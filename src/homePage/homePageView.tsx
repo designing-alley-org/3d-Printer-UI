@@ -1,5 +1,5 @@
 const homePageView = () => {
-  return <></>;
+  return <span></span>;
 };
 
 export default homePageView;
