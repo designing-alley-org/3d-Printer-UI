@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
-import Login from './loginPage/login';
+import Login from './pages/loginPage/login';
 
 const App: React.FC = () => {
   const isAuthenticated = useSelector(

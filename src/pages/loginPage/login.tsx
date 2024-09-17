@@ -5,7 +5,8 @@ import {
   // useDispatch,
   useSelector,
 } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '../../store/store';
+import styled from 'styled-components';
 // import { loginRequest, loginSuccess, loginFailure, logout } from '../store/auth/actions';
 
 const Login = () => {
@@ -37,7 +38,7 @@ const Login = () => {
         </div>
       ) : (
         <div>
-          <h2>Login</h2>
+          <Header>Login</Header>
           <input
             type="text"
             value={username}
@@ -58,4 +59,5 @@ const Login = () => {
   );
 };
 
+const Header = styled.h1``;
 export default Login;
