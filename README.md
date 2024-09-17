@@ -4,18 +4,19 @@
 
 - [Start](#start)
 - [Routing](#routing)
-- [Structure of files](#structure)
+- [Structure of files](#structure-of-files)
 - [API](#api)
-- [Technology](#technology)
+- [Technology](#technology-list)
 - [Extensions](#extensions)
 
 # Start
 
-# npm run dev // will run in http://localhost:5173/
-
-# npm build // to build your project
+- npm run dev // will run in http://localhost:5173/
+- npm build // to build your project
 
 # Routing
+
+all the routings will be listed here
 
 # Structure Of Files
 
@@ -37,7 +38,9 @@
 
 ## API
 
-## Technology
+important api will be listed here
+
+## Technology List
 
 - [Typescript](https://www.typescriptlang.org/)
 - [React](https://react.dev/)
