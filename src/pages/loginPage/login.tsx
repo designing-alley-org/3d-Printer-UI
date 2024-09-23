@@ -7,6 +7,7 @@ import {
 } from 'react-redux';
 import { RootState } from '../../store/store';
 import styled from 'styled-components';
+import Button from '../../stories/Button';
 // import { loginRequest, loginSuccess, loginFailure, logout } from '../store/auth/actions';
 
 const Login = () => {
@@ -51,7 +52,12 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
           />
-          <button onClick={handleLogin}>Login</button>
+          <Button
+            label="submit"
+            onClick={handleLogin}
+            width="100px"
+            height="20px"
+          />
           {authState.error && <p>{authState.error}</p>}
         </div>
       )}
