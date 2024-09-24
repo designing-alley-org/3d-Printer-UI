@@ -4,6 +4,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import Login from './pages/loginPage/login';
+import Layout from './component/ViewStlFile/Layout'; // For STl viewing
 
 const App: React.FC = () => {
   const isAuthenticated = useSelector(
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         </div>
       ) : (
         <Login />
+        // <Layout/>   // STl view Component
       )}
     </div>
   );
