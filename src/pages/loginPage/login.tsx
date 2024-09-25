@@ -1,69 +1,72 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/components/Login.tsx
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-import { useState } from 'react';
-import {
-  // useDispatch,
-  useSelector,
-} from 'react-redux';
-import { RootState } from '../../store/store';
-import styled from 'styled-components';
-import Button from '../../stories/Button';
-// import { loginRequest, loginSuccess, loginFailure, logout } from '../store/auth/actions';
-
-const Login = () => {
+const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const dispatch = useDispatch();
-  const authState = useSelector((state: RootState) => state.auth);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // dispatch(loginRequest());
-    // Simulate login request (replace with real API call)
-    if (username === 'user' && password === 'pass') {
-      // dispatch(loginSuccess('fake-jwt-token'));
-    } else {
-      // dispatch(loginFailure('Invalid username or password'));
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      // Send a POST request to login endpoint
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/login`,
+        { username, password },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      // Extract token from the response
+      const { token } = response.data;
+
+      // Store the JWT token in local storage
+      localStorage.setItem('token', token);
+
+      // Redirect to the dashboard or home page after successful login
+      navigate('/dashboard');
+    } catch (err: any) {
+      // Handle errors
+      setError(
+        err.response?.data?.message || 'Login failed. Please try again.'
+      );
     }
   };
 
-  const handleLogout = () => {
-    // dispatch(logout());
-  };
-
   return (
-    <div>
-      {authState.isAuthenticated ? (
+    <div className="login-container">
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
         <div>
-          <h2>Welcome, you are logged in!</h2>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      ) : (
-        <div>
-          <Header>Login</Header>
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
+            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            required
           />
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
+            required
           />
-          <Button
-            label="submit"
-            onClick={handleLogin}
-            width="100px"
-            height="20px"
-          />
-          {authState.error && <p>{authState.error}</p>}
         </div>
-      )}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };
 
-const Header = styled.h1``;
 export default Login;
