@@ -1,28 +1,29 @@
 // src/App.tsx
-
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from './store/store';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import Login from './pages/loginPage/login';
-import Layout from './component/ViewStlFile/Layout'; // For STl viewing
+import Dashboard from './pages/homePage/homePageView';
 
 const App: React.FC = () => {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
+  // Simple authentication check function
+  const isAuthenticated = () => !!localStorage.getItem('token');
 
   return (
-    <div className="App">
-      {isAuthenticated ? (
-        <div>
-          <h1>Welcome to the Dashboard</h1>
-          {/* Add your authenticated routes, components, or dashboard UI here */}
-        </div>
-      ) : (
-        <Login />
-        // <Layout/>   // STl view Component
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
+        />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
 };
 
