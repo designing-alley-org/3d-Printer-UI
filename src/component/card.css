@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 .card {
-  margin: 12px;
   width: 17.625rem;
   height: 18.438rem;
   border-radius: 21px;
@@ -63,7 +64,7 @@
 
 .card-upper-text {
   color: white;
-  font-family: 'Michroma';
+  font-family: 'Michroma', sans-serif;
   font-size: 1.25rem;
   font-weight: 400;
 }
@@ -82,10 +83,10 @@
 }
 
 .card-bottom-text-content {
-  font-family: 'Montserrat';
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: 400;
-  color: #0047ff;
+  color: #001047;
   text-align: center;
   width: 14.813rem;
   height: 2.813rem;

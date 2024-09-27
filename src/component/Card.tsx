@@ -19,7 +19,12 @@ const CustomCard: React.FC<CardProps> = ({
     <div className="card">
       {/* Top section */}
       <Box className="card-top">
-        <Typography className="card-number">{number}</Typography>
+        <Typography
+          className="card-number"
+          sx={{ fontFamily: 'Michroma, sans-serif' }}
+        >
+          {number}
+        </Typography>
 
         <Box className="card-icon-container">
           <Box className="card-icon">{iconPath}</Box>
@@ -28,7 +33,12 @@ const CustomCard: React.FC<CardProps> = ({
         {/* Curve area */}
         <Box className="card-curve">
           <Box className="card-curve-text">
-            <Typography className="card-upper-text">{upperText}</Typography>
+            <Typography
+              className="card-upper-text"
+              sx={{ fontFamily: 'Michroma, sans-serif' }}
+            >
+              {upperText}
+            </Typography>
           </Box>
           <Box className="card-curve-fill" />
         </Box>
@@ -36,7 +46,10 @@ const CustomCard: React.FC<CardProps> = ({
 
       {/* Bottom text section */}
       <Box className="card-bottom-text">
-        <Typography className="card-bottom-text-content">
+        <Typography
+          className="card-bottom-text-content"
+          sx={{ fontFamily: 'Montserrat, sans-serif' }}
+        >
           {bottomText}
         </Typography>
       </Box>
