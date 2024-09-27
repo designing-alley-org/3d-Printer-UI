@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import Login from './pages/loginPage/login';
 import Dashboard from './pages/homePage/homePageView';
+import Card from './component/Card';
 
 const App: React.FC = () => {
   // Simple authentication check function
@@ -17,6 +18,7 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/card" element={<Card />} />
         <Route
           path="/dashboard"
           element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}

@@ -1,0 +1,92 @@
+.card {
+  margin: 12px;
+  width: 17.625rem;
+  height: 18.438rem;
+  border-radius: 21px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 2px rgba(0, 102, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-top {
+  width: 100%;
+  height: 12.676rem;
+  background-color: #000000;
+  border-radius: 21px 21px 0 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-number {
+  color: white;
+  font-family: 'Michroma';
+  font-size: 2.25rem;
+  font-weight: 400;
+  position: absolute;
+  top: 1.563rem;
+  left: 1.25rem;
+}
+
+.card-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-icon {
+  width: 6.688rem;
+  height: 6.688rem;
+  border-radius: 50%;
+  background-color: rgba(0, 102, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-curve {
+  width: 100%;
+  height: 2.125rem;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+}
+
+.card-curve-text {
+  width: 80%;
+  position: relative;
+  left: 1.25rem;
+  border-radius: 67% 10% 47% 0% / 0% 0% 57% 10%;
+}
+
+.card-upper-text {
+  color: white;
+  font-family: 'Michroma';
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.card-curve-fill {
+  width: 20%;
+  background-color: #ffffff;
+  border-radius: 67% 10% 10% 0% / 46% 0% 0% 10%;
+}
+
+.card-bottom-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.card-bottom-text-content {
+  font-family: 'Montserrat';
+  font-size: 1rem;
+  font-weight: 400;
+  color: #0047ff;
+  text-align: center;
+  width: 14.813rem;
+  height: 2.813rem;
+}
