@@ -15,6 +15,18 @@
   height: 12.676rem;
   background-color: #000000;
   border-radius: 21px 21px 0 0;
+  clip-path: polygon(
+    72% 100%,
+    0 100%,
+    0 0,
+    100% 0,
+    100% 80%,
+    95% 85%,
+    90% 90%,
+    85% 93%,
+    80% 95%,
+    75% 98%
+  );
   position: relative;
   display: flex;
   align-items: center;
@@ -22,29 +34,22 @@
 }
 
 .card-number {
-  color: white;
-  font-family: 'Michroma';
-  font-size: 2.25rem;
-  font-weight: 400;
+  color: rgb(255, 255, 255);
   position: absolute;
   top: 1.563rem;
   left: 1.25rem;
+  width: 2.688rem;
+  height: 1.438rem;
 }
 
 .card-icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.card-icon {
   width: 6.688rem;
   height: 6.688rem;
   border-radius: 50%;
-  background-color: rgba(0, 102, 255, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: #0066ff;
 }
 
 .card-curve {
@@ -63,16 +68,7 @@
 }
 
 .card-upper-text {
-  color: white;
-  font-family: 'Michroma', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 400;
-}
-
-.card-curve-fill {
-  width: 20%;
-  background-color: #ffffff;
-  border-radius: 67% 10% 10% 0% / 46% 0% 0% 10%;
+  color: rgb(255, 255, 255);
 }
 
 .card-bottom-text {
@@ -83,9 +79,6 @@
 }
 
 .card-bottom-text-content {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
   color: #001047;
   text-align: center;
   width: 14.813rem;
