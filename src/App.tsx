@@ -1,30 +1,14 @@
-// src/App.tsx
-import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
-import Login from './pages/loginPage/login';
-import Dashboard from './pages/homePage/homePageView';
+import { BrowserRouter } from 'react-router-dom';
+import { CssBaseline } from '@mui/material';
+import Routing from './routes/Routing';
 
-const App: React.FC = () => {
-  // Simple authentication check function
-  const isAuthenticated = () => !!localStorage.getItem('token');
-
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <CssBaseline />
+      <Routing />
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
