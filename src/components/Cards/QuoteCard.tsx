@@ -19,7 +19,7 @@ interface QuoteText {
 
 const QuoteCard: React.FC = () => {
   // For QuoteText
-  const [quoteTexts, SetQuoteTexts] = useState<QuoteText[]>([
+  const [quoteTexts] = useState<QuoteText[]>([
     {
       id: '1',
       text: 'UPLOAD TEXT',
@@ -39,7 +39,7 @@ const QuoteCard: React.FC = () => {
   ]);
 
   // Cards details
-  const [cardItems, setCardItems] = useState<CardItem[]>([
+  const [cardItems] = useState<CardItem[]>([
     {
       id: '1.',
       icon: 'icon',
@@ -62,20 +62,35 @@ const QuoteCard: React.FC = () => {
   return (
     <Box
       sx={{
+        margin: '40px',
         width: '79rem',
-        height: '40.3rem',
+        height: '36.7rem',
         bgcolor: '#FFFFFF',
         borderRadius: '30px',
         position: 'relative',
+        overflow: 'hidden',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          width: '9rem',
+          height: '6rem',
+          backgroundColor: 'red',
+          bottom: 0,
+          right: '3rem',
+          borderTopLeftRadius: '30px',
+          transform: 'translate(50%, 50%)',
+          opacity: '0.1',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        },
       }}
     >
       <Box
         sx={{
-          height: '80%',
-          padding: '1.7rem 3rem',
+          height: '78%',
+          padding: '2.5rem 3rem ',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-evenly',
+          justifyContent: 'space-between',
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
