@@ -2,7 +2,7 @@ import { useState } from 'react';
 import TabComponent from '../Tab/index';
 import { Wrap, Wrapper } from './styles';
 import { tabData } from '../../constants';
-import MainCard from '../Cards/MainCard';
+import MainCard from '../MainCard/MainCard';
 
 const Header = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([0]);

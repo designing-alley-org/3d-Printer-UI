@@ -25,7 +25,7 @@ const TabComponent = (props: ITabContainerProps) => {
             <span className="tabContent">
               {' '}
               {numberId && (
-                <span>
+                <span className="idx">
                   {' '}
                   <p>{tab.id}</p>
                 </span>

@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import TabComponent from '../Tab';
 import { quoteTexts } from '../../constants';
-import UploadStlCard from './UploadStlCard/UploadStlCard';
+import UploadStlCard from '../Cards/UploadStlCard/UploadStlCard';
 
 const MainCardLayout: React.FC = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([0]);

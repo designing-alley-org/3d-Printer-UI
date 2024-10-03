@@ -3,10 +3,12 @@ import { SxProps } from '@mui/material';
 
 export const innerBox: SxProps = {
   height: '90%',
-  padding: '2.5rem 4rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+};
+export const content: SxProps = {
+  padding: '0rem 4rem 4rem',
 };
 
 export const upperQuoteText: SxProps = {
@@ -19,11 +21,13 @@ export const instantQuoteText: SxProps = {
   fontWeight: 400,
   fontSize: '1.25rem',
   color: '#0047FF',
+  padding: '4rem 0rem',
 };
 
 export const cardBox: SxProps = {
-  display: 'flex',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: '20px',
 };
 
 export const quoteTextBox: SxProps = {

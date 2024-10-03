@@ -2,7 +2,6 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const BoxWrapper = styled(Box)({
-  width: '17.6rem',
   height: '18.4rem',
   backgroundColor: '#FFFFFF',
   boxShadow: '0px 0px 2.1px 0px #0066FFB2',

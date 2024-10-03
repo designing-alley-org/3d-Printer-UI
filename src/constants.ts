@@ -11,7 +11,7 @@ export const tabData = [
 
 // Data for QuoteText
 export const quoteTexts = [
-  { id: 1, label: 'UPLOAD TEXT' },
+  { id: 1, label: 'UPLOAD STL' },
   { id: 2, label: 'CUSTOMIZE' },
   { id: 3, label: 'DELIVERY PLAN' },
   { id: 4, label: 'CHECKOUT' },
