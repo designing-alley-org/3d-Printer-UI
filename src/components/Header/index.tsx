@@ -2,6 +2,7 @@ import { useState } from 'react';
 import TabComponent from '../Tab/index';
 import { Wrap, Wrapper } from './styles';
 import { tabData } from '../../constants';
+import MainCardLayout from '../Cards/MainCardLayout';
 
 const Header = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([0]);
@@ -26,6 +27,7 @@ const Header = () => {
       {activeTabs[activeTabs.length - 1] === 0 && (
         <Wrap>
           <h1>START 3D PRINTING YOUR FUTURE</h1>
+          <MainCardLayout />
         </Wrap>
       )}
     </Wrapper>
