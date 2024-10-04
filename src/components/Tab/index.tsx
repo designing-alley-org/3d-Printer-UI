@@ -7,10 +7,11 @@ interface ITabContainerProps {
   tabs: Tab[];
   activeTabs: number[];
   handleTabClick: (activeTab: number) => void;
+  numberId: boolean;
 }
 
 const TabComponent = (props: ITabContainerProps) => {
-  const { tabs, activeTabs, handleTabClick } = props;
+  const { tabs, activeTabs, handleTabClick, numberId } = props;
 
   return (
     <TabWrapper>
@@ -21,8 +22,14 @@ const TabComponent = (props: ITabContainerProps) => {
             className={`${activeTabs.includes(index) ? 'selected' : ''}`}
             onClick={() => handleTabClick(index)}
           >
-            <span>
+            <span className="tabContent">
               {' '}
+              {numberId && (
+                <span className="idx">
+                  {' '}
+                  <p>{tab.id}</p>
+                </span>
+              )}
               <p>{tab.label}</p>
             </span>
           </li>

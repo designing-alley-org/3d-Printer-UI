@@ -80,3 +80,9 @@
   margin: unset;
   transform: skew(-40deg);
 }
+
+.tabContent {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
