@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './UploadStlCardStyle'; // Import styles as 'styles'
+import uploadIcon from '../../../assets/icons/upload2.svg';
 
 interface UploadStlCardProps {}
 
@@ -52,7 +53,11 @@ const UploadStlCard: React.FC<UploadStlCardProps> = () => {
         <Box sx={styles.fileUploadContainer}>
           <Box sx={styles.uploadBox}>
             {/* Icon centered within the box */}
-            {/* <CloudUploadIcon sx={styles.uploadIcon} /> */}
+            <img
+              src={uploadIcon}
+              alt={`Upload`}
+              style={styles.uploadIcon as React.CSSProperties}
+            />
             <input
               type="file"
               style={styles.hiddenInput as React.CSSProperties}

@@ -32,7 +32,10 @@ const Card: React.FC<CardProps> = ({ sx, id, icon, upperText, bottomText }) => {
           }}
         >
           <IdText>{id}</IdText>
-          <IconBox>{icon}</IconBox>
+          <IconBox>
+            {/* Display the image passed via props */}
+            {icon && <img src={icon} alt={`${id} Icon`} />}
+          </IconBox>
         </Box>
         <UpperText>{upperText}</UpperText>
       </BlackBox>

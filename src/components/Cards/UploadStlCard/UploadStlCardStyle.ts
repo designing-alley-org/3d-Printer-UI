@@ -87,6 +87,7 @@ export const uploadBox: SxProps = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  position: 'relative',
 };
 
 export const hiddenInput: SxProps = {
@@ -133,9 +134,6 @@ export const fileCardContainer: SxProps = {
 
 export const uploadIcon: SxProps = {
   fontSize: '2.5rem',
-  color: '#0047FF', // Icon color
   position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  left: '2rem',
 };

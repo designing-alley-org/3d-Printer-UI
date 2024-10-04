@@ -1,3 +1,6 @@
+// import all svg
+import uploadIcon from './assets/icons/upload.svg';
+
 export const tabData = [
   {
     id: 0,
@@ -21,19 +24,19 @@ export const quoteTexts = [
 export const cardItems = [
   {
     id: '1.',
-    icon: 'icon', // Replace 'icon' with the actual icon component or image path
+    icon: uploadIcon, // Use the imported SVG icon
     upperText: 'UPLOAD STL',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
     id: '2.',
-    icon: 'icon', // Replace 'icon' with the actual icon component or image path
+    icon: uploadIcon, // Use the imported SVG icon
     upperText: 'CUSTOMIZE',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
     id: '3.',
-    icon: 'icon', // Replace 'icon' with the actual icon component or image path
+    icon: uploadIcon, // Use the imported SVG icon
     upperText: 'DELIVERY',
     bottomText: 'upload one or more STL files and start customizing',
   },
