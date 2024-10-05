@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import QuoteCard from '../Cards/QuoteCard/QuoteCard';
+import QuoteCard from '../TabComponents/QuoteTab/QuoteTab';
 import TabComponent from '../Tab';
 import { quoteTexts } from '../../constants';
-import UploadStlCard from '../Cards/UploadStlCard/UploadStlCard';
+import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import { TabContent, Wrapper } from './Main';
 import { LinearProgress, Box } from '@mui/material'; // Import LinearProgress and Box from Material-UI
-import CustomizeTab from '../CustomizeTab';
+import CustomizeTab from '../TabComponents/CustomizeTab';
 
 const MainCard: React.FC = () => {
   const totalTabs = 4; // Total number of tabs

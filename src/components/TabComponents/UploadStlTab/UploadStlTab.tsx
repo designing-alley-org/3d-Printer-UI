@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import UploadStlCardFile from './UploadStlCardFile';
-import * as styles from './UploadStlCardStyle'; // Import styles as 'styles'
+import * as styles from './styles'; // Import styles as 'styles'
 import uploadIcon from '../../../assets/icons/upload2.svg';
 
 interface UploadStlCardProps {}
