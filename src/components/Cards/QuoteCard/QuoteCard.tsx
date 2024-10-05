@@ -2,7 +2,7 @@
 // import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { cardItems } from '../../../constants';
-import Card from '../Card';
+import Card from '../Card/Card';
 import * as styles from './QuoteCardStyle';
 import { styled } from 'styled-components';
 

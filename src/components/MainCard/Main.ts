@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.section`
-  border-radius: 30px;
+  border-radius: 40px;
   position: relative;
   overflow: hidden;
   .tabrow {
@@ -33,7 +33,5 @@ export const Wrapper = styled.section`
 export const TabContent = styled.section`
   background: white;
   min-height: 34rem;
-  display: flex;
-  flexdirection: column;
-  justifycontent: space-between;
+  padding: 2rem;
 `;

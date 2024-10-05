@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-// import MainCardLayout from './MainCardLayout';
-import QuoteCard from '../Cards/quoteCard/QuoteCard';
+import QuoteCard from '../Cards/QuoteCard/QuoteCard';
 import TabComponent from '../Tab';
 import { quoteTexts } from '../../constants';
 import UploadStlCard from '../Cards/UploadStlCard/UploadStlCard';
 import { TabContent, Wrapper } from './Main';
+import { LinearProgress, Box } from '@mui/material'; // Import LinearProgress and Box from Material-UI
 
 const MainCard: React.FC = () => {
+  const totalTabs = 4; // Total number of tabs
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
 
   const handleTabClick = (index: number) => {
@@ -17,6 +18,12 @@ const MainCard: React.FC = () => {
       setActiveTabs([index]);
     }
   };
+
+  // Calculate progress value based on the active tab
+  const getProgressValue = () => {
+    return (activeTabs.length / totalTabs) * 100;
+  };
+
   return (
     <Wrapper>
       <TabComponent
@@ -25,12 +32,19 @@ const MainCard: React.FC = () => {
         tabs={quoteTexts}
         numberId={true}
       />
-      {/* TODO: use Outlet  */}
-      {/* Use MainCardLayout */}
+
+      {/* TODO: use Outlet */}
       <TabContent>
-        {''}
-        {activeTabs.length === 0 && <QuoteCard />}
-        {activeTabs[activeTabs.length - 1] === 0 && <UploadStlCard />}
+        {/* Show QuoteCard when no tabs are active */}
+        {activeTabs.length > 0 && (
+          <Box sx={{ width: '100%', paddingBottom: '1rem' }}>
+            <LinearProgress variant="determinate" value={getProgressValue()} />
+          </Box>
+        )}
+        <span>
+          {activeTabs.length === 0 && <QuoteCard />}
+          {activeTabs[activeTabs.length - 1] === 0 && <UploadStlCard />}
+        </span>
       </TabContent>
     </Wrapper>
   );
