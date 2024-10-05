@@ -34,4 +34,5 @@ export const TabContent = styled.section`
   background: white;
   min-height: 34rem;
   padding: 2rem;
+  display: flex;
 `;

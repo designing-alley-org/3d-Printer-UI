@@ -5,6 +5,7 @@ import { quoteTexts } from '../../constants';
 import UploadStlCard from '../Cards/UploadStlCard/UploadStlCard';
 import { TabContent, Wrapper } from './Main';
 import { LinearProgress, Box } from '@mui/material'; // Import LinearProgress and Box from Material-UI
+import CustomizeTab from '../CustomizeTab';
 
 const MainCard: React.FC = () => {
   const totalTabs = 4; // Total number of tabs
@@ -44,6 +45,7 @@ const MainCard: React.FC = () => {
         <span>
           {activeTabs.length === 0 && <QuoteCard />}
           {activeTabs[activeTabs.length - 1] === 0 && <UploadStlCard />}
+          {activeTabs[activeTabs.length - 1] === 1 && <CustomizeTab />}
         </span>
       </TabContent>
     </Wrapper>
