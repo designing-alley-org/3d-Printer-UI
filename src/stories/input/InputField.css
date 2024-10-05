@@ -1,0 +1,27 @@
+/* InputField.css */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-label {
+  font-size: 14px;
+  color: #333;
+}
+
+.custom-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  color: #000;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+.custom-input:hover {
+  border-color: #007bff;
+  /* Example hover effect */
+}
