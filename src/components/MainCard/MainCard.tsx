@@ -33,7 +33,6 @@ const MainCard: React.FC = () => {
         tabs={quoteTexts}
         numberId={true}
       />
-
       {/* TODO: use Outlet */}
       <TabContent>
         {/* Show QuoteCard when no tabs are active */}

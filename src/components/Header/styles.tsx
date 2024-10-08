@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.main`
-  height: 56rem;
+  height: 59rem;
   background-size: cover;
   background-position: center;
   border-top-left-radius: 30px;

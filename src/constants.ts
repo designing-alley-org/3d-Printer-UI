@@ -1,6 +1,5 @@
 // import all svg
 import uploadIcon from './assets/icons/upload.svg';
-
 export const tabData = [
   {
     id: 0,
