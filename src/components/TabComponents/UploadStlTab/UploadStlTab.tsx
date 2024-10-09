@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFile, removeFile } from '../../../store/stlFile/actions';
+import {
+  addFile,
+  removeFile,
+  setActiveFile,
+} from '../../../store/stlFile/actions';
 import { RootState } from '../../../store/store';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
@@ -17,6 +21,7 @@ const UploadStlCard: React.FC = () => {
     if (file) {
       const fileId = `${file.name}_${Date.now()}`;
       dispatch(addFile(file, fileId));
+      dispatch(setActiveFile(fileId)); // Set the newly added file as active
     }
   };
 
