@@ -1,10 +1,14 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { setActiveFile } from '../../../store/stlFile/actions';
+import { RootState } from '../../../store/store';
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
-import * as styles from './ViewerStlModelStyles'; // Import your CSS styles here
+import ViewModelStl from '../../ViewStlFile/ViewModelStl'; // Your STL viewer component
 import arrow_left from '../../../assets/icons/arrow_left.svg';
 import arrow_right from '../../../assets/icons/arrow_right.svg';
 import cross from '../../../assets/icons/cross.svg';
+import * as styles from './ViewerStlModelStyles';
 
 interface ViewerStlModelProps {
   isOpen: boolean;
@@ -17,7 +21,26 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = ({
   onClose,
   fileName,
 }) => {
-  if (!isOpen) return null; // Return null if the popup is not open
+  const dispatch = useDispatch();
+  const files = useSelector((state: RootState) => state.fileState.files);
+  const activeFileId = useSelector(
+    (state: RootState) => state.fileState.activeFileId
+  );
+  const currentIndex = files.findIndex((file) => file.id === activeFileId);
+  const activeFile = files[currentIndex];
+
+  // Handle file navigation
+  const handleNext = () => {
+    const nextIndex = (currentIndex + 1) % files.length;
+    dispatch(setActiveFile(files[nextIndex].id));
+  };
+
+  const handlePrevious = () => {
+    const previousIndex = (currentIndex - 1 + files.length) % files.length;
+    dispatch(setActiveFile(files[previousIndex].id));
+  };
+
+  if (!isOpen) return null;
 
   return (
     <Box sx={styles.modalContainer}>
@@ -27,10 +50,16 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = ({
         </Box>
 
         <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
+
         <Box sx={styles.viewerContent}>
+          {/* STL File Viewer */}
           <Box sx={styles.viewModel}>
-            {/* 3D Viewer Component logic goes here */}
+            {activeFile && activeFile.data && (
+              <ViewModelStl fileUrl={URL.createObjectURL(activeFile.data)} />
+            )}
           </Box>
+
+          {/* Navigation Buttons */}
           <Box
             sx={{
               display: 'flex',
@@ -40,9 +69,9 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = ({
               height: '15%',
             }}
           >
-            <ButtonIcon svgPath={arrow_left} onClick={''} />
+            <ButtonIcon svgPath={arrow_left} onClick={handlePrevious} />
             <Typography sx={styles.fileName}>{fileName}</Typography>
-            <ButtonIcon svgPath={arrow_right} onClick={''} />
+            <ButtonIcon svgPath={arrow_right} onClick={handleNext} />
           </Box>
         </Box>
       </Box>

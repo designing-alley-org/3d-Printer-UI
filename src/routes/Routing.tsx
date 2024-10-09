@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../pages/loginPage/login';
 import Dashboard from '../pages/homePage/Home';
+import Home from '../pages/homePage/Home';
 
 const Routing: React.FC = () => {
   // Simple authentication check function
@@ -10,6 +11,7 @@ const Routing: React.FC = () => {
 
   return (
     <Routes>
+      <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/dashboard"

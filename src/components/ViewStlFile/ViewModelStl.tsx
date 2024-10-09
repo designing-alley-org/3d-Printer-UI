@@ -48,7 +48,7 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl }) => {
         orbitControls
         url={fileUrl}
         onFinishLoading={handleFinishLoading}
-        modelProps={{ scale: zoom, color }} // Pass the color here
+        // modelProps={{ scale: zoom, color }} // Pass the color here
         ref={viewerRef}
       />
       <div className="absolute bottom-4 right-4 flex space-x-2">

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ButtonIcon, ButtonIconProps } from './ButtonIcon';
-import sampleSvg from '../../assets/react.svg'; // You need to replace this with an actual SVG path
+import sampleSvg from '../../assets/icons/cross.svg'; // for testing
+
 export default {
   title: 'Example/ButtonIcon',
   component: ButtonIcon,

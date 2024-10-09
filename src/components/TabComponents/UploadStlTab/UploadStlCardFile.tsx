@@ -1,78 +1,85 @@
 import React, { useState } from 'react';
-import { Box, Button, LinearProgress, Typography } from '@mui/material';
-import * as styles from './UploadStlCardFileStyle'; // Import styles
-import ViewerStlModel from './ViewerStlModel'; // Import the 3D Viewer popup component
-import cross from '../../../assets/icons/cross.svg';
+import { Box, Button, Typography, LinearProgress } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { removeFile } from '../../../store/stlFile/actions'; // Action to remove file
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
+import ViewerStlModel from './ViewerStlModel'; // The modal component for viewing 3D models
+import * as styles from './UploadStlCardFileStyle'; // Your styles for the file card
+import cross from '../../../assets/icons/cross.svg'; // Icon for removing the file
+import ViewModelStl from '../../ViewStlFile/ViewModelStl'; // Your STL viewer component
 
-const UploadStlCardFile: React.FC = () => {
-  const [isViewerOpen, setViewerOpen] = useState(false); // Popup state
-
-  const handleViewerOpen = () => {
-    setViewerOpen(true); // Open popup
+interface UploadStlCardFileProps {
+  file: {
+    id: string;
+    name: string;
+    size: string;
+    progress: number;
+    data: Blob; // Assuming that the file data is stored as a Blob for STL rendering
   };
+}
 
-  const handleViewerClose = () => {
-    setViewerOpen(false); // Close popup
-  };
+const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
+  ({ file }) => {
+    const [isViewerOpen, setViewerOpen] = useState(false); // Modal open/close state
+    const dispatch = useDispatch();
 
-  // For testing
-  const testFor = () => {
-    alert('press');
-  };
+    const handleViewerOpen = () => setViewerOpen(true);
+    const handleViewerClose = () => setViewerOpen(false);
+    const handleRemove = () => dispatch(removeFile(file.id)); // Dispatch remove action
 
-  return (
-    <>
-      <Box sx={styles.container}>
-        {/* First Box with View and 3D Viewer */}
-        <Box sx={styles.viewBox}>
-          <Box sx={styles.viewContent}>View</Box>
-          <Button sx={styles.viewerButton} onClick={handleViewerOpen}>
-            <Typography sx={styles.viewerButtonText}>3D VIEWER</Typography>
-          </Button>
-        </Box>
-
-        {/* Second Box with STL file info */}
-        <Box sx={styles.infoBox}>
-          <Typography sx={styles.fileName}>Final 10000.stl</Typography>
-          <Box sx={{ display: 'flex', padding: '1rem 0' }}>
-            <Typography sx={styles.sizeLabel}>Size</Typography>
-            <Typography sx={styles.sizeValue}>
-              100mm x 120 mm x 320 mm
-            </Typography>
+    return (
+      <>
+        <Box sx={styles.container}>
+          {/* View Box containing the 3D Viewer button */}
+          <Box sx={styles.viewBox}>
+            <Box sx={styles.viewContent}>
+              {/* Placeholder for file preview, or later implementation */}
+            </Box>
+            <Button sx={styles.viewerButton} onClick={handleViewerOpen}>
+              <Typography sx={styles.viewerButtonText}>3D VIEWER</Typography>
+            </Button>
           </Box>
-          <LinearProgress
-            variant="determinate"
-            value={50}
-            sx={styles.progressBar}
-          />
-        </Box>
 
-        {/* Third Box for Quantity */}
-        <Box sx={styles.quantityBox}>
-          <Box sx={styles.quantityHeader}>
-            <Typography sx={styles.fileName}>Quantity</Typography>
-            <ButtonIcon
-              width="4rem"
-              height="3rem"
-              svgPath={cross}
-              onClick={testFor}
+          {/* Info box containing file details */}
+          <Box sx={styles.infoBox}>
+            <Typography sx={styles.fileName}>{file.name}</Typography>
+            <Box sx={{ display: 'flex', padding: '1rem 0' }}>
+              <Typography sx={styles.sizeLabel}>Size</Typography>
+              <Typography sx={styles.sizeValue}>{file.size}</Typography>
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={file.progress}
+              sx={styles.progressBar}
             />
           </Box>
-          <Box sx={styles.quantityValueBox}>
-            <Typography sx={styles.quantityValue}>1</Typography>
+
+          {/* Quantity and remove button */}
+          <Box sx={styles.quantityBox}>
+            <Box sx={styles.quantityHeader}>
+              <Typography sx={styles.fileName}>Quantity</Typography>
+              <ButtonIcon
+                width="4rem"
+                height="3rem"
+                svgPath={cross} // Cross icon for removing file
+                onClick={handleRemove}
+              />
+            </Box>
+            <Box sx={styles.quantityValueBox}>
+              <Typography sx={styles.quantityValue}>1</Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
 
-      {/* Viewer popup */}
-      <ViewerStlModel
-        isOpen={isViewerOpen}
-        onClose={handleViewerClose}
-        fileName="Final 10000.stl" // Pass the file name
-      />
-    </>
-  );
-};
+        {/* The modal popup for 3D Viewer */}
+        <ViewerStlModel
+          isOpen={isViewerOpen}
+          onClose={handleViewerClose}
+          fileName={file.name}
+        />
+      </>
+    );
+  }
+);
 
 export default UploadStlCardFile;
