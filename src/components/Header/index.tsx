@@ -27,7 +27,7 @@ const Header = () => {
       </section>
       {activeTabs[activeTabs.length - 1] === 0 && (
         <Wrap>
-          <h1>START 3D PRINTING YOUR FUTURE</h1>
+          <h1 style={{ color: 'white' }}>START 3D PRINTING YOUR FUTURE</h1>
           <MainCard />
         </Wrap>
       )}

@@ -15,11 +15,10 @@ function AppThemeProvider(props: IAppThemeProvider) {
       secondary: {
         main: '#8638a00d',
       },
-
       background: {},
     },
     typography: {
-      fontFamily: 'Inter, Roboto, sans-serif',
+      fontFamily: ' "Michroma", sans-serif',
       subtitle1: {
         fontSize: '1.375rem',
       },
@@ -36,6 +35,10 @@ function AppThemeProvider(props: IAppThemeProvider) {
         },
         fontWeight: 500,
       },
+      h2:{
+        fontSize: '2rem',
+        fontWeight: 400,
+      }
     },
   });
 
