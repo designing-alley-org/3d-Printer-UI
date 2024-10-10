@@ -41,3 +41,23 @@ export const cardItems = [
     bottomText: 'upload one or more STL files and start customizing',
   },
 ];
+
+// Data for DeliveryPlan
+
+export const deliveryPlans = [
+  {
+    deliveryName: 'Standard Shipping',
+    deliveryTime: '3-5 days',
+    deliveryCost: '$10',
+  },
+  {
+    deliveryName: 'Express Shipping',
+    deliveryTime: '1-2 days',
+    deliveryCost: '$20',
+  },
+  {
+    deliveryName: 'Premium Shipping',
+    deliveryTime: '1 day',
+    deliveryCost: '$30',
+  },
+];
