@@ -7,6 +7,7 @@ import { TabContent, Wrapper } from './Main';
 import { LinearProgress, Box } from '@mui/material'; // Import LinearProgress and Box from Material-UI
 import CustomizeTab from '../TabComponents/CustomizeTab';
 import DeliveryPlan from '../TabComponents/CheckOut/DeliveryPlan';
+import ShippingDetails from '../TabComponents/CheckOut/Shipping';
 
 const MainCard: React.FC = () => {
   const totalTabs = 4; // Total number of tabs
@@ -46,8 +47,9 @@ const MainCard: React.FC = () => {
           {activeTabs.length === 0 && <QuoteCard />}
           {activeTabs[activeTabs.length - 1] === 0 && <UploadStlCard />}
           {activeTabs[activeTabs.length - 1] === 1 && <CustomizeTab />}
-          {activeTabs[activeTabs.length - 1] === 2 && <span>Quote</span>}
+          {activeTabs[activeTabs.length - 1] === 2 && <ShippingDetails />}
           {activeTabs[activeTabs.length - 1] === 3 && <DeliveryPlan />}
+
         </span>
       </TabContent>
     </Wrapper>
