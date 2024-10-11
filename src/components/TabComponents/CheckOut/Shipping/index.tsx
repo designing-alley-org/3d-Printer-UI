@@ -2,61 +2,9 @@ import { Box, Typography } from '@mui/material';
 import Input from '../../../../stories/StandardInput/Input';
 import { useForm } from 'react-hook-form';
 import { InputWrapper } from './style';
+import { inputFields } from '../../../../constants';
 
 export default function ShippingDetails() {
-  const inputFields = [
-    {
-      label: 'firstName',
-      type: 'text',
-      placeholder: 'Enter your first name',
-    },
-    {
-      label: 'Last Name',
-      type: 'text',
-      placeholder: 'Enter your last name',
-    },
-    {
-      label: 'Phone Number',
-      type: 'text',
-      placeholder: 'Enter your phone number',
-    },
-    {
-      label: 'Email',
-      type: 'email',
-      placeholder: 'Enter your email',
-    },
-    {
-      label: 'Street Address',
-      type: 'text',
-      placeholder: 'Enter your address',
-    },
-    {
-      label: 'State/Region',
-      type: 'text',
-      placeholder: 'Enter your state',
-    },
-    {
-      label: 'Country',
-      type: 'text',
-      placeholder: 'Enter your country',
-    },
-    {
-      label: 'Extended Address',
-      type: 'text',
-      placeholder: 'Enter your address',
-    },
-    {
-      label: 'City',
-      type: 'text',
-      placeholder: 'Enter your city',
-    },
-
-    {
-      label: 'Zip Code',
-      type: 'text',
-      placeholder: 'Enter your zip code',
-    },
-  ];
 
   const {
     register,
@@ -75,6 +23,7 @@ export default function ShippingDetails() {
             <Input
               key={index}
               label={inputField.label}
+              name={inputField.name}
               type={inputField.type}
               placeholder={inputField.placeholder}
               register={register}
