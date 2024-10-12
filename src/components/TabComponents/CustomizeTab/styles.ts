@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.section`
-  margin: 16px 32px;
+  margin: 0px 32px;
   h3 {
     margin: unset;
-    color: #0066ff;
-    font-size: 16px;
+    color: #001047;
+    font-size: 32px;
     font-weight: 400;
   }
 `;
@@ -22,7 +22,7 @@ export const Files = styled.article`
   padding: 8px;
   margin-right: 20px;
   overflow-y: auto;
-  height: 34rem;
+  height: 30rem;
   .header {
     display: flex;
     align-items: center;
@@ -73,4 +73,24 @@ export const UploadedFile = styled.section`
   }
 `;
 
-export const Customize = styled.article``;
+export const Customize = styled.article`
+  display: flex;
+  flex-direction: column;
+  width: 55%;
+  .text {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid;
+    margin-bottom: 12px;
+    span {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 400;
+      color: #525e86;
+      img {
+        margin-right: 0.6rem;
+      }
+    }
+  }
+`;

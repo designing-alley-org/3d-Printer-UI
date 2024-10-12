@@ -3,8 +3,8 @@ import QuoteCard from '../TabComponents/QuoteTab/QuoteTab';
 import TabComponent from '../Tab';
 import { quoteTexts } from '../../constants';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
-import { TabContent, Wrapper } from './Main';
-import { LinearProgress, Box } from '@mui/material'; // Import LinearProgress and Box from Material-UI
+import { TabContent, TabLine, Wrapper } from './styles';
+import { LinearProgress } from '@mui/material'; // Import LinearProgress and Box from Material-UI
 import CustomizeTab from '../TabComponents/CustomizeTab';
 import DeliveryPlan from '../TabComponents/CheckOut/DeliveryPlan';
 import ShippingDetails from '../TabComponents/CheckOut/Shipping';
@@ -29,6 +29,11 @@ const MainCard: React.FC = () => {
 
   return (
     <Wrapper>
+      {activeTabs.length > 0 && (
+        <TabLine>
+          <LinearProgress variant="determinate" value={getProgressValue()} />
+        </TabLine>
+      )}
       <TabComponent
         activeTabs={activeTabs}
         handleTabClick={handleTabClick}
@@ -38,11 +43,6 @@ const MainCard: React.FC = () => {
       {/* TODO: use Outlet */}
       <TabContent>
         {/* Show QuoteCard when no tabs are active */}
-        {activeTabs.length > 0 && (
-          <Box sx={{ width: '100%', paddingBottom: '1rem' }}>
-            <LinearProgress variant="determinate" value={getProgressValue()} />
-          </Box>
-        )}
         <span>
           {activeTabs.length === 0 && <QuoteCard />}
           {activeTabs[activeTabs.length - 1] === 0 && <UploadStlCard />}

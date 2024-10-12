@@ -1,5 +1,12 @@
 // import all svg
 import uploadIcon from './assets/icons/upload.svg';
+import scaleIcon from './assets/icons/scaleIcon.svg';
+import technologyIcon from './assets/icons/technologyIcon.svg';
+import materialIcon from './assets/icons/materialIcon.svg';
+import colorIcon from './assets/icons/colorIcon.svg';
+import printerIcon from './assets/icons/printerIcon.svg';
+import infillIcon from './assets/icons/infillIcon.svg';
+
 export const tabData = [
   {
     id: 0,
@@ -13,9 +20,9 @@ export const tabData = [
 
 // Data for QuoteText
 export const quoteTexts = [
-  { id: 1, label: 'UPLOAD TEXT' },
+  { id: 1, label: 'UPLOAD STL' },
   { id: 2, label: 'CUSTOMIZE' },
-  { id: 3, label: 'DELIVERY PLAN' },
+  { id: 3, label: 'QUOTE' },
   { id: 4, label: 'CHECKOUT' },
 ];
 
@@ -123,5 +130,55 @@ export const inputFields = [
     name: 'zipCode',
     type: 'text',
     placeholder: 'Enter your zip code',
+  },
+];
+export const customize = [
+  {
+    id: '1',
+    icon: scaleIcon,
+    name: 'Scale',
+  },
+  {
+    id: '2',
+    icon: technologyIcon,
+    name: 'Technology',
+  },
+  {
+    id: '3',
+    icon: materialIcon,
+    name: 'Material',
+  },
+  {
+    id: '4',
+    icon: colorIcon,
+    name: 'Colors',
+  },
+  {
+    id: '5',
+    icon: printerIcon,
+    name: 'Printers',
+  },
+  {
+    id: '6',
+    icon: infillIcon,
+    name: 'Infill',
+  },
+];
+
+export const dimensionsOption = [
+  {
+    id: 1,
+    label: 'Dimensions',
+    value: 'dimensions',
+  },
+  {
+    id: 2,
+    label: 'Ratio',
+    value: 'ratio',
+  },
+  {
+    id: 3,
+    label: 'Percentage',
+    value: 'percentage',
   },
 ];

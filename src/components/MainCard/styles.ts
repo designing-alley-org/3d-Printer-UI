@@ -6,13 +6,13 @@ export const Wrapper = styled.section`
   overflow: hidden;
   .tabrow {
     margin: unset;
-    transform: skew(-40deg);
+    transform: unset;
     li span p {
-      transform: skew(40deg);
+      transform: unset;
       font-size: 20px;
     }
     li.selected {
-      color: white;
+      background: white;
     }
     li {
       color: #0066ff;
@@ -32,8 +32,18 @@ export const Wrapper = styled.section`
 `;
 export const TabContent = styled.section`
   background: white;
-  min-height: 34rem;
-  padding: 0.2rem 2rem 2rem 2rem;
+  max-height: 38rem;
+  padding: 2rem 2rem 2rem 2rem;
   display: flex;
   flex-direction: column;
+`;
+export const TabLine = styled.section`
+  width: 100%;
+  span {
+    height: 8px;
+    background: white;
+    span {
+      background: #0047ff;
+    }
+  }
 `;

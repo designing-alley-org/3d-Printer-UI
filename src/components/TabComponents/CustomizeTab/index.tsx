@@ -1,3 +1,4 @@
+import { customize } from '../../../constants';
 import {
   Customize,
   Files,
@@ -5,16 +6,14 @@ import {
   UploadedFile,
   Wrapper,
 } from './styles';
+import React from 'react';
+import Accordion from '../../Accordion';
 
-const customizeTab = () => {
+const customizeTab: React.FC = () => {
   const elementsArray = Array(5).fill(null);
   return (
     <Wrapper>
-      <h3>
-        Set the required quantities for each file and if their sizes appear too
-        small, change the unit of measurement to inches. Click on 3D Viewer for
-        a 360° preview of your files.
-      </h3>
+      <h3>Customize your Files</h3>
       <Filescomponent>
         <Files>
           <span className="header">
@@ -27,7 +26,17 @@ const customizeTab = () => {
             ))}
           </UploadedFile>
         </Files>
-        <Customize>scale</Customize>
+        <Customize>
+          {customize.map((item, index) => (
+            <Accordion
+              key={index}
+              id={item.id}
+              icon={item.icon}
+              title={item.name}
+              content={'hi'}
+            />
+          ))}
+        </Customize>
       </Filescomponent>
     </Wrapper>
   );

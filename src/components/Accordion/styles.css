@@ -1,0 +1,26 @@
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid;
+  margin-bottom: 8px;
+  cursor: pointer;
+  .title {
+    display: flex;
+    align-items: center;
+    h2 {
+      margin: unset;
+      font-size: 20px;
+      font-weight: 400;
+      color: #525e86;
+    }
+    img {
+      width: 20px;
+      margin-right: 8px;
+    }
+  }
+  .active {
+    img {
+      rotate: 180deg;
+    }
+  }
+}
