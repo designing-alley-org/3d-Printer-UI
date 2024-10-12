@@ -23,7 +23,7 @@ function AppThemeProvider(props: IAppThemeProvider) {
         fontSize: '1.375rem',
       },
       subtitle2: {
-        fontSize: '1.125rem',
+        fontSize: '1.25rem',
       },
       body1: {
         fontSize: '1rem',

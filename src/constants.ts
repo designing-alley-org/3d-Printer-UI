@@ -60,3 +60,68 @@ export const deliveryPlans = [
     deliveryCost: '$30',
   },
 ];
+
+//Input fields for ShippingDetails
+export const inputFields = [
+  {
+    label: 'First Name',
+    name: 'firstName',
+    type: 'text',
+    placeholder: 'Enter your first name',
+  },
+  {
+    label: 'Last Name',
+    name: 'lastName',
+    type: 'text',
+    placeholder: 'Enter your last name',
+  },
+  {
+    label: 'Phone Number',
+    name: 'phoneNumber',
+    type: 'text',
+    placeholder: 'Enter your phone number',
+  },
+  {
+    label: 'Email',
+    name: 'email',
+    type: 'email',
+    placeholder: 'Enter your email',
+  },
+  {
+    label: 'Street Address',
+    name: 'streetAddress',
+    type: 'text',
+    placeholder: 'Enter your address',
+  },
+  {
+    label: 'State/Region',
+    name: 'state',
+    type: 'text',
+    placeholder: 'Enter your state',
+  },
+  {
+    label: 'Country',
+    name: 'country',
+    type: 'text',
+    placeholder: 'Enter your country',
+  },
+  {
+    label: 'Extended Address',
+    name: 'extendedAddress',
+    type: 'text',
+    placeholder: 'Enter your address',
+  },
+  {
+    label: 'City',
+    name: 'city',
+    type: 'text',
+    placeholder: 'Enter your city',
+  },
+
+  {
+    label: 'Zip Code',
+    name: 'zipCode',
+    type: 'text',
+    placeholder: 'Enter your zip code',
+  },
+];
