@@ -132,6 +132,26 @@ export const inputFields = [
     placeholder: 'Enter your zip code',
   },
 ];
+export const scaleFields = [
+  {
+    label: 'Length',
+    name: 'length',
+    type: 'text',
+    placeholder: 'Enter Length',
+  },
+  {
+    label: 'Width',
+    name: 'width',
+    type: 'text',
+    placeholder: 'Enter Width',
+  },
+  {
+    label: 'Height',
+    name: 'height',
+    type: 'text',
+    placeholder: 'Enter Height',
+  },
+];
 export const customize = [
   {
     id: '1',
@@ -180,5 +200,74 @@ export const dimensionsOption = [
     id: 3,
     label: 'Percentage',
     value: 'percentage',
+  },
+];
+export const sizeOption = [
+  {
+    id: 1,
+    label: 'MM',
+    value: 'mm',
+  },
+  {
+    id: 2,
+    label: 'IN',
+    value: 'in',
+  },
+];
+
+export const uploadDimBtnData = [
+  {
+    id: 'MM',
+    name: 'MM'
+  },
+  {
+    id: 'IN',
+    name: 'IN'
+  }
+];
+export const technologyBtnData = [
+  {
+    id: 'FDM',
+    name: 'FDM'
+  },
+  {
+    id: 'SLA',
+    name: 'SLA'
+  }
+];
+export const materialBtnData = [
+  {
+    id: 'nylons',
+    name: 'Nylons'
+  },
+  {
+    id: 'poly',
+    name: 'Polyester/PTEG'
+  },
+  {
+    id: 'abs',
+    name: 'ABS'
+  },
+  {
+    id: 'plastic',
+    name: 'Durable Plastics'
+  },
+  {
+    id: 'tpu',
+    name: 'Flexible TPU/TPE'
+  },
+  {
+    id: 'pla',
+    name: 'PLA'
+  },
+];
+export const colorBtnData = [
+  {
+    id: 'white',
+    name: 'White'
+  },
+  {
+    id: 'black',
+    name: 'Black'
   },
 ];

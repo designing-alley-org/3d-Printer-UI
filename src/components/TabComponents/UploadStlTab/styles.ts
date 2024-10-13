@@ -25,7 +25,7 @@ export const unitText: SxProps = {
 };
 
 export const unitButton: SxProps = {
-  width: '1rem',
+  width: 'fit-content',
   height: '2rem',
   color: 'black',
   borderRadius: '50px',

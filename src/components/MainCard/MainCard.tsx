@@ -1,45 +1,21 @@
-import React, { useState } from 'react';
+// import React from 'react';
 import QuoteCard from '../TabComponents/QuoteTab/QuoteTab';
-import TabComponent from '../Tab';
-import { quoteTexts } from '../../constants';
+// import TabComponent from '../Tab';
+// import { quoteTexts } from '../../constants';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
-import { TabContent, TabLine, Wrapper } from './styles';
-import { LinearProgress } from '@mui/material'; // Import LinearProgress and Box from Material-UI
+import { TabContent, Wrapper } from './styles';
 import CustomizeTab from '../TabComponents/CustomizeTab';
 import DeliveryPlan from '../TabComponents/CheckOut/DeliveryPlan';
 import ShippingDetails from '../TabComponents/CheckOut/Shipping';
 
-const MainCard: React.FC = () => {
-  const totalTabs = 4; // Total number of tabs
-  const [activeTabs, setActiveTabs] = useState<number[]>([]);
-
-  const handleTabClick = (index: number) => {
-    if (index > 0) {
-      const len = Array.from({ length: index + 1 }, (_, i) => i);
-      setActiveTabs(len);
-    } else {
-      setActiveTabs([index]);
-    }
-  };
-
-  // Calculate progress value based on the active tab
-  const getProgressValue = () => {
-    return (activeTabs.length / totalTabs) * 100;
-  };
+interface IMainCard {
+  activeTabs: number[] 
+}
+const MainCard = (props: IMainCard) => {
+  const {activeTabs} = props;
 
   return (
     <Wrapper>
-      {activeTabs.length > 0 && (
-        <TabLine>
-          <LinearProgress variant="determinate" value={getProgressValue()} />
-        </TabLine>
-      )}
-      <TabComponent
-        activeTabs={activeTabs}
-        handleTabClick={handleTabClick}
-        tabs={quoteTexts}
-        numberId={true}
-      />
       {/* TODO: use Outlet */}
       <TabContent>
         {/* Show QuoteCard when no tabs are active */}

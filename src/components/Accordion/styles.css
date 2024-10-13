@@ -1,3 +1,6 @@
+.accordion {
+  margin-bottom: 12px;
+}
 .accordion-header {
   display: flex;
   justify-content: space-between;
@@ -22,5 +25,16 @@
     img {
       rotate: 180deg;
     }
+  }
+}
+.accordion-content {
+  display: flex;
+  flex-wrap: wrap;
+  .dropdown-wrapper {
+    width: unset;
+    margin-right: 8px;
+  }
+  button {
+    margin: 4px;
   }
 }

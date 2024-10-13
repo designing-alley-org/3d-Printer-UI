@@ -3,16 +3,17 @@ import { Box, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addFile,
-  removeFile,
+  // removeFile,
   setActiveFile,
 } from '../../../store/stlFile/actions';
 import { RootState } from '../../../store/store';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
 import uploadIcon from '../../../assets/icons/upload2.svg';
+import { uploadDimBtnData } from '../../../constants';
 
 const UploadStlCard: React.FC = () => {
-  const [selectedUnit, setSelectedUnit] = useState<'MM' | 'IN'>('MM');
+  const [selectedUnit, setSelectedUnit] = useState<string>('MM');
   const dispatch = useDispatch();
   const files = useSelector((state: RootState) => state.fileState.files);
 
@@ -25,7 +26,7 @@ const UploadStlCard: React.FC = () => {
     }
   };
 
-  const handleUnitClick = (unit: 'MM' | 'IN') => {
+  const handleUnitClick = (unit: string) => {
     setSelectedUnit(unit);
   };
 
@@ -40,24 +41,17 @@ const UploadStlCard: React.FC = () => {
       <Box sx={styles.unitContainer}>
         <Box sx={styles.unitSection}>
           <Typography sx={styles.unitText}>Unit of Measurement</Typography>
-          <Button
-            onClick={() => handleUnitClick('MM')}
-            sx={{
-              ...styles.unitButton,
-              ...(selectedUnit === 'MM' && styles.activeButton),
-            }}
-          >
-            MM
-          </Button>
-          <Button
-            onClick={() => handleUnitClick('IN')}
-            sx={{
-              ...styles.unitButton,
-              ...(selectedUnit === 'IN' && styles.activeButton),
-            }}
-          >
-            IN
-          </Button>
+          {uploadDimBtnData.map((item) => (
+            <Button
+              onClick={() => handleUnitClick(item.name)}
+              sx={{
+                ...styles.unitButton,
+                ...(selectedUnit === item.name && styles.activeButton),
+              }}
+            >
+              {item.name}
+            </Button>
+          ))}
         </Box>
 
         <Box sx={styles.fileCountSection}>
