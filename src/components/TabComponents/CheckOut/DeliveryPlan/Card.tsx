@@ -28,7 +28,7 @@ export default function Card({
   };
 
   return (
-    <MainCard isActive={active === index}>
+    <MainCard $isSelected={active === index}>
       <Header>
         <Typography sx={{ color: '#0047FF' }} variant="h1">
           {deliveryName}

@@ -1,26 +1,25 @@
 import './styles.css';
 import styled from 'styled-components';
 import { Tab } from '../../types/home.types';
-// import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface ITabContainerProps {
   tabs: Tab[];
-  activeTabs: number[];
-  handleTabClick: (activeTab: number) => void;
   numberId: boolean;
 }
 
 const TabComponent = (props: ITabContainerProps) => {
-  const { tabs, activeTabs, handleTabClick, numberId } = props;
-
+  const { tabs,numberId } = props;
+  const navigate=useNavigate();
+  const {pathname}=useLocation()
   return (
     <TabWrapper>
       <ul className="tabrow">
-        {tabs.map((tab, index) => (
+        {tabs.map((tab) => (
           <li
             key={tab.id}
-            className={`${activeTabs.includes(index) ? 'selected' : ''}`}
-            onClick={() => handleTabClick(index)}
+            className={`${pathname.includes(tab.path) ? 'selected' : ''}`}
+            onClick={() =>navigate(tab.path) }
           >
             <span className="tabContent">
               {' '}

@@ -1,39 +1,44 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { ReactNode, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Footer from '../Footer';
 import Header from '../Header';
-// import Main from '../Main';
 import './styles.css';
 import { Wrap } from '../Header/styles';
 import { tabData } from '../../constants';
+import { Outlet, useLocation } from 'react-router-dom';
+import { ROUTES } from '../../routes/routes-constants';
 
-interface ILayout {
-  children?: ReactNode;
-}
-
-const index = (props: ILayout) => {
+const index = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([0]);
-
-  const handleTabClick = (index: number) => {
-    if (index > 0) {
-      const len = Array.from({ length: index + 1 }, (_, i) => i);
-      setActiveTabs(len);
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname.includes(ROUTES.DASHBOARD)) {
+      setActiveTabs([0]);
+    } else if (pathname.includes(ROUTES.GET_QUOTES)) {
+      setActiveTabs([0, 1]);
+    } else if (pathname.includes(ROUTES.SERVICES)) {
+      setActiveTabs([0, 1, 2]);
+    } else if (pathname.includes(ROUTES.ACCOUNT)) {
+      setActiveTabs([0, 1, 2, 3]);
     } else {
-      setActiveTabs([index]);
+      setActiveTabs([0, 1, 2, 3, 4]);
     }
-  };
+  }, [pathname]);
+
   return (
     <div className="rootLayout">
       <div className="Content">
         <div className="header">
-          <Header activeTabs={activeTabs} handleTabClick={handleTabClick} tabData={tabData}/>
+          <Header tabData={tabData} />
         </div>
         <div className="mainContent">
-          {activeTabs[activeTabs.length - 1] === 0 && (
+          {activeTabs[activeTabs.length - 1] === 0 ? (
             <Wrap>
               <h1 style={{ color: 'white' }}>START 3D PRINTING YOUR FUTURE</h1>
-              {props.children}
+              {<Outlet />}
             </Wrap>
+          ) : (
+            <Outlet />
           )}
         </div>
       </div>
