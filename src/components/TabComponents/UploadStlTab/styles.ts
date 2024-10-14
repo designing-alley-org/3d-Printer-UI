@@ -35,6 +35,17 @@ export const unitButton: SxProps = {
   border: 'none',
   transition: 'background-color 0.3s ease',
 };
+export const unitCButton: SxProps = {
+  width: 'fit-content',
+  height: '2rem',
+  color: '#0080FF',
+  borderRadius: '50px',
+  marginLeft: '.6rem',
+  backgroundColor: '#E8F1FF',
+  fontFamily: 'Montserrat',
+  transition: 'background-color 0.3s ease',
+  border: '0.1px solid #66A3FF',
+};
 
 export const activeButton: SxProps = {
   backgroundColor: '#0047FF', // Change color when active

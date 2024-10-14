@@ -32,9 +32,48 @@
   flex-wrap: wrap;
   .dropdown-wrapper {
     width: unset;
+    width: 11rem;
     margin-right: 8px;
+    margin-bottom: 8px;
   }
-  button {
+  .dropdown-header {
+    border-radius: 2rem;
+  }
+  .btn {
     margin: 4px;
+    width: fit-content;
+    height: 2rem;
+    color: #0080ff;
+    border-radius: 50px;
+    margin-left: 0.6rem;
+    background-color: #e8f1ff;
+    font-family: 'Montserrat';
+    border: 0.1px solid #66a3ff;
+    transition: background-color 0.3s ease;
+  }
+  .active {
+    margin: 4px;
+    width: fit-content;
+    height: 2rem;
+    border-radius: 50px;
+    margin-left: 0.6rem;
+    font-family: 'Montserrat';
+    border: 0.1px solid #66a3ff;
+    transition: background-color 0.3s ease;
+    background-color: #0047ff;
+    color: #fff;
+  }
+  .fields {
+    > div {
+      width: 170px;
+      margin-left: 8px;
+    }
+    input {
+      height: 20px;
+    }
+    fieldset {
+      border: 1px solid #66a3ff;
+      border-radius: 40px;
+    }
   }
 }

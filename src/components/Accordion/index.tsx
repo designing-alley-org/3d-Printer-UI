@@ -3,11 +3,18 @@ import React, { useState } from 'react';
 import arrow from '../../assets/icons/arrow_drop_down_circle.svg';
 import './styles.css';
 import Dropdown from '../../stories/Dropdown/Dropdown';
-import { colorBtnData, dimensionsOption, materialBtnData, scaleFields, sizeOption, technologyBtnData } from '../../constants';
-import * as styles from '../TabComponents/UploadStlTab/styles';
-import { Button } from '@mui/material';
+import {
+  colorBtnData,
+  dimensionsOption,
+  materialBtnData,
+  scaleFields,
+  sizeOption,
+  technologyBtnData,
+} from '../../constants';
+import { Button, TextField } from '@mui/material';
 import Input from '../../stories/StandardInput/Input';
 import { useForm } from 'react-hook-form';
+import PrinterCard from '../PrinterCard';
 
 // Define the type for Accordion Props
 interface AccordionProps {
@@ -19,7 +26,6 @@ interface AccordionProps {
 
 // Accordion Component
 const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
-
   const {
     register,
     formState: { errors },
@@ -48,7 +54,7 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
   const options = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     value: `${(i + 1) * 5}`,
-    label: `${(i + 1) * 5}`
+    label: `${(i + 1) * 5}`,
   }));
 
   return (
@@ -66,20 +72,17 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
         <div className="accordion-content">
           <Dropdown options={dimensionsOption} onSelect={() => {}} />
           <Dropdown options={sizeOption} onSelect={() => {}} />
-          {scaleFields.map((item) => (
-            <Input label={item.label} placeholder={item.placeholder} name={item.name} type={item.type} register={register} errors={errors} />
+            {scaleFields.map((item) => (
+            <TextField id={item.name} placeholder={item.placeholder} className='fields'/>
           ))}
         </div>
       )}
       {isOpen && id === '2' && (
-        <div className="accordion-content"> 
+        <div className="accordion-content">
           {technologyBtnData.map((item) => (
             <Button
+              className={selectedTech === item.name ? 'active' : 'btn'}
               onClick={() => handleUnitClick(item.name)}
-              sx={{
-                ...styles.unitButton,
-                ...(selectedTech === item.name && styles.activeButton),
-              }}
             >
               {item.name}
             </Button>
@@ -87,14 +90,11 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
         </div>
       )}
       {isOpen && id === '3' && (
-        <div className="accordion-content"> 
+        <div className="accordion-content">
           {materialBtnData.map((item) => (
             <Button
+              className={selectedMat === item.name ? 'active' : 'btn'}
               onClick={() => handleMatClick(item.name)}
-              sx={{
-                ...styles.unitButton,
-                ...(selectedMat === item.name && styles.activeButton),
-              }}
             >
               {item.name}
             </Button>
@@ -102,14 +102,11 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
         </div>
       )}
       {isOpen && id === '4' && (
-        <div className="accordion-content"> 
+        <div className="accordion-content">
           {colorBtnData.map((item) => (
             <Button
+              className={selectedcolor === item.name ? 'active' : 'btn'}
               onClick={() => handleColorClick(item.name)}
-              sx={{
-                ...styles.unitButton,
-                ...(selectedcolor === item.name && styles.activeButton),
-              }}
             >
               {item.name}
             </Button>
@@ -117,22 +114,12 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
         </div>
       )}
       {isOpen && id === '5' && (
-        <div className="accordion-content"> 
-          {colorBtnData.map((item) => (
-            <Button
-              onClick={() => handleColorClick(item.name)}
-              sx={{
-                ...styles.unitButton,
-                ...(selectedcolor === item.name && styles.activeButton),
-              }}
-            >
-              {item.name}
-            </Button>
-          ))}
+        <div className="accordion-content">
+          <PrinterCard name={'printer'}/>
         </div>
       )}
       {isOpen && id === '6' && (
-        <div className="accordion-content"> 
+        <div className="accordion-content">
           <Dropdown options={options} onSelect={() => {}} />
         </div>
       )}
