@@ -7,7 +7,7 @@ export const CardBox = styled.div`
 `;
 
 interface MainCardProps {
-  isActive: boolean;
+  $isSelected: boolean; // Note the $ prefix
 }
 
 export const MainCard = styled.div<MainCardProps>`
@@ -18,7 +18,7 @@ export const MainCard = styled.div<MainCardProps>`
   border: 1px solid #e8eff9;
   transition: all 0.3s ease-in-out;
   ${(props) =>
-    props.isActive
+    props.$isSelected
       ? `
         border-color: #0047FF;
         box-shadow: 0px 4px 20px rgba(0, 71, 255, 0.2);
@@ -28,6 +28,7 @@ export const MainCard = styled.div<MainCardProps>`
         box-shadow: none;
       `}
 `;
+
 
 export const Header = styled.div`
   height: 40%;

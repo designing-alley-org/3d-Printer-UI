@@ -6,24 +6,26 @@ import materialIcon from './assets/icons/materialIcon.svg';
 import colorIcon from './assets/icons/colorIcon.svg';
 import printerIcon from './assets/icons/printerIcon.svg';
 import infillIcon from './assets/icons/infillIcon.svg';
+import { ROUTES } from './routes/routes-constants';
 
 export const tabData = [
   {
     id: 0,
     label: '3D PRINT YOUR FUTURE',
+    path: 'dashboard',
   },
-  { id: 1, label: 'GET QUOTE' },
-  { id: 2, label: 'OUR SERVICES' },
-  { id: 3, label: 'YOUR ACCOUNT' },
-  { id: 4, label: 'CART' },
+  { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
+  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
+  { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
+  { id: 4, label: 'CART', path: ROUTES.CART },
 ];
 
 // Data for QuoteText
 export const quoteTexts = [
-  { id: 1, label: 'UPLOAD STL' },
-  { id: 2, label: 'CUSTOMIZE' },
-  { id: 3, label: 'QUOTE' },
-  { id: 4, label: 'CHECKOUT' },
+  { id: 1, label: 'UPLOAD STL', path: ROUTES.UPLOAD_STL },
+  { id: 2, label: 'CUSTOMIZE', path: ROUTES.CUSTOMIZE },
+  { id: 3, label: 'QUOTE', path: ROUTES.QUOTE },
+  { id: 4, label: 'CHECKOUT', path: ROUTES.CHECKOUT },
 ];
 
 // Data for Card
@@ -218,56 +220,56 @@ export const sizeOption = [
 export const uploadDimBtnData = [
   {
     id: 'MM',
-    name: 'MM'
+    name: 'MM',
   },
   {
     id: 'IN',
-    name: 'IN'
-  }
+    name: 'IN',
+  },
 ];
 export const technologyBtnData = [
   {
     id: 'FDM',
-    name: 'FDM'
+    name: 'FDM',
   },
   {
     id: 'SLA',
-    name: 'SLA'
-  }
+    name: 'SLA',
+  },
 ];
 export const materialBtnData = [
   {
     id: 'nylons',
-    name: 'Nylons'
+    name: 'Nylons',
   },
   {
     id: 'poly',
-    name: 'Polyester/PTEG'
+    name: 'Polyester/PTEG',
   },
   {
     id: 'abs',
-    name: 'ABS'
+    name: 'ABS',
   },
   {
     id: 'plastic',
-    name: 'Durable Plastics'
+    name: 'Durable Plastics',
   },
   {
     id: 'tpu',
-    name: 'Flexible TPU/TPE'
+    name: 'Flexible TPU/TPE',
   },
   {
     id: 'pla',
-    name: 'PLA'
+    name: 'PLA',
   },
 ];
 export const colorBtnData = [
   {
     id: 'white',
-    name: 'White'
+    name: 'White',
   },
   {
     id: 'black',
-    name: 'Black'
+    name: 'Black',
   },
 ];
