@@ -1,6 +1,6 @@
 .mainCardContent {
   background: white;
-  max-height: 38rem;
+  min-height: 38rem;
   padding: 2rem 2rem 2rem 2rem;
   display: flex;
   flex-direction: column;

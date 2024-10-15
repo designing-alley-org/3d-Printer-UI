@@ -8,7 +8,7 @@ import { tabData } from '../../constants';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 
-const index = () => {
+const index: React.FC = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([0]);
   const { pathname } = useLocation();
   useEffect(() => {

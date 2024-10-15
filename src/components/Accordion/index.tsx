@@ -7,13 +7,12 @@ import {
   colorBtnData,
   dimensionsOption,
   materialBtnData,
+  PrinterData,
   scaleFields,
   sizeOption,
   technologyBtnData,
 } from '../../constants';
 import { Button, TextField } from '@mui/material';
-import Input from '../../stories/StandardInput/Input';
-import { useForm } from 'react-hook-form';
 import PrinterCard from '../PrinterCard';
 
 // Define the type for Accordion Props
@@ -26,10 +25,6 @@ interface AccordionProps {
 
 // Accordion Component
 const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
-  const {
-    register,
-    formState: { errors },
-  } = useForm();
 
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [selectedMat, setSelectedMat] = useState<string>('');
@@ -115,7 +110,9 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
       )}
       {isOpen && id === '5' && (
         <div className="accordion-content">
-          <PrinterCard name={'printer'}/>
+          {PrinterData.map((item) => (
+            <PrinterCard title={item.title} subTitle={item.subTitle} desc={item.desc} data={item.data}/>
+          )) }
         </div>
       )}
       {isOpen && id === '6' && (

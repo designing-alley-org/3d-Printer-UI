@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, TextField, Typography } from '@mui/material';
 
 interface InputProps {

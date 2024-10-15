@@ -273,3 +273,41 @@ export const colorBtnData = [
     name: 'Black',
   },
 ];
+
+export const PrinterData = [
+  {
+    title: 'printer name',
+    subTitle: ' printer',
+    desc: 'Ultra High Resolution',
+    data: [
+      {
+        name: "Build Volume",
+        val: "X: 220 mm, Y: 220 mm, Z: 250 mm", 
+      },
+      {
+        name: "Layer Resolution",
+        val: 'Min: 50 microns, Max: 400 microns'
+      },
+      {
+        name: "Material Compatibility",
+        val: "PLA, ABS, TPU"
+      },
+      {
+        name: "Technology Type",
+        val: "FDM (Fused Deposition Modeling)"
+      },
+      {
+        name: "Nozzle Size",
+        val: "0.4 mm (Interchangeable)"
+      },
+      {
+        name: "Print Speed",
+        val: "0.4 mm (Interchangeable)"
+      },
+      {
+        name: "Extruders",
+        val: "Single Extruder"
+      },
+    ],
+  }
+]
