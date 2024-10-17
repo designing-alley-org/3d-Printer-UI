@@ -12,6 +12,7 @@ import ShippingDetails from '../components/TabComponents/CheckOut/Shipping';
 import DeliveryPlan from '../components/TabComponents/CheckOut/DeliveryPlan/index.tsx';
 import CheckOut from '../components/TabComponents/CheckOut/index.tsx';
 import { ROUTES } from './routes-constants.ts';
+import Quote from '../components/Quote/Card/index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -23,7 +24,7 @@ const Routing: React.FC = () => {
           <Route index element={<QuoteCard />} />
           <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
           <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
-          <Route path={ROUTES.QUOTE} element={<h1>Quote Card</h1>} />
+          <Route path={ROUTES.QUOTE} element={<Quote />} />
           <Route path={ROUTES.CHECKOUT} element={<CheckOut />}>
             <Route index element={<ShippingDetails />} />
             <Route path={ROUTES.DELIVERY_PLAN} element={<DeliveryPlan />} />
