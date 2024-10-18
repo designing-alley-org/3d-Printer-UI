@@ -4,5 +4,5 @@
   background-position: center;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  background-image: url(../src/assets/images/background-img.svg);
+  background-image: url(/src/assets/images/background-img.svg);
 }
