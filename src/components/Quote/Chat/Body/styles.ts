@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  height: 27rem;
+  min-height: 45rem;
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -9,6 +9,9 @@ export const Wrapper = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 `;
 
 interface MessageProps {
