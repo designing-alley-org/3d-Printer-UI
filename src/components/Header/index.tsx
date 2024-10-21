@@ -5,13 +5,14 @@ import { Wrapper } from './styles';
 
 interface IHeader {
   tabData: any;
+  activeTabs?: number[];
 }
 const Header = (props: IHeader) => {
   const { tabData } = props;
   return (
     <Wrapper>
       <section>
-        <TabComponent tabs={tabData} numberId={false} />
+        <TabComponent tabs={tabData} numberId={false} activeTabs={props.activeTabs}/>
       </section>
     </Wrapper>
   );

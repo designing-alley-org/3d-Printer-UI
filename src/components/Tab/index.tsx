@@ -6,19 +6,19 @@ import { useLocation, useNavigate } from 'react-router-dom';
 interface ITabContainerProps {
   tabs: Tab[];
   numberId: boolean;
+  activeTabs?: number[]; 
 }
 
 const TabComponent = (props: ITabContainerProps) => {
-  const { tabs,numberId } = props;
+  const { tabs,numberId , activeTabs} = props;
   const navigate=useNavigate();
-  const {pathname}=useLocation()
   return (
     <TabWrapper>
       <ul className="tabrow">
         {tabs.map((tab) => (
           <li
             key={tab.id}
-            className={`${pathname.includes(tab.path) ? 'selected' : ''}`}
+            className={`${activeTabs?.includes(tab.id) ? 'selected' : ''}`}
             onClick={() =>navigate(tab.path) }
           >
             <span className="tabContent">

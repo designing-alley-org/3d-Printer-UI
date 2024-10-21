@@ -29,7 +29,7 @@ const index: React.FC = () => {
     <div className="rootLayout">
       <div className="Content">
         <div className="header">
-          <Header tabData={tabData} />
+          <Header tabData={tabData} activeTabs={activeTabs}/>
         </div>
         <div className="mainContent">
           {activeTabs[activeTabs.length - 1] === 0 ? (

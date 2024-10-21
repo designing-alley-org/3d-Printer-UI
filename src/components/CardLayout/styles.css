@@ -4,7 +4,7 @@
   padding: 2rem 2rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-  border-radius: 0px 0px 40px 40px;
+  border-radius: 0px 0px 40px 0px;
 }
 .headerCard {
   border-radius: 40px 40px 0px 0px;
@@ -33,6 +33,39 @@
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+}
+.cardLayout {
+  .btn {
+    display: flex;
+    justify-content: space-between;
+    > div {
+      background-color: white;
+      width: 77%;
+      height: 3rem;
+      border-bottom-right-radius: 2rem;
+      display: flex;
+      justify-content: end;
+      &::after {
+        content: '';
+        position: absolute;
+        margin-right: -4.9rem;
+        background-color: transparent;
+        width: 5.25rem;
+        height: 2.5rem;
+        rotate: 180deg;
+        border-bottom-right-radius: 8.25rem;
+        box-shadow: 0.813rem 0.4rem 0 0 #fff;
+      }
+    }
+    .proc {
+      padding: 8px;
+      button {
+        background-color: #1e6fff;
+        border-radius: 40px;
+        width: 274px;
+      }
     }
   }
 }
