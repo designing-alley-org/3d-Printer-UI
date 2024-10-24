@@ -14,11 +14,13 @@ import CheckOut from '../components/TabComponents/CheckOut/index.tsx';
 import { ROUTES } from './routes-constants.ts';
 import Quote from '../components/Quote/Card/index.tsx';
 import PaymentDetails from '../components/TabComponents/CheckOut/PaymentDetails/index.tsx';
+import RegisterForm from '../pages/loginPage/signup.tsx';
 
 const Routing: React.FC = () => {
   return (
     <Routes>
       <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} />} />
         <Route path={ROUTES.DASHBOARD} element={<CardLayout />}>

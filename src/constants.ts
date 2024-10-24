@@ -17,7 +17,6 @@ export const tabData = [
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
   { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
-  { id: 4, label: 'CART', path: ROUTES.CART },
 ];
 
 // Data for QuoteText

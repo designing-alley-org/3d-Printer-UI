@@ -1,23 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // reducer.ts
+import { FileReducerState } from '../types';
 import {
   ADD_FILE,
   REMOVE_FILE,
   UPDATE_FILE_PROGRESS,
   SET_ACTIVE_FILE,
 } from './types';
-
-interface FileState {
-  id: string;
-  file: File;
-  name: string;
-  size: string;
-  progress: number;
-}
-
-interface FileReducerState {
-  files: FileState[];
-  activeFileId: string | null;
-}
 
 const initialState: FileReducerState = {
   files: [],
@@ -27,7 +16,7 @@ const initialState: FileReducerState = {
 const fileReducer = (state = initialState, action: any): FileReducerState => {
   switch (action.type) {
     case ADD_FILE:
-      const { file, id } = action.payload;
+      { const { file, id } = action.payload;
       return {
         ...state,
         files: [
@@ -40,7 +29,7 @@ const fileReducer = (state = initialState, action: any): FileReducerState => {
             progress: 0,
           },
         ],
-      };
+      }; }
     case REMOVE_FILE:
       return {
         ...state,

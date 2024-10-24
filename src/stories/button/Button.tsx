@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 
 interface ButtonProps {
   label: string;
-  onClick: () => void;
+  onClick: (e?:any) => void;
   width?: string; // Optional width
   height?: string; // Optional height
 }

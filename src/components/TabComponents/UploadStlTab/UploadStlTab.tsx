@@ -6,11 +6,11 @@ import {
   // removeFile,
   setActiveFile,
 } from '../../../store/stlFile/actions';
-import { RootState } from '../../../store/store';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
 import uploadIcon from '../../../assets/icons/upload2.svg';
 import { uploadDimBtnData } from '../../../constants';
+import { RootState } from '../../../store/types';
 
 const UploadStlCard: React.FC = () => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
@@ -25,7 +25,6 @@ const UploadStlCard: React.FC = () => {
       dispatch(setActiveFile(fileId)); // Set the newly added file as active
     }
   };
-
   const handleUnitClick = (unit: string) => {
     setSelectedUnit(unit);
   };
@@ -81,7 +80,7 @@ const UploadStlCard: React.FC = () => {
         </Box>
 
         <Box sx={styles.fileCardContainer}>
-          {files.map((file) => (
+          {files?.map((file) => (
             <UploadStlCardFile key={file.id} file={file} />
           ))}
         </Box>

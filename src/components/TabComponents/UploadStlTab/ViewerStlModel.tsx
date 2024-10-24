@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveFile } from '../../../store/stlFile/actions';
-import { RootState } from '../../../store/store';
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import ViewModelStl from '../../ViewStlFile/ViewModelStl';
 import arrow_left from '../../../assets/icons/arrow_left.svg';
 import arrow_right from '../../../assets/icons/arrow_right.svg';
 import cross from '../../../assets/icons/cross.svg';
 import * as styles from './ViewerStlModelStyles';
+import { RootState } from '../../../store/types';
 
 interface ViewerStlModelProps {
   isOpen: boolean;
