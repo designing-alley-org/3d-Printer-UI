@@ -73,8 +73,8 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
         <ViewerStlModel
           isOpen={isViewerOpen}
           onClose={handleViewerClose}
-          fileName={file.name}
-          data={file}
+          // fileName={file.name}
+          // data={file}
         />
       </>
     );

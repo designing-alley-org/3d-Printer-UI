@@ -43,6 +43,7 @@ const UploadStlCard: React.FC = () => {
           {uploadDimBtnData.map((item) => (
             <Button
               onClick={() => handleUnitClick(item.name)}
+              key={item.id}
               sx={{
                 ...styles.unitButton,
                 ...(selectedUnit === item.name && styles.activeButton),
