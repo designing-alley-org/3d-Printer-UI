@@ -2,9 +2,15 @@
 import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 
+const token = localStorage.getItem('token');
+
 // Create an axios instance with the base URL
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL as string,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  },
 });
 
 // Set up an interceptor to handle responses

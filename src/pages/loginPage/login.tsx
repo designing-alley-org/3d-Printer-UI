@@ -3,16 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { login } from '../../store/auth/actions';
 import { RootState } from '../../store/types';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch: AppDispatch = useDispatch();
+  const navigate=useNavigate();
   const { error } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login( username, password ));
+    dispatch(login( email, password,navigate ));
   };
 
   return (
@@ -20,12 +22,12 @@ const Login: React.FC = () => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="username">Email:</label>
           <input
             type="text"
             id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
