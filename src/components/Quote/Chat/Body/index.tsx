@@ -3,7 +3,7 @@ import { Message, MessageIcon, Wrapper } from './styles';
 import { useEffect, useRef } from 'react';
 
 interface ChatBodyProps {
-  messages: { sender: string; message: string }[];
+  messages: { sender: string; content: string }[];
 }
 
 export default function ChatBody({ messages }: ChatBodyProps) {
@@ -33,7 +33,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
               <MessageIcon $color="white" $bgColor="#0080FF">
                 3D
               </MessageIcon>
-              <Message $sender={message.sender}>{message.message}</Message>
+              <Message $sender={message.sender}>{message.content}</Message>
             </Box>
           ) : (
             <Box
@@ -44,7 +44,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                 gap: '0.5rem',
               }}
             >
-              <Message $sender={message.sender}>{message.message}</Message>
+              <Message $sender={message.sender}>{message.content}</Message>
               <MessageIcon $color="#0080FF" $bgColor="white">
                 3D
               </MessageIcon>

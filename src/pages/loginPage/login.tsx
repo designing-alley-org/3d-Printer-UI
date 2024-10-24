@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     try {
       // Send a POST request to login endpoint
       const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/login`,
+        `http://localhost:5000/login`,
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
