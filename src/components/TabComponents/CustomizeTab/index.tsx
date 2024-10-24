@@ -8,8 +8,13 @@ import {
 } from './styles';
 import React from 'react';
 import Accordion from '../../Accordion';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/types';
 
-const customizeTab: React.FC = () => {
+const CustomizeTab: React.FC = () => {
+
+  const files = useSelector((state: RootState) => state.fileState.files);
+  console.log(files);
   const elementsArray = Array(5).fill(null);
   return (
     <Wrapper>
@@ -42,4 +47,4 @@ const customizeTab: React.FC = () => {
   );
 };
 
-export default customizeTab;
+export default CustomizeTab;

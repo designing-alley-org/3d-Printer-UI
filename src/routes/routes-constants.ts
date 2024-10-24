@@ -2,6 +2,7 @@
 
 export const ROUTES = {
   LOGIN: '/login',
+  SIGNUP: '/signup',
   HOME: '/',
   DASHBOARD: 'dashboard',
   UPLOAD_STL: 'upload-stl',

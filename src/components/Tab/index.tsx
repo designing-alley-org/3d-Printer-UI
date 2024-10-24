@@ -1,7 +1,7 @@
 import './styles.css';
 import styled from 'styled-components';
 import { Tab } from '../../types/home.types';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface ITabContainerProps {
   tabs: Tab[];

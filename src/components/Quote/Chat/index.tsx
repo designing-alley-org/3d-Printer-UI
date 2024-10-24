@@ -4,7 +4,8 @@ import ChatBody from './Body';
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import axios from 'axios';
+
+import api from '../../../axiosConfig';
 
 interface Message {
   sender: string;
@@ -12,8 +13,6 @@ interface Message {
 }
 
 export default function Chat() {
-  const TOKEN =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWEzNzA4YzVmYWU4ZGU2MGQ2ODEwMCIsImlhdCI6MTcyOTc3MTMwNH0.u9n41I7GJvk2kaLM4yJKwHNH5ZUO97KJa871C2SDNbM';
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
     DefaultEventsMap
@@ -54,15 +53,7 @@ export default function Chat() {
     });
     async function fetchMessages() {
       try {
-        const response = await axios.get(
-          'http://localhost:5000/get-message/TestUser/TestMerchant',
-          {
-            headers: {
-              Authorization: `Bearer ${TOKEN}`,
-            },
-          }
-        );
-        // console.log('Fetched messages:', response.data.data.messages);
+        const response = await api.get('/get-message/TestUser/TestMerchant');
         const fetchedMessages = response.data.data.messages;
         const fetchMessages = fetchedMessages.reverse();
         setMessages(fetchMessages);
