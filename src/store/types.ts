@@ -2,6 +2,9 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  REGISTER_FAILURE,
+  REGISTER_REQUEST,
+  REGISTER_SUCCESS,
 } from './auth/action_types';
 
 export interface RootState {
@@ -60,10 +63,6 @@ export interface RegisterState {
   success: boolean;
   error: string | null;
 }
-
-export const REGISTER_REQUEST = 'REGISTER_REQUEST';
-export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
-export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
 interface RegisterRequestAction {
   type: typeof REGISTER_REQUEST;

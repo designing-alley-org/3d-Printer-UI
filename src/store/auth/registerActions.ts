@@ -2,7 +2,8 @@
 // registerActions.ts
 import { Dispatch } from "redux";
 import axios from "axios";
-import { REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE, RegisterActionTypes } from "../types";
+import {  RegisterActionTypes } from "../types";
+import { REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./action_types";
 
 export const register = (username: string, password: string) => async (dispatch: Dispatch<RegisterActionTypes>) => {
     dispatch({ type: REGISTER_REQUEST });

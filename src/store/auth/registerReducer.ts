@@ -1,5 +1,6 @@
 // registerReducer.ts
-import { RegisterState, RegisterActionTypes, REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE } from "../types";
+import { RegisterState, RegisterActionTypes} from "../types";
+import { REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./action_types";
 
 const initialState: RegisterState = {
     loading: false,
