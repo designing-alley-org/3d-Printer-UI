@@ -2,24 +2,30 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import SendIcon from '../../../../assets/images/send.svg';
 import MessageInput from '../../../../stories/MessageInput/MessageInput';
+import { Socket } from 'socket.io-client';
 
 interface ChatFooterProps {
-  setMessages: React.Dispatch<
-    React.SetStateAction<{ sender: string; message: string }[]>
-  >;
+  socket: Socket | null;
 }
+const defaultUserId = 'TestUser'; // Replace with actual user ID
+const defaultMerchantId = 'TestMerchant'; // Replace with actual merchant ID
 
-export default function ChatFooter({ setMessages }: ChatFooterProps) {
+export default function ChatFooter({ socket }: ChatFooterProps) {
   const [message, setMessage] = useState('');
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message) {
-      setMessages((prev) => [...prev, { sender: 'user', message }]);
+  const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (message.trim() !== '' && socket) {
+      // Send message based on whether the current user is a merchant or a user
+      socket.emit('sendMessage', {
+        senderId: defaultUserId,
+        receiverId: defaultMerchantId,
+        content: message,
+      });
       setMessage('');
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSendMessage}>
       <Box
         sx={{
           background: 'transparent',
