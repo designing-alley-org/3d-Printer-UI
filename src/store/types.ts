@@ -7,6 +7,11 @@ import {
   REGISTER_SUCCESS,
 } from './auth/action_types';
 
+
+import {
+  ADD_FILE,REMOVE_FILE,UPDATE_FILE_PROGRESS,SET_ACTIVE_FILE
+} from './stlFile/action_types';
+
 export interface RootState {
   auth: AuthState;
   fileState: FileReducerState;
@@ -45,18 +50,7 @@ export type AuthActionTypes =
   | LoginSuccessAction
   | LoginFailureAction;
 
-export interface FileState {
-  id: string;
-  file: File;
-  name: string;
-  size: string;
-  progress: number;
-}
 
-export interface FileReducerState {
-  files: FileState[];
-  activeFileId: string | null;
-}
 
 export interface RegisterState {
   loading: boolean;
@@ -81,3 +75,53 @@ export type RegisterActionTypes =
   | RegisterRequestAction
   | RegisterSuccessAction
   | RegisterFailureAction;
+
+
+  //====================== STL FILE ========================
+
+
+  export interface FileState {
+    id: string;
+    file: File;
+    name: string;
+    size: string;
+    progress: number;
+  }
+  
+  export interface FileReducerState {
+    files: FileState[];
+    activeFileId: string | null;
+  }
+  
+   interface AddFileAction {
+    type: typeof ADD_FILE;
+    payload: {
+      file: File;
+      id: string;
+    };
+  }
+  
+  interface RemoveFileAction {
+    type: typeof REMOVE_FILE;
+    payload: string;
+  }
+  
+  interface UpdateFileProgressAction {
+    type: typeof UPDATE_FILE_PROGRESS;
+    payload: {
+      id: string;
+      progress: number;
+    };
+  }
+  
+  interface SetActiveFileAction {
+    type: typeof SET_ACTIVE_FILE;
+    payload: string;
+  }
+  
+  export type FileActionTypes =
+    | AddFileAction
+    | RemoveFileAction
+    | UpdateFileProgressAction
+    | SetActiveFileAction;
+  

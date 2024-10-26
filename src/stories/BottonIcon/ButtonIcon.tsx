@@ -45,7 +45,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
       onClick={onClick}
       {...rest} // This spreads any additional props onto the button element
     >
-      <img src={svgPath} alt="icon" style={{ width: '100%', height: '100%' }} />
+      <img src={svgPath} alt="icon" style={{ width: '1.3rem', height: '1.3rem' }} />
     </button>
   );
 };
