@@ -22,10 +22,6 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl}) => {
     const height = Math.floor(dimensions.height);
     const width = Math.floor(dimensions.width);
     const length = Math.floor(dimensions.length);
-
-    console.log('height: ',height,'widht :', width,'length :', length);
-    console.log('STL Model Loaded with dimensions:', dimensions);
-
     setLoading(false);
   };
 

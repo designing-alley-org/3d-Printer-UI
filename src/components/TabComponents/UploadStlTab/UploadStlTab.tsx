@@ -60,7 +60,6 @@ const UploadStlCard: React.FC = () => {
     }
   }, [activeFileId]);
 
-  console.log(files);
   const handleUpdateQuantity = useCallback((fileId: string, newQuantity: number) => {
     setFiles(prevFiles => 
       prevFiles.map(file => 
