@@ -1,7 +1,7 @@
 import fileReducer from './stlFile/reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { authReducer } from './auth/reducer';
-import { registerReducer } from './auth/RegisterReducer';
+import { registerReducer } from './auth/registerReducer';
 
 const store = configureStore({
   reducer: {

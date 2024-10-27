@@ -1,46 +1,83 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, LinearProgress } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { removeFile, setActiveFile } from '../../../store/stlFile/actions';
+
+// UploadStlCardFile.tsx
+import React, { useState, useEffect, useCallback } from 'react';
+import { Box, Typography, LinearProgress } from '@mui/material';
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import ViewerStlModel from './ViewerStlModel';
 import * as styles from './UploadStlCardFileStyle';
 import cross from '../../../assets/icons/cross.svg';
-import ViewModelStl from '../../ViewStlFile/ViewModelStl';
+import plus from '../../../assets/icons/plus.svg';
+import minus from '../../../assets/icons/minus.svg';
+import vector from '../../../assets/icons/Vector.svg';
+import ViewModelStl from '../../ViewStlFile/index';
+
+interface FileData {
+  id: string;
+  name: string;
+  size: string;
+  progress: number;
+  file: File;
+  quantity: number;
+}
 
 interface UploadStlCardFileProps {
-  file: {
-    id: string;
-    name: string;
-    size: string;
-    progress: number;
-    file: File;
-  };
+  file: FileData;
+  onRemove: (fileId: string) => void;
+  onSetActiveFile: (fileId: string) => void;
+  onUpdateQuantity: (fileId: string, quantity: number) => void;
+  files: FileData[];
+  activeFileId: string | null;
 }
 
 const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
-  ({ file }) => {
+  ({ file, onRemove, onSetActiveFile, onUpdateQuantity, files, activeFileId }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
-    const dispatch = useDispatch();
+    const [fileUrl, setFileUrl] = useState<string>('');
 
-    const handleViewerOpen = () => {
+    useEffect(() => {
+      const url = URL.createObjectURL(file.file);
+      setFileUrl(url);
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }, [file.file]);
+
+    const handleQuantityChange = useCallback((operation: 'increase' | 'decrease') => {
+      const minLimit = 1;
+      const maxLimit = 999;
+      const newQuantity = operation === 'increase' 
+        ? Math.min(file.quantity + 1, maxLimit)
+        : Math.max(file.quantity - 1, minLimit);
+      
+      if (newQuantity !== file.quantity) {
+        onUpdateQuantity(file.id, newQuantity);
+      }
+    }, [file.quantity, file.id, onUpdateQuantity]);
+
+    const handleViewerOpen = useCallback(() => {
       setViewerOpen(true);
-      dispatch(setActiveFile(file.id));
-    };
-    const handleViewerClose = () => setViewerOpen(false);
-    const handleRemove = () => dispatch(removeFile(file.id));
+      onSetActiveFile(file.id);
+    }, [onSetActiveFile, file.id]);
 
+    const handleViewerClose = useCallback(() => {
+      setViewerOpen(false);
+    }, []);
+
+    const handleRemove = useCallback((e: React.MouseEvent) => {
+      e.stopPropagation();
+      onRemove(file.id);
+    }, [onRemove, file.id]);
+   
     return (
       <>
         <Box sx={styles.container}>
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
-              {/* Priview Stl file */}
-              <ViewModelStl fileUrl={URL.createObjectURL(file.file)} />
+              <ViewModelStl fileUrl={fileUrl} />
+              <Box sx={styles.viewButton} onClick={handleViewerOpen}>
+                <img src={vector} alt="View_stl_model" />
+              </Box>
             </Box>
-            <Button sx={styles.viewerButton} onClick={handleViewerOpen}>
-              <Typography sx={styles.viewerButtonText}>3D VIEWER</Typography>
-            </Button>
           </Box>
           <Box sx={styles.infoBox}>
             <Typography sx={styles.fileName}>{file.name}</Typography>
@@ -58,23 +95,43 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
             <Box sx={styles.quantityHeader}>
               <Typography sx={styles.fileName}>Quantity</Typography>
               <ButtonIcon
-                width="4rem"
+                width="3rem"
                 height="3rem"
                 svgPath={cross}
                 onClick={handleRemove}
               />
             </Box>
             <Box sx={styles.quantityValueBox}>
-              <Typography sx={styles.quantityValue}>1</Typography>
+              <ButtonIcon
+                width="2rem"
+                height="2rem" 
+                bgColor='#DDE9FC'
+                border='1px solid #66A3FF'
+                style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+                svgPath={minus}
+                onClick={() => handleQuantityChange('decrease')}
+                disabled={file.quantity <= 1}
+              />
+              <Typography sx={styles.quantityValue}>{file.quantity}</Typography>
+              <ButtonIcon
+                width="2rem"
+                height="2rem"
+                border='1px solid #66A3FF'
+                bgColor='#DDE9FC'
+                style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+                svgPath={plus}
+                onClick={() => handleQuantityChange('increase')}
+                disabled={file.quantity >= 999}
+              />
             </Box>
           </Box>
         </Box>
-        {/* POP up STl */}
         <ViewerStlModel
           isOpen={isViewerOpen}
           onClose={handleViewerClose}
-          // fileName={file.name}
-          // data={file}
+          files={files}
+          activeFileId={activeFileId}
+          onSetActiveFile={onSetActiveFile}
         />
       </>
     );

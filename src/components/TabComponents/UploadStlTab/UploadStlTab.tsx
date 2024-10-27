@@ -1,33 +1,74 @@
-import React, { useState } from 'react';
+// UploadStlTab.tsx
+import React, { useState, useCallback, useRef } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  addFile,
-  // removeFile,
-  setActiveFile,
-} from '../../../store/stlFile/actions';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
 import uploadIcon from '../../../assets/icons/upload2.svg';
 import { uploadDimBtnData } from '../../../constants';
-import { RootState } from '../../../store/types';
+
+interface FileData {
+  id: string;
+  name: string;
+  size: string;
+  progress: number;
+  file: File;
+  quantity: number;
+}
 
 const UploadStlCard: React.FC = () => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
-  const dispatch = useDispatch();
-  const files = useSelector((state: RootState) => state.fileState.files);
+  const [files, setFiles] = useState<FileData[]>([]);
+  const [activeFileId, setActiveFileId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (file) {
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files;
+
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      if (file.type !== 'application/vnd.ms-pki.stl' && !file.name.toLowerCase().endsWith('.stl')) {
+        alert('Please upload only STL files');
+        return;
+      }
+
       const fileId = `${file.name}_${Date.now()}`;
-      dispatch(addFile(file, fileId));
-      dispatch(setActiveFile(fileId)); // Set the newly added file as active
+      const newFile: FileData = {
+        id: fileId,
+        name: file.name,
+        size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+        progress: 73,
+        file: file,
+        quantity: 1,
+      };
+      
+      setFiles(prevFiles => [...prevFiles, newFile]);
+      setActiveFileId(fileId);
     }
-  };
-  const handleUnitClick = (unit: string) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, []);
+
+  const handleUnitClick = useCallback((unit: string) => {
     setSelectedUnit(unit);
-  };
+  }, []);
+
+  const handleRemoveFile = useCallback((fileId: string) => {
+    setFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
+    if (activeFileId === fileId) {
+      setActiveFileId(null);
+    }
+  }, [activeFileId]);
+
+  const handleUpdateQuantity = useCallback((fileId: string, newQuantity: number) => {
+    setFiles(prevFiles => 
+      prevFiles.map(file => 
+        file.id === fileId 
+          ? { ...file, quantity: newQuantity }
+          : file
+      )
+    );
+  }, []);
 
   return (
     <Box>
@@ -71,6 +112,7 @@ const UploadStlCard: React.FC = () => {
               style={styles.uploadIcon as React.CSSProperties}
             />
             <input
+              ref={fileInputRef}
               type="file"
               accept=".stl"
               onChange={handleFileUpload}
@@ -81,8 +123,16 @@ const UploadStlCard: React.FC = () => {
         </Box>
 
         <Box sx={styles.fileCardContainer}>
-          {files?.map((file) => (
-            <UploadStlCardFile key={file.id} file={file} />
+          {files.map((file) => (
+            <UploadStlCardFile 
+              key={file.id} 
+              file={file}
+              onRemove={handleRemoveFile}
+              onSetActiveFile={setActiveFileId}
+              onUpdateQuantity={handleUpdateQuantity}
+              files={files}
+              activeFileId={activeFileId}
+            />
           ))}
         </Box>
       </Box>

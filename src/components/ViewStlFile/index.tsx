@@ -1,77 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import ViewModelStl from './ViewModelStl';
-import './layout.css';
+import React, { useRef, useState } from 'react';
+import { StlViewer } from 'react-stl-viewer';
+import './styles.css';
+interface ViewModelStlProps {
+  fileUrl: string;
+}
 
-const Layout: React.FC = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [fileUrl, setFileUrl] = useState<string>('');
-  const [modelInfo, setModelInfo] = useState({
-    name: '',
-    size: '',
-    volume: '',
-  });
+const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl}) => {
+  const [zoom, setZoom] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [color, setColor] = useState('#808080');
+  const viewerRef = useRef(null);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = event.target.files?.[0];
-    if (uploadedFile) {
-      setFile(uploadedFile);
-      const fileURL = URL.createObjectURL(uploadedFile);
-      setFileUrl(fileURL);
-      setModelInfo({
-        name: uploadedFile.name,
-        size: '100 x 100 x 100 mm',
-        volume: '500 mm³', // Dummy volume
-      });
-    }
+  const style = {
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  };
+  const handleFinishLoading = (dimensions: any) => {
+  
+    const height = Math.floor(dimensions.height);
+    const width = Math.floor(dimensions.width);
+    const length = Math.floor(dimensions.length);
+    setLoading(false);
   };
 
-  // Clean up the object
-  useEffect(() => {
-    return () => {
-      URL.revokeObjectURL(fileUrl);
-    };
-  }, [fileUrl]);
+  const handleZoomIn = () => {
+    setZoom((prevZoom) => Math.min(prevZoom + 0.1, 2));
+  };
+
+  const handleZoomOut = () => {
+    setZoom((prevZoom) => Math.max(prevZoom - 0.1, 0.5));
+  };
+
+  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setColor(event.target.value);
+  };
 
   return (
-    <div className="container">
-      <div className="main-content">
-        <div className="upload-section">
-          {!file ? (
-            <div className="upload-box">
-              <input
-                type="file"
-                accept=".stl"
-                onChange={handleFileUpload}
-                className="file-input"
-              />
-              <p className="upload-text">
-                Drop your STL file here or{' '}
-                <span className="browse-link">browse your computer</span>
-              </p>
-            </div>
-          ) : (
-            <div className="viewer-box">
-              <ViewModelStl fileUrl={fileUrl} />
-            </div>
-          )}
-          {file && (
-            <button className="upload-btn" onClick={() => setFile(null)}>
-              Upload New STL
-            </button>
-          )}
+    <div className="relative" style={{ width: '100%', height: '100%' }}>
+      {loading && (
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <svg viewBox="25 25 50 50">
+          <circle r="20" cy="50" cx="50"></circle>
+        </svg>
         </div>
+      )}
+      <StlViewer
+        style={style}
+        orbitControls
+        shadows
+        url={fileUrl}
+        onFinishLoading={handleFinishLoading}
+        modelProps={{ scale: zoom, color }}
+        ref={viewerRef}
+      />
 
-        <div className="form-section">
-          {file && (
-            <div className="model-info-box">
-              <p className="model-info">Name: {modelInfo.name}</p>
-              <p className="model-info">Size: {modelInfo.size}</p>
-            </div>
-          )}
-        </div>
-      </div>
+      {/* <div className="absolute bottom-4 right-4 flex space-x-2">
+        <button onClick={handleZoomIn} className="zoom-btn">
+          +
+        </button>
+        <button onClick={handleZoomOut} className="zoom-btn">
+          -
+        </button>
+      </div> */}
+
+      {/* <div className="absolute top-4 left-4">
+        <input
+          type="color"
+          value={color}
+          onChange={handleColorChange}
+          className="border rounded p-1"
+          title="Pick a color"
+        />
+      </div> */}
     </div>
   );
 };
 
-export default Layout;
+export default ViewModelStl;
