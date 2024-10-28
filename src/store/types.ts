@@ -16,6 +16,7 @@ export interface RootState {
   auth: AuthState;
   fileState: FileReducerState;
   register: RegisterState;
+  printerDetails: IPrinterDetails[];
 }
 
 // types.ts
@@ -125,3 +126,15 @@ export type RegisterActionTypes =
     | UpdateFileProgressAction
     | SetActiveFileAction;
   
+export interface IPrinterDetails {
+  printerName: string;
+  buildVolume: string;
+  layerResolution: string;
+  materialCompatibility: string;
+  technologyType: string;
+  nozzleSize: string;
+  printSpeed: string;
+  extruders: number;
+  maxBedHeat: string;
+  heatSinkSize: string;
+}

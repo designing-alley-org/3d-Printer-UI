@@ -44,6 +44,12 @@ export const cardItems = [
   {
     id: '3.',
     icon: uploadIcon, // Use the imported SVG icon
+    upperText: 'QUOTE',
+    bottomText: 'upload one or more STL files and start customizing',
+  },
+  {
+    id: '4.',
+    icon: uploadIcon, // Use the imported SVG icon
     upperText: 'DELIVERY',
     bottomText: 'upload one or more STL files and start customizing',
   },
@@ -280,33 +286,76 @@ export const PrinterData = [
     desc: 'Ultra High Resolution',
     data: [
       {
-        name: "Build Volume",
-        val: "X: 220 mm, Y: 220 mm, Z: 250 mm", 
+        name: 'Build Volume',
+        val: 'X: 220 mm, Y: 220 mm, Z: 250 mm',
       },
       {
-        name: "Layer Resolution",
-        val: 'Min: 50 microns, Max: 400 microns'
+        name: 'Layer Resolution',
+        val: 'Min: 50 microns, Max: 400 microns',
       },
       {
-        name: "Material Compatibility",
-        val: "PLA, ABS, TPU"
+        name: 'Material Compatibility',
+        val: 'PLA, ABS, TPU',
       },
       {
-        name: "Technology Type",
-        val: "FDM (Fused Deposition Modeling)"
+        name: 'Technology Type',
+        val: 'FDM (Fused Deposition Modeling)',
       },
       {
-        name: "Nozzle Size",
-        val: "0.4 mm (Interchangeable)"
+        name: 'Nozzle Size',
+        val: '0.4 mm (Interchangeable)',
       },
       {
-        name: "Print Speed",
-        val: "0.4 mm (Interchangeable)"
+        name: 'Print Speed',
+        val: '0.4 mm (Interchangeable)',
       },
       {
-        name: "Extruders",
-        val: "Single Extruder"
+        name: 'Extruders',
+        val: 'Single Extruder',
       },
     ],
-  }
-]
+  },
+];
+
+export const footerData = [
+  {
+    name: 'ABOUT US',
+    url: '',
+  },
+  {
+    name: 'FACEBOOK',
+    url: '',
+  },
+  {
+    name: 'HOW IT WORKS',
+    url: '',
+  },
+  {
+    name: 'INSTAGRAM',
+    url: '',
+  },
+  {
+    name: 'BLOGS',
+    url: '',
+  },
+  {
+    name: 'TWITTER',
+    url: '',
+  },
+  {
+    name: 'CONTACT US',
+    url: '',
+  },
+  {
+    name: 'YOUTUBE',
+    url: '',
+  },
+  {
+    name: 'NEWSLETTER',
+    url: '',
+  },
+  {
+    name: 'LINKEDIN',
+    url: '',
+  },
+];

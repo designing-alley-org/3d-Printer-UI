@@ -18,15 +18,14 @@ export const upperQuoteText: SxProps = {
 
 export const instantQuoteText: SxProps = {
   fontFamily: 'Michroma',
-  fontWeight: 400,
-  fontSize: '1.25rem',
-  color: '#0047FF',
+  fontSize: '32px',
+  color: '#1E6FFF',
   padding: '4rem 0rem',
 };
 
 export const cardBox: SxProps = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
+  gridTemplateColumns: 'repeat(4, 1fr)',
   gap: '20px',
 };
 

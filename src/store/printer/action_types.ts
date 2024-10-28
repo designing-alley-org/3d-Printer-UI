@@ -1,0 +1,6 @@
+// action_types.ts
+export const GET_PRINTER = 'GET_PRINTER';
+export const GET_PRINTER_SUCCESS = 'GET_PRINTER_SUCCESS';
+export const UPDATE_PRINTER = 'UPDATE_PRINTER';
+export const DELETE_PRINTER = 'DELETE_PRINTER';
+export const GET_PRINTER_FAILURE = 'GET_PRINTER_FAILURE';

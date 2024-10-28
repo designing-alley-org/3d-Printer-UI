@@ -11,7 +11,7 @@ const QuoteCard = () => {
     <Wrapper>
       <Box sx={styles.content}>
         <Typography sx={styles.instantQuoteText}>
-          GET INSTANT QUOTE START 3D PRINTING
+        Get Instant live quotes from our merchants!
         </Typography>
 
         <Box sx={styles.cardBox}>
