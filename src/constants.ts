@@ -7,7 +7,18 @@ import colorIcon from './assets/icons/colorIcon.svg';
 import printerIcon from './assets/icons/printerIcon.svg';
 import infillIcon from './assets/icons/infillIcon.svg';
 import { ROUTES } from './routes/routes-constants';
+import cross from './assets/icons/cross.svg';
+import plus from './assets/icons/plus.svg';
+import minus from './assets/icons/minus.svg';
+import vector from './assets/icons/Vector.svg';
+import arrow_left from './assets/icons/arrow_left.svg';
+import arrow_right from './assets/icons/arrow_right.svg';
 
+
+// export svg
+export { uploadIcon, cross, plus, minus, vector, arrow_left, arrow_right };
+
+// Data for Tab
 export const tabData = [
   {
     id: 0,

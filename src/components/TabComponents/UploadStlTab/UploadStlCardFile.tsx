@@ -1,21 +1,21 @@
-
-// UploadStlCardFile.tsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, LinearProgress } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import ViewerStlModel from './ViewerStlModel';
 import * as styles from './UploadStlCardFileStyle';
-import cross from '../../../assets/icons/cross.svg';
-import plus from '../../../assets/icons/plus.svg';
-import minus from '../../../assets/icons/minus.svg';
-import vector from '../../../assets/icons/Vector.svg';
+import { cross, plus, minus, vector } from '../../../constants';
 import ViewModelStl from '../../ViewStlFile/index';
+
+interface ModelDimensions {
+  height: number;
+  width: number;
+  length: number;
+}
 
 interface FileData {
   id: string;
   name: string;
-  size: string;
-  progress: number;
+  dimensions: ModelDimensions;
   file: File;
   quantity: number;
 }
@@ -25,15 +25,27 @@ interface UploadStlCardFileProps {
   onRemove: (fileId: string) => void;
   onSetActiveFile: (fileId: string) => void;
   onUpdateQuantity: (fileId: string, quantity: number) => void;
+  onUpdateDimensions: (fileId: string, dimensions: ModelDimensions) => void;
   files: FileData[];
   activeFileId: string | null;
+  selectedUnit: string;
+  convertDimensions: (dimensions: ModelDimensions, unit: string) => ModelDimensions;
 }
 
 const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
-  ({ file, onRemove, onSetActiveFile, onUpdateQuantity, files, activeFileId }) => {
+  ({ 
+    file, 
+    onRemove, 
+    onSetActiveFile, 
+    onUpdateQuantity, 
+    onUpdateDimensions,
+    files, 
+    activeFileId,
+    selectedUnit,
+    convertDimensions
+  }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
     const [fileUrl, setFileUrl] = useState<string>('');
-
     useEffect(() => {
       const url = URL.createObjectURL(file.file);
       setFileUrl(url);
@@ -67,13 +79,18 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
       e.stopPropagation();
       onRemove(file.id);
     }, [onRemove, file.id]);
+
+    const displayDimensions = convertDimensions(file.dimensions, selectedUnit);
    
     return (
       <>
         <Box sx={styles.container}>
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
-              <ViewModelStl fileUrl={fileUrl} />
+              <ViewModelStl 
+                fileUrl={fileUrl} 
+                onDimensionsCalculated={(dimensions) => onUpdateDimensions(file.id, dimensions)}
+              />
               <Box sx={styles.viewButton} onClick={handleViewerOpen}>
                 <img src={vector} alt="View_stl_model" />
               </Box>
@@ -81,15 +98,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
           </Box>
           <Box sx={styles.infoBox}>
             <Typography sx={styles.fileName}>{file.name}</Typography>
-            <Box sx={{ display: 'flex', padding: '1rem 0' }}>
-              <Typography sx={styles.sizeLabel}>Size</Typography>
-              <Typography sx={styles.sizeValue}>{file.size}</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem 0' }}>
+              <Typography sx={styles.dimensionLabel}>Size: H x W x L </Typography>
+              <Typography sx={styles.dimensionsValue}>
+              ({selectedUnit}) : {displayDimensions.height} x  {displayDimensions.width} x  {displayDimensions.length}
+              </Typography>
             </Box>
-            <LinearProgress
-              variant="determinate"
-              value={file.progress}
-              sx={styles.progressBar}
-            />
           </Box>
           <Box sx={styles.quantityBox}>
             <Box sx={styles.quantityHeader}>
@@ -98,7 +112,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 width="3rem"
                 height="3rem"
                 svgPath={cross}
-                onClick={handleRemove}
+                onClick={() => handleRemove}
               />
             </Box>
             <Box sx={styles.quantityValueBox}>

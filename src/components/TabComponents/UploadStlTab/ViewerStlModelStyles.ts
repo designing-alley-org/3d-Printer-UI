@@ -84,6 +84,14 @@ export const viewModel = {
   height: '85%',
 };
 
+export const navigationContainer = {
+  display: 'flex',
+  justifyContent: 'space-evenly',
+  alignItems: 'center',
+  width: '100%',
+  height: '10%',
+};
+
 export const fileName = {
   fontFamily: 'Michroma',
   fontSize: '2rem',

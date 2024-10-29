@@ -1,6 +1,5 @@
 import { SxProps } from '@mui/material';
 
-// Container for the entire component
 export const container: SxProps = {
   height: '100%',
   display: 'flex',
@@ -9,7 +8,6 @@ export const container: SxProps = {
   padding: '.7rem',
 };
 
-// Style for the first box containing the view and 3D button
 export const viewBox: SxProps = {
   width: '20%',
 };
@@ -56,31 +54,21 @@ export const fileName: SxProps = {
   color: '#0047FF',
 };
 
-export const sizeLabel: SxProps = {
+export const dimensionLabel: SxProps = {
   fontFamily: 'Montserrat',
   fontSize: '1rem',
-  fontWeight: '500',
-  color: '#759BFF',
+  fontWeight: '700',
+  color: '#001331',
   marginRight: '.9rem',
 };
 
-export const sizeValue: SxProps = {
+export const dimensionsValue: SxProps = {
   fontFamily: 'Montserrat',
   fontSize: '1rem',
   fontWeight: '500',
-  color: '#0047FF',
+  color: '#001331'
 };
 
-export const progressBar: SxProps = {
-  height: '.5rem',
-  borderRadius: '1rem',
-  color: '#0066FF',
-  bgcolor: '#D9D9D9',
-  width: '6rem',
-  '& .MuiLinearProgress-bar': {
-    backgroundColor: '#0066FF', 
-  },
-};
 export const quantityBox: SxProps = {
   width: '40%',
 };
