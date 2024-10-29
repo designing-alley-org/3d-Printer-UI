@@ -1,41 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import { useState } from 'react';
-// import arrow from '../../assets/icons/arrow_drop_down_circle.svg';
-import { Body, Header, Wrapper } from './styles';
+import { PrinterData } from "../../constants";
+import PrinterLibraryCard from "./printerLibraryCard";
 
-interface IPrinterCard {
-  title: string;
-  subTitle: string;
-  desc: string;
-  data: any;
-}
-const PrinterLibrary = (props: IPrinterCard) => {
-  const printerDataF = (item: any) => {
-    return (
-      <span className="data" key={item.name}>
-        <span className="head">
-          <span className="dot">.</span>
-          <span className="name">{item.name}</span>
-        </span>
-        <span className="desc">{item.val}</span>
-      </span>
-    );
-  };
-
+const PrinterLibrary = () => {
   return (
-    <Wrapper>
-      <Header>
-        <section>
-          <span className="title">{props.title}</span>
-          <span className="subTitle">{props.subTitle}</span>
-          <span className="desc">{props.desc}</span>
-        </section>
-      </Header>
-      <Body>
-        <section>{props.data.map((it: any) => printerDataF(it))}</section>
-      </Body>
-    </Wrapper>
+    <>
+      <h1>PRINTER LIBRARY</h1>
+      <div>
+        {PrinterData.map((item) => (
+          <PrinterLibraryCard
+            title={item.title}
+            subTitle={item.subTitle}
+            desc={item.desc}
+            data={item.data}
+          />
+        ))}
+      </div>
+    </>
   );
 };
-
 export default PrinterLibrary;

@@ -15,6 +15,7 @@ import { ROUTES } from './routes-constants.ts';
 import Quote from '../components/Quote/Card/index.tsx';
 import PaymentDetails from '../components/TabComponents/CheckOut/PaymentDetails/index.tsx';
 import RegisterForm from '../pages/loginPage/signup.tsx';
+import DashboardLayout from '../components/DashboardLayout/index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -23,7 +24,18 @@ const Routing: React.FC = () => {
       <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} />} />
-        <Route path={ROUTES.DASHBOARD} element={<CardLayout />}>
+        <Route path={ROUTES.DASHBOARD} element={<DashboardLayout />}>
+          {/* <Route index element={<QuoteCard />} />
+          <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
+          <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
+          <Route path={ROUTES.QUOTE} element={<Quote />} />
+          <Route path={ROUTES.CHECKOUT} element={<CheckOut />}>
+            <Route index element={<ShippingDetails />} />
+            <Route path={ROUTES.DELIVERY_PLAN} element={<DeliveryPlan />} />
+            <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
+          </Route> */}
+        </Route>
+        <Route path={ROUTES.GET_QUOTES} element={<CardLayout />}>
           <Route index element={<QuoteCard />} />
           <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
           <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
@@ -34,10 +46,8 @@ const Routing: React.FC = () => {
             <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
           </Route>
         </Route>
-        <Route path={ROUTES.GET_QUOTES} element={<h1>Get Quote</h1>} />
         <Route path={ROUTES.SERVICES} element={<h1>Services</h1>} />
         <Route path={ROUTES.ACCOUNT} element={<h1>Account</h1>} />
-        <Route path={ROUTES.CART} element={<h1>Cart</h1>} />
         <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
       </Route>
 

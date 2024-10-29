@@ -19,7 +19,7 @@ const CardLayout = () => {
       setActiveTabs([0]);
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1]);
-    } else if (pathname.includes(ROUTES.QUOTE)) {
+    } else if (pathname.includes(`get-quotes/quote`)) {
       setActiveTabs([0, 1, 2]);
     } else if (pathname.includes(ROUTES.CHECKOUT)) {
       setActiveTabs([0, 1, 2, 3]);
@@ -34,7 +34,7 @@ const CardLayout = () => {
   };
 
   const onProceed = () => {
-    if (pathname.includes(ROUTES.DASHBOARD)) {
+    if (pathname === '/get-quotes') {
       setActiveTabs([0]);
       navigate(ROUTES.UPLOAD_STL);
     }
@@ -44,7 +44,7 @@ const CardLayout = () => {
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
       navigate(ROUTES.QUOTE);
-    } else if (pathname.includes(ROUTES.QUOTE)) {
+    } else if (pathname === '/get-quotes/quote') {
       setActiveTabs([0, 1, 2, 3]);
       navigate(ROUTES.CHECKOUT);
     }

@@ -1,15 +1,14 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.section`
-  margin: 0 80px;
-  width: 60%;
+  margin: 4rem 5rem;
   h2 {
-    color: #0066ff;
     font-family: Montserrat;
     font-size: 20px;
     font-weight: 400;
     line-height: 24.38px;
     text-align: left;
+    width: 35%;
   }
   h1 {
     color: #101a36;

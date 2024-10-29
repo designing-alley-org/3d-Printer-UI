@@ -32,7 +32,7 @@ const index: React.FC = () => {
           <Header tabData={tabData} activeTabs={activeTabs} />
         </div>
         <div className="mainContent">
-          {activeTabs[activeTabs.length - 1] === 0 ? (
+          {activeTabs[activeTabs.length - 1] === 1 ? (
             <Wrap>
               <h1 style={{ color: 'white' }}>START 3D PRINTING YOUR FUTURE</h1>
               {<Outlet />}
