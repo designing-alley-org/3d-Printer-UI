@@ -1,18 +1,15 @@
-// ViewerStlModel.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import ViewModelStl from '../../ViewStlFile/index';
-import arrow_left from '../../../assets/icons/arrow_left.svg';
-import arrow_right from '../../../assets/icons/arrow_right.svg';
-import cross from '../../../assets/icons/cross.svg';
+import { arrow_left, arrow_right, cross } from '../../../constants';
 import * as styles from './ViewerStlModelStyles';
+
+
 
 interface FileData {
   id: string;
   name: string;
-  size: string;
-  progress: number;
   file: File;
   quantity: number;
 }
@@ -30,7 +27,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
   onClose, 
   files, 
   activeFileId, 
-  onSetActiveFile 
+  onSetActiveFile,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
@@ -93,17 +90,14 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
           <Box sx={styles.viewModel}>
             {currentFileUrl && <ViewModelStl fileUrl={currentFileUrl} />}
           </Box>
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            width: '80%',
-            height: '15%',
-          }}>
+          <Box sx={styles.navigationContainer}>
             <ButtonIcon
               svgPath={arrow_left}
               onClick={() => handleNavigate('previous')}
               disabled={files.length <= 1}
+              width="3rem"
+              height="3rem"
+              style={{ opacity: files.length <= 1 ? 0.5 : 1 }}
             />
             <Typography sx={styles.fileName}>
               {currentFile.name}
@@ -112,6 +106,9 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
               svgPath={arrow_right}
               onClick={() => handleNavigate('next')}
               disabled={files.length <= 1}
+              width="3rem"
+              height="3rem"
+              style={{ opacity: files.length <= 1 ? 0.5 : 1 }}
             />
           </Box>
         </Box>

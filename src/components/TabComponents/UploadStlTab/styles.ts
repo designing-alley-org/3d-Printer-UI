@@ -1,5 +1,11 @@
 import { SxProps } from '@mui/material';
 
+export const mainHeader : SxProps = {
+  margin: '1rem 0rem',
+  fontSize:'2rem',
+  fontWeight: 600,
+}
+
 export const infoText: SxProps = {
   fontFamily: 'Montserrat',
   fontWeight: 400,
@@ -35,17 +41,7 @@ export const unitButton: SxProps = {
   border: 'none',
   transition: 'background-color 0.3s ease',
 };
-export const unitCButton: SxProps = {
-  width: 'fit-content',
-  height: '2rem',
-  color: '#0080FF',
-  borderRadius: '50px',
-  marginLeft: '.6rem',
-  backgroundColor: '#E8F1FF',
-  fontFamily: 'Montserrat',
-  transition: 'background-color 0.3s ease',
-  border: '0.1px solid #66A3FF',
-};
+
 
 export const activeButton: SxProps = {
   backgroundColor: '#0047FF', // Change color when active
@@ -84,6 +80,9 @@ export const filesBox: SxProps = {
 
 export const fileUploadContainer: SxProps = {
   margin: '1rem 0',
+  borderRadius: '1rem',
+  backgroundColor: '#DDE9FC',
+  padding: '1rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -91,14 +90,22 @@ export const fileUploadContainer: SxProps = {
 };
 
 export const uploadBox: SxProps = {
-  width: '6.2rem',
-  height: '6.2rem',
+  margin: '1rem 0',
+  width: '5rem',
+  height: '5rem',
   borderRadius: '50%',
-  backgroundColor: '#DCE3FF',
+  backgroundColor: '#FFFFFF',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
+  cursor: 'pointer',  
+  transition: 'background-color 0.3s ease, transform 0.3s ease', 
+
+  '&:hover': {
+    backgroundColor: '#f0f0f0', // Change background on hover
+    transform: 'scale(1.1)', // Slight scale effect on hover
+  },
 };
 
 export const hiddenInput: SxProps = {
@@ -108,12 +115,25 @@ export const hiddenInput: SxProps = {
   cursor: 'pointer',
 };
 
+export const uploadIcon: SxProps = {
+  width: '2rem',
+  height: '2rem',
+  fontSize: '2.5rem',
+  position: 'absolute',
+  top:0,
+  bottom:0,
+  left:0,
+  right:0,
+  margin: 'auto',
+};
+
 export const uploadText: SxProps = {
-  fontFamily: 'Montserrat',
-  fontSize: '1rem',
+  fontFamily: 'Michroma',
+  fontSize: '1.4rem',
   fontWeight: 400,
   textAlign: 'center',
-  color: '#0066FF',
+  color: '#1E6FFF',
+
 };
 
 export const fileCardContainer: SxProps = {
@@ -143,8 +163,3 @@ export const fileCardContainer: SxProps = {
   },
 };
 
-export const uploadIcon: SxProps = {
-  fontSize: '2.5rem',
-  position: 'absolute',
-  left: '2rem',
-};
