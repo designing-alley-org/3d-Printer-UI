@@ -8,12 +8,29 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import Button from '../../stories/button/Button';
 import axios from 'axios';
+import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
+
+interface ModelDimensions {
+  height: number;
+  width: number;
+  length: number;
+}
+
+interface FileData {
+  id: string;
+  name: string;
+  dimensions: ModelDimensions;
+  file: File;
+  quantity: number;
+}
 
 const CardLayout = () => {
   const { pathname } = useLocation();
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
   const navigate = useNavigate();
+  const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
+
   useEffect(() => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       setActiveTabs([0]);
@@ -33,14 +50,28 @@ const CardLayout = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
 
-  const onProceed = () => {
-    if (pathname === '/get-quotes') {
+  const onProceed = async () => {
+    // Add validation for files before proceeding from upload step
+    if (pathname.includes(ROUTES.UPLOAD_STL) && files.length === 0) {
+      alert('Please upload at least one file before proceeding');
+      return;
+    }
+
+    if (pathname.includes(ROUTES.UPLOAD_STL)) {
+      try {
+        const response = await axios.post('/api/create-order', { files });
+        if (response.status === 200) {
+          console.log('Files uploaded successfully!');
+          setActiveTabs([0, 1]);
+          navigate(ROUTES.CUSTOMIZE);
+        }
+      } catch (error) {
+        console.error('Error uploading files:', error);
+      }
+      
+    } else if (pathname === '/get-quotes') {
       setActiveTabs([0]);
       navigate(ROUTES.UPLOAD_STL);
-    }
-    if (pathname.includes(ROUTES.UPLOAD_STL)) {
-      setActiveTabs([0, 1]);
-      navigate(ROUTES.CUSTOMIZE);
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
       navigate(ROUTES.QUOTE);
@@ -60,6 +91,7 @@ const CardLayout = () => {
       console.error('Error processing payment:', error);
     }
   };
+
   return (
     <div className="cardLayout">
       <div className="headerCard">
@@ -70,16 +102,20 @@ const CardLayout = () => {
         )}
         <Header tabData={quoteTexts} />
       </div>
-      <div className="mainCardContent">{<Outlet />}</div>
+      <div className="mainCardContent">
+        {pathname.includes(ROUTES.UPLOAD_STL) ? (
+          <UploadStlCard files={files} setFiles={setFiles} />
+        ) : (
+          <Outlet context={{ files, setFiles }} />
+        )}
+      </div>
       <div className="btn">
-        <div>.</div>
+        <div></div>
         <span className="proc">
           <Button
-            label={!pathname.includes(ROUTES.PAYMENT) ? 'proceed' : 'Pay now'}
-            onClick={
-              !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
-            }
-          ></Button>
+            label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
+            onClick={!pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment}
+          />
         </span>
       </div>
     </div>
