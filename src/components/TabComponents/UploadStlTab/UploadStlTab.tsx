@@ -19,9 +19,13 @@ interface FileData {
   quantity: number;
 }
 
-const UploadStlCard: React.FC = () => {
+interface UploadStlTabProps {
+  files: FileData[];
+  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
+}
+
+const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
-  const [files, setFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,7 +63,7 @@ const UploadStlCard: React.FC = () => {
         fileInputRef.current.value = '';
       }
     },
-    []
+    [setFiles]
   );
 
   const handleUnitClick = useCallback((unit: string) => {
@@ -73,7 +77,7 @@ const UploadStlCard: React.FC = () => {
         setActiveFileId(null);
       }
     },
-    [activeFileId]
+    [activeFileId, setFiles]
   );
 
   const handleUpdateQuantity = useCallback(
@@ -84,7 +88,7 @@ const UploadStlCard: React.FC = () => {
         )
       );
     },
-    []
+    [setFiles]
   );
 
   const handleUpdateDimensions = useCallback(
@@ -95,7 +99,7 @@ const UploadStlCard: React.FC = () => {
         )
       );
     },
-    []
+    [setFiles]
   );
 
   const convertDimensions = (dimensions: ModelDimensions, unit: string) => {
@@ -112,7 +116,7 @@ const UploadStlCard: React.FC = () => {
 
   return (
     <Box>
-      <Typography sx={styles.mainHeader}> Upload Your Files</Typography>
+      <Typography sx={styles.mainHeader}>Upload Your Files</Typography>
       <Typography sx={styles.infoText}>
         Set the required quantities for each file and if their sizes appear too
         small, change the unit of measurement to inches. <br />
