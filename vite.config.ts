@@ -7,4 +7,7 @@ export default defineConfig({
   resolve: {
     extensions: ['.ts', '.tsx'],
   },
+  server: {
+    host: '127.0.0.1',
+  },
 });

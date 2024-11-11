@@ -13,7 +13,12 @@ import minus from './assets/icons/minus.svg';
 import vector from './assets/icons/Vector.svg';
 import arrow_left from './assets/icons/arrow_left.svg';
 import arrow_right from './assets/icons/arrow_right.svg';
-
+import precision from './assets/images/precision_manufacturing.svg';
+import shape from './assets/images/shapes.svg';
+import instant from './assets/images/instant_mix.svg';
+import eos from './assets/images/eos-icons_3d-print.svg';
+import bolt from './assets/images/bolt.svg';
+import demography from './assets/images/demography.svg';
 
 // export svg
 export { uploadIcon, cross, plus, minus, vector, arrow_left, arrow_right };
@@ -368,5 +373,43 @@ export const footerData = [
   {
     name: 'LINKEDIN',
     url: '',
+  },
+];
+
+export const whyUSData = [
+  {
+    img: precision,
+    title: 'Quality Assurance',
+    subTitle:
+      'Our rigorous testing guarantees high-performance and flawless final products.',
+  },
+  {
+    img: bolt,
+    title: 'Fast Prototyping',
+    subTitle: 'Get rapid, high-quality 3D prints with quick turnaround times.',
+  },
+  {
+    img: shape,
+    title: 'Material Variety',
+    subTitle:
+      'Select the perfect material to suit the functionality and aesthetic of your project.',
+  },
+  {
+    img: eos,
+    title: 'Comprehensive Printer Library: ',
+    subTitle:
+      'Browse a vast library of meticulously categorized 3D models, complete with detailed specifications, to find the perfect asset for your projects.',
+  },
+  {
+    img: demography,
+    title: 'Expert Services and Support',
+    subTitle:
+      'Our platform connects you with skilled merchants for quality 3D printing, from prototypes to large-scale production.',
+  },
+  {
+    img: instant,
+    title: 'Flexibility & Customization: ',
+    subTitle:
+      'Customize your 3D prints with various materials and finishes to meet your specific needs, from simple to complex projects.',
   },
 ];

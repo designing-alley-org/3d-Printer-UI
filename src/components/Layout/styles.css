@@ -4,7 +4,7 @@
   background-position: center;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  margin: 20px 0px 20px 20px;
+  margin: 20px;
   border-bottom-right-radius: 40px;
   background-image: url(/src/assets/images/background-img.svg);
 }
