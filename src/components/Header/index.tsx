@@ -5,14 +5,15 @@ import { Wrapper } from './styles';
 
 interface IHeader {
   tabData: any;
-  activeTabs?: number[];
+  activeTabs?: number;
+  insideTab?: boolean;
 }
 const Header = (props: IHeader) => {
   const { tabData } = props;
   return (
     <Wrapper>
       <section>
-        <TabComponent tabs={tabData} numberId={false} activeTabs={props.activeTabs}/>
+        <TabComponent tabs={tabData} numberId={false} activeTabs={props.activeTabs} insideTab={props.insideTab}/>
       </section>
     </Wrapper>
   );

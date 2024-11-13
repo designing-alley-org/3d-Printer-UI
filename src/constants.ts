@@ -37,10 +37,16 @@ export const tabData = [
 
 // Data for QuoteText
 export const quoteTexts = [
-  { id: 1, label: 'UPLOAD STL', path: ROUTES.UPLOAD_STL },
-  { id: 2, label: 'CUSTOMIZE', path: ROUTES.CUSTOMIZE },
-  { id: 3, label: 'QUOTE', path: ROUTES.QUOTE },
-  { id: 4, label: 'CHECKOUT', path: ROUTES.CHECKOUT },
+  { id: 1, label: '1. UPLOAD STL', path: ROUTES.UPLOAD_STL },
+  { id: 2, label: '2. CUSTOMIZE', path: ROUTES.CUSTOMIZE },
+  { id: 3, label: '3. QUOTE', path: ROUTES.QUOTE },
+  { id: 4, label: '4. CHECKOUT', path: ROUTES.CHECKOUT },
+];
+export const accTab = [
+  { id: 1, label: 'MY PROFILE' },
+  { id: 2, label: 'MY ORDERS' },
+  { id: 3, label: 'NOTIFICATIONS' },
+  { id: 4, label: 'SETTINGS' },
 ];
 
 // Data for Card
@@ -256,6 +262,28 @@ export const technologyBtnData = [
   {
     id: 'SLA',
     name: 'SLA',
+  },
+];
+export const notifyData = [
+  {
+    id: 1,
+    value: 'immediately',
+    label: 'Immediately',
+  },
+  {
+    id: 2,
+    value: 'daily',
+    label: 'Daily',
+  },
+  {
+    id: 3,
+    value: 'never',
+    label: 'Never',
+  },
+  {
+    id: 4,
+    value: 'working Hours',
+    label: 'Working hours',
   },
 ];
 export const materialBtnData = [

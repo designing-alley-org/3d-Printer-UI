@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 interface ITabContainerProps {
   tabs: Tab[];
   numberId: boolean;
-  activeTabs?: number[]; 
+  activeTabs?: number; 
+  insideTab?: boolean;
 }
 
 const TabComponent = (props: ITabContainerProps) => {
@@ -14,11 +15,11 @@ const TabComponent = (props: ITabContainerProps) => {
   const navigate=useNavigate();
   return (
     <TabWrapper>
-      <ul className="tabrow">
+      <ul className={props.insideTab ? "insideTab" : "tabrow"}>
         {tabs.map((tab) => (
           <li
             key={tab.id}
-            className={`${activeTabs?.includes(tab.id) ? 'selected' : ''}`}
+            className={`${activeTabs === tab.id ? 'selected' : ''}`}
             onClick={() =>navigate(tab.path) }
           >
             <span className="tabContent">

@@ -45,6 +45,7 @@
       width: 77%;
       height: 3rem;
       border-bottom-right-radius: 2rem;
+      border-bottom-left-radius: 2rem;
       display: flex;
       justify-content: end;
       &::after {
