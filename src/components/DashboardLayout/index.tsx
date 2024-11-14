@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Button from '../../stories/button/Button';
 import { Bottom, Wrapper } from './styles';
-import { ROUTES } from '../../routes/routes-constants';
+// import { ROUTES } from '../../routes/routes-constants';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const DashboardLayout = () => {
         <div className="btn">
           <Button
             label="Get Quote"
-            onClick={() => navigate(ROUTES.GET_QUOTES)}
+            onClick={() => navigate('/get-quotes')}
           ></Button>
         </div>
       </Bottom>

@@ -6,32 +6,41 @@ import WhyUs from '../whyUs';
 import Contact from '../contactInfo';
 // import PrinterLibrary from '../PrinterLibrary';
 import numbers from '../../assets/images/numbersIcon.jpeg';
+import { useLocation } from 'react-router-dom';
+import { ROUTES } from '../../routes/routes-constants';
+import AboutUs from '../Services/AboutUs';
 
 const Footer: React.FC = () => {
+  const { pathname } = useLocation();
   return (
     <Wrapper>
-      <h2 className="checkout">
-        Checkout our special editions curated collections and merchant specials
-        and more in our 3d assets library
-      </h2>
-      <Numbers>
-        <img src={numbers} />
-        <section>
-          <span className='sect'>
-            <h1>SELECT 3D MODEL/UPLOAD YOURS </h1>
-            <h3>CUSTOMIZE PRINTING OPTIONS</h3>
-          </span>
-          <span  className='sect'>
-            <h1>GET QUOTE</h1>
-            <h3>SELECT DELIVERY & PAYMENT</h3>
-          </span>
-          <span  className='sect'>
-            <h1>PRINTED & DELIVERED</h1>
-            <h3>FUTURE PRINTED</h3>
-          </span>
-        </section>
-      </Numbers>
-      <PrinterLibrary />
+      {pathname.includes(ROUTES.DASHBOARD) && (
+        <>
+          <h2 className="checkout">
+            Checkout our special editions curated collections and merchant
+            specials and more in our 3d assets library
+          </h2>
+          <Numbers>
+            <img src={numbers} />
+            <section>
+              <span className="sect">
+                <h1>SELECT 3D MODEL/UPLOAD YOURS </h1>
+                <h3>CUSTOMIZE PRINTING OPTIONS</h3>
+              </span>
+              <span className="sect">
+                <h1>GET QUOTE</h1>
+                <h3>SELECT DELIVERY & PAYMENT</h3>
+              </span>
+              <span className="sect">
+                <h1>PRINTED & DELIVERED</h1>
+                <h3>FUTURE PRINTED</h3>
+              </span>
+            </section>
+          </Numbers>
+        </>
+      )}
+      {!pathname.includes(ROUTES.SERVICES) && <PrinterLibrary /> }
+      {pathname.includes(ROUTES.SERVICES) && <AboutUs /> }
       <WhyUs />
       <Contact />
       <FooterData>

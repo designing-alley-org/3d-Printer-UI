@@ -131,7 +131,7 @@ export const OrderWrap = styled.section`
   .details {
     display: grid;
     grid-template-columns: 2fr 2fr 1fr;
-    margin-left: 2rem;
+    margin-left: 3rem;
     p,
     .data {
       color: #232fb0;
@@ -150,8 +150,49 @@ export const OrderWrap = styled.section`
     background: aliceblue;
     border-radius: 1rem;
   }
+  /* Basic styling for the card container */
+  }
+
+/* Container styling */
+.card-container {
+  display: flex;
+  position: relative;
+}
+
+/* Base style for each card */
+.card {
+  position: absolute;
+  width: 90px;
+  height: 100px;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-weight: bold;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #F0F6FF;
+}
+
+/* Individual card styling */
+.card-1 {
+    position: relative;
+  z-index: 1;
+  transform: translateX(0);
+}
+
+.card-2 {
+  z-index: 2;
+  transform: translateX(15px);
+}
+
+.card-3 {
+  z-index: 3;
+  transform: translateX(30px);
+}
 `;
-export const PlacedWrap = styled.section`
+export const PlacedWrap = styled.section<{ isOpen?: boolean }>`
   .img {
     padding: 1rem;
     background: aliceblue;
@@ -160,9 +201,17 @@ export const PlacedWrap = styled.section`
   .orderPlaced {
     display: flex;
   }
+  .orderInfo {
+    cursor: pointer;
+  }
+  .arrow {
+    img {
+      rotate: ${(props) => (props.isOpen ? 180 : 0)}deg;
+    }
+  }
   .orderDetails {
     width: 100%;
-    margin-left: 2rem;
+    margin-left: 3rem;
     .orderInfo {
       display: flex;
       justify-content: space-between;
@@ -294,5 +343,25 @@ export const NotifyWrap = styled.section`
     .email {
       display: flex;
     }
+  }
+`;
+
+export const DetailsWrap = styled.section`
+  display: flex;
+  margin-top: 2rem;
+  .img {
+    padding: 1rem;
+    background: aliceblue;
+    border-radius: 1rem;
+  }
+  .details {
+    display: grid;
+    grid-template-columns: 7fr 7fr 1fr;
+    margin-left: 3rem;
+  }
+  .data {
+    padding: 0.5rem;
+    border: 1px solid #e3eeff;
+    border-radius: 2rem;
   }
 `;

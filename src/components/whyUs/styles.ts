@@ -10,14 +10,14 @@ export const Wrapper = styled.main`
     &::after {
       content: '';
       position: absolute;
-      margin-top: -2.2rem;
-      margin-left: 9.3rem;
+      margin-top: -2.3rem;
+      margin-left: 9.4rem;
       background-color: transparent;
       width: 3.05rem;
       height: 5rem;
       rotate: 90deg;
       border-bottom-left-radius: 9rem;
-      box-shadow: 0rem 2.8rem 0rem 0rem white;
+      box-shadow: -1rem 3rem 0rem 0rem #ffffff;
     }
   }
   h3 {

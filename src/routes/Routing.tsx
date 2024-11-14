@@ -17,6 +17,7 @@ import PaymentDetails from '../components/TabComponents/CheckOut/PaymentDetails/
 import RegisterForm from '../pages/loginPage/signup.tsx';
 import DashboardLayout from '../components/DashboardLayout/index.tsx';
 import Account from '../components/accountComponent/index.tsx';
+import Services from '../components/Services/index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -47,7 +48,7 @@ const Routing: React.FC = () => {
             <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
           </Route>
         </Route>
-        <Route path={ROUTES.SERVICES} element={<h1>Services</h1>} />
+        <Route path={ROUTES.SERVICES} element={<Services />} />
         <Route path={ROUTES.ACCOUNT} element={<Account />} />
         <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
       </Route>

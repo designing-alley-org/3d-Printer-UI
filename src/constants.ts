@@ -19,6 +19,9 @@ import instant from './assets/images/instant_mix.svg';
 import eos from './assets/images/eos-icons_3d-print.svg';
 import bolt from './assets/images/bolt.svg';
 import demography from './assets/images/demography.svg';
+import aboutUs from './assets/images/aboutUS.svg';
+import aboutUs1 from './assets/images/aboutUs1.svg';
+import aboutUs2 from './assets/images/aboutUs2.svg';
 
 // export svg
 export { uploadIcon, cross, plus, minus, vector, arrow_left, arrow_right };
@@ -439,5 +442,24 @@ export const whyUSData = [
     title: 'Flexibility & Customization: ',
     subTitle:
       'Customize your 3D prints with various materials and finishes to meet your specific needs, from simple to complex projects.',
+  },
+];
+export const AboutUsData = [
+  {
+    img: aboutUs,
+    title: 'Quality Assurance',
+    subTitle:
+      'Our rigorous testing guarantees high-performance and flawless final products.',
+  },
+  {
+    img: aboutUs1,
+    title: 'Fast Prototyping',
+    subTitle: 'Get rapid, high-quality 3D prints with quick turnaround times.',
+  },
+  {
+    img: aboutUs2,
+    title: 'Material Variety',
+    subTitle:
+      'Select the perfect material to suit the functionality and aesthetic of your project.',
   },
 ];
