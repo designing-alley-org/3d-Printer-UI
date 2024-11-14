@@ -1,5 +1,8 @@
 // import all svg
 import uploadIcon from './assets/icons/upload.svg';
+import deliveryIcon from './assets/icons/local_shipping.svg';
+import customizeIcon from './assets/icons/inbox_customize.svg';
+import quoteIcon from './assets/icons/quoteIcon.svg';
 import scaleIcon from './assets/icons/scaleIcon.svg';
 import technologyIcon from './assets/icons/technologyIcon.svg';
 import materialIcon from './assets/icons/materialIcon.svg';
@@ -55,26 +58,26 @@ export const accTab = [
 // Data for Card
 export const cardItems = [
   {
-    id: '1.',
+    id: '1',
     icon: uploadIcon, // Use the imported SVG icon
     upperText: 'UPLOAD STL',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
-    id: '2.',
-    icon: uploadIcon, // Use the imported SVG icon
+    id: '2',
+    icon: customizeIcon, // Use the imported SVG icon
     upperText: 'CUSTOMIZE',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
-    id: '3.',
-    icon: uploadIcon, // Use the imported SVG icon
+    id: '3',
+    icon: quoteIcon, // Use the imported SVG icon
     upperText: 'QUOTE',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
-    id: '4.',
-    icon: uploadIcon, // Use the imported SVG icon
+    id: '4',
+    icon: deliveryIcon, // Use the imported SVG icon
     upperText: 'DELIVERY',
     bottomText: 'upload one or more STL files and start customizing',
   },

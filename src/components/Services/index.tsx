@@ -6,7 +6,7 @@ const Services = () => {
     <Wrapper>
       <header>3D PRINT YOUR FUTURE</header>
       <Bottom>
-        <div className="curve">About Us</div>
+        <div className="curve">ABOUT US</div>
         <div></div>
       </Bottom>
     </Wrapper>
