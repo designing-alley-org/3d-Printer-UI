@@ -11,6 +11,7 @@ import cross from './assets/icons/cross.svg';
 import plus from './assets/icons/plus.svg';
 import minus from './assets/icons/minus.svg';
 import vector from './assets/icons/Vector.svg';
+import vector_black from './assets/icons/Vector-black.svg';
 import arrow_left from './assets/icons/arrow_left.svg';
 import arrow_right from './assets/icons/arrow_right.svg';
 import precision from './assets/images/precision_manufacturing.svg';
@@ -19,9 +20,12 @@ import instant from './assets/images/instant_mix.svg';
 import eos from './assets/images/eos-icons_3d-print.svg';
 import bolt from './assets/images/bolt.svg';
 import demography from './assets/images/demography.svg';
+import info from './assets/icons/info.svg';
+import group from './assets/icons/Group.svg';
+import arrow_dropdown_blue from './assets/icons/arrow_drop_down_blue_circle.svg';
 
 // export svg
-export { uploadIcon, cross, plus, minus, vector, arrow_left, arrow_right };
+export { uploadIcon, cross, plus, minus, vector,vector_black,  arrow_left, arrow_right, info, group, arrow_dropdown_blue };
 
 // Data for Tab
 export const tabData = [
@@ -290,14 +294,90 @@ export const colorBtnData = [
     name: 'White',
   },
   {
-    id: 'black',
-    name: 'Black',
+    id: 'blue',
+    name: 'Blue',
   },
+  {
+    id: 'grey',
+    name: 'Gray',
+  },
+  {
+    id: 'orange',
+    name: 'Orange',
+  }
 ];
 
 export const PrinterData = [
   {
     title: 'printer name',
+    subTitle: ' printer',
+    desc: 'Ultra High Resolution',
+    data: [
+      {
+        name: 'Build Volume',
+        val: 'X: 220 mm, Y: 220 mm, Z: 250 mm',
+      },
+      {
+        name: 'Layer Resolution',
+        val: 'Min: 50 microns, Max: 400 microns',
+      },
+      {
+        name: 'Material Compatibility',
+        val: 'PLA, ABS, TPU',
+      },
+      {
+        name: 'Technology Type',
+        val: 'FDM (Fused Deposition Modeling)',
+      },
+      {
+        name: 'Nozzle Size',
+        val: '0.4 mm (Interchangeable)',
+      },
+      {
+        name: 'Print Speed',
+        val: '0.4 mm (Interchangeable)',
+      },
+      {
+        name: 'Extruders',
+        val: 'Single Extruder',
+      },
+    ],
+  },{
+    title: 'printer name 2',
+    subTitle: ' printer',
+    desc: 'Ultra High Resolution',
+    data: [
+      {
+        name: 'Build Volume',
+        val: 'X: 220 mm, Y: 220 mm, Z: 250 mm',
+      },
+      {
+        name: 'Layer Resolution',
+        val: 'Min: 50 microns, Max: 400 microns',
+      },
+      {
+        name: 'Material Compatibility',
+        val: 'PLA, ABS, TPU',
+      },
+      {
+        name: 'Technology Type',
+        val: 'FDM (Fused Deposition Modeling)',
+      },
+      {
+        name: 'Nozzle Size',
+        val: '0.4 mm (Interchangeable)',
+      },
+      {
+        name: 'Print Speed',
+        val: '0.4 mm (Interchangeable)',
+      },
+      {
+        name: 'Extruders',
+        val: 'Single Extruder',
+      },
+    ],
+  },{
+    title: 'printer name 3',
     subTitle: ' printer',
     desc: 'Ultra High Resolution',
     data: [

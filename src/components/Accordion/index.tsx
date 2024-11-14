@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import arrow from '../../assets/icons/arrow_drop_down_circle.svg';
 import './styles.css';
 import Dropdown from '../../stories/Dropdown/Dropdown';
 import {
@@ -11,30 +9,30 @@ import {
   scaleFields,
   sizeOption,
   technologyBtnData,
+  info,
+  group,
 } from '../../constants';
 import { Button, TextField } from '@mui/material';
 import PrinterCard from '../PrinterCard';
 
-// Define the type for Accordion Props
 interface AccordionProps {
   icon: any;
-  id: any;
+  id: string;
   title: string;
   content: string;
 }
+interface PrinterData {
+  title: string;
+  subTitle: string;
+  desc: string;
+  data: Array<{ name: string; val: string }>;
+}
 
-// Accordion Component
 const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
-
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [selectedMat, setSelectedMat] = useState<string>('');
-  const [selectedcolor, setSelectedColor] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  // Function to toggle accordion state
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
-  };
+  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [selectedPrinter, setSelectedPrinter] = useState<string>('');
 
   const handleUnitClick = (unit: string) => {
     setSelectedTech(unit);
@@ -46,6 +44,10 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
     setSelectedColor(unit);
   };
 
+  const handlePrinterSelect = (title: string) => {
+    setSelectedPrinter(selectedPrinter === title ? '' : title);
+  };
+
   const options = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     value: `${(i + 1) * 5}`,
@@ -54,72 +56,122 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
 
   return (
     <div className="accordion">
-      <div className="accordion-header" onClick={toggleAccordion}>
+      <div className="accordion-header">
         <span className="title">
           <img src={icon} />
           <h2>{title}</h2>
         </span>
-        <span className={isOpen ? 'active' : ''}>
-          <img src={arrow} />
-        </span>
       </div>
-      {isOpen && id === '1' && (
-        <div className="accordion-content">
-          <Dropdown options={dimensionsOption} onSelect={() => {}} />
-          <Dropdown options={sizeOption} onSelect={() => {}} />
+      <div className="accordion-content">
+        {id === '1' && (
+          <>
+          <div className='scale'>
+          <p>Scale In</p>
+          <div style={{ display: 'flex',justifyContent: 'space-between' }}>
+            <Dropdown
+              options={dimensionsOption}
+              onSelect={() => {}}
+              defaultValue="Dimensions"
+            />
+            <Dropdown options={sizeOption} onSelect={() => {}} />
             {scaleFields.map((item) => (
-            <TextField id={item.name} placeholder={item.placeholder} className='fields'/>
-          ))}
-        </div>
-      )}
-      {isOpen && id === '2' && (
-        <div className="accordion-content">
-          {technologyBtnData.map((item) => (
-            <Button
-              className={selectedTech === item.name ? 'active' : 'btn'}
-              onClick={() => handleUnitClick(item.name)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </div>
-      )}
-      {isOpen && id === '3' && (
-        <div className="accordion-content">
-          {materialBtnData.map((item) => (
-            <Button
-              className={selectedMat === item.name ? 'active' : 'btn'}
-              onClick={() => handleMatClick(item.name)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </div>
-      )}
-      {isOpen && id === '4' && (
-        <div className="accordion-content">
-          {colorBtnData.map((item) => (
-            <Button
-              className={selectedcolor === item.name ? 'active' : 'btn'}
-              onClick={() => handleColorClick(item.name)}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </div>
-      )}
-      {isOpen && id === '5' && (
-        <div className="accordion-content">
-          {PrinterData.map((item) => (
-            <PrinterCard title={item.title} subTitle={item.subTitle} desc={item.desc} data={item.data}/>
-          )) }
-        </div>
-      )}
-      {isOpen && id === '6' && (
-        <div className="accordion-content">
-          <Dropdown options={options} onSelect={() => {}} />
-        </div>
-      )}
+              <TextField
+                key={item.name}
+                id={item.name}
+                label={item.label}
+                placeholder={item.placeholder}
+                className="fields"
+              />
+            ))}
+            </div>
+            <div className='revert'>
+            <Button className="btn ">Revert to original</Button>
+            <p>100mm x 120mm x 320mm</p>
+            </div>
+            </div>
+          </>
+        )}
+        {id === '2' && (
+          <>
+            {technologyBtnData.map((item) => (
+              <Button
+                key={item.name}
+                className={selectedTech === item.name ? 'active' : 'btn'}
+                onClick={() => handleUnitClick(item.name)}
+              >
+                {item.name}
+              </Button>
+            ))}
+            <div className="check-box">
+              {selectedTech ? (
+                <img src={group} alt="group" />
+              ) : (
+                <img src={info} alt="info" />
+              )}
+            </div>
+          </>
+        )}
+        {id === '3' && (
+          <>
+            {materialBtnData.map((item) => (
+              <Button
+                key={item.name}
+                className={selectedMat === item.name ? 'active' : 'btn'}
+                onClick={() => handleMatClick(item.name)}
+              >
+                {item.name}
+              </Button>
+            ))}
+            <div className="check-box">
+              {selectedMat ? (
+                <img src={group} alt="group" />
+              ) : (
+                <img src={info} alt="info" />
+              )}
+            </div>
+          </>
+        )}
+        {id === '4' && (
+          <>
+            {colorBtnData.map((item) => (
+              <Button
+                key={item.name}
+                className={selectedColor === item.name ? 'active' : 'btn'}
+                onClick={() => handleColorClick(item.name)}
+              >
+                <span
+                  className="btn-color"
+                  style={{ backgroundColor: item.id }}
+                ></span>
+                {item.name}
+              </Button>
+            ))}
+            <div className="check-box">
+              {selectedColor ? (
+                <img src={group} alt="group" />
+              ) : (
+                <img src={info} alt="info" />
+              )}
+            </div>
+          </>
+        )}
+        {id === '5' && (
+          <>
+            {PrinterData.map((item) => (
+              <PrinterCard
+                key={item.title}
+                title={item.title}
+                subTitle={item.subTitle}
+                desc={item.desc}
+                data={item.data}
+                isSelected={selectedPrinter === item.title}
+                onSelect={handlePrinterSelect}
+              />
+            ))}
+          </>
+        )}
+        {id === '6' && <Dropdown options={options} onSelect={() => {}} />}
+      </div>
     </div>
   );
 };

@@ -11,11 +11,12 @@ interface ModelDimensions {
 interface ViewModelStlProps {
   fileUrl: string;
   onDimensionsCalculated?: (dimensions: ModelDimensions) => void;
+  modelColor:string;
 }
 
-const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl, onDimensionsCalculated }) => {
+const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl, onDimensionsCalculated, modelColor }) => {
   const [loading, setLoading] = useState(true);
-  const [color, setColor] = useState('#808080');
+  const [color, setColor] = useState('#808080')
   const viewerRef = useRef(null);
 
   const style = {
@@ -24,6 +25,10 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl, onDimensionsCalcul
     width: '100%',
     height: '100%',
   };
+  
+  useEffect(() => {
+    setColor(modelColor ? modelColor : '#808080');
+  }, [modelColor]);
 
   const handleFinishLoading = useCallback((dimensions: any) => {
     setLoading(false);
@@ -38,9 +43,6 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl, onDimensionsCalcul
     }
   }, [onDimensionsCalculated]);
 
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setColor(event.target.value);
-  };
 
   // Cleanup on unmount or when fileUrl changes
   useEffect(() => {

@@ -30,7 +30,6 @@ const CardLayout = () => {
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
-
   useEffect(() => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       setActiveTabs([0]);
@@ -59,7 +58,7 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
-        const response = await axios.post('/api/create-order', { files });
+        const response = await axios.post('/update-user-order/:orderId', { files });
         if (response.status === 200) {
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
@@ -103,12 +102,12 @@ const CardLayout = () => {
         <Header tabData={quoteTexts} />
       </div>
       <div className="mainCardContent">
-        {pathname.includes(ROUTES.UPLOAD_STL) ? (
-          <UploadStlCard files={files} setFiles={setFiles} />
-        ) : (
-          <Outlet context={{ files, setFiles }} />
-        )}
-      </div>
+      {pathname.includes(ROUTES.UPLOAD_STL) ? (
+        <UploadStlCard files={files} setFiles={setFiles} />
+      ) : (
+        <Outlet context={{ files, setFiles }} />
+      )}
+    </div>
       <div className="btn">
         <div></div>
         <span className="proc">
