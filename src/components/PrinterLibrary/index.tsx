@@ -17,7 +17,7 @@ const PrinterLibrary = () => {
     <Wrapper>
       <h1>PRINTER LIBRARY</h1>
       <h3>Check Our Comprehensive printer Library For all your Needs</h3>
-      <div>
+      <div className="cards">
         {PrinterData.map((item) => (
           <PrinterLibraryCard
             title={item.title}
@@ -32,6 +32,10 @@ const PrinterLibrary = () => {
 };
 const Wrapper = styled.section`
   margin: 0rem 4rem;
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 export default PrinterLibrary;
