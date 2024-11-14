@@ -7,6 +7,7 @@ export const Wrapper = styled.main`
   border-radius: 24px;
   padding: 1rem;
   cursor: pointer;
+  margin: 1rem 0;
   .active-printer {
     border: unset;
     background: unset;
@@ -18,6 +19,8 @@ export const Wrapper = styled.main`
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
+  position: relative;
+  
   section {
     display: flex;
     flex-direction: column;
@@ -32,6 +35,15 @@ export const Header = styled.header`
     font-size: 14px;
     color: #525e86;
   }
+    .select{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: #66A3FF;
+    color: #fff;
+    border-radius: 50px;
+    padding: 4px 8px;
+    font-weight: 500;}
 `;
 export const Body = styled.section`
   section {

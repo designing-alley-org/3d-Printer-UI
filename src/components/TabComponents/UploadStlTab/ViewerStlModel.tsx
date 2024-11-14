@@ -88,7 +88,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
         <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
         <Box sx={styles.viewerContent}>
           <Box sx={styles.viewModel}>
-            {currentFileUrl && <ViewModelStl fileUrl={currentFileUrl} />}
+            {currentFileUrl && <ViewModelStl fileUrl={currentFileUrl} modelColor='' />}
           </Box>
           <Box sx={styles.navigationContainer}>
             <ButtonIcon

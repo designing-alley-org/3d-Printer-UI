@@ -3,15 +3,11 @@
 .dropdown-wrapper {
   position: relative;
   display: inline-block;
-  width: 100%;
   font-family: Arial, sans-serif;
 }
 
 .dropdown-header {
-  width: 100%;
-  padding: 1rem 1rem;
   border-radius: 1rem;
-  border: 1px solid #66a3ff;
   cursor: pointer;
   display: flex;
   background-color: white;
@@ -21,45 +17,39 @@
 
 .dropdown-header:focus {
   outline: none;
-  border-color: #007bff;
 }
 
 .dropdown-header-title {
-  font-size: 16px;
   color: #759bff;
-}
-
-.dropdown-arrow {
-  font-size: 12px;
-  color: #759bff;
-}
+  margin-right:.6rem;
+} 
 
 .dropdown-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 4rem;
-  left: 0;
   width: 100%;
   max-height: 10rem;
-  padding: 0.8rem 0rem;
   overflow-y: auto;
-  border: 1px solid #66a3ff;
+  border: 1px solid #66A3FF;
+  box-shadow: 0px 4px 4px 0px #BECDFF;
   background-color: white;
-  z-index: 1000;
   border-radius: 2rem;
 }
 
 .dropdown-item {
   width: 100%;
-  padding: 0.8rem 1rem;
-  text-align: left;
   background-color: white;
   border: none;
   cursor: pointer;
   font-size: 16px;
   color: #759bff;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  
 }
 
 .dropdown-item:hover {
@@ -70,6 +60,3 @@
   background-color: #e6f7ff;
 }
 
-.checkmark {
-  color: #007bff;
-}

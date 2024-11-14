@@ -2,20 +2,32 @@
 import { useState } from 'react';
 import arrow from '../../assets/icons/arrow_drop_down_circle.svg';
 import { Body, Header, Wrapper } from './styles';
+import { Button } from '@mui/material';
 
 interface IPrinterCard {
   title: string;
   subTitle: string;
   desc: string;
-  data: any;
+  data: Array<{ name: string; val: string }>;
+  isSelected: boolean;
+  onSelect: (title: string) => void;
 }
+
 const PrinterCard = (props: IPrinterCard) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   // Function to toggle accordion state
-  const toggleAccordion = () => {
+  const toggleAccordion = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsOpen(!isOpen);
   };
-  const printerDataF = (item: any) => {
+
+  const handleSelect = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    props.onSelect(props.title);
+  };
+
+  const printerDataF = (item: { name: string; val: string }) => {
     return (
       <span className="data" key={item.name}>
         <span className="head">
@@ -37,16 +49,23 @@ const PrinterCard = (props: IPrinterCard) => {
         </section>
         <span className={isOpen ? 'active-printer' : ''}>
           <img src={arrow} />
+          <Button
+            className="select"
+            onClick={handleSelect}
+          >
+            {props.isSelected ? 'UNSELECT' : 'SELECT'}
+          </Button>
         </span>
       </Header>
       <Body>
         {isOpen && (
-          <section>{props.data.map((it: any) => printerDataF(it))}</section>
+          <section>{props.data.map(printerDataF)}</section>
         )}
       </Body>
     </Wrapper>
   );
 };
+
 
 
 export default PrinterCard;

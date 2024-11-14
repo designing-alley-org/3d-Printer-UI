@@ -146,20 +146,5 @@ export const fileCardContainer: SxProps = {
   borderRadius: '1rem',
   display: 'flex',
   flexDirection: 'column',
-
-  /* Custom scrollbar */
-  '&::-webkit-scrollbar': {
-    width: '6px', // Width of the scrollbar
-  },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: 'white', // Background color for the scrollbar track
-  },
-  '&::-webkit-scrollbar-thumb': {
-    backgroundColor: '#5186ff', // Color of the scrollbar thumb (blue as shown in the image)
-    borderRadius: '10px', // Optional for rounded scrollbar thumb
-  },
-  '&::-webkit-scrollbar-thumb:hover': {
-    backgroundColor: '#3f6bd9', // Darker shade on hover (optional)
-  },
 };
 

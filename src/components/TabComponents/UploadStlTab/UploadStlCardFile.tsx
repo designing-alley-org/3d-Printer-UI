@@ -90,6 +90,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               <ViewModelStl 
                 fileUrl={fileUrl} 
                 onDimensionsCalculated={(dimensions) => onUpdateDimensions(file.id, dimensions)}
+                modelColor=''
               />
               <Box sx={styles.viewButton} onClick={handleViewerOpen}>
                 <img src={vector} alt="View_stl_model" />
@@ -112,7 +113,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 width="3rem"
                 height="3rem"
                 svgPath={cross}
-                onClick={() => handleRemove}
+                onClick={ handleRemove }
               />
             </Box>
             <Box sx={styles.quantityValueBox}>
