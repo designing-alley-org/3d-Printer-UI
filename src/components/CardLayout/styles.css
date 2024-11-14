@@ -43,14 +43,15 @@
     > div {
       background-color: white;
       width: 77%;
-      height: 3rem;
-      border-bottom-right-radius: 2rem;
+      height: 4rem;
+      border-bottom-right-radius: 4rem;
+      border-bottom-left-radius: 2rem;
       display: flex;
       justify-content: end;
       &::after {
         content: '';
         position: absolute;
-        margin-right: -4.9rem;
+        margin-right: -4.7rem;
         background-color: transparent;
         width: 5.25rem;
         height: 2.5rem;
@@ -60,7 +61,7 @@
       }
     }
     .proc {
-      padding: 8px;
+      padding: 1rem;
       button {
         background-color: #1e6fff;
         border-radius: 40px;

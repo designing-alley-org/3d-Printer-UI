@@ -99,7 +99,7 @@ const CardLayout = () => {
             <LinearProgress variant="determinate" value={getProgressValue()} />
           </TabLine>
         )}
-        <Header tabData={quoteTexts} />
+        <Header tabData={quoteTexts} insideTab={true}/>
       </div>
       <div className="mainCardContent">
       {pathname.includes(ROUTES.UPLOAD_STL) ? (

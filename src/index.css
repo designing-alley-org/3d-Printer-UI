@@ -47,6 +47,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #3f6bd9; /* Darker shade on hover */
 }
+  width: fit-content;
 }
 
 h1 {

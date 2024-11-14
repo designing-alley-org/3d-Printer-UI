@@ -9,19 +9,19 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 
 const index: React.FC = () => {
-  const [activeTabs, setActiveTabs] = useState<number[]>([0]);
+  const [activeTabs, setActiveTabs] = useState<number>(0);
   const { pathname } = useLocation();
   useEffect(() => {
     if (pathname.includes(ROUTES.DASHBOARD)) {
-      setActiveTabs([0]);
+      setActiveTabs(0);
     } else if (pathname.includes(ROUTES.GET_QUOTES)) {
-      setActiveTabs([0, 1]);
+      setActiveTabs(1);
     } else if (pathname.includes(ROUTES.SERVICES)) {
-      setActiveTabs([0, 1, 2]);
+      setActiveTabs(2);
     } else if (pathname.includes(ROUTES.ACCOUNT)) {
-      setActiveTabs([0, 1, 2, 3]);
+      setActiveTabs(3);
     } else {
-      setActiveTabs([0, 1, 2, 3, 4]);
+      setActiveTabs(4);
     }
   }, [pathname]);
 
@@ -32,7 +32,7 @@ const index: React.FC = () => {
           <Header tabData={tabData} activeTabs={activeTabs} />
         </div>
         <div className="mainContent">
-          {activeTabs[activeTabs.length - 1] === 1 ? (
+          {activeTabs === 1 ? (
             <Wrap>
               <h1 style={{ color: 'white' }}>START 3D PRINTING YOUR FUTURE</h1>
               {<Outlet />}

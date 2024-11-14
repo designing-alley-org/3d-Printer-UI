@@ -34,20 +34,27 @@ export const FooterData = styled.section`
 
 export const Numbers = styled.section`
   display: flex;
-      padding: 2rem 4rem;
+  padding: 2rem 4rem;
   img {
     width: 70rem;
   }
   section {
-        display: grid;
+    display: grid;
     grid-template-rows: repeat(4, 1fr);
   }
   .sect {
-      padding-bottom: 1rem;
-}
+    margin: 1rem;
     h1 {
-      font-size: 24px;
-      color: #0066ff;
+      margin: unset;
     }
+    h3 {
+      font-family: Montserrat;
+      font-weight: 100;
+    }
+    padding-bottom: 1rem;
+  }
+  h1 {
+    font-size: 24px;
+    color: #0066ff;
   }
 `;

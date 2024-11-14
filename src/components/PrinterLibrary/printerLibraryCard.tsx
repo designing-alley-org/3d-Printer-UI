@@ -7,6 +7,7 @@ import stylus from '../../assets/images/stylus_note.svg';
 import print from '../../assets/images/print.svg';
 import mat from '../../assets/images/mat.svg';
 import tech from '../../assets/images/tech.svg';
+import printerImg from '../../assets/images/printerImg.svg';
 
 interface IPrinterCard {
   title: string;
@@ -18,48 +19,48 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
   const printerDataF = (item: any) => {
     return (
       <>
-      <span className="data">
-        <span className="head">
-          <img src={straigthen}/>
-          <span className="name">Build Volume</span>
+        <span className="data">
+          <span className="head">
+            <img src={straigthen} />
+            <span className="name">Build Volume</span>
+          </span>
+          <span className="desc">{item.buildVolume}</span>
         </span>
-        <span className="desc">{item.buildVolume}</span>
-      </span>
-      <span className="data">
-        <span className="head">
-          <img src={hd}/>
-          <span className="name">Layer Resolution</span>
+        <span className="data">
+          <span className="head">
+            <img src={hd} />
+            <span className="name">Layer Resolution</span>
+          </span>
+          <span className="desc">{item.layerResolution}</span>
         </span>
-        <span className="desc">{item.layerResolution}</span>
-      </span>
-      <span className="data">
-        <span className="head">
-          <img src={stylus}/>
-          <span className="name">Nozzle Size</span>
+        <span className="data">
+          <span className="head">
+            <img src={stylus} />
+            <span className="name">Nozzle Size</span>
+          </span>
+          <span className="desc">{item.nozzleSize}</span>
         </span>
-        <span className="desc">{item.nozzleSize}</span>
-      </span>
-      <span className="data">
-        <span className="head">
-          <img src={print}/>
-          <span className="name">Print Speed</span>
+        <span className="data">
+          <span className="head">
+            <img src={print} />
+            <span className="name">Print Speed</span>
+          </span>
+          <span className="desc">{item.printSpeed}</span>
         </span>
-        <span className="desc">{item.printSpeed}</span>
-      </span>
-      <span className="data">
-        <span className="head">
-          <img src={mat}/>
-          <span className="name">Material Compatibility</span>
+        <span className="data">
+          <span className="head">
+            <img src={mat} />
+            <span className="name">Material Compatibility</span>
+          </span>
+          <span className="desc">{item.materialCompatibility}</span>
         </span>
-        <span className="desc">{item.materialCompatibility}</span>
-      </span>
-      <span className="data">
-        <span className="head">
-          <img src={tech}/>
-          <span className="name">Technology Type</span>
+        <span className="data">
+          <span className="head">
+            <img src={tech} />
+            <span className="name">Technology Type</span>
+          </span>
+          <span className="desc">{item.technologyType}</span>
         </span>
-        <span className="desc">{item.technologyType}</span>
-      </span>
       </>
     );
   };
@@ -67,6 +68,7 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
   return (
     <Wrapper>
       <Header>
+        <img src={printerImg} />
         <section>
           <span className="title">{props.title}</span>
           <span className="subTitle">{props.subTitle}</span>

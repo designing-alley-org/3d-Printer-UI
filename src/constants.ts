@@ -1,5 +1,8 @@
 // import all svg
 import uploadIcon from './assets/icons/upload.svg';
+import deliveryIcon from './assets/icons/local_shipping.svg';
+import customizeIcon from './assets/icons/inbox_customize.svg';
+import quoteIcon from './assets/icons/quoteIcon.svg';
 import scaleIcon from './assets/icons/scaleIcon.svg';
 import technologyIcon from './assets/icons/technologyIcon.svg';
 import materialIcon from './assets/icons/materialIcon.svg';
@@ -23,6 +26,9 @@ import demography from './assets/images/demography.svg';
 import info from './assets/icons/info.svg';
 import group from './assets/icons/Group.svg';
 import arrow_dropdown_blue from './assets/icons/arrow_drop_down_blue_circle.svg';
+import aboutUs from './assets/images/aboutUS.svg';
+import aboutUs1 from './assets/images/aboutUs1.svg';
+import aboutUs2 from './assets/images/aboutUs2.svg';
 
 // export svg
 export { uploadIcon, cross, plus, minus, vector,vector_black,  arrow_left, arrow_right, info, group, arrow_dropdown_blue };
@@ -41,35 +47,41 @@ export const tabData = [
 
 // Data for QuoteText
 export const quoteTexts = [
-  { id: 1, label: 'UPLOAD STL', path: ROUTES.UPLOAD_STL },
-  { id: 2, label: 'CUSTOMIZE', path: ROUTES.CUSTOMIZE },
-  { id: 3, label: 'QUOTE', path: ROUTES.QUOTE },
-  { id: 4, label: 'CHECKOUT', path: ROUTES.CHECKOUT },
+  { id: 1, label: '1. UPLOAD STL', path: ROUTES.UPLOAD_STL },
+  { id: 2, label: '2. CUSTOMIZE', path: ROUTES.CUSTOMIZE },
+  { id: 3, label: '3. QUOTE', path: ROUTES.QUOTE },
+  { id: 4, label: '4. CHECKOUT', path: ROUTES.CHECKOUT },
+];
+export const accTab = [
+  { id: 1, label: 'MY PROFILE' },
+  { id: 2, label: 'MY ORDERS' },
+  { id: 3, label: 'NOTIFICATIONS' },
+  { id: 4, label: 'SETTINGS' },
 ];
 
 // Data for Card
 export const cardItems = [
   {
-    id: '1.',
+    id: '1',
     icon: uploadIcon, // Use the imported SVG icon
     upperText: 'UPLOAD STL',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
-    id: '2.',
-    icon: uploadIcon, // Use the imported SVG icon
+    id: '2',
+    icon: customizeIcon, // Use the imported SVG icon
     upperText: 'CUSTOMIZE',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
-    id: '3.',
-    icon: uploadIcon, // Use the imported SVG icon
+    id: '3',
+    icon: quoteIcon, // Use the imported SVG icon
     upperText: 'QUOTE',
     bottomText: 'upload one or more STL files and start customizing',
   },
   {
-    id: '4.',
-    icon: uploadIcon, // Use the imported SVG icon
+    id: '4',
+    icon: deliveryIcon, // Use the imported SVG icon
     upperText: 'DELIVERY',
     bottomText: 'upload one or more STL files and start customizing',
   },
@@ -260,6 +272,28 @@ export const technologyBtnData = [
   {
     id: 'SLA',
     name: 'SLA',
+  },
+];
+export const notifyData = [
+  {
+    id: 1,
+    value: 'immediately',
+    label: 'Immediately',
+  },
+  {
+    id: 2,
+    value: 'daily',
+    label: 'Daily',
+  },
+  {
+    id: 3,
+    value: 'never',
+    label: 'Never',
+  },
+  {
+    id: 4,
+    value: 'working Hours',
+    label: 'Working hours',
   },
 ];
 export const materialBtnData = [
@@ -491,5 +525,24 @@ export const whyUSData = [
     title: 'Flexibility & Customization: ',
     subTitle:
       'Customize your 3D prints with various materials and finishes to meet your specific needs, from simple to complex projects.',
+  },
+];
+export const AboutUsData = [
+  {
+    img: aboutUs,
+    title: 'Quality Assurance',
+    subTitle:
+      'Our rigorous testing guarantees high-performance and flawless final products.',
+  },
+  {
+    img: aboutUs1,
+    title: 'Fast Prototyping',
+    subTitle: 'Get rapid, high-quality 3D prints with quick turnaround times.',
+  },
+  {
+    img: aboutUs2,
+    title: 'Material Variety',
+    subTitle:
+      'Select the perfect material to suit the functionality and aesthetic of your project.',
   },
 ];

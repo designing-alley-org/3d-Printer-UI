@@ -1,4 +1,4 @@
-.tabrow {
+.tabrow, .insideTab {
   text-align: center;
   list-style: none;
   padding: 0;
@@ -7,66 +7,48 @@
   font-size: 12px;
   position: relative;
   display: flex;
-  transform: skew(40deg);
   border-top-right-radius: 30px;
+  margin: unset;
+  height: 4rem;
 }
-
-.tabrow li {
+.tabrow li, .insideTab li {
   background: #ffffff;
-  color: black;
   width: -webkit-fill-available;
-  background: linear-gradient(top, #ececec 50%, #d1d1d1 100%);
-  display: inline-block;
-  position: relative;
-  z-index: 0;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  margin: 0 -5px;
   padding: 8px 30px;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
 }
-
 .tabrow li.selected {
-  background: none;
-  border-top-color: #fff;
-  color: #ffffff;
+  border-top: 8px solid #1e6fff;
 }
-
-.tabrow li:before,
-.tabrow li:after {
-  position: absolute;
-  top: -1px;
-  width: 6px;
-  height: 6px;
-  content: '';
+.tabrow li:first-child {
+  background-color: unset;
+  border-top: unset;
+  color: white;
+  .tabContent {
+    padding: 10px;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    margin-top: -3.9rem;
+    margin-left: 11rem;
+    width: 3.05rem;
+    height: 4rem;
+    rotate: 180deg;
+    border-bottom-left-radius: 9rem;
+    box-shadow: -1px 2rem 0px 0px #ffffff;
+  }
 }
-
-/* .tabrow li:before {
-  left: -7px;
-  border-top-right-radius: 6px;
-  border-width: 1px 1px 0px 0px;
-  box-shadow: 2px 0px 0 #ffffff;
+.tabrow li:nth-child(2) {
+  border-bottom-left-radius: 3rem;
 }
-
-.tabrow li:after {
-  right: -7px;
-  border-top-left-radius: 6px;
-  border-width: 1px 0px 0px 1px;
-  box-shadow: -2px 0px 0 #ececec;
-}
-
-.tabrow li.selected:before {
-  box-shadow: 2px 0px 0 #fff;
-} */
-
 .tabrow li.selected:last-of-type::after {
   right: 10px;
   border-top-right-radius: 6px;
   border-width: 1px 1px 0px 0px;
   box-shadow: 2px 0px 0 #ffffff;
 }
-
 .tabrow li:first-child::before {
   display: none;
 }
@@ -78,7 +60,7 @@
 }
 .tabrow li span p {
   margin: unset;
-  transform: skew(-40deg);
+  /* transform: skew(-40deg); */
 }
 
 .tabContent {
