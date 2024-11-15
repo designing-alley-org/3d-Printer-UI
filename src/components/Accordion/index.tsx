@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import './styles.css';
 import Dropdown from '../../stories/Dropdown/Dropdown';
 import {
   colorBtnData,
   dimensionsOption,
   materialBtnData,
-  PrinterData,
+  PrinterData as InitialPrinterData,
   scaleFields,
   sizeOption,
   technologyBtnData,
@@ -34,6 +33,8 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
   const [selectedMat, setSelectedMat] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedPrinter, setSelectedPrinter] = useState<string>('');
+  const [printerData, setPrinterData] = useState<PrinterData[]>(InitialPrinterData);
+
 
   const handleUnitClick = (unit: string) => {
     setSelectedTech(unit);
@@ -55,6 +56,41 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
     label: `${(i + 1) * 5}`,
   }));
 
+  // Fetch printers based on selected technology and material
+  useEffect(() => {
+    if (selectedTech && selectedMat) {
+      const fetchPrinters = async () => {
+        try {
+          console.log('data:');
+          const response = await fetch(
+            `http://localhost:3000/filter?technology=${selectedTech}&materials=${selectedMat}`
+          );
+          const data = await response.json();
+          if (data.success) {
+            const formattedData = data.data.map((printer: any) => ({
+              title: printer.Name,
+              subTitle: printer.Model,
+              desc: 'Ultra High Resolution',
+              data: [
+                { name: 'Build Volume', val: `X: ${printer.buildVolume.x} mm, Y: ${printer.buildVolume.y} mm, Z: ${printer.buildVolume.z} mm` },
+                { name: 'Layer Resolution', val: `Min: ${printer.layerResolution.min} mm, Max: ${printer.layerResolution.max} mm` },
+                { name: 'Material Compatibility', val: printer.materialCompatibility.join(', ') },
+                { name: 'Technology Type', val: printer.technologyType },
+                { name: 'Nozzle Size', val: `${printer.nozzleSize} mm` },
+                { name: 'Print Speed', val: `${printer.printSpeed} mm/s` },
+                { name: 'Extruders', val: printer.extruders },
+              ],
+            }));
+            setPrinterData(formattedData);
+          }
+        } catch (error) {
+          console.error('Error fetching printers:', error);
+        }
+      };
+      fetchPrinters();
+    }
+  }, [selectedTech, selectedMat]);
+
   return (
     <div className="accordion">
       <div className="accordion-header">
@@ -69,11 +105,11 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
           <div className='scale'>
           <p>Scale In</p>
           <div style={{ display: 'flex',justifyContent: 'space-between' }}>
-            <Dropdown
+            {/* <Dropdown
               options={dimensionsOption}
               onSelect={() => {}}
               defaultValue="Dimensions"
-            />
+            /> */}
             <Dropdown options={sizeOption} onSelect={() => {}} />
             {scaleFields.map((item) => (
               <TextField
@@ -158,7 +194,7 @@ const Accordion: React.FC<AccordionProps> = ({ icon, id, title }) => {
         )}
         {id === '5' && (
           <>
-            {PrinterData.map((item) => (
+              {printerData.map((item) => (
               <PrinterCard
                 key={item.title}
                 title={item.title}

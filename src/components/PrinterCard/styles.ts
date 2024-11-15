@@ -53,13 +53,15 @@ export const Body = styled.section`
   .data {
     display: flex;
     flex-direction: column;
-    margin: 4px 8px 0px 0px;
+    width: 14rem;
+    margin: 8px 8px 0px 0px;
     .head {
       display: flex;
       align-items: center;
     }
     .name {
-      margin-left: 4px;
+      margin-left: 8px;
+      margin-bottom: 4px;
       font-size: 14px;
       font-weight: bold;
     }
@@ -71,7 +73,9 @@ export const Body = styled.section`
       border-radius: 40px;
     }
     .desc {
-      font-size: 12px;
+      font-size: 11px;
+      margin-top: .2rem;
+      margin-left: 1.7rem;
     }
   }
 `;
