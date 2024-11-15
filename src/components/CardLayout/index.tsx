@@ -60,13 +60,13 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
-        const response = await api.post(`/update-user-order/${orderId}`, {
+        const response = await api.put(`/update-user-order/${orderId}`, {
           files,
         });
         if (response.status === 200) {
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
-          navigate(ROUTES.CUSTOMIZE);
+          navigate(`${response.data.data._id}/customize`);
         }
       } catch (error) {
         console.error('Error uploading files:', error);
