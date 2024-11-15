@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import Header from '../Header';
 import './styles.css';
@@ -31,12 +32,13 @@ const CardLayout = () => {
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
+  const { orderId } = useParams();
   useEffect(() => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       setActiveTabs([0]);
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1]);
-    } else if (pathname.includes(`get-quotes/quote`)) {
+    } else if (pathname.includes(`get-quotes/${orderId}/quote`)) {
       setActiveTabs([0, 1, 2]);
     } else if (pathname.includes(ROUTES.CHECKOUT)) {
       setActiveTabs([0, 1, 2, 3]);
@@ -49,7 +51,6 @@ const CardLayout = () => {
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
-  const { orderId } = useParams();
 
   const onProceed = async () => {
     // Add validation for files before proceeding from upload step
@@ -84,7 +85,7 @@ const CardLayout = () => {
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
-      navigate(ROUTES.QUOTE);
+      navigate(`${orderId}/quote`);
     } else if (pathname === '/get-quotes/quote') {
       setActiveTabs([0, 1, 2, 3]);
       navigate(ROUTES.CHECKOUT);

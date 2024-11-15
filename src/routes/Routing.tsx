@@ -39,7 +39,7 @@ const Routing: React.FC = () => {
         </Route>
         <Route path={ROUTES.GET_QUOTES} element={<CardLayout />}>
           <Route index element={<QuoteCard />} />
-          <Route path=':orderId'>
+          <Route path=':orderId/'>
             <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
             <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
             <Route path={ROUTES.QUOTE} element={<Quote />} />

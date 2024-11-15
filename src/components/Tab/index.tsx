@@ -1,7 +1,7 @@
 import './styles.css';
 import styled from 'styled-components';
 import { Tab } from '../../types/home.types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface ITabContainerProps {
   tabs: Tab[];
@@ -13,6 +13,7 @@ interface ITabContainerProps {
 const TabComponent = (props: ITabContainerProps) => {
   const { tabs, numberId, activeTabs } = props;
   const navigate = useNavigate();
+  const { orderId } = useParams();
   return (
     <TabWrapper>
       <ul className={props.insideTab ? 'insideTab' : 'tabrow'}>
@@ -20,7 +21,11 @@ const TabComponent = (props: ITabContainerProps) => {
           <li
             key={tab.id}
             className={`${activeTabs === tab.id ? 'selected' : ''}`}
-            onClick={() => navigate(tab.path)}
+            onClick={() =>
+              props.insideTab
+                ? navigate(`${orderId}/${tab.path}`)
+                : navigate(tab.path)
+            }
           >
             <span className="tabContent">
               {' '}
