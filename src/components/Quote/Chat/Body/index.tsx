@@ -22,7 +22,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
     <Wrapper ref={chatContainerRef}>
       {messages.map((message, index) => (
         <Box key={index}>
-          {message.sender === 'admin' ? (
+          {message.sendBy === 'admin' ? (
             <Box
               sx={{
                 display: 'flex',

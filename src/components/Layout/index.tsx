@@ -7,10 +7,16 @@ import { Wrap } from '../Header/styles';
 import { tabData } from '../../constants';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
+import api from '../../axiosConfig';
+import { useDispatch } from 'react-redux';
+import { ADD_USER } from '../../store/user/action_types';
+import { addUser } from '../../store/user/actions';
+import { addUserDetails } from '../../store/user/reducer';
 
 const index: React.FC = () => {
   const [activeTabs, setActiveTabs] = useState<number>(0);
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (pathname.includes(ROUTES.DASHBOARD)) {
       setActiveTabs(0);
@@ -24,6 +30,15 @@ const index: React.FC = () => {
       setActiveTabs(4);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    async function getUserDetails() {
+      // Fetch user details
+      const res = await api.get('user/me');
+      dispatch(addUserDetails(res.data.data));
+    }
+    getUserDetails();
+  }, []);
 
   return (
     <div className="rootLayout">

@@ -10,7 +10,6 @@ import Button from '../../stories/button/Button';
 import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
-import { API_URL } from '../../store/printer/actions';
 
 interface ModelDimensions {
   height: number;
@@ -73,11 +72,11 @@ const CardLayout = () => {
       }
     } else if (pathname === '/get-quotes') {
       try {
-        const response = await api.post(`${API_URL}/create-order`);
+        const response = await api.post(`/create-order`);
         if (response.status === 200) {
           console.log('order-created successfully successfully!');
           setActiveTabs([0]);
-          navigate(`upload-stl/${response.data.data._id}`);
+          navigate(`${response.data.data._id}/upload-stl`);
         }
       } catch (error) {
         console.error('Error uploading files:', error);

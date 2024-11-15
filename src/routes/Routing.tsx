@@ -39,13 +39,15 @@ const Routing: React.FC = () => {
         </Route>
         <Route path={ROUTES.GET_QUOTES} element={<CardLayout />}>
           <Route index element={<QuoteCard />} />
-          <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
-          <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
-          <Route path={ROUTES.QUOTE} element={<Quote />} />
-          <Route path={ROUTES.CHECKOUT} element={<CheckOut />}>
-            <Route index element={<ShippingDetails />} />
-            <Route path={ROUTES.DELIVERY_PLAN} element={<DeliveryPlan />} />
-            <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
+          <Route path=':orderId'>
+            <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
+            <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
+            <Route path={ROUTES.QUOTE} element={<Quote />} />
+            <Route path={ROUTES.CHECKOUT} element={<CheckOut />}>
+              <Route index element={<ShippingDetails />} />
+              <Route path={ROUTES.DELIVERY_PLAN} element={<DeliveryPlan />} />
+              <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
+            </Route>
           </Route>
         </Route>
         <Route path={ROUTES.SERVICES} element={<Services />} />

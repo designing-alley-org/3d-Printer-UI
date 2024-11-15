@@ -11,6 +11,7 @@ import {
 import {
   ADD_FILE,REMOVE_FILE,UPDATE_FILE_PROGRESS,SET_ACTIVE_FILE
 } from './stlFile/action_types';
+import { ADD_USER } from './user/action_types';
 
 export interface RootState {
   auth: AuthState;
@@ -30,6 +31,18 @@ export interface User {
   id: string;
   username: string;
   token: string;
+}
+
+export interface user{
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+interface AddUserAction {
+  type: typeof ADD_USER;
+  payload: User;
 }
 
 interface LoginRequestAction {
@@ -93,6 +106,10 @@ export type RegisterActionTypes =
     files: FileState[];
     activeFileId: string | null;
   }
+
+  export interface UserReducerState{
+    user: User | null;
+  }
   
    interface AddFileAction {
     type: typeof ADD_FILE;
@@ -120,6 +137,10 @@ export type RegisterActionTypes =
     payload: string;
   }
   
+  export type UserActionTypes =
+    | AddUserAction;
+
+
   export type FileActionTypes =
     | AddFileAction
     | RemoveFileAction
