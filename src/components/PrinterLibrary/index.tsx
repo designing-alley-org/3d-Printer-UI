@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 // import { PrinterData } from '../../constants';
 import PrinterLibraryCard from './printerLibraryCard';
@@ -8,7 +7,7 @@ import PrinterLibraryCard from './printerLibraryCard';
 // import { AppDispatch } from '../../store/store';
 import { styled } from 'styled-components';
 // import { IPrinterDetails } from '../../store/types';
-import { API_URL } from '../../store/printer/actions';
+import api from '../../axiosConfig';
 // import { RootState } from '../../store/types';
 
 const PrinterLibrary = () => {
@@ -24,7 +23,7 @@ const PrinterLibrary = () => {
       setError(null);
       try {
         // Fetch the data (replace URL with your API endpoint)
-        const response = await axios.get(`${API_URL}/printers`);
+        const response = await api.get('/printers');
         setPrinterDetails(response.data); // Store the data in state
       } catch (error) {
         setError(error.message); // Handle errors

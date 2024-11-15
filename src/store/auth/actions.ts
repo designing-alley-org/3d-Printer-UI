@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from './action_types';
 import { AuthActionTypes } from '../types';
 import api from '../../axiosConfig';
-import { API_URL } from '../printer/actions';
 
 export const login =
   (email: string, password: string,navigate) =>
@@ -12,7 +11,7 @@ export const login =
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-      const response = await api.post(`${API_URL}/login`, { email, password });
+      const response = await api.post('login', { email, password });
       const token = response.data.token;
       localStorage.setItem('token', token);
       const user = response.data;

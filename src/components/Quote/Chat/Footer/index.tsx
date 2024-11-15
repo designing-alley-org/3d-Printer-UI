@@ -6,20 +6,26 @@ import { Socket } from 'socket.io-client';
 
 interface ChatFooterProps {
   socket: Socket | null;
+  sender: string;
+  receiver: string;
 }
-const defaultUserId = 'TestUser'; // Replace with actual user ID
-const defaultMerchantId = 'TestMerchant'; // Replace with actual merchant ID
 
-export default function ChatFooter({ socket }: ChatFooterProps) {
+export default function ChatFooter({
+  socket,
+  sender,
+  receiver,
+}: ChatFooterProps) {
   const [message, setMessage] = useState('');
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (message.trim() !== '' && socket) {
       // Send message based on whether the current user is a merchant or a user
       socket.emit('sendMessage', {
-        senderId: defaultUserId,
-        receiverId: defaultMerchantId,
+        senderId: sender,
+        receiverId: receiver,
         content: message,
+        order_id: '67373280282e4679f21631f6',
+        sender: 'user',
       });
       setMessage('');
     }

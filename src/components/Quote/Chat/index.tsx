@@ -4,8 +4,8 @@ import ChatBody from './Body';
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-
 import api from '../../../axiosConfig';
+import { useSelector } from 'react-redux';
 
 interface Message {
   sender: string;
@@ -18,10 +18,12 @@ export default function Chat() {
     DefaultEventsMap
   > | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const user = useSelector((state) => state.user);
+  console.log(messages);
 
   // Use default test IDs for sender and receiver (User and Merchant)
-  const defaultUserId = 'TestUser'; // Replace with actual user ID
-  const defaultMerchantId = 'TestMerchant'; // Replace with actual merchant ID
+  const defaultUserId = user.user._id; // Replace with actual user ID
+  const defaultMerchantId = user.user._id; // Replace with actual merchant ID
 
   useEffect(() => {
     const newSocket: Socket = io('http://localhost:5000', {
@@ -53,7 +55,7 @@ export default function Chat() {
     });
     async function fetchMessages() {
       try {
-        const response = await api.get('/get-message/TestUser/TestMerchant');
+        const response = await api.get('/get-message/67373280282e4679f21631f6');
         const fetchedMessages = response.data.data.messages;
         const fetchMessages = fetchedMessages.reverse();
         setMessages(fetchMessages);
@@ -72,7 +74,11 @@ export default function Chat() {
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
       <ChatBody messages={messages} />
-      <ChatFooter socket={socket} />
+      <ChatFooter
+        socket={socket}
+        sender={defaultUserId}
+        receiver={defaultMerchantId}
+      />
     </Box>
   );
 }
