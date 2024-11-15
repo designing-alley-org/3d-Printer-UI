@@ -361,90 +361,22 @@ export const PrinterData = [
       },
       {
         name: 'Technology Type',
-        val: 'FDM (Fused Deposition Modeling)',
+        val: 'FDM ',
       },
       {
         name: 'Nozzle Size',
-        val: '0.4 mm (Interchangeable)',
+        val: '0.4 mm ',
       },
       {
         name: 'Print Speed',
-        val: '0.4 mm (Interchangeable)',
+        val: '0.4 mm ',
       },
       {
         name: 'Extruders',
         val: 'Single Extruder',
       },
     ],
-  },{
-    title: 'printer name 2',
-    subTitle: ' printer',
-    desc: 'Ultra High Resolution',
-    data: [
-      {
-        name: 'Build Volume',
-        val: 'X: 220 mm, Y: 220 mm, Z: 250 mm',
-      },
-      {
-        name: 'Layer Resolution',
-        val: 'Min: 50 microns, Max: 400 microns',
-      },
-      {
-        name: 'Material Compatibility',
-        val: 'PLA, ABS, TPU',
-      },
-      {
-        name: 'Technology Type',
-        val: 'FDM (Fused Deposition Modeling)',
-      },
-      {
-        name: 'Nozzle Size',
-        val: '0.4 mm (Interchangeable)',
-      },
-      {
-        name: 'Print Speed',
-        val: '0.4 mm (Interchangeable)',
-      },
-      {
-        name: 'Extruders',
-        val: 'Single Extruder',
-      },
-    ],
-  },{
-    title: 'printer name 3',
-    subTitle: ' printer',
-    desc: 'Ultra High Resolution',
-    data: [
-      {
-        name: 'Build Volume',
-        val: 'X: 220 mm, Y: 220 mm, Z: 250 mm',
-      },
-      {
-        name: 'Layer Resolution',
-        val: 'Min: 50 microns, Max: 400 microns',
-      },
-      {
-        name: 'Material Compatibility',
-        val: 'PLA, ABS, TPU',
-      },
-      {
-        name: 'Technology Type',
-        val: 'FDM (Fused Deposition Modeling)',
-      },
-      {
-        name: 'Nozzle Size',
-        val: '0.4 mm (Interchangeable)',
-      },
-      {
-        name: 'Print Speed',
-        val: '0.4 mm (Interchangeable)',
-      },
-      {
-        name: 'Extruders',
-        val: 'Single Extruder',
-      },
-    ],
-  },
+  }
 ];
 
 export const footerData = [

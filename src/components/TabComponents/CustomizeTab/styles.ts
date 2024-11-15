@@ -116,6 +116,7 @@ export const ModelName = styled.section`
     content: 'Customisation';
     position: absolute;
     bottom: 9px;
+    margin-left: 1.7rem;
   }
 `;
 
@@ -125,7 +126,7 @@ export const CustomizeBox = styled.section`
   align-items: center;
   background: red;
   border-radius: 37px;
-  position: static;
+  position: absolute;
   background: #ffffff;
   bottom: 0.6rem;
   right: 0.4rem;
