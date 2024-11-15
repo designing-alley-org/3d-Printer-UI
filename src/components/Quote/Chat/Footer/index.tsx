@@ -8,12 +8,14 @@ interface ChatFooterProps {
   socket: Socket | null;
   sender: string;
   receiver: string;
+  orderId: string;
 }
 
 export default function ChatFooter({
   socket,
   sender,
   receiver,
+  orderId
 }: ChatFooterProps) {
   const [message, setMessage] = useState('');
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +26,7 @@ export default function ChatFooter({
         senderId: sender,
         receiverId: receiver,
         content: message,
-        order_id: '67373280282e4679f21631f6',
+        order_id: orderId,
         sender: 'user',
       });
       setMessage('');

@@ -6,6 +6,7 @@ import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 import api from '../../../axiosConfig';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 interface Message {
   sender: string;
@@ -20,7 +21,9 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const user = useSelector((state) => state.user);
   console.log(messages);
-
+  const {orderId} =useParams();
+  console.log(orderId);
+    
   // Use default test IDs for sender and receiver (User and Merchant)
   const defaultUserId = user.user._id; // Replace with actual user ID
   const defaultMerchantId = user.user._id; // Replace with actual merchant ID
@@ -55,7 +58,7 @@ export default function Chat() {
     });
     async function fetchMessages() {
       try {
-        const response = await api.get('/get-message/67373280282e4679f21631f6');
+        const response = await api.get(`/get-message/${orderId}`);
         const fetchedMessages = response.data.data.messages;
         const fetchMessages = fetchedMessages.reverse();
         setMessages(fetchMessages);
@@ -78,6 +81,7 @@ export default function Chat() {
         socket={socket}
         sender={defaultUserId}
         receiver={defaultMerchantId}
+        orderId={orderId}
       />
     </Box>
   );
