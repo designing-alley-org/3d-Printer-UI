@@ -89,6 +89,11 @@ export const Body = styled.section`
       border-radius: 40px;
     }
     .desc {
+      display: flex;
+      margin-left: 1rem;
+      p {
+        margin: 0rem 0.5rem;
+      }
       font-size: 12px;
     }
   }

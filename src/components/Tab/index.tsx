@@ -6,21 +6,21 @@ import { useNavigate } from 'react-router-dom';
 interface ITabContainerProps {
   tabs: Tab[];
   numberId: boolean;
-  activeTabs?: number; 
+  activeTabs?: number;
   insideTab?: boolean;
 }
 
 const TabComponent = (props: ITabContainerProps) => {
-  const { tabs,numberId , activeTabs} = props;
-  const navigate=useNavigate();
+  const { tabs, numberId, activeTabs } = props;
+  const navigate = useNavigate();
   return (
     <TabWrapper>
-      <ul className={props.insideTab ? "insideTab" : "tabrow"}>
+      <ul className={props.insideTab ? 'insideTab' : 'tabrow'}>
         {tabs.map((tab) => (
           <li
             key={tab.id}
             className={`${activeTabs === tab.id ? 'selected' : ''}`}
-            onClick={() => props.insideTab ? '' : navigate(tab.path) }
+            onClick={() => navigate(tab.path)}
           >
             <span className="tabContent">
               {' '}

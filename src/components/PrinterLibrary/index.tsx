@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-// import { PrinterData } from '../../constants';
 import PrinterLibraryCard from './printerLibraryCard';
-// import { fetchPrinters } from '../../store/printer/actions';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { AppDispatch } from '../../store/store';
 import { styled } from 'styled-components';
 // import { IPrinterDetails } from '../../store/types';
 import api from '../../axiosConfig';
@@ -12,7 +8,6 @@ import api from '../../axiosConfig';
 
 const PrinterLibrary = () => {
   //   const dispatch: AppDispatch = useDispatch();
-  //   const details = useSelector((state: RootState) => state.printerDetails);
   const [printerDetails, setPrinterDetails] = useState(); // State to hold the fetched data
   const [loading, setLoading] = useState(true); // State to indicate loading
   const [error, setError] = useState(null);
@@ -34,7 +29,6 @@ const PrinterLibrary = () => {
 
     fetchData();
   }, []);
-  console.log(printerDetails?.data);
 
   return (
     <Wrapper>
@@ -46,7 +40,7 @@ const PrinterLibrary = () => {
         {printerDetails?.data?.map((item: any, idx: number) => (
           <PrinterLibraryCard
             key={idx}
-            title={item.printerName}
+            title={item.Name}
             subTitle={item.Model}
             desc={item.printerName}
             data={item}
