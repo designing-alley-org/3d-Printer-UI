@@ -4,7 +4,7 @@ import './styles.css';
 import { TabLine } from './styles';
 import { LinearProgress } from '@mui/material';
 import { quoteTexts } from '../../constants';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import Button from '../../stories/button/Button';
 import axios from 'axios';
@@ -49,6 +49,7 @@ const CardLayout = () => {
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
+  const { orderId } = useParams();
 
   const onProceed = async () => {
     // Add validation for files before proceeding from upload step
@@ -59,7 +60,7 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
-        const response = await axios.post('/update-user-order/:orderId', {
+        const response = await api.post(`/update-user-order/${orderId}`, {
           files,
         });
         if (response.status === 200) {
