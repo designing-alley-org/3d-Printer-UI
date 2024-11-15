@@ -39,15 +39,15 @@ const Footer: React.FC = () => {
           </Numbers>
         </>
       )}
-      {!pathname.includes(ROUTES.SERVICES) && <PrinterLibrary /> }
-      {pathname.includes(ROUTES.SERVICES) && <AboutUs /> }
+      {!pathname.includes(ROUTES.SERVICES) && <PrinterLibrary />}
+      {pathname.includes(ROUTES.SERVICES) && <AboutUs />}
       <WhyUs />
       <Contact />
       <FooterData>
         <h1>3D PRINT YOUR FUTURE</h1>
         <div className="footer-data">
-          {footerData.map((item) => (
-            <a href={`${item.url}`} target="_blank">
+          {footerData.map((item, idx) => (
+            <a key={idx} href={`${item.url}`} target="_blank">
               {item.name}
             </a>
           ))}

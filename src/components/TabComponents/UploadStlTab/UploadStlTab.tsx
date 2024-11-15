@@ -44,7 +44,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
           return;
         }
 
-        const filesData: FileData[] = newFiles.map((file) => ({
+        const filesData: FileData[] = newFiles?.map((file) => ({
           id: `${file.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           name: file.name,
           dimensions: {
@@ -65,7 +65,6 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     },
     [setFiles]
   );
-
 
   const handleUnitClick = useCallback((unit: string) => {
     setSelectedUnit(unit);
@@ -143,7 +142,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         <Box sx={styles.fileCountSection}>
           <Typography sx={styles.fileText}>Files</Typography>
           <Box sx={styles.filesBox}>
-            <Typography sx={styles.fileBoxText}>{files.length}</Typography>
+            <Typography sx={styles.fileBoxText}>{files?.length}</Typography>
           </Box>
         </Box>
       </Box>
@@ -167,7 +166,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
           <Typography sx={styles.uploadText}>Upload STL Files</Typography>
         </Box>
         <Box sx={styles.fileCardContainer}>
-          {files.map((file) => (
+          {files?.map((file) => (
             <UploadStlCardFile
               key={file.id}
               file={file}

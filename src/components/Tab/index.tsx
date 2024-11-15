@@ -20,7 +20,7 @@ const TabComponent = (props: ITabContainerProps) => {
           <li
             key={tab.id}
             className={`${activeTabs === tab.id ? 'selected' : ''}`}
-            onClick={() =>navigate(tab.path) }
+            onClick={() => props.insideTab ? '' : navigate(tab.path) }
           >
             <span className="tabContent">
               {' '}

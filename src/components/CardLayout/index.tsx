@@ -9,6 +9,8 @@ import { ROUTES } from '../../routes/routes-constants';
 import Button from '../../stories/button/Button';
 import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
+import api from '../../axiosConfig';
+import { API_URL } from '../../store/printer/actions';
 
 interface ModelDimensions {
   height: number;
@@ -58,7 +60,9 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
-        const response = await axios.post('/update-user-order/:orderId', { files });
+        const response = await axios.post('/update-user-order/:orderId', {
+          files,
+        });
         if (response.status === 200) {
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
@@ -67,10 +71,17 @@ const CardLayout = () => {
       } catch (error) {
         console.error('Error uploading files:', error);
       }
-      
     } else if (pathname === '/get-quotes') {
-      setActiveTabs([0]);
-      navigate(ROUTES.UPLOAD_STL);
+      try {
+        const response = await api.post(`${API_URL}/create-order`);
+        if (response.status === 200) {
+          console.log('order-created successfully successfully!');
+          setActiveTabs([0]);
+          navigate(`upload-stl/${response.data.data._id}`);
+        }
+      } catch (error) {
+        console.error('Error uploading files:', error);
+      }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
       navigate(ROUTES.QUOTE);
@@ -99,21 +110,23 @@ const CardLayout = () => {
             <LinearProgress variant="determinate" value={getProgressValue()} />
           </TabLine>
         )}
-        <Header tabData={quoteTexts} insideTab={true}/>
+        <Header tabData={quoteTexts} insideTab={true} />
       </div>
       <div className="mainCardContent">
-      {pathname.includes(ROUTES.UPLOAD_STL) ? (
-        <UploadStlCard files={files} setFiles={setFiles} />
-      ) : (
-        <Outlet context={{ files, setFiles }} />
-      )}
-    </div>
+        {pathname.includes(ROUTES.UPLOAD_STL) ? (
+          <UploadStlCard files={files} setFiles={setFiles} />
+        ) : (
+          <Outlet context={{ files, setFiles }} />
+        )}
+      </div>
       <div className="btn">
         <div></div>
         <span className="proc">
           <Button
             label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
-            onClick={!pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment}
+            onClick={
+              !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
+            }
           />
         </span>
       </div>

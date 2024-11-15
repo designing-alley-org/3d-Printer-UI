@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const Wrapper = styled.main`
   border: 0.1px solid #66a3ff;
   background-color: #e8f1ff;
-  width: 22rem;
   border-radius: 2rem;
   cursor: pointer;
   .active-printer {

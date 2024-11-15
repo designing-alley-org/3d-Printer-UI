@@ -24,14 +24,21 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <img src={straigthen} />
             <span className="name">Build Volume</span>
           </span>
-          <span className="desc">{item.buildVolume}</span>
+          <span className="desc">
+            <p>x: {item.buildVolume.x}</p>
+            <p>y: {item.buildVolume.y}</p>
+            <p>z: {item.buildVolume.z}</p>
+          </span>
         </span>
         <span className="data">
           <span className="head">
             <img src={hd} />
             <span className="name">Layer Resolution</span>
           </span>
-          <span className="desc">{item.layerResolution}</span>
+          <span className="desc">
+            <p>min: {item.layerResolution.min}</p>
+            <p>max: {item.layerResolution.max}</p>
+          </span>
         </span>
         <span className="data">
           <span className="head">

@@ -1,4 +1,3 @@
-
 import { Display, DisplayInfo, KnowMore, Wrapper } from './styles';
 import Button from '../../stories/button/Button';
 import { whyUSData } from '../../constants';
@@ -16,8 +15,8 @@ const WhyUs = () => {
           <span>.</span>
         </span>
         <DisplayInfo>
-          {whyUSData.map((item) => (
-            <span className="info">
+          {whyUSData.map((item, idx) => (
+            <span className="info" key={idx}>
               <img src={item.img} />
               <span className="title">{item.title}</span>
               <span className="sub">{item.subTitle}</span>
@@ -34,6 +33,6 @@ const WhyUs = () => {
       </KnowMore>
     </Wrapper>
   );
-}
+};
 
 export default WhyUs;

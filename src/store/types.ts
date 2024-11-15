@@ -128,6 +128,7 @@ export type RegisterActionTypes =
   
 export interface IPrinterDetails {
   printerName: string;
+  Model: string;
   buildVolume: string;
   layerResolution: string;
   materialCompatibility: string;

@@ -1,4 +1,5 @@
-.tabrow, .insideTab {
+.tabrow,
+.insideTab {
   text-align: center;
   list-style: none;
   padding: 0;
@@ -11,7 +12,8 @@
   margin: unset;
   height: 4rem;
 }
-.tabrow li, .insideTab li {
+.tabrow li,
+.insideTab li {
   background: #ffffff;
   width: -webkit-fill-available;
   padding: 8px 30px;
@@ -27,17 +29,17 @@
   color: white;
   .tabContent {
     padding: 10px;
-  }
-  &::after {
-    content: '';
-    position: absolute;
-    margin-top: -3.9rem;
-    margin-left: 11rem;
-    width: 3.05rem;
-    height: 4rem;
-    rotate: 180deg;
-    border-bottom-left-radius: 9rem;
-    box-shadow: -1px 2rem 0px 0px #ffffff;
+    &::before {
+      content: '';
+      position: absolute;
+      margin-top: -0.5rem;
+      margin-right: -23%;
+      width: 3.05rem;
+      height: 4rem;
+      rotate: 180deg;
+      border-bottom-left-radius: 9rem;
+      box-shadow: -1px 2rem 0px 0px #ffffff;
+    }
   }
 }
 .tabrow li:nth-child(2) {

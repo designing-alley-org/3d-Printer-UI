@@ -36,7 +36,7 @@ export const Numbers = styled.section`
   display: flex;
   padding: 2rem 4rem;
   img {
-    width: 70rem;
+    width: -webkit-fill-available;
   }
   section {
     display: grid;

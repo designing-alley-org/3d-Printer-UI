@@ -14,7 +14,7 @@ import { Dispatch } from "redux";
 //     payload: id,
 //   });
   
-const API_URL = 'https://threed-web-backend.onrender.com';
+export const API_URL = 'https://threed-web-backend.onrender.com';
 
   export const fetchPrinters = () => async (dispatch: Dispatch) => {
     dispatch({ type: GET_PRINTER });
