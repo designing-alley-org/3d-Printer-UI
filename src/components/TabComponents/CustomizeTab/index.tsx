@@ -16,7 +16,7 @@ import {
 import { customize, vector_black } from '../../../constants';
 import Accordion from '../../Accordion';
 import ViewModelStl from '../../ViewStlFile';
-import { addFileDetails } from '../../../store/FilesDetails/reducer';
+import { addAllFiles } from '../../../store/FilesDetails/reducer';
 import api from '../../../axiosConfig';
 
 // Define FileData type
@@ -37,10 +37,10 @@ interface FileData {
 }
 
 const CustomizeTab: React.FC = () => {
-  const [fetchfiles, setFetchFiles] = useState<FileData[]>([]);
+  const [files, setFetchFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [color, setColor] = useState<string>('');
- 
+  const [weight, setWeight] = useState<number>(0);
   const dispatch = useDispatch();
   const { orderId } = useParams();
 
@@ -49,45 +49,39 @@ const CustomizeTab: React.FC = () => {
     const fetchOrder = async () => {
       try {
         const response = await api.get(`/order-show/${orderId}`);
-        const fetchedFiles = response.data.message.files.map((file: any) => ({
+        const files = response.data.message.files.map((file: any) => ({
           _id: file._id,
-          fileName: file.fileName.slice(0, 6),
+          fileName: file.fileName.split('-')[0],
           fileUrl: file.fileUrl,
           quantity: file.quantity,
           color: file.color,
-          material: file.material,
-          technology: file.technology,
+          material: file.material || '',
+          technology: file.technology || '',
           printer: file.printer,
           dimensions: file.dimensions,
         }));
-        setFetchFiles(fetchedFiles);
+        setFetchFiles(files);
+        dispatch(addAllFiles(files));
       } catch (error) {
         console.error('Error fetching files:', error);
       }
     };
 
     if (orderId) fetchOrder();
-  }, [orderId]);
+  }, []);
 
-  // Store fetched files in Redux
-  useEffect(() => {
-    dispatch(addFileDetails(fetchfiles));
-  }, [dispatch, fetchfiles]);
-
+  
   // Save the rendering in store
   useEffect(() => {
-    dispatch({ type: 'SAVE_RENDERING', payload: fetchfiles });
-  }, [dispatch, fetchfiles]);
+    dispatch({ type: 'SAVE_RENDERING', payload: files });
+  }, [dispatch, files]);
 
-  // extract file from store
-  const fileDetails = useSelector((state: any) => state.fileDetails.files);
-  console.log('fileDetails:', fileDetails);
 
   // Extract color of the active file
   useEffect(() => {
-    const activeFile = fetchfiles.find((file) => file._id === activeFileId);
+    const activeFile = files.find((file) => file._id === activeFileId);
     if (activeFile) setColor(activeFile.color);
-  }, [activeFileId, fetchfiles]);
+  }, [activeFileId, files]);
 
   const handleOpenViewer = useCallback((fileId: string) => {
     setActiveFileId(fileId);
@@ -108,10 +102,10 @@ const CustomizeTab: React.FC = () => {
         <Files>
           <span className="header">
             <span className="file">Files</span>
-            <span className="count">{fetchfiles.length}</span>
+            <span className="count">{files.length}</span>
           </span>
           <UploadedFile>
-            {fetchfiles.map((file) => (
+            {files.map((file) => (
               <span
                 key={file._id}
                 className="upload-file"
@@ -125,10 +119,10 @@ const CustomizeTab: React.FC = () => {
               >
                 <Model>
                   <span className="model-preview">
-                    <ViewModelStl
+                    {/* <ViewModelStl
                       fileUrl={file.fileUrl}
                       modelColor={activeFileId === file._id ? color : ''}
-                    />
+                    /> */}
                   </span>
                   <span
                     className="view-model"
@@ -166,8 +160,12 @@ const CustomizeTab: React.FC = () => {
             ))}
           </div>
           <div className="weight-section">
-            <p>Current Weight & Volume:</p>
-            <p>100gm</p>
+            {weight > 0 && (
+              <>
+                <p>Current Weight & Volume:</p>
+                <p>{`${weight}gm`}</p>
+              </>
+            )}
           </div>
           <Button className="apply-button">Apply Selection</Button>
         </Customize>

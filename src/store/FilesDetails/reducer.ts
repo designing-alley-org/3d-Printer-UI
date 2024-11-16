@@ -34,6 +34,11 @@ export const fileDetailsSlice = createSlice({
         addFileDetails: (state, action: PayloadAction<FileDetail>) => {
             state.files = [...state.files, action.payload];
         },
+
+        addAllFiles: (state, action: PayloadAction<FileDetail[]>) => {
+            state.files = action.payload;
+        },
+
         updateDimensions: (state, action: PayloadAction<{ id: string; dimensions: Partial<Dimensions> }>) => {
             const { id, dimensions } = action.payload;
             const file = state.files.find(file => file._id === id);
@@ -89,6 +94,7 @@ export const {
     updateTechnology,
     updateMaterial,
     updatePrinter,
+    addAllFiles
 } = fileDetailsSlice.actions;
 
 export default fileDetailsSlice.reducer;
