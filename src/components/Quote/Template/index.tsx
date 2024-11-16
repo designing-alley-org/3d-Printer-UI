@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Divider, Typography, TextField, Button } from '@mui/material';
+import { Box, Divider, Typography, TextField } from '@mui/material';
 import { TemplateWrapper } from './styles';
+import Button from '../../../stories/button/Button';
+import './style.css';
 
 interface QuoteItem {
   file: string;
@@ -17,11 +19,6 @@ interface QuoteData {
 interface SummaryRow {
   label: string;
   value: number;
-}
-
-interface ActionButton {
-  label: string;
-  onClick: () => void;
 }
 
 const QuoteTemplate: React.FC = () => {
@@ -54,47 +51,100 @@ const QuoteTemplate: React.FC = () => {
   // Summary rows configuration
   const summaryRows: SummaryRow[] = [
     { label: 'Total Price', value: totalPrice },
-    { label: 'Shipping', value: quote.Shipping },
     { label: 'Taxes', value: quote.Taxes },
   ];
 
   // Action buttons configuration
-  const actionButtons: ActionButton[] = [
-    { label: 'Negotiate', onClick: () => setShowNegotiate(!showNegotiate) },
-    { label: 'Reject', onClick: () => {} },
-    { label: 'Put Order on Hold', onClick: () => {} },
-    { label: 'Approve', onClick: () => {} },
-  ];
+  // const actionButtons: ActionButton[] = [
+  //   { label: 'Negotiate', onClick: () => setShowNegotiate(!showNegotiate) },
+  //   { label: 'Approve', onClick: () => {} },
+  // ];
 
   return (
     <TemplateWrapper>
-      <Typography variant="body1">Quote Chat</Typography>
-      <Typography variant="h2" sx={{ color: '#1E6FFF', mb: 2 }}>
-        {showNegotiate ? 'Negotiate Quote' : 'Merchant Quote'}
+      <Typography variant="body1" sx={{ color: '#2359B0' }}>
+        Quote Chat
+      </Typography>
+      <Typography variant="h2" sx={{ color: '#2359B0', mb: 2 }}>
+        Quote
       </Typography>
 
-      <Divider />
+      <Divider sx={{ background: '#66A3FF' }} />
 
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: showNegotiate ? 'repeat(4, 1fr)' : 'repeat(3, 1fr)',
-          gap: 2,
+          gridTemplateColumns: showNegotiate
+            ? 'repeat(4, 1fr)'
+            : 'repeat(3, 1fr)',
+          gap: 4,
           position: 'relative',
         }}
       >
-        <Typography variant="body1" fontWeight="bold">
-          Files
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant="body1" fontWeight="bold">
+            Files
+          </Typography>
+          <Box
+            sx={{
+              height: 32,
+              width: 32,
+              backgroundColor: '#66A3FF',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+            }}
+          >
+            {quote.Items.length}
+          </Box>
+        </Box>
         <Divider
-          sx={{ position: 'absolute', left: showNegotiate ? '25%' : '33%' }}
+          sx={{
+            position: 'absolute',
+            left: showNegotiate ? '25%' : '33%',
+            background: '#66A3FF',
+          }}
           orientation="vertical"
         />
-        <Typography variant="body1" fontWeight="bold" textAlign="center">
-          Quantity
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant="body1" fontWeight="bold">
+            Quantity
+          </Typography>
+          <Box
+            sx={{
+              height: 32,
+              width: 32,
+              backgroundColor: '#66A3FF',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+            }}
+          >
+            {quote.Items.length}
+          </Box>
+        </Box>
         <Divider
-          sx={{ position: 'absolute', left: showNegotiate ? '50%' : '66%' }}
+          sx={{
+            position: 'absolute',
+            left: showNegotiate ? '50%' : '67%',
+            background: '#66A3FF',
+          }}
           orientation="vertical"
         />
         <Typography
@@ -107,7 +157,7 @@ const QuoteTemplate: React.FC = () => {
         {showNegotiate && (
           <>
             <Divider
-              sx={{ position: 'absolute', left: '75%' }}
+              sx={{ position: 'absolute', left: '75%', background: '#66A3FF' }}
               orientation="vertical"
             />
             <Typography variant="body1" fontWeight="bold" color="#1E6FFF">
@@ -118,15 +168,21 @@ const QuoteTemplate: React.FC = () => {
 
         {quote.Items.map((item, index) => (
           <React.Fragment key={item.file}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <Box
                 sx={{
                   height: 32,
                   width: 32,
-                  backgroundColor: '#DDE9FC',
-                  borderRadius: '25%',
+                  backgroundColor: '#66A3FF',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
                 }}
-              />
+              >
+                {index + 1}
+              </Box>
               <Typography variant="body2">{item.file}</Typography>
             </Box>
             <Typography variant="body2" textAlign="center">
@@ -143,28 +199,34 @@ const QuoteTemplate: React.FC = () => {
                 size="small"
                 value={item.price}
                 onChange={(e) => handlePriceChange(index, e.target.value)}
-                sx={{ '& .MuiOutlinedInput-root': { bgcolor: '#DDE9FC' } }}
+                className="fields"
               />
             )}
           </React.Fragment>
         ))}
       </Box>
 
-      <Divider sx={{ mb: 2 }} />
+      <Divider sx={{ mb: 2, background: '#66A3FF' }} />
 
       {/* Summary Rows */}
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: showNegotiate ? 'repeat(4, 1fr)' : 'repeat(3, 1fr)',
-          gap: 2,
+          gridTemplateColumns: showNegotiate
+            ? 'repeat(4, 1fr)'
+            : 'repeat(3, 1fr)',
+          gap: 4,
           mb: 2,
         }}
       >
         {summaryRows.map(({ label, value }) => (
           <React.Fragment key={label}>
             <Typography variant="body2">{label}</Typography>
-            <Typography variant="body2" gridColumn="2 / span 2" textAlign="right">
+            <Typography
+              variant="body2"
+              gridColumn="2 / span 2"
+              textAlign="right"
+            >
               ${value.toFixed(2)}
             </Typography>
             {showNegotiate && (
@@ -176,13 +238,15 @@ const QuoteTemplate: React.FC = () => {
         ))}
       </Box>
 
-      <Divider sx={{ mb: 2 }} />
+      <Divider sx={{ mb: 2, background: '#66A3FF' }} />
 
       {/* Total Row */}
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: showNegotiate ? 'repeat(4, 1fr)' : 'repeat(3, 1fr)',
+          gridTemplateColumns: showNegotiate
+            ? 'repeat(4, 1fr)'
+            : 'repeat(3, 1fr)',
           gap: 2,
           mb: 4,
         }}
@@ -192,9 +256,9 @@ const QuoteTemplate: React.FC = () => {
         </Typography>
         <Typography
           variant="body1"
-          fontWeight="bold"
           gridColumn="2 / span 2"
           textAlign="right"
+          sx={{ fontWeight: '800' }}
         >
           ${total.toFixed(2)}
         </Typography>
@@ -206,25 +270,35 @@ const QuoteTemplate: React.FC = () => {
       </Box>
 
       {/* Action Buttons */}
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        {actionButtons.map((button) => (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Box sx={{
+          display: 'flex',
+          gap: '4rem',
+          alignItems: 'center',
+        }}>
+          <Typography variant="body1" fontWeight="bold">
+            Don’t Like our pricing? Click on negotiate ; to negotiate pricing
+            Details Live
+          </Typography>
+          <span className="negotiation">
+            <Button
+              label={'Negotiate'}
+              onClick={() => setShowNegotiate(!showNegotiate)}
+            />
+          </span>
+        </Box>
+        <span className="approve">
           <Button
-            key={button.label}
-            variant="contained"
-            onClick={button.onClick}
-            sx={{
-              textTransform: 'none',
-              bgcolor: button.label === 'Approve' ? '#1E6FFF' : 'transparent',
-              color: button.label === 'Approve' ? 'white' : '#1E6FFF',
-              border: button.label === 'Approve' ? 'none' : '1px solid #1E6FFF',
-              '&:hover': {
-                bgcolor: button.label === 'Approve' ? '#1555CC' : 'rgba(30, 111, 255, 0.04)',
-              },
-            }}
-          >
-            {button.label}
-          </Button>
-        ))}
+            label={'Approve'}
+            onClick={() => setShowNegotiate(!showNegotiate)}
+          />
+        </span>
       </Box>
     </TemplateWrapper>
   );

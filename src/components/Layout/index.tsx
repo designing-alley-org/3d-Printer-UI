@@ -34,7 +34,7 @@ const index: React.FC = () => {
   useEffect(() => {
     async function getUserDetails() {
       // Fetch user details
-      const res = await api.get('user/me');
+      const res = await api.get('user');
       dispatch(addUserDetails(res.data.data));
     }
     getUserDetails();
