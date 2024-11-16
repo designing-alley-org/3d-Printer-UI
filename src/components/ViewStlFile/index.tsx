@@ -39,6 +39,7 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl, onDimensionsCalcul
         width: (dimensions.width).toFixed(2),
         length: (dimensions.length).toFixed(2)
       };
+      
       onDimensionsCalculated(modelDimensions);
     }
   }, [onDimensionsCalculated]);

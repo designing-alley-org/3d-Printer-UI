@@ -31,6 +31,7 @@ const CardLayout = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
+  console.log('files:', files);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
   useEffect(() => {
@@ -61,9 +62,17 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
-        const response = await api.put(`/update-user-order/${orderId}`, {
-          files,
+        console.log("files...", files[0].file);
+        const formData = new FormData();
+        files.forEach((file) => {
+          formData.append('file', file.file);
+          formData.append('quantity', file.quantity.toString());
+          formData.append('dimensions', JSON.stringify(file.dimensions));
         });
+        console.log('FormData:', ...formData.entries());
+        const response = await api.put(`/update-user-order/${orderId}`, 
+          formData,
+        );
         if (response.status === 200) {
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
