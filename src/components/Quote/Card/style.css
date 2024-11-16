@@ -2,18 +2,20 @@
   button {
     background-color: #1e6fff;
     border-radius: 40px;
-    width: 200px;
+    width: max-content;
+    padding: 1rem;
   }
 }
 .negotiation {
   button {
-    width: 200px;
+    width: max-content;
+    padding: 1rem;
     border-radius: 50px;
     padding: 1rem;
-    color: #2359B0;
-    background-color: #FFFFFF;
+    color: #2359b0;
+    background-color: #ffffff;
     font-family: 'Montserrat';
-    border: 1px solid #DDE9FC;
+    border: 1px solid #dde9fc;
     text-transform: uppercase;
     transition: background-color 0.3s ease;
   }
@@ -22,16 +24,15 @@
   > div {
     width: 7.3rem;
     display: flex;
+   
   }
   input {
     height: 1.3rem;
-    color: #235AB0;
-
+    color: #235ab0;
   }
   fieldset {
     border: 1px solid #66a3ff;
     border-radius: 40px;
-    box-shadow: 0px 0px 4px 0px #0047FF inset;
-
+    box-shadow: 0px 0px 4px 0px #0047ff inset;
   }
 }
