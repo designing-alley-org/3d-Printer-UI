@@ -25,7 +25,7 @@ export const MainWrap = styled.section`
   input {
     background: #e6f0ff;
     border: 1px solid #0066ff47;
-    color: white;
+    color: black;
     padding: 1rem;
     width: 50%;
     border-radius: 2rem;
@@ -193,6 +193,7 @@ export const OrderWrap = styled.section`
 }
 `;
 export const PlacedWrap = styled.section<{ isOpen?: boolean }>`
+  margin: 2rem 0rem;
   .img {
     padding: 1rem;
     background: aliceblue;
@@ -224,6 +225,9 @@ export const PlacedWrap = styled.section<{ isOpen?: boolean }>`
         margin-left: 1rem;
       }
     }
+  }
+  no-order {
+    margin: 2rem;
   }
   .delivery {
     display: flex;
@@ -276,6 +280,10 @@ export const NotifyWrap = styled.section`
       width: 15rem;
       button {
         border-radius: 2rem;
+        width: -webkit-fill-available;
+      }
+      .dropdown-header {
+        background: #dde9fc;
       }
     }
     .switch {

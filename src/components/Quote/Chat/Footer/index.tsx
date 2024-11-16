@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import SendIcon from '../../../../assets/images/send.svg';
 import MessageInput from '../../../../stories/MessageInput/MessageInput';
@@ -10,14 +10,20 @@ interface ChatFooterProps {
   receiver: string;
   orderId: string;
 }
-
+interface Attachment {
+  file: File;
+  name: string;
+  extension: string;
+}
 export default function ChatFooter({
   socket,
   sender,
   receiver,
-  orderId
+  orderId,
 }: ChatFooterProps) {
   const [message, setMessage] = useState('');
+  const [attachment, setAttachment] = useState<Attachment[]>([]);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (message.trim() !== '' && socket) {
@@ -25,11 +31,13 @@ export default function ChatFooter({
       socket.emit('sendMessage', {
         senderId: sender,
         receiverId: receiver,
+        files: attachment,
         content: message,
         order_id: orderId,
         sender: 'user',
       });
       setMessage('');
+      setAttachment([]);
     }
   };
   return (
@@ -47,6 +55,9 @@ export default function ChatFooter({
             value={message}
             setValue={setMessage}
             disabled={false}
+            inputRef={inputRef}
+            setAttachment={setAttachment}
+            attachment={attachment}
           />
           <Box
             sx={{

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import Header from '../Header';
@@ -11,6 +12,7 @@ import Button from '../../stories/button/Button';
 import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
+import { useForm } from 'react-hook-form';
 
 interface ModelDimensions {
   height: number;
@@ -22,7 +24,7 @@ interface FileData {
   id: string;
   name: string;
   dimensions: ModelDimensions;
-  file: File;
+  file: any;
   quantity: number;
 }
 
@@ -31,9 +33,10 @@ const CardLayout = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
-  console.log('files:', files);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
+  const formMethods = useForm();
+
   useEffect(() => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       setActiveTabs([0]);
@@ -124,20 +127,22 @@ const CardLayout = () => {
         {pathname.includes(ROUTES.UPLOAD_STL) ? (
           <UploadStlCard files={files} setFiles={setFiles} />
         ) : (
-          <Outlet context={{ files, setFiles }} />
+          <Outlet context={{ files, setFiles, formMethods }} />
         )}
       </div>
-      <div className="btn">
-        <div></div>
-        <span className="proc">
-          <Button
-            label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
-            onClick={
-              !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
-            }
-          />
-        </span>
-      </div>
+      {pathname !== (`/get-quotes/${orderId}/checkout`) && (
+        <div className="btn">
+          <div></div>
+          <span className="proc">
+            <Button
+              label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
+              onClick={
+                !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
+              }
+            />
+          </span>
+        </div>
+      )}
     </div>
   );
 };

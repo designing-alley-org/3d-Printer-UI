@@ -9,8 +9,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import api from '../../axiosConfig';
 import { useDispatch } from 'react-redux';
-import { ADD_USER } from '../../store/user/action_types';
-import { addUser } from '../../store/user/actions';
+// import { ADD_USER } from '../../store/user/action_types';
+// import { addUser } from '../../store/user/actions';
 import { addUserDetails } from '../../store/user/reducer';
 
 const index: React.FC = () => {
@@ -34,11 +34,11 @@ const index: React.FC = () => {
   useEffect(() => {
     async function getUserDetails() {
       // Fetch user details
-      const res = await api.get('user/me');
+      const res = await api.get('user');
       dispatch(addUserDetails(res.data.data));
     }
     getUserDetails();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="rootLayout">
