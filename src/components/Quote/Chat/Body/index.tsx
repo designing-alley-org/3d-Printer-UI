@@ -45,6 +45,23 @@ export default function ChatBody({ messages }: ChatBodyProps) {
               }}
             >
               <Message $sender={message.sender}>{message.content}</Message>
+              {message.files.length > 0 &&
+                message.files.map((file, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                    }}
+                  >
+                    <img
+                      style={{ height: '6rem', width: '6rem' }}
+                      src={file.fileUrl}
+                      alt="pic"
+                    />
+                  </Box>
+                ))}
               <MessageIcon $color="#0080FF" $bgColor="white">
                 3D
               </MessageIcon>
