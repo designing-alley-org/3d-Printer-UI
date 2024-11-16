@@ -122,6 +122,13 @@
     color: #fff;
   }
 
+  .no-printer{
+    display: flex;
+    margin-left: 1rem;
+    color: #235AB0;
+
+  }
+
   .btn-color{
     width: 1.5rem;
     height: 1.5rem;

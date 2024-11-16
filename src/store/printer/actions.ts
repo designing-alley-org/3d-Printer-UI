@@ -32,6 +32,7 @@ export const fetchPrinters = () => async (dispatch: Dispatch) => {
     });
   }
 };
+
 //   export const deletePrinter = (id: string, progress: number) => ({
 //     type: UPDATE_FILE_PROGRESS,
 //     payload: { id, progress },

@@ -31,7 +31,19 @@ import aboutUs1 from './assets/images/aboutUs1.svg';
 import aboutUs2 from './assets/images/aboutUs2.svg';
 
 // export svg
-export { uploadIcon, cross, plus, minus, vector,vector_black,  arrow_left, arrow_right, info, group, arrow_dropdown_blue };
+export {
+  uploadIcon,
+  cross,
+  plus,
+  minus,
+  vector,
+  vector_black,
+  arrow_left,
+  arrow_right,
+  info,
+  group,
+  arrow_dropdown_blue,
+};
 
 // Data for Tab
 export const tabData = [
@@ -122,20 +134,14 @@ export const inputFields = [
     placeholder: 'Enter your last name',
   },
   {
-    label: 'Phone Number',
-    name: 'phoneNumber',
-    type: 'text',
-    placeholder: 'Enter your phone number',
-  },
-  {
-    label: 'Email',
-    name: 'email',
-    type: 'email',
-    placeholder: 'Enter your email',
-  },
-  {
     label: 'Street Address',
     name: 'streetAddress',
+    type: 'text',
+    placeholder: 'Enter your address',
+  },
+  {
+    label: 'Extended Address',
+    name: 'extendedAddress',
     type: 'text',
     placeholder: 'Enter your address',
   },
@@ -146,29 +152,34 @@ export const inputFields = [
     placeholder: 'Enter your state',
   },
   {
+    label: 'City',
+    name: 'city',
+    type: 'text',
+    placeholder: 'Enter your city',
+  },
+  {
     label: 'Country',
     name: 'country',
     type: 'text',
     placeholder: 'Enter your country',
   },
   {
-    label: 'Extended Address',
-    name: 'extendedAddress',
-    type: 'text',
-    placeholder: 'Enter your address',
-  },
-  {
-    label: 'City',
-    name: 'city',
-    type: 'text',
-    placeholder: 'Enter your city',
-  },
-
-  {
     label: 'Zip Code',
     name: 'zipCode',
     type: 'text',
     placeholder: 'Enter your zip code',
+  },
+  {
+    label: 'Phone Number',
+    name: 'phoneNumber',
+    type: 'text',
+    placeholder: 'Enter your phone number',
+  },
+  {
+    label: 'Email',
+    name: 'email',
+    type: 'email',
+    placeholder: 'Enter your email',
   },
 ];
 export const scaleFields = [
@@ -338,7 +349,7 @@ export const colorBtnData = [
   {
     id: 'orange',
     name: 'Orange',
-  }
+  },
 ];
 
 export const PrinterData = [
@@ -376,7 +387,7 @@ export const PrinterData = [
         val: 'Single Extruder',
       },
     ],
-  }
+  },
 ];
 
 export const footerData = [
