@@ -1,8 +1,19 @@
 import { Box, styled } from '@mui/material';
+import AttachmentIcon from '../../assets/images/attachement.png';
+
+interface Attachment {
+  file: File;
+  name: string;
+  extension: string | undefined;
+}
+
 interface InputFieldProps {
   value: string;
   setValue: (value: string) => void;
   disabled?: boolean;
+  setAttachment: (attachment: Attachment) => void;
+  inputRef?: React.RefObject<HTMLInputElement>;
+  attachment: Attachment;
 }
 const StyledInput = styled('input')(() => ({
   width: '90%',
@@ -24,7 +35,23 @@ export default function MessageInput({
   value,
   setValue,
   disabled = false,
+  setAttachment,
+  inputRef,
+  attachment,
 }: InputFieldProps) {
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const attachments = files.map((file) => {
+        const name = file.name;
+        const extension = name.split('.').pop();
+        return { file, name, extension };
+      });
+      setAttachment([...attachment, ...attachments]);
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -35,9 +62,28 @@ export default function MessageInput({
         borderRadius: '3rem',
         display: 'flex',
         alignItems: 'center',
+        gap: '0.5rem',
         boxSizing: 'border-box',
       }}
     >
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+      <img
+        style={{
+          height: '2rem',
+          width: '2rem',
+          marginLeft: '1rem',
+          cursor: 'pointer',
+        }}
+        src={AttachmentIcon}
+        onClick={() => inputRef?.current?.click()}
+        alt="send"
+      />
       <StyledInput
         disabled={disabled}
         value={value}
