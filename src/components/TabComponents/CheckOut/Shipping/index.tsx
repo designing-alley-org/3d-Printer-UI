@@ -1,22 +1,42 @@
-import { Box, Typography } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Typography } from '@mui/material';
 import Input from '../../../../stories/StandardInput/Input';
-import { useForm } from 'react-hook-form';
-import { InputWrapper } from './style';
+import { InputWrapper, SubHeader, Wrapper } from './style';
 import { inputFields } from '../../../../constants';
+// import Button from '../../../../stories/button/Button';
+import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import api from '../../../../axiosConfig';
 
-export default function ShippingDetails() {
-
+const ShippingDetails: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
+  const { orderId } = useParams();
+
+  const handleProceed = async (data: any) => {
+    try {
+      const response = await api.post(`/address/create`, data);
+      if (response.status === 200) {
+        navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
+  };
   return (
-    <Box>
+    <Wrapper>
       <Typography variant="h2">Shipping Details</Typography>
+      <SubHeader>Please Enter Your Delivery Address</SubHeader>
       <form
-        onSubmit={handleSubmit((data) => console.log(JSON.stringify(data)))}
+        onSubmit={handleSubmit((data: any) =>
+          handleProceed(JSON.stringify(data))
+        )}
       >
         <InputWrapper>
           {inputFields.map((inputField, index) => (
@@ -31,8 +51,14 @@ export default function ShippingDetails() {
             />
           ))}
         </InputWrapper>
-        <input type="submit" value="Submit" />
+        <div className="btn">
+          <div></div>
+          <span className="proc">
+            <input type="submit" value="Proceed" />
+          </span>
+        </div>
       </form>
-    </Box>
+    </Wrapper>
   );
-}
+};
+export default ShippingDetails;
