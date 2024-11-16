@@ -1,6 +1,8 @@
 import { useOutletContext } from 'react-router-dom';
 import { customize, vector_black } from '../../../constants';
 import { Button } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import api from '../../../axiosConfig';
 import {
   Customize,
   Files,
@@ -12,7 +14,7 @@ import {
   CustomizeBox,
   Heading,
 } from './styles';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Accordion from '../../Accordion';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 import ViewModelStl from '../../ViewStlFile';
@@ -39,6 +41,18 @@ const CustomizeTab: React.FC = () => {
   const [activeFileIndex, setActiveFileIndex] = useState<number | null>(null);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
+  const [fetchfiles, setFetchFiles] = useState<FileData[]>([]);
+  
+  const  { orderId }  = useParams();
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      const response = await api.get<{files: FileData[]}>(`/order-show/${orderId}`);
+      setFetchFiles(response.data.files);
+    };
+    fetchOrder();
+  }, [orderId]);
+
 
   function getFileUrl(file: File): string {
     return URL.createObjectURL(file);
