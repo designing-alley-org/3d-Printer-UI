@@ -62,14 +62,12 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
-        console.log("files...", files[0].file);
         const formData = new FormData();
         files.forEach((file) => {
-          formData.append('file', file.file);
+          formData.append('files', file.file);
           formData.append('quantity', file.quantity.toString());
           formData.append('dimensions', JSON.stringify(file.dimensions));
         });
-        console.log('FormData:', ...formData.entries());
         const response = await api.put(`/update-user-order/${orderId}`, 
           formData,
         );
