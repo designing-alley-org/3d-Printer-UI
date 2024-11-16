@@ -22,14 +22,13 @@ import {
 //   heatSinkSize: '',
 // };
 const initialState = {
-    // initial values
-    // loading: false,
-    // error: null,
-    printerDetails: [],
+  // initial values
+  // loading: false,
+  // error: null,
+  printerDetails: [],
 };
 
 export const printerReducer = (state = initialState, action: any) => {
-    console.log(action.payload);
   switch (action.type) {
     case GET_PRINTER:
       return {

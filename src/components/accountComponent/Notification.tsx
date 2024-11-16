@@ -16,21 +16,9 @@ const Notification = () => {
               <span className="slider round"></span>
             </label>
           </div>
-          <div className="email">
-            <div className="notify">Phone</div>
-            <label className="switch">
-              <input type="checkbox" />
-              <span className="slider round"></span>
-            </label>
-          </div>
         </span>
         <span className="cate">
           <p>Order Notifications</p>
-          <Dropdown
-            className="dropdown"
-            onSelect={() => {}}
-            options={notifyData}
-          />
           <Dropdown
             className="dropdown"
             onSelect={() => {}}
@@ -44,19 +32,9 @@ const Notification = () => {
             onSelect={() => {}}
             options={notifyData}
           />
-          <Dropdown
-            className="dropdown"
-            onSelect={() => {}}
-            options={notifyData}
-          />
         </span>
         <span className="cate">
           <p>News & Promotions</p>
-          <Dropdown
-            className="dropdown"
-            onSelect={() => {}}
-            options={notifyData}
-          />
           <Dropdown
             className="dropdown"
             onSelect={() => {}}
@@ -70,19 +48,9 @@ const Notification = () => {
             onSelect={() => {}}
             options={notifyData}
           />
-          <Dropdown
-            className="dropdown"
-            onSelect={() => {}}
-            options={notifyData}
-          />
         </span>
         <span className="cate">
           <p>Personal Messages</p>
-          <Dropdown
-            className="dropdown"
-            onSelect={() => {}}
-            options={notifyData}
-          />
           <Dropdown
             className="dropdown"
             onSelect={() => {}}

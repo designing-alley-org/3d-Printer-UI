@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from '@mui/material';
 import ChatFooter from './Footer';
 import ChatBody from './Body';
@@ -19,7 +20,7 @@ export default function Chat() {
     DefaultEventsMap
   > | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state: any) => state.user);
   console.log(messages);
   const {orderId} =useParams();
   console.log(orderId);
