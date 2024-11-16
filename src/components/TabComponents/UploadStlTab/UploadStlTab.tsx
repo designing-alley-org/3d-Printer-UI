@@ -167,6 +167,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         </Box>
         <Box sx={styles.fileCardContainer}>
           {files?.map((file) => (
+            
             <UploadStlCardFile
               key={file.id}
               file={file}
