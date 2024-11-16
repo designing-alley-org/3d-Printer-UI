@@ -37,6 +37,7 @@ export default function ChatFooter({
         sender: 'user',
       });
       setMessage('');
+      setAttachment([]);
     }
   };
   return (
