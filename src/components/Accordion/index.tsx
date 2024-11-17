@@ -57,7 +57,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const [technologyData, setTechnologyData] = useState<string[]>([]);
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
   const  [selectSize, setSelectSize] = useState<string>('');
-  console.log('selectSize', selectSize);
   const [weight, setWeight] = useState<number>(0);
   const { orderId } = useParams();
   const handleColorClick = (color: string) => setSelectedColor(color);
@@ -108,7 +107,7 @@ const Accordion: React.FC<AccordionProps> = ({
     };
 
     if (selectedMat && selectedTech) fetchPrinterData();
-  }, [selectedMat, selectedTech]);
+  }, [selectedMat, selectedTech, selectedId]);
   
 
   // Take selected technology and material from selected file
@@ -128,6 +127,13 @@ const Accordion: React.FC<AccordionProps> = ({
       dispatch(updateColor({ id: selectedId, color: selectedColor }));
     }
   }, [selectedColor]);
+
+  // send printer corresponding to selectedId to store
+  useEffect(() => {
+    if (selectedPrinter && selectedId) {
+      dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
+    }
+  }, [selectedPrinter]);
 
   // Send technology corresponding to selectedId to store
   useEffect(() => {
@@ -180,6 +186,10 @@ const Accordion: React.FC<AccordionProps> = ({
                   placeholder={field.placeholder}
                   className="fields"
                   value={dimansions ? dimansions[field.name] : ''}
+                  onChange={(e) => setDimansions((prev) => ({
+                    ...prev,
+                    [field.name]: e.target.value,
+                  }))}
                 />
               ))}
             </div>
@@ -249,26 +259,25 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '5' && (
           <>
-            {(selectedTech === '' || selectedMat === '') && (
-              <p className="no-data">Please select Material and Technology</p>
-            )}
-            {printerData.length <= 0 && selectedTech !== '' && selectedMat !== '' && (
-              <p className="no-data">No Printer Data Found Please select Other Material and Technology</p>
-            )}
-            {printerData.length > 0 && (
-              printerData.map((printer) => (
-                <PrinterCard
-                  key={printer.title}
-                  title={printer.title}
-                  subTitle={printer.subTitle}
-                  desc={printer.desc}
-                  data={printer.data}
-                  isSelected={selectedPrinter === printer.title}
-                  onSelect={handlePrinterSelect}
-                />
-              ))
-            )}
-          </>
+          {(!selectedTech || !selectedMat) ? (
+            <p className="no-data">Please select Material and Technology</p>
+          ) : printerData.length === 0 ? (
+            <p className="no-data">No Printer Data Found. Please select other Material and Technology</p>
+          ) : (
+            printerData.map((printer) => (
+              <PrinterCard
+                key={printer.title}
+                title={printer.title}
+                subTitle={printer.subTitle}
+                desc={printer.desc}
+                data={printer.data}
+                isSelected={selectedPrinter === printer.title}
+                onSelect={handlePrinterSelect}
+              />
+            ))
+          )}
+        </>
+        
         )}
         {id === '6' && <Dropdown options={dimensionsOption} onSelect={() => {}} />}
       </div>

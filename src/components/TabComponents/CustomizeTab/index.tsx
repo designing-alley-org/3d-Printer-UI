@@ -15,7 +15,7 @@ import {
 } from './styles';
 import { customize, vector_black } from '../../../constants';
 import Accordion from '../../Accordion';
-import { addAllFiles } from '../../../store/customizeFilesDetails/reducer';
+import { addAllFiles, updateWeight } from '../../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 import api from '../../../axiosConfig';
 
@@ -43,7 +43,10 @@ interface FileData {
 const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
-  const [ weight, setWeight] = useState<number>(0);
+  const [ weight, setWeight] = useState<number | null>(null);
+  console.log('Apply selectio weight:', weight);
+  console.log('Apply selection response:', weight);
+
   console.log(activeFileId)
 
   const dispatch = useDispatch();
@@ -53,6 +56,8 @@ const CustomizeTab: React.FC = () => {
   const activeFile = useMemo(() => {
     return fileDetails.find((file: any) => file._id === activeFileId) || null;
   }, [fileDetails, activeFileId]);
+
+  console.log('activeFile ', activeFile);
 
   // Fetch files from the server
   useEffect(() => {
@@ -101,32 +106,33 @@ const CustomizeTab: React.FC = () => {
   const selectedMatMass = useSelector((state: any) => state.specification.material_with_mass);
   const materialMass = selectedMatMass?.find((mat : any) => mat.material_name === selectedMat)?.material_mass;
   
-  useEffect(() => {
-    const fetchWeight = async () => {
-      if (!selectedMat || !activeFileId || materialMass === undefined) return;
-      try {
-        const payload = {
-          material_name: selectedMat,
-          material_mass: materialMass,
-        };
-        const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
-        console.log('Weight response:', response.data.data.files);
-        // setWeight(response.data.files[0].dimensions.weight);
-      } catch (error) {
-        console.error('Error fetching weight:', error);
-      }
-    };
-    fetchWeight();
+  const getWeight = useCallback(async () => {
+    if (!selectedMat || !activeFileId || materialMass === undefined) return;
+    try {
+      const payload = {
+        material_name: selectedMat,
+        material_mass: materialMass,
+      };
+      const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
+      // console.log('Weight response:', response.data.data.dimensions.weight);
+      setWeight(response.data.data.dimensions.weight);
+      dispatch(updateWeight(response.data.data.dimensions.weight));
+    } catch (error) {
+      console.error('Error fetching weight:', error);
+    }
   }, [selectedMat, activeFileId, materialMass, orderId]);
 
 
  
 
   // Check if all required fields are filled for the active file
+
+
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    const requiredFields = ['color', 'material', 'technology', 'printer', 'weight'];
-    return requiredFields.some((field) => !activeFile[field]);
+    const { color, material, technology, printer } = activeFile;
+    if (color && material && technology && printer) return false;
+    return true;
   }, [activeFile]);
 
   const handleOpenViewer = useCallback((fileId: string) => {
@@ -140,10 +146,12 @@ const CustomizeTab: React.FC = () => {
   const handleApplySelection = async () => {
     if (!activeFile) return;
     try {
-      const response = await api.post('/apply-selection', {
-        fileDetails: activeFile,
-      });
-      console.log('Apply selection response:', response.data);
+      // todo : store dimension in redux
+
+      // get weight
+      await getWeight();
+
+      console.log('Apply selection response:', weight);
       // Handle success response
     } catch (error) {
       console.error('Error applying selection:', error);
@@ -217,10 +225,10 @@ const CustomizeTab: React.FC = () => {
             ))}
           </div>
           <div className="weight-section">
-            {activeFile?.weight > 0 && (
+            {weight > 0 && (
               <>
                 <p>Current Weight & Volume:</p>
-                <p>{`${activeFile.weight}gm`}</p>
+                <p>{`${weight}gm`}</p>
               </>
             )}
           </div>
