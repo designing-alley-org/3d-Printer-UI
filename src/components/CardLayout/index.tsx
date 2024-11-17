@@ -51,7 +51,6 @@ const CardLayout = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
   const formMethods = useForm();
@@ -73,11 +72,17 @@ const CardLayout = () => {
     }
   }, [pathname, orderId]); // Added orderId to dependencies
 
+  // Calculate progress value based on the active tab
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
 
-  const onProceed = async () => {
+  /**
+   * Handle the Proceed button click.
+   * Saves files to IndexedDB and proceeds based on the current route.
+   */
+  const onProceed = useCallback(async () => {
+    // Add validation for files before proceeding from upload step
     if (pathname.includes(ROUTES.UPLOAD_STL) && files.length === 0) {
       alert('Please upload at least one file before proceeding');
       return;
@@ -87,7 +92,6 @@ const CardLayout = () => {
       setIsSaving(true); // Start loading spinner
 
       try {
-        setIsUploading(true);
         // Save each file to IndexedDB
         const updatedFiles = await Promise.all(
           files.map(async (file) => {
@@ -116,14 +120,13 @@ const CardLayout = () => {
 
         setIsSaving(false); // Stop loading spinner
       } catch (error) {
-        console.error('Error uploading files:', error);
-      } finally {
-        setIsUploading(false);
+        console.error('Error processing proceed action:', error);
+        setIsSaving(false); // Stop loading spinner even if there's an error
+        alert('Failed to proceed. Please try again.');
       }
     } else if (pathname === '/get-quotes') {
       setIsSaving(true); // Start loading spinner
       try {
-        setIsUploading(true);
         const response = await api.post(`/create-order`);
         if (response.status === 200) {
           console.log('Order created successfully!');
@@ -132,9 +135,9 @@ const CardLayout = () => {
         }
         setIsSaving(false); // Stop loading spinner
       } catch (error) {
-        console.error('Error uploading files:', error);
-      } finally {
-        setIsUploading(false);
+        console.error('Error creating order:', error);
+        setIsSaving(false); // Stop loading spinner even if there's an error
+        alert('Failed to create order. Please try again.');
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
@@ -158,13 +161,6 @@ const CardLayout = () => {
     } finally {
       setIsSaving(false); // Stop loading spinner
     }
-  };
-
-  const getButtonLabel = () => {
-    if (isUploading) {
-      return 'Processing...';
-    }
-    return !pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now';
   };
 
   return (
@@ -201,9 +197,6 @@ const CardLayout = () => {
           <div></div>
           <span className="proc">
             <Button
-              label={getButtonLabel()}
-              onClick={!pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment}
-              disabled={isUploading}
               label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
               onClick={
                 !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
