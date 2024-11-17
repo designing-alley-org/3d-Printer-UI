@@ -60,7 +60,7 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <span className="name">Material Compatibility</span>
           </span>
          <div style={{display:"flex"}}>
-         {item.materialCompatibility.map((mat: string, idx: number) => (
+         {item.materialCompatibility.map((mat: any, idx: number) => (
             <span key={idx} className="desc">
               {mat.material_name}
             </span>

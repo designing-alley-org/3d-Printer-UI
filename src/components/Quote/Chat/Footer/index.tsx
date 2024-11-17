@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import SendIcon from '../../../../assets/images/send.svg';
 import MessageInput from '../../../../stories/MessageInput/MessageInput';
 import { Socket } from 'socket.io-client';
+import { content } from '../../../TabComponents/QuoteTab/styles';
 
 interface ChatFooterProps {
   socket: Socket | null;
@@ -22,8 +23,9 @@ export default function ChatFooter({
   orderId,
 }: ChatFooterProps) {
   const [message, setMessage] = useState('');
-  const [attachment, setAttachment] = useState<Attachment[]>([]);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<Attachment[]>([]);
+  const [images, setImages] = useState<Attachment[]>([]);
+
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (message.trim() !== '' && socket) {
@@ -31,13 +33,61 @@ export default function ChatFooter({
       socket.emit('sendMessage', {
         senderId: sender,
         receiverId: receiver,
-        files: attachment,
+        files: [],
         content: message,
         order_id: orderId,
         sender: 'user',
       });
+      if (file.length > 0) {
+        socket.emit('sendMessage', {
+          senderId: sender,
+          receiverId: receiver,
+          files: file,
+          content: 'Attachment',
+          order_id: orderId,
+          sender: 'user',
+        });
+        setFile([]);
+      }
+      if (images.length > 0) {
+        socket.emit('sendMessage', {
+          senderId: sender,
+          receiverId: receiver,
+          files: images,
+          order_id: orderId,
+          sender: 'user',
+          content: 'Attachment',
+        });
+        setImages([]);
+      }
       setMessage('');
-      setAttachment([]);
+    }
+  };
+
+  const handleSendAttachment = () => {
+    if (socket) {
+      if (file.length > 0) {
+        socket.emit('sendMessage', {
+          senderId: sender,
+          receiverId: receiver,
+          files: file,
+          content: 'Attachment',
+          order_id: orderId,
+          sender: 'user',
+        });
+        setFile([]);
+      }
+      if (images.length > 0) {
+        socket.emit('sendMessage', {
+          senderId: sender,
+          receiverId: receiver,
+          files: images,
+          order_id: orderId,
+          sender: 'user',
+          content: 'Attachment',
+        });
+        setImages([]);
+      }
     }
   };
   return (
@@ -55,9 +105,10 @@ export default function ChatFooter({
             value={message}
             setValue={setMessage}
             disabled={false}
-            inputRef={inputRef}
-            setAttachment={setAttachment}
-            attachment={attachment}
+            setFile={setFile}
+            setImages={setImages}
+            file={file}
+            images={images}
           />
           <Box
             sx={{
@@ -73,11 +124,13 @@ export default function ChatFooter({
               cursor: 'pointer',
             }}
             onClick={() =>
-              document
-                .querySelector('form')
-                ?.dispatchEvent(
-                  new Event('submit', { cancelable: true, bubbles: true })
-                )
+              message
+                ? document
+                    .querySelector('form')
+                    ?.dispatchEvent(
+                      new Event('submit', { cancelable: true, bubbles: true })
+                    )
+                : handleSendAttachment()
             }
           >
             <img

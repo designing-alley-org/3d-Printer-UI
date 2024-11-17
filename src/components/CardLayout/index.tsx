@@ -96,9 +96,9 @@ const CardLayout = () => {
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
       navigate(`${orderId}/quote`);
-    } else if (pathname === '/get-quotes/quote') {
+    } else if (pathname === `/get-quotes/${orderId}/quote`) {
       setActiveTabs([0, 1, 2, 3]);
-      navigate(ROUTES.CHECKOUT);
+      navigate(`/get-quotes/${orderId}/checkout`);
     }
   };
 
@@ -130,7 +130,7 @@ const CardLayout = () => {
           <Outlet context={{ files, setFiles, formMethods }} />
         )}
       </div>
-      {pathname !== (`/get-quotes/${orderId}/checkout`) && (
+      {pathname !== `/get-quotes/${orderId}/checkout` && (
         <div className="btn">
           <div></div>
           <span className="proc">

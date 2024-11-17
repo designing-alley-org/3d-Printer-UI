@@ -47,8 +47,8 @@ const AccountLayout = () => {
         ))}
       </SideTab>
       <MainComp>
-        {activeTab === 1 && <MyProfile profileData={user.user} />}
-        {activeTab === 2 && <Orders orderData={orders.data.order}/>}
+        {activeTab === 1 && <MyProfile profileData={user?.user} />}
+        {activeTab === 2 && <Orders orderData={orders?.data?.order} />}
         {activeTab === 3 && <Notification />}
         {activeTab === 4 && <Settings />}
       </MainComp>

@@ -45,7 +45,7 @@ const Orders = (props: IOrders) => {
         </section>
       </OrderWrap>
       <h1 className="placed">ORDERS PLACED</h1>
-      {orderData.map((item: any) => (
+      {orderData?.map((item: any) => (
         <PlacedWrap isOpen={expandedOrderId === item._id ? true : false}>
           <section className="orderPlaced">
             <div className="card-container">

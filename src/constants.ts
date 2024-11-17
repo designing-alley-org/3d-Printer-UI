@@ -122,34 +122,28 @@ export const deliveryPlans = [
 //Input fields for ShippingDetails
 export const inputFields = [
   {
-    label: 'First Name',
-    name: 'firstName',
+    label: 'Name',
+    name: 'personName',
     type: 'text',
     placeholder: 'Enter your first name',
   },
   {
-    label: 'Last Name',
-    name: 'lastName',
+    label: 'Company',
+    name: 'companyName',
     type: 'text',
-    placeholder: 'Enter your last name',
+    placeholder: 'Enter your first name',
   },
   {
     label: 'Street Address',
-    name: 'streetAddress',
+    name: 'streetLines',
     type: 'text',
     placeholder: 'Enter your address',
   },
   {
-    label: 'Extended Address',
-    name: 'extendedAddress',
+    label: 'State or Province Code',
+    name: 'stateOrProvinceCode',
     type: 'text',
-    placeholder: 'Enter your address',
-  },
-  {
-    label: 'State/Region',
-    name: 'state',
-    type: 'text',
-    placeholder: 'Enter your state',
+    placeholder: 'Enter your state code',
   },
   {
     label: 'City',
@@ -159,13 +153,13 @@ export const inputFields = [
   },
   {
     label: 'Country',
-    name: 'country',
+    name: 'countryCode',
     type: 'text',
     placeholder: 'Enter your country',
   },
   {
-    label: 'Zip Code',
-    name: 'zipCode',
+    label: 'Postal Code',
+    name: 'postalCode',
     type: 'text',
     placeholder: 'Enter your zip code',
   },

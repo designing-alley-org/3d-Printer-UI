@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
-import { Body, Header, MainCard } from './styles';
+import { Body, Header, MainCard, Specs } from './styles';
 import Button from '../../../../stories/button/Button';
+import icon from '../../../../assets/icons/avg_pace.svg';
 
 interface CardProps {
   deliveryName: string;
@@ -30,23 +30,28 @@ export default function Card({
   return (
     <MainCard $isSelected={active === index}>
       <Header>
-        <Typography sx={{ color: '#0047FF' }} variant="h1">
-          {deliveryName}
-        </Typography>
-        <Typography sx={{ color: '#0047FF', mb: '1rem' }} variant="body1">
-          {deliveryTime}
-        </Typography>
+        <img src={icon} />
+        <span className="name">{deliveryName}</span>
+        <span>{deliveryTime}</span>
       </Header>
       <Body>
-        <Box sx={{ position: 'absolute', top: '-7%', zIndex: '1' }}>
-          <Button
-            label={active !== index ? 'Select' : 'UnSelect'}
-            onClick={() => handleClick(index)}
-          />
-        </Box>
-        <Typography sx={{ color: '#0047FF' }} variant="h1">
-          {deliveryCost}
-        </Typography>
+        <Specs>
+          <span>Time: {deliveryTime}</span>
+          <span>Cost: {}</span>
+          <span>Packaging: {}</span>
+          <span>Tracking: {}</span>
+          <span>Support: {}</span>
+          <span>Insurance: {}</span>
+        </Specs>
+        <div className="btm">
+          <span className="cost">{deliveryCost}</span>
+          <span className="btn">
+            <Button
+              label={active !== index ? 'Select' : 'Selected'}
+              onClick={() => handleClick(index)}
+            />
+          </span>
+        </div>
       </Body>
     </MainCard>
   );

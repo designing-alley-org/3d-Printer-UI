@@ -8,7 +8,7 @@ interface IPrinterCard {
   title: string;
   subTitle: string;
   desc: string;
-  data: Array<{ name: string; val: string }>;
+  data: any;
   isSelected: boolean;
   onSelect: (title: string) => void;
 }
@@ -24,27 +24,70 @@ const PrinterCard = (props: IPrinterCard) => {
 
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
-    props.onSelect(props.title);
+    props.onSelect(props.data._id);
   };
 
-  const printerDataF = (item: { name: string; val: string }) => {
+  const printerDataF = (item: any) => {
     return (
-      <span className="data" key={item.name}>
-        <span className="head">
-          <span className="dot">.</span>
-          <span className="name">{item.name}</span>
+      <>
+        <span className="data">
+          <span className="head">
+            <span className="dot">.</span>
+            <span className="name">Build Volume</span>
+          </span>
+          <span className="desc">
+            <p>x: {item?.buildVolume?.x}</p>
+            <p>y: {item?.buildVolume?.y}</p>
+            <p>z: {item?.buildVolume?.z}</p>
+          </span>
         </span>
-        {Array.isArray(item.val) ? (
-          item.val.map((value, index) => (
-            <span key={index} className="desc">{value}</span>
-          ))
-        ) : (
-          <span className="desc">{item.val}</span>
-        )}
-      </span>
+        <span className="data">
+          <span className="head">
+            <span className="dot">.</span>
+            <span className="name">Layer Resolution</span>
+          </span>
+          <span className="desc">
+            <p>min: {item?.layerResolution?.min}</p>
+            <p>max: {item?.layerResolution?.max}</p>
+          </span>
+        </span>
+        <span className="data">
+          <span className="head">
+            <span className="dot">.</span>
+            <span className="name">Nozzle Size</span>
+          </span>
+          <span className="desc">{item?.nozzleSize}</span>
+        </span>
+        <span className="data">
+          <span className="head">
+            <span className="dot">.</span>
+            <span className="name">Print Speed</span>
+          </span>
+          <span className="desc">{item?.printSpeed}</span>
+        </span>
+        <span className="data">
+          <span className="head">
+            <span className="dot">.</span>
+            <span className="name">Material Compatibility</span>
+          </span>
+          <div style={{ display: 'flex' }}>
+            {item?.materialCompatibility?.map((mat: any, idx: number) => (
+              <span key={idx} className="desc">
+                {mat?.material_name}
+              </span>
+            ))}
+          </div>
+        </span>
+        <span className="data">
+          <span className="head">
+            <span className="dot">.</span>
+            <span className="name">Technology Type</span>
+          </span>
+          <span className="desc">{item?.technologyType}</span>
+        </span>
+      </>
     );
   };
-
   return (
     <Wrapper onClick={toggleAccordion}>
       <Header>
@@ -55,23 +98,16 @@ const PrinterCard = (props: IPrinterCard) => {
         </section>
         <span className={isOpen ? 'active-printer' : ''}>
           <img src={arrow} />
-          <Button
-            className="select"
-            onClick={handleSelect}
-          >
-            {props.isSelected ? 'UNSELECT' : 'SELECT'}
-          </Button>
         </span>
       </Header>
-      <Body>
-        {isOpen && (
-          <section>{props.data.map(printerDataF)}</section>
-        )}
-      </Body>
+      <Body>{isOpen && <section>{printerDataF(props.data)}</section>}</Body>
+      <span className="select">
+        <Button onClick={handleSelect}>
+          {props.isSelected ? 'UNSELECT' : 'SELECT'}
+        </Button>
+      </span>
     </Wrapper>
   );
 };
-
-
 
 export default PrinterCard;
