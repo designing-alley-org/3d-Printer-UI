@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import AttachmentIcon from '../../assets/images/attachement.png';
-
+import ImgUpload from '../../assets/images/imgUpload.png';
+import React from 'react';
 interface Attachment {
   file: File;
   name: string;
@@ -14,9 +15,13 @@ interface InputFieldProps {
   setAttachment: (attachment: Attachment) => void;
   inputRef?: React.RefObject<HTMLInputElement>;
   attachment: Attachment;
+  setFile: (file: Attachment[]) => void;
+  setImages: (images: Attachment[]) => void;
+  file: Attachment[];
+  images: Attachment[];
 }
 const StyledInput = styled('input')(() => ({
-  width: '90%',
+  width: '86%',
   height: 'inherit',
   border: 'none',
   background: 'transparent',
@@ -35,20 +40,48 @@ export default function MessageInput({
   value,
   setValue,
   disabled = false,
-  setAttachment,
-  inputRef,
-  attachment,
+  setFile,
+  setImages,
+  file,
+  images,
 }: InputFieldProps) {
-
+  const inputRef = React.createRef<HTMLInputElement>();
+  const imgRef = React.createRef<HTMLInputElement>();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    if(e.target.files){
       const files = Array.from(e.target.files);
       const attachments = files.map((file) => {
+        if(file.type!=='application/pdf' && file.type!=='application/msword' && file.type!=='application/vnd.openxmlformats-officedocument.wordprocessingml.document'){
+          return;
+        }
         const name = file.name;
         const extension = name.split('.').pop();
         return { file, name, extension };
-      });
-      setAttachment([...attachment, ...attachments]);
+      }
+
+      );
+
+      setFile([...attachments,...file])
+
+    }
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.files){
+      const files = Array.from(e.target.files);
+      const attachments = files.map((file) => {
+        if(file.type!=='image/jpeg' && file.type!=='image/png' && file.type!=='image/jpg'){
+          return;
+        }
+        const name = file.name;
+        const extension = name.split('.').pop();
+        return { file, name, extension };
+      }
+
+      );
+
+      setImages([...attachments,...images])
+
     }
   }
 
@@ -67,23 +100,22 @@ export default function MessageInput({
       }}
     >
       <input
+        ref={imgRef}
+        type="file"
+        multiple
+        style={{ display: 'none' }}
+        onChange={handleImageChange}
+        accept="image/*"
+      />
+      <input
         ref={inputRef}
         type="file"
         multiple
         style={{ display: 'none' }}
         onChange={handleFileChange}
+        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       />
-      <img
-        style={{
-          height: '2rem',
-          width: '2rem',
-          marginLeft: '1rem',
-          cursor: 'pointer',
-        }}
-        src={AttachmentIcon}
-        onClick={() => inputRef?.current?.click()}
-        alt="send"
-      />
+
       <StyledInput
         disabled={disabled}
         value={value}
@@ -91,6 +123,43 @@ export default function MessageInput({
         type="text"
         placeholder="Type Here.."
       />
+      <Box
+        onClick={() => imgRef?.current?.click()}
+        sx={{
+          width: '3rem',
+          height: '3rem',
+          borderRadius: '50%',
+          backgroundColor: '#BAD6FF',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          color: '#336DFF',
+        }}
+      >
+        <img src={ImgUpload} alt="attachment" style={{ width: '1.5rem' }} />
+      </Box>
+      <Box
+        onClick={() => inputRef?.current?.click()}
+        sx={{
+          width: '3rem',
+          height: '3rem',
+          borderRadius: '50%',
+          backgroundColor: '#BAD6FF',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          color: '#336DFF',
+          ml: '0.5rem',
+        }}
+      >
+        <img
+          src={AttachmentIcon}
+          alt="attachment"
+          style={{ width: '1.5rem' }}
+        />
+      </Box>
     </Box>
   );
 }
