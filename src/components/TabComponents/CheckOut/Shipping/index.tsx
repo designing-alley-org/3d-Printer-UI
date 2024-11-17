@@ -20,9 +20,11 @@ const ShippingDetails: React.FC = () => {
   const { orderId } = useParams();
 
   const handleProceed = async (data: any) => {
+    // data.orderId = `${orderId}`;
+    console.log(data);
     try {
       const response = await api.post(`/create-address`, data);
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
       }
     } catch (error) {
@@ -34,9 +36,10 @@ const ShippingDetails: React.FC = () => {
       <Typography variant="h2">Shipping Details</Typography>
       <SubHeader>Please Enter Your Delivery Address</SubHeader>
       <form
-        onSubmit={handleSubmit((data: any) =>
-          handleProceed(JSON.stringify(data))
-        )}
+        onSubmit={handleSubmit((data: any) => {
+          data.orderId = `${orderId}`;
+          handleProceed(data);
+        })}
       >
         <InputWrapper>
           {inputFields.map((inputField, index) => (
