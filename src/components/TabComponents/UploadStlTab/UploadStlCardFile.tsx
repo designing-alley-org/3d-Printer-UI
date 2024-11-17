@@ -47,7 +47,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     convertDimensions
   }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
-    const [fileBlobUrl, setFileBlobUrl] = useState<string>('');
+    const [fileBlob, setFileBlob] = useState<Blob | null>(null);
     const [fileUrl, setFileUrl] = useState<string>('');
     useEffect(() => {
       const url = URL.createObjectURL(file.file);
@@ -58,22 +58,27 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     }, [file.file]);
 
     useEffect(() => {
+      let isMounted = true;
+    
       const loadFile = async () => {
-        const blob = await getFile(file.fileUrl);
-        if (blob) {
-          const blobUrl = URL.createObjectURL(blob);
-          setFileBlobUrl(blobUrl);
+        try {
+          const blob = await getFile(file.fileUrl);
+          if (blob && isMounted) {
+            setFileBlob(blob);
+          } else {
+            console.error('File not found in IndexedDB');
+          }
+        } catch (error) {
+          console.error('Error retrieving file from IndexedDB:', error);
         }
       };
-  
+    
       loadFile();
-  
+    
       return () => {
-        if (fileBlobUrl) {
-          URL.revokeObjectURL(fileBlobUrl);
-        }
+        isMounted = false;
       };
-    }, [file.fileUrl, fileBlobUrl]);
+    }, [file.fileUrl]);
 
     const handleQuantityChange = useCallback((operation: 'increase' | 'decrease') => {
       const minLimit = 1;
@@ -108,11 +113,15 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
         <Box sx={styles.container}>
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
+            {fileBlob ? (
               <ViewModelStl 
-                fileUrl={fileUrl} 
+              fileBlob={fileBlob} 
                 onDimensionsCalculated={(dimensions) => onUpdateDimensions(file.id, dimensions)}
                 modelColor=''
               />
+            ) : (
+              <div>Loading...</div>
+            )}
               <Box sx={styles.viewButton} onClick={handleViewerOpen}>
                 <img src={vector} alt="View_stl_model" />
               </Box>

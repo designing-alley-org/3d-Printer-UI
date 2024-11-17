@@ -16,9 +16,14 @@ interface ModelDimensions {
 interface FileData {
   id: string;
   name: string;
-  dimensions: ModelDimensions;
-  file: File;
+  dimensions: {
+    height: number;
+    width: number;
+    length: number;
+  };
   fileUrl: string;
+  fileBlob?: Blob;
+  file: File; // Added file property
   quantity: number;
 }
 
@@ -41,19 +46,23 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             file.type === 'application/vnd.ms-pki.stl' ||
             file.name.toLowerCase().endsWith('.stl')
         );
-  
+
         if (newFiles.length === 0) {
           alert('Please upload only STL files');
           return;
         }
-  
+
+        // In your handleFileUpload function
         const filesData: FileData[] = [];
         for (const file of newFiles) {
           const fileId = `${file.name}_${Date.now()}_${Math.random()
             .toString(36)
             .substr(2, 9)}`;
-          const fileUrl = fileId; // Using unique ID as key
-          await saveFile(fileUrl, file); // Save the file blob
+          const fileUrl = fileId;
+
+          // Save the file to IndexedDB
+          await saveFile(fileUrl, file);
+
           filesData.push({
             id: fileId,
             name: file.name,
@@ -62,12 +71,13 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
               width: 0,
               length: 0,
             },
-            file: file,
             fileUrl: fileUrl,
+            fileBlob: file,
+            file: file,
             quantity: 1,
           });
         }
-  
+
         setFiles((prevFiles) => [...prevFiles, ...filesData]);
         setActiveFileId(filesData[0].id);
       }
@@ -75,7 +85,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         fileInputRef.current.value = '';
       }
     },
-    [setFiles, setActiveFileId]
+    [setFiles]
   );
 
   const handleUnitClick = useCallback((unit: string) => {
@@ -181,7 +191,6 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         </Box>
         <Box sx={styles.fileCardContainer}>
           {files?.map((file) => (
-            
             <UploadStlCardFile
               key={file.id}
               file={file}
