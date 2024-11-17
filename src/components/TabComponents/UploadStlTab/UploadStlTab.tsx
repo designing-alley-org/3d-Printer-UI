@@ -38,7 +38,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const fileList = event.target.files;
       if (fileList && fileList.length > 0) {
         const newFiles = Array.from(fileList).filter(
@@ -46,38 +46,25 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             file.type === 'application/vnd.ms-pki.stl' ||
             file.name.toLowerCase().endsWith('.stl')
         );
-
+  
         if (newFiles.length === 0) {
           alert('Please upload only STL files');
           return;
         }
-
-        // In your handleFileUpload function
-        const filesData: FileData[] = [];
-        for (const file of newFiles) {
-          const fileId = `${file.name}_${Date.now()}_${Math.random()
-            .toString(36)
-            .substr(2, 9)}`;
-          const fileUrl = fileId;
-
-          // Save the file to IndexedDB
-          await saveFile(fileUrl, file);
-
-          filesData.push({
-            id: fileId,
-            name: file.name,
-            dimensions: {
-              height: 0,
-              width: 0,
-              length: 0,
-            },
-            fileUrl: fileUrl,
-            fileBlob: file,
-            file: file,
-            quantity: 1,
-          });
-        }
-
+  
+        const filesData: FileData[] = newFiles.map((file) => ({
+          id: `${file.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          name: file.name,
+          dimensions: {
+            height: 0,
+            width: 0,
+            length: 0,
+          },
+          fileUrl: '', // Will be set after saving to IndexedDB
+          quantity: 1,
+          file: file,
+        }));
+  
         setFiles((prevFiles) => [...prevFiles, ...filesData]);
         setActiveFileId(filesData[0].id);
       }
@@ -85,7 +72,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         fileInputRef.current.value = '';
       }
     },
-    [setFiles]
+    [setFiles, setActiveFileId]
   );
 
   const handleUnitClick = useCallback((unit: string) => {
@@ -190,7 +177,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
           <Typography sx={styles.uploadText}>Upload STL Files</Typography>
         </Box>
         <Box sx={styles.fileCardContainer}>
-          {files?.map((file) => (
+          {files.map((file) => (
             <UploadStlCardFile
               key={file.id}
               file={file}

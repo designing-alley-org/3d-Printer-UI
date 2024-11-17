@@ -12,71 +12,61 @@ interface ModelDimensions {
 
 interface ViewModelStlProps {
   fileUrl?: string;
-  fileBlob?: Blob;
+  localBlobUrl?: string;
   onDimensionsCalculated?: (dimensions: ModelDimensions) => void;
   modelColor: string;
 }
 
 const ViewModelStl: React.FC<ViewModelStlProps> = ({
   fileUrl,
-  fileBlob,
+  localBlobUrl,
   onDimensionsCalculated,
   modelColor,
 }) => {
   const [loading, setLoading] = useState(true);
-  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+  const [fileBlobUrl, setFileBlobUrl] = useState<string | null>(null);
   const viewerRef = useRef(null);
 
-  const style = {
-    width: '100%',
-    height: '100%',
-  };
-
   useEffect(() => {
-    let isMounted = true;
-    let blobUrl: string | null = null;
-
     const loadFile = async () => {
-      try {
-        if (fileBlob) {
-          // If fileBlob is provided, create an object URL
-          blobUrl = URL.createObjectURL(fileBlob);
-        } else if (fileUrl) {
-          // If fileUrl is provided, retrieve the file from IndexedDB
+      if (localBlobUrl) {
+        // Use the local blob URL directly
+        setFileBlobUrl(localBlobUrl);
+        setLoading(false);
+      } else if (fileUrl) {
+        try {
           const blob = await getFile(fileUrl);
           if (blob) {
-            blobUrl = URL.createObjectURL(blob);
+            const blobUrl = URL.createObjectURL(blob);
+            setFileBlobUrl(blobUrl);
           } else {
             console.error('File not found in IndexedDB');
           }
+        } catch (error) {
+          console.error('Error retrieving file from IndexedDB:', error);
+        } finally {
+          setLoading(false);
         }
-
-        if (isMounted && blobUrl) {
-          setObjectUrl(blobUrl);
-        }
-      } catch (error) {
-        console.error('Error loading file:', error);
       }
     };
 
     loadFile();
 
     return () => {
-      isMounted = false;
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
+      if (fileBlobUrl && !localBlobUrl) {
+        URL.revokeObjectURL(fileBlobUrl);
       }
     };
-  }, [fileUrl, fileBlob]);
+  }, [fileUrl, localBlobUrl]); // Removed fileBlobUrl from dependencies to prevent infinite loops
 
   const handleFinishLoading = useCallback(
     (dimensions: any) => {
       setLoading(false);
       if (onDimensionsCalculated) {
         const modelDimensions: ModelDimensions = {
-          height: parseFloat(dimensions.height.toFixed(2)),
-          width: parseFloat(dimensions.width.toFixed(2)),
-          length: parseFloat(dimensions.length.toFixed(2)),
+          height: +dimensions.height.toFixed(2),
+          width: +dimensions.width.toFixed(2),
+          length: +dimensions.length.toFixed(2),
         };
         onDimensionsCalculated(modelDimensions);
       }
@@ -84,18 +74,28 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
     [onDimensionsCalculated]
   );
 
+  const style = {
+    width: '100%',
+    height: '100%',
+  };
+
   return (
-    <div style={style}>
+    <div className="relative" style={style}>
       {loading && (
         <div className="loading-overlay">
-          {/* Add your loading indicator here */}
+          {/* Loading spinner or message */}
+          Loading...
         </div>
       )}
-      {objectUrl && (
+      {fileBlobUrl && (
         <StlViewer
           style={style}
-          url={objectUrl}
-          modelProps={{ color: modelColor || '#808080' }}
+          orbitControls
+          shadows
+          url={fileBlobUrl}
+          modelProps={{
+            color: modelColor || '#808080',
+          }}
           onFinishLoading={handleFinishLoading}
           ref={viewerRef}
         />
