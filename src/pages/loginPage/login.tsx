@@ -15,6 +15,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { AppDispatch } from '../../store/store';
 import { login } from '../../store/auth/actions';
 import { RootState } from '../../store/types';
+import "./styles.css";
 
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -57,13 +58,16 @@ const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const {loading, error } = useSelector((state: RootState) => state.auth);
-
+  const handleGoogleLogin = () => {
+    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(login(email, password, navigate));
   };
 
   return (
+    <div className='AuthBG'>
     <Container maxWidth="sm">
       <Paper
         elevation={3}
@@ -159,6 +163,7 @@ const Login: React.FC = () => {
             }}
           >
             <SocialButton
+            onClick={handleGoogleLogin}
               startIcon={
                 <GoogleIcon sx={{ animation: 'none', transform: 'none' }} />
               }
@@ -216,6 +221,7 @@ const Login: React.FC = () => {
         </Box>
       </Paper>
     </Container>
+    </div>
   );
 };
 

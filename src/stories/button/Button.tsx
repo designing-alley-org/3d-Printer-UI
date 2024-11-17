@@ -6,7 +6,9 @@ interface ButtonProps {
   onClick: (e?:any) => void;
   width?: string; // Optional width
   height?: string; // Optional height
+  disabled?: boolean;
 }
+
 
 const Button: React.FC<ButtonProps> = ({ label, onClick, width, height }) => {
   return (
@@ -15,5 +17,7 @@ const Button: React.FC<ButtonProps> = ({ label, onClick, width, height }) => {
     </button>
   );
 };
+
+
 
 export default Button;

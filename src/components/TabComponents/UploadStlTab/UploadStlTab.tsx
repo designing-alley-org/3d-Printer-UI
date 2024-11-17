@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { SxProps, Theme } from '@mui/system';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
 import { plus } from '../../../constants';
 import { uploadDimBtnData } from '../../../constants';
+import { saveFile } from '../../../utils/indexedDB';
 
 interface ModelDimensions {
   height: number;
@@ -14,8 +16,14 @@ interface ModelDimensions {
 interface FileData {
   id: string;
   name: string;
-  dimensions: ModelDimensions;
-  file: File;
+  dimensions: {
+    height: number;
+    width: number;
+    length: number;
+  };
+  fileUrl: string;
+  fileBlob?: Blob;
+  file: File; // Added file property
   quantity: number;
 }
 
@@ -38,13 +46,13 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             file.type === 'application/vnd.ms-pki.stl' ||
             file.name.toLowerCase().endsWith('.stl')
         );
-
+  
         if (newFiles.length === 0) {
           alert('Please upload only STL files');
           return;
         }
-
-        const filesData: FileData[] = newFiles?.map((file) => ({
+  
+        const filesData: FileData[] = newFiles.map((file) => ({
           id: `${file.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           name: file.name,
           dimensions: {
@@ -52,10 +60,11 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             width: 0,
             length: 0,
           },
-          file: file,
+          fileUrl: '', // Will be set after saving to IndexedDB
           quantity: 1,
+          file: file,
         }));
-
+  
         setFiles((prevFiles) => [...prevFiles, ...filesData]);
         setActiveFileId(filesData[0].id);
       }
@@ -63,7 +72,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         fileInputRef.current.value = '';
       }
     },
-    [setFiles]
+    [setFiles, setActiveFileId]
   );
 
   const handleUnitClick = useCallback((unit: string) => {
@@ -129,10 +138,12 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             <Button
               onClick={() => handleUnitClick(item.name)}
               key={item.id}
-              sx={{
-                ...styles.unitButton,
-                ...(selectedUnit === item.name && styles.activeButton),
-              }}
+              sx={
+                {
+                  ...styles.unitButton,
+                  ...(selectedUnit === item.name && styles.activeButton),
+                } as SxProps<Theme>
+              }
             >
               {item.name}
             </Button>
@@ -166,8 +177,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
           <Typography sx={styles.uploadText}>Upload STL Files</Typography>
         </Box>
         <Box sx={styles.fileCardContainer}>
-          {files?.map((file) => (
-            
+          {files.map((file) => (
             <UploadStlCardFile
               key={file.id}
               file={file}
