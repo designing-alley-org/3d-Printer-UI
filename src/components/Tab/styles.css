@@ -27,19 +27,19 @@
   background-color: unset;
   border-top: unset;
   color: white;
+  &::after {
+    content: '';
+    position: absolute;
+    margin-top: -3.9rem;
+    margin-left: 10.6%;
+    width: 3.05rem;
+    height: 4rem;
+    rotate: 180deg;
+    border-bottom-left-radius: 9rem;
+    box-shadow: -1px 2rem 0px 0px #ffffff;
+  }
   .tabContent {
     padding: 10px;
-    &::before {
-      content: '';
-      position: absolute;
-      margin-top: -0.5rem;
-      margin-right: -23%;
-      width: 3.05rem;
-      height: 4rem;
-      rotate: 180deg;
-      border-bottom-left-radius: 9rem;
-      box-shadow: -1px 2rem 0px 0px #ffffff;
-    }
   }
 }
 .tabrow li:nth-child(2) {

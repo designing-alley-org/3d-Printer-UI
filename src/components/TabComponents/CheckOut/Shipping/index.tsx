@@ -21,7 +21,7 @@ const ShippingDetails: React.FC = () => {
 
   const handleProceed = async (data: any) => {
     try {
-      const response = await api.post(`/address/create`, data);
+      const response = await api.post(`/create-address`, data);
       if (response.status === 200) {
         navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
       }
