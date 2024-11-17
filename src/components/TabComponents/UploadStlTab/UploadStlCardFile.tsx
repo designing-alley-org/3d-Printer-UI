@@ -100,7 +100,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                   localBlobUrl={localBlobUrl}
                   fileUrl={file.fileUrl} // Pass fileUrl if available
                   onDimensionsCalculated={(dimensions) => onUpdateDimensions(file.id, dimensions)}
-                  modelColor={activeFileId === file.id ? '#ff0000' : '#808080'}
+                  modelColor={activeFileId === file.id ? '#808080' : '#808080'}
                 />
               ) : (
                 <div>Loading...</div>
@@ -155,6 +155,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
           </Box>
         </Box>
         <ViewerStlModel
+        localBlobUrl={localBlobUrl}
           isOpen={isViewerOpen}
           onClose={handleViewerClose}
           files={files}

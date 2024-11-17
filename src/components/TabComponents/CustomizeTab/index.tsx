@@ -19,6 +19,7 @@ import { addAllFiles, updateWeight } from '../../../store/customizeFilesDetails/
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 import api from '../../../axiosConfig';
 import { set } from 'react-hook-form';
+import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 
 import { saveFile } from '../../../utils/indexedDB';
 import ViewModelStl from '../../ViewStlFile';
@@ -54,9 +55,11 @@ const CustomizeTab: React.FC = () => {
   const [lenght, setLenght] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
-
+  const [isViewerOpen, setViewerOpen] = useState(false);
   const dispatch = useDispatch();
   const { orderId } = useParams();
+
+  
 
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const activeFile = useMemo(() => {
@@ -196,12 +199,19 @@ const CustomizeTab: React.FC = () => {
     return true;
   }, [activeFile]);
 
-  const handleOpenViewer = useCallback((fileId: string) => {
-    setActiveFileId(fileId);
-  }, []);
+  
 
   const handleSetActiveFile = useCallback((fileId: string) => {
     setActiveFileId(fileId);
+  }, []);
+
+  const handleOpenViewer = useCallback((fileId: string) => {
+    setViewerOpen(true);
+    handleSetActiveFile(fileId);
+  }, [handleSetActiveFile]);
+
+  const handleViewerClose = useCallback(() => {
+    setViewerOpen(false);
   }, []);
 
   const handleApplySelection = async () => {
@@ -216,8 +226,6 @@ const CustomizeTab: React.FC = () => {
      if(updateWidth > 0 && updateHeight > 0 && updateLength > 0) {
       await scaleStl();
      }
-
-      console.log('Apply selection response:', weight);
       // Handle success response
     } catch (error) {
       console.error('Error applying selection:', error);
@@ -254,10 +262,9 @@ const CustomizeTab: React.FC = () => {
                 <Model>
                   <span className="model-preview">
                   <ViewModelStl
-  fileUrl={file.fileUrl}
-  modelColor={activeFileId === file._id ? file.color : ''}
-  // onDimensionsCalculated={handleDimensions}
-/>
+                       fileUrl={file.fileUrl}
+                         modelColor={activeFileId === file._id ? file.color : ''}
+                         />
                   </span>
                   <span
                     className="view-model"
@@ -314,7 +321,18 @@ const CustomizeTab: React.FC = () => {
           </Button>
         </Customize>
       </Filescomponent>
+      <ViewerStlModel
+          fileURl={activeFile?.fileUrl}
+          isOpen={isViewerOpen}
+          onClose={handleViewerClose}
+          activeFileId={activeFileId}
+          files={files as ViewerStlModelProps['files']}
+          onSetActiveFile={handleSetActiveFile}
+        />
+
+   
     </Wrapper>
+
   );
 };
 

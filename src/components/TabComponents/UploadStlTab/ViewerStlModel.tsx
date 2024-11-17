@@ -20,6 +20,8 @@ interface ViewerStlModelProps {
   files: FileData[];
   activeFileId: string | null;
   onSetActiveFile: (fileId: string) => void;
+  localBlobUrl?: string;
+  fileURl?: string;
 }
 
 const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({ 
@@ -28,6 +30,8 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
   files, 
   activeFileId, 
   onSetActiveFile,
+  localBlobUrl,
+  fileURl
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
@@ -88,7 +92,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
         <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
         <Box sx={styles.viewerContent}>
           <Box sx={styles.viewModel}>
-            {currentFileUrl && <ViewModelStl fileUrl={currentFileUrl} modelColor='' />}
+            {currentFileUrl && <ViewModelStl localBlobUrl={localBlobUrl} fileUrl={currentFileUrl} modelColor='' />}
           </Box>
           <Box sx={styles.navigationContainer}>
             <ButtonIcon
