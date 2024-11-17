@@ -1,6 +1,8 @@
+// src/components/ViewStlFile/index.tsx
+
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { StlViewer } from 'react-stl-viewer';
-import './styles.css';
+import { getFile } from '../../utils/indexedDB';
 
 interface ModelDimensions {
   height: number;
@@ -9,83 +11,95 @@ interface ModelDimensions {
 }
 
 interface ViewModelStlProps {
-  fileUrl: string;
+  fileUrl?: string;
+  localBlobUrl?: string;
   onDimensionsCalculated?: (dimensions: ModelDimensions) => void;
-  modelColor:string;
+  modelColor: string;
 }
 
-const ViewModelStl: React.FC<ViewModelStlProps> = ({ fileUrl, onDimensionsCalculated, modelColor }) => {
+const ViewModelStl: React.FC<ViewModelStlProps> = ({
+  fileUrl,
+  localBlobUrl,
+  onDimensionsCalculated,
+  modelColor,
+}) => {
   const [loading, setLoading] = useState(true);
-  const [color, setColor] = useState('#808080')
+  const [fileBlobUrl, setFileBlobUrl] = useState<string | null>(null);
   const viewerRef = useRef(null);
 
+  useEffect(() => {
+    const loadFile = async () => {
+      if (localBlobUrl) {
+        // Use the local blob URL directly
+        setFileBlobUrl(localBlobUrl);
+        setLoading(false);
+      } else if (fileUrl) {
+        try {
+          const blob = await getFile(fileUrl);
+          if (blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            setFileBlobUrl(blobUrl);
+          } else {
+            console.error('File not found in IndexedDB');
+          }
+        } catch (error) {
+          console.error('Error retrieving file from IndexedDB:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadFile();
+
+    return () => {
+      if (fileBlobUrl && !localBlobUrl) {
+        URL.revokeObjectURL(fileBlobUrl);
+      }
+    };
+  }, [fileUrl, localBlobUrl]); // Removed fileBlobUrl from dependencies to prevent infinite loops
+
+  const handleFinishLoading = useCallback(
+    (dimensions: any) => {
+      setLoading(false);
+      if (onDimensionsCalculated) {
+        const modelDimensions: ModelDimensions = {
+          height: +dimensions.height.toFixed(2),
+          width: +dimensions.width.toFixed(2),
+          length: +dimensions.length.toFixed(2),
+        };
+        onDimensionsCalculated(modelDimensions);
+      }
+    },
+    [onDimensionsCalculated]
+  );
+
   const style = {
-    top: 0,
-    left: 0,
     width: '100%',
     height: '100%',
   };
-  
-  useEffect(() => {
-    setColor(modelColor ? modelColor : '#808080');
-  }, [modelColor]);
-
-  const handleFinishLoading = useCallback((dimensions: any) => {
-    setLoading(false);
-    
-    if (onDimensionsCalculated) {
-      const modelDimensions: ModelDimensions = {
-        height: (dimensions.height).toFixed(2),
-        width: (dimensions.width).toFixed(2),
-        length: (dimensions.length).toFixed(2)
-      };
-      
-      onDimensionsCalculated(modelDimensions);
-    }
-  }, [onDimensionsCalculated]);
-
-
-  // Cleanup on unmount or when fileUrl changes
-  useEffect(() => {
-    return () => {
-      setLoading(true);
-    };
-  }, [fileUrl]);
 
   return (
-    <div className="relative" style={{ width: '100%', height: '100%' }}>
+    <div className="relative" style={style}>
       {loading && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
-          zIndex: 1
-        }}>
-          <svg viewBox="25 25 50 50" style={{ width: '48px', height: '48px' }}>
-            <circle r="20" cy="50" cx="50"></circle>
-          </svg>
+        <div className="loading-overlay">
+          {/* Loading spinner or message */}
+          Loading...
         </div>
       )}
-      <StlViewer
-        style={style}
-        orbitControls
-        shadows
-        url={fileUrl}
-        onFinishLoading={handleFinishLoading}
-        modelProps={{ 
-          color,
-          rotationX: 0,
-          rotationY: 0,
-          rotationZ: 0,
-        }}
-        ref={viewerRef}
-      />
+      {fileBlobUrl && (
+        <StlViewer
+          style={style}
+          orbitControls
+          shadows
+          url={fileBlobUrl}
+          modelProps={{
+            color: modelColor || '#808080',
+          }}
+          onFinishLoading={handleFinishLoading}
+          ref={viewerRef}
+        />
+      )}
     </div>
   );
 };

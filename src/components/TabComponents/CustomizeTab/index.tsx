@@ -18,7 +18,8 @@ import Accordion from '../../Accordion';
 import { addAllFiles } from '../../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 import api from '../../../axiosConfig';
-
+import { saveFile } from '../../../utils/indexedDB';
+import ViewModelStl from '../../ViewStlFile';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -81,6 +82,26 @@ const CustomizeTab: React.FC = () => {
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
 
+  
+  // Store files in IndexedDB
+  useEffect(() => {
+    const storeFileInIndexedDB = async (fileUrl: string) => {
+      try {
+        const response = await fetch(fileUrl);
+        const blob = await response.blob();
+        await saveFile(fileUrl, blob);
+        console.log('File saved to IndexedDB');
+      } catch (error) {
+        console.error('Error saving file to IndexedDB:', error);
+      }
+    };
+
+    files.forEach(file => {
+      if (file.fileUrl) {
+        storeFileInIndexedDB(file.fileUrl);
+      }
+    });
+  }, [files]);
   // Get specifications
   const fetchSpec = useCallback(async () => {
     try {
@@ -179,7 +200,11 @@ const CustomizeTab: React.FC = () => {
               >
                 <Model>
                   <span className="model-preview">
-                    {/* Add STL Viewer Component Here */}
+                  <ViewModelStl
+  fileUrl={file.fileUrl}
+  modelColor={activeFileId === file._id ? file.color : ''}
+  // onDimensionsCalculated={handleDimensions}
+/>
                   </span>
                   <span
                     className="view-model"

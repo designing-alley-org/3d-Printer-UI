@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Header from '../Header';
 import './styles.css';
 import { TabLine } from './styles';
-import { LinearProgress } from '@mui/material';
+import { LinearProgress, Box, Typography, CircularProgress } from '@mui/material';
 import { quoteTexts } from '../../constants';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
@@ -13,6 +13,7 @@ import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { useForm } from 'react-hook-form';
+import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function
 
 interface ModelDimensions {
   height: number;
@@ -26,7 +27,24 @@ interface FileData {
   dimensions: ModelDimensions;
   file: any;
   quantity: number;
+  fileUrl?: string; // Optional, will be set upon saving to IndexedDB
 }
+
+const styles = {
+  loadingOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    zIndex: 9999,
+  },
+};
+
 
 const CardLayout = () => {
   const { pathname } = useLocation();
@@ -36,6 +54,9 @@ const CardLayout = () => {
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
   const formMethods = useForm();
+
+  // New state for managing the loading spinner
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   useEffect(() => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
@@ -49,14 +70,18 @@ const CardLayout = () => {
     } else {
       setActiveTabs([]);
     }
-  }, [pathname]);
+  }, [pathname, orderId]); // Added orderId to dependencies
 
   // Calculate progress value based on the active tab
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
 
-  const onProceed = async () => {
+  /**
+   * Handle the Proceed button click.
+   * Saves files to IndexedDB and proceeds based on the current route.
+   */
+  const onProceed = useCallback(async () => {
     // Add validation for files before proceeding from upload step
     if (pathname.includes(ROUTES.UPLOAD_STL) && files.length === 0) {
       alert('Please upload at least one file before proceeding');
@@ -64,34 +89,55 @@ const CardLayout = () => {
     }
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
+      setIsSaving(true); // Start loading spinner
+
       try {
+        // Save each file to IndexedDB
+        const updatedFiles = await Promise.all(
+          files.map(async (file) => {
+            const fileUrl = `${file.id}`; // Using file.id as the key
+            await saveFile(fileUrl, file.file); // Save to IndexedDB
+            return { ...file, fileUrl }; // Update fileUrl in the state
+          })
+        );
+
+        setFiles(updatedFiles); // Update state with fileUrls
+
+        // Proceed with your existing API call after saving to IndexedDB
         const formData = new FormData();
-        files.forEach((file) => {
+        updatedFiles.forEach((file) => {
           formData.append('files', file.file);
           formData.append('quantity', file.quantity.toString());
           formData.append('dimensions', JSON.stringify(file.dimensions));
         });
-        const response = await api.put(`/update-user-order/${orderId}`, 
-          formData,
-        );
+
+        const response = await api.put(`/update-user-order/${orderId}`, formData);
         if (response.status === 200) {
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
           navigate(`${response.data.data._id}/customize`);
         }
+
+        setIsSaving(false); // Stop loading spinner
       } catch (error) {
-        console.error('Error uploading files:', error);
+        console.error('Error processing proceed action:', error);
+        setIsSaving(false); // Stop loading spinner even if there's an error
+        alert('Failed to proceed. Please try again.');
       }
     } else if (pathname === '/get-quotes') {
+      setIsSaving(true); // Start loading spinner
       try {
         const response = await api.post(`/create-order`);
         if (response.status === 200) {
-          console.log('order-created successfully successfully!');
+          console.log('Order created successfully!');
           setActiveTabs([0]);
           navigate(`${response.data.data._id}/upload-stl`);
         }
+        setIsSaving(false); // Stop loading spinner
       } catch (error) {
-        console.error('Error uploading files:', error);
+        console.error('Error creating order:', error);
+        setIsSaving(false); // Stop loading spinner even if there's an error
+        alert('Failed to create order. Please try again.');
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
@@ -100,9 +146,10 @@ const CardLayout = () => {
       setActiveTabs([0, 1, 2, 3]);
       navigate(`/get-quotes/${orderId}/checkout`);
     }
-  };
+  }, [files, navigate, orderId, pathname]);
 
   const handlePayment = async () => {
+    setIsSaving(true); // Start loading spinner
     try {
       const response = await axios.post('http://localhost:3000/payment');
       if (response.status === 200) {
@@ -110,6 +157,9 @@ const CardLayout = () => {
       }
     } catch (error) {
       console.error('Error processing payment:', error);
+      alert('Failed to process payment. Please try again.');
+    } finally {
+      setIsSaving(false); // Stop loading spinner
     }
   };
 
@@ -130,6 +180,18 @@ const CardLayout = () => {
           <Outlet context={{ files, setFiles, formMethods }} />
         )}
       </div>
+
+      {/* Loading Overlay */}
+      {isSaving && (
+        <Box className="loading-overlay" sx={styles.loadingOverlay}>
+          <CircularProgress />
+          <Typography variant="h6" sx={{ marginTop: '1rem' }}>
+            Processing...
+          </Typography>
+        </Box>
+      )}
+
+      {/* Proceed Button */}
       {pathname !== `/get-quotes/${orderId}/checkout` && (
         <div className="btn">
           <div></div>
@@ -139,6 +201,7 @@ const CardLayout = () => {
               onClick={
                 !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
               }
+              disabled={isSaving} // Disable button while saving or processing payment
             />
           </span>
         </div>

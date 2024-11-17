@@ -1,10 +1,12 @@
+// src/components/TabComponents/UploadStlTab/UploadStlCardFile.tsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
-import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
-import ViewerStlModel from './ViewerStlModel';
-import * as styles from './UploadStlCardFileStyle';
-import { cross, plus, minus, vector } from '../../../constants';
 import ViewModelStl from '../../ViewStlFile/index';
+import { cross, plus, minus, vector } from '../../../constants';
+import * as styles from './UploadStlCardFileStyle';
+import ViewerStlModel from './ViewerStlModel';
+import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 
 interface ModelDimensions {
   height: number;
@@ -16,8 +18,9 @@ interface FileData {
   id: string;
   name: string;
   dimensions: ModelDimensions;
-  file: File;
+  fileUrl: string;
   quantity: number;
+  file: File;
 }
 
 interface UploadStlCardFileProps {
@@ -33,25 +36,29 @@ interface UploadStlCardFileProps {
 }
 
 const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
-  ({ 
-    file, 
-    onRemove, 
-    onSetActiveFile, 
-    onUpdateQuantity, 
+  ({
+    file,
+    onRemove,
+    onSetActiveFile,
+    onUpdateQuantity,
     onUpdateDimensions,
-    files, 
+    files,
     activeFileId,
     selectedUnit,
     convertDimensions
   }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
-    const [fileUrl, setFileUrl] = useState<string>('');
+    const [localBlobUrl, setLocalBlobUrl] = useState<string>('');
+
     useEffect(() => {
-      const url = URL.createObjectURL(file.file);
-      setFileUrl(url);
-      return () => {
-        URL.revokeObjectURL(url);
-      };
+      // Create a local URL for immediate rendering
+      if (file.file) {
+        const url = URL.createObjectURL(file.file);
+        setLocalBlobUrl(url);
+        return () => {
+          URL.revokeObjectURL(url);
+        };
+      }
     }, [file.file]);
 
     const handleQuantityChange = useCallback((operation: 'increase' | 'decrease') => {
@@ -75,10 +82,11 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
       setViewerOpen(false);
     }, []);
 
-    const handleRemove = useCallback((e: React.MouseEvent) => {
-      e.stopPropagation();
-      onRemove(file.id);
-    }, [onRemove, file.id]);
+    const handleRemove = useCallback(() => {
+        onRemove(file.id);
+      },
+      [onRemove, file.id]
+    );
 
     const displayDimensions = convertDimensions(file.dimensions, selectedUnit);
    
@@ -87,11 +95,16 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
         <Box sx={styles.container}>
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
-              <ViewModelStl 
-                fileUrl={fileUrl} 
-                onDimensionsCalculated={(dimensions) => onUpdateDimensions(file.id, dimensions)}
-                modelColor=''
-              />
+              {localBlobUrl ? (
+                <ViewModelStl
+                  localBlobUrl={localBlobUrl}
+                  fileUrl={file.fileUrl} // Pass fileUrl if available
+                  onDimensionsCalculated={(dimensions) => onUpdateDimensions(file.id, dimensions)}
+                  modelColor={activeFileId === file.id ? '#ff0000' : '#808080'}
+                />
+              ) : (
+                <div>Loading...</div>
+              )}
               <Box sx={styles.viewButton} onClick={handleViewerOpen}>
                 <img src={vector} alt="View_stl_model" />
               </Box>
@@ -102,7 +115,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem 0' }}>
               <Typography sx={styles.dimensionLabel}>Size: H x W x L </Typography>
               <Typography sx={styles.dimensionsValue}>
-              ({selectedUnit}) : {displayDimensions.height} x  {displayDimensions.width} x  {displayDimensions.length}
+                {`${displayDimensions.height} x ${displayDimensions.width} x ${displayDimensions.length} ${selectedUnit}`}
               </Typography>
             </Box>
           </Box>
@@ -113,7 +126,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 width="3rem"
                 height="3rem"
                 svgPath={cross}
-                onClick={ handleRemove }
+                onClick={handleRemove}
               />
             </Box>
             <Box sx={styles.quantityValueBox}>
