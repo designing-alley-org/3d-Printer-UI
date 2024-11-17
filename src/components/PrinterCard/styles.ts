@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.main`
   border: 0.1px solid #66a3ff;
@@ -15,12 +15,24 @@ export const Wrapper = styled.main`
       rotate: 180deg;
     }
   }
+  .select {
+    display: flex;
+    justify-content: end;
+    padding: 0.5rem;
+    button {
+      border-radius: 50px;
+      font-weight: 500;
+      color: white;
+      padding: 0.4rem 2rem;
+      background: #1e6fff;
+    }
+  }
 `;
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   position: relative;
-  
+
   section {
     display: flex;
     flex-direction: column;
@@ -35,21 +47,14 @@ export const Header = styled.header`
     font-size: 14px;
     color: #525e86;
   }
-    .select{
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    background: #66A3FF;
-    color: #fff;
-    border-radius: 50px;
-    padding: 4px 8px;
-    font-weight: 500;}
 `;
 export const Body = styled.section`
   section {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
+
+  padding: 0.5rem;
   .data {
     display: flex;
     flex-direction: column;
@@ -73,9 +78,13 @@ export const Body = styled.section`
       border-radius: 40px;
     }
     .desc {
+      display: flex;
       font-size: 11px;
-      margin-top: .2rem;
+      margin-top: 0.2rem;
       margin-left: 1.7rem;
+      p {
+        margin-right: 0.2rem;
+      }
     }
   }
 `;
