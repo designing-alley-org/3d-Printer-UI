@@ -34,7 +34,13 @@ const PrinterCard = (props: IPrinterCard) => {
           <span className="dot">.</span>
           <span className="name">{item.name}</span>
         </span>
-        <span className="desc">{item.val}</span>
+        {Array.isArray(item.val) ? (
+          item.val.map((value, index) => (
+            <span key={index} className="desc">{value}</span>
+          ))
+        ) : (
+          <span className="desc">{item.val}</span>
+        )}
       </span>
     );
   };

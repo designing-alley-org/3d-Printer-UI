@@ -11,9 +11,10 @@ import {
 import { Button, TextField } from '@mui/material';
 import PrinterCard from '../PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateColor, updateMaterial, updatePrinter, updateTechnology, updateWeight } from '../../store/FilesDetails/reducer';
+import { updateColor, updateMaterial, updatePrinter, updateTechnology, updateWeight } from '../../store/customizeFilesDetails/reducer';
 import api from '../../axiosConfig';
 import { useParams } from 'react-router-dom';
+import { set } from 'react-hook-form';
 
 interface AccordionProps {
   icon: string;
@@ -52,19 +53,29 @@ const Accordion: React.FC<AccordionProps> = ({
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedPrinter, setSelectedPrinter] = useState<string>('');
   const [printerData, setPrinterData] = useState<PrinterData[]>([]);
-  const [spec, setSpec] = useState<Specification | null>(null);
   const [colorBtnData, setColorBtnData] = useState<string[]>([]);
   const [technologyData, setTechnologyData] = useState<string[]>([]);
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
+  const  [selectSize, setSelectSize] = useState<string>('');
+  console.log('selectSize', selectSize);
+  const [weight, setWeight] = useState<number>(0);
   const { orderId } = useParams();
-
   const handleColorClick = (color: string) => setSelectedColor(color);
   const handleTechClick = (technology: string) => setSelectedTech(technology);
   const handleMatClick = (material: string) => setSelectedMat(material);
     const fileDetails = useSelector((state: any) => state.fileDetails.files);
     const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
+    const dataspec = useSelector((state: any) => state.specification);
+  useEffect(() => {
+    if (dataspec) {
+      setColorBtnData(dataspec.color || []);
+      setTechnologyData(dataspec.technologyType || []);
+      setMaterialData(dataspec.material_with_mass || []);
+    }
+  }, [dataspec]);
     const dimansions = selectedFile?.dimensions;
   const dispatch = useDispatch();
+
 
 
    // Fetch printer data based on selected material and technology
@@ -98,45 +109,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
     if (selectedMat && selectedTech) fetchPrinterData();
   }, [selectedMat, selectedTech]);
-
-
-  // Get specifications
-  useEffect(() => {
-    const fetchSpec = async () => {
-      try {
-        const response = await api.get(`/get-specification`);
-        const data = response.data?.data?.[0]; // Access the first object in the array
-
-        if (data) {
-          setSpec(data);
-          setColorBtnData(data.color || []);
-          setTechnologyData(data.technologyType || []);
-          setMaterialData(data.material_with_mass || []);
-        }
-      } catch (error) {
-        console.error('Error fetching specification:', error);
-      }
-    };
-
-    fetchSpec();
-  }, []);
   
-
-// Get weight for stl file 
-useEffect(() => {
-  const fetchWeight = async () => {
-    try {
-      const payload = {
-        material_name: selectedMat,
-        material_mass: materialData.find((mat) => mat.material_name === selectedMat)?.material_mass,
-      };
-      const response = await api.put(`/process-order/${orderId}/file/${selectedId}`, payload);
-      console.log('weight:', response);
-    } catch (error) {
-      console.error('Error fetching weight:', error);
-    }};
-    if(selectedMat && selectedId) fetchWeight();
-  },[selectedMat, selectedId, materialData]);
 
   // Take selected technology and material from selected file
   useEffect(() => {
@@ -149,8 +122,6 @@ useEffect(() => {
     }
   },[selectedFile]);
 
-
- 
   // Send color corresponding to selectedId to store
   useEffect(() => {
     if (selectedColor && selectedId) {
@@ -197,13 +168,18 @@ useEffect(() => {
           <div className="scale">
             <p>Scale In</p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Dropdown options={sizeOption} onSelect={() => {}} />
+            <Dropdown 
+              options={sizeOption} 
+              onSelect={(option: Option) => setSelectSize(option.value)} 
+              defaultValue="mm"
+            />
               {scaleFields.map((field) => (
                 <TextField
                   key={field.name}
                   id={field.name}
                   placeholder={field.placeholder}
                   className="fields"
+                  value={dimansions ? dimansions[field.name] : ''}
                 />
               ))}
             </div>
