@@ -13,6 +13,9 @@ interface QuoteItem {
 }
 
 interface QuoteData {
+  quoteStatus: string;
+  isClosed: boolean;
+  approvedBy: any;
   tax: number;
   files: QuoteItem[];
   Shipping: number;
@@ -33,14 +36,18 @@ const QuoteTemplate: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const [showNegotiate, setShowNegotiate] = useState<boolean>(false);
   const [updatedQuote, setUpdatedQuote] = useState<QuoteData | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
+  async function getQuotes() {
+    const res = await api.get(`/get-all-quotes/${orderId}`);
+    setAllQuotes(res.data.data);
+    setQuote(res.data.data[activeIndex]);
+  }
   useEffect(() => {
-    async function getQuotes() {
-      const res = await api.get(`/get-all-quotes/${orderId}`);
-      setAllQuotes(res.data.data);
-    }
     getQuotes();
   }, []);
+  console.log(allQuotes);
+  console.log(quote);
 
   const handlePriceChange = (index: number, newPrice: string): void => {
     if (quote) {
@@ -92,10 +99,12 @@ const QuoteTemplate: React.FC = () => {
       });
       console.log('Approve', res);
     }
+    getQuotes();
   };
 
-  const handleQuoteClick = (quote: QuoteData) => {
+  const handleQuoteClick = (quote: QuoteData, index: number) => {
     setQuote(quote);
+    setActiveIndex(index);
     setUpdatedQuote(null);
     setShowNegotiate(false);
   };
@@ -125,7 +134,7 @@ const QuoteTemplate: React.FC = () => {
                 color: 'black',
                 padding: '0.5rem 1rem',
               }}
-              onClick={() => handleQuoteClick(item)}
+              onClick={() => handleQuoteClick(item, index)}
             >
               <Typography variant="body1">Quote {index + 1}</Typography>
             </Box>
@@ -361,30 +370,45 @@ const QuoteTemplate: React.FC = () => {
               alignItems: 'center',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '4rem',
-                alignItems: 'center',
-              }}
-            >
-              <Typography variant="body1" fontWeight="bold">
-                Don’t Like our pricing? Click on negotiate ; to negotiate
-                pricing Details Live
-              </Typography>
-              <span className="negotiation">
+            {quote.approvedBy?.role === 'user' ||
+            quote?.quoteStatus === 'Negotiate' ||
+            quote?.isClosed ? null : quote.approvedBy ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: '4rem',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography variant="body1" fontWeight="bold">
+                  Don’t Like our pricing? Click on negotiate ; to negotiate
+                  pricing Details Live
+                </Typography>
+                <span className="negotiation">
+                  <Button
+                    label={'Negotiate'}
+                    onClick={() => setShowNegotiate(!showNegotiate)}
+                  />
+                </span>
+              </Box>
+            ) : (
+              <h2>Sent to Admin for Approval!</h2>
+            )}
+
+            {quote.approvedBy?.role === 'user' || quote?.isClosed ? (
+              quote?.approvedBy?.role === 'user' ? (
+                <h2>Quote Approved</h2>
+              ) : (
+                <h2>Quote Negotiated </h2>
+              )
+            ) : quote.approvedBy ? (
+              <span className="approve">
                 <Button
-                  label={'Negotiate'}
-                  onClick={() => setShowNegotiate(!showNegotiate)}
+                  label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
+                  onClick={handleSend}
                 />
               </span>
-            </Box>
-            <span className="approve">
-              <Button
-                label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
-                onClick={handleSend}
-              />
-            </span>
+            ) : null}
           </Box>
         </>
       ) : (
