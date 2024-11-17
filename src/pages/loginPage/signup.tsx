@@ -63,12 +63,17 @@ const RegisterForm: React.FC = () => {
     (state: RootState) => state.register
   );
 
+  const handleGoogleSignup = () => {
+    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(register(username, email,password,navigate));
   };
 
   return (
+    <div className='AuthBG'>
     <Container maxWidth="sm">
       <Paper
         elevation={3}
@@ -213,6 +218,7 @@ const RegisterForm: React.FC = () => {
             }}
           >
             <SocialButton
+            onClick={handleGoogleSignup}
               startIcon={
                 <GoogleIcon sx={{ animation: 'none', transform: 'none' }} />
               }
@@ -268,6 +274,7 @@ const RegisterForm: React.FC = () => {
         </Box>
       </Paper>
     </Container>
+    </div>
   );
 };
 

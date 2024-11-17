@@ -5,6 +5,7 @@ import ViewerStlModel from './ViewerStlModel';
 import * as styles from './UploadStlCardFileStyle';
 import { cross, plus, minus, vector } from '../../../constants';
 import ViewModelStl from '../../ViewStlFile/index';
+import { getFile } from '../../../utils/indexedDB';
 
 interface ModelDimensions {
   height: number;
@@ -18,6 +19,7 @@ interface FileData {
   dimensions: ModelDimensions;
   file: File;
   quantity: number;
+  fileUrl: string;
 }
 
 interface UploadStlCardFileProps {
@@ -45,6 +47,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     convertDimensions
   }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
+    const [fileBlobUrl, setFileBlobUrl] = useState<string>('');
     const [fileUrl, setFileUrl] = useState<string>('');
     useEffect(() => {
       const url = URL.createObjectURL(file.file);
@@ -53,6 +56,24 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
         URL.revokeObjectURL(url);
       };
     }, [file.file]);
+
+    useEffect(() => {
+      const loadFile = async () => {
+        const blob = await getFile(file.fileUrl);
+        if (blob) {
+          const blobUrl = URL.createObjectURL(blob);
+          setFileBlobUrl(blobUrl);
+        }
+      };
+  
+      loadFile();
+  
+      return () => {
+        if (fileBlobUrl) {
+          URL.revokeObjectURL(fileBlobUrl);
+        }
+      };
+    }, [file.fileUrl, fileBlobUrl]);
 
     const handleQuantityChange = useCallback((operation: 'increase' | 'decrease') => {
       const minLimit = 1;
@@ -113,7 +134,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 width="3rem"
                 height="3rem"
                 svgPath={cross}
-                onClick={ handleRemove }
+                onClick={() => handleRemove}
               />
             </Box>
             <Box sx={styles.quantityValueBox}>

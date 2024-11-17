@@ -18,4 +18,5 @@ export const ROUTES = {
   ACCOUNT: 'account',
   CART: 'cart',
   SUCCESS: 'order-successful',
+  GOOGLE_AUTH: 'google-auth',
 };

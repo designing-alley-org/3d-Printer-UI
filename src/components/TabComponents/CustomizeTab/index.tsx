@@ -18,7 +18,7 @@ import Accordion from '../../Accordion';
 import ViewModelStl from '../../ViewStlFile';
 import { addFileDetails } from '../../../store/FilesDetails/reducer';
 import api from '../../../axiosConfig';
-
+import { saveFile } from '../../../utils/indexedDB';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -68,7 +68,24 @@ const CustomizeTab: React.FC = () => {
 
     if (orderId) fetchOrder();
   }, [orderId]);
+  useEffect(() => {
+    const storeFileInIndexedDB = async (fileUrl: string) => {
+      try {
+        const response = await fetch(fileUrl);
+        const blob = await response.blob();
+        await saveFile(fileUrl, blob);
+        console.log('File saved to IndexedDB');
+      } catch (error) {
+        console.error('Error saving file to IndexedDB:', error);
+      }
+    };
 
+    fetchfiles.forEach(file => {
+      if (file.fileUrl) {
+        storeFileInIndexedDB(file.fileUrl);
+      }
+    });
+  }, [fetchfiles]);
   // Store fetched files in Redux
   useEffect(() => {
     dispatch(addFileDetails(fetchfiles));

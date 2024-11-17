@@ -6,7 +6,7 @@ import { AuthActionTypes } from '../types';
 import api from '../../axiosConfig';
 
 export const login =
-  (email: string, password: string,navigate) =>
+  (email: string, password: string, navigate: (path: string) => void) =>
   async (dispatch: Dispatch<AuthActionTypes>) => {
     dispatch({ type: LOGIN_REQUEST });
 

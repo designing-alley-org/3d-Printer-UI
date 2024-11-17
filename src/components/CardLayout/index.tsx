@@ -13,6 +13,7 @@ import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { useForm } from 'react-hook-form';
+import "./styles.css";
 
 interface ModelDimensions {
   height: number;
@@ -50,6 +51,8 @@ const CardLayout = () => {
       setActiveTabs([]);
     }
   }, [pathname]);
+
+
 
   // Calculate progress value based on the active tab
   const getProgressValue = () => {

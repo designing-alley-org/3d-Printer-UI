@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { SxProps, Theme } from '@mui/system';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
 import { plus } from '../../../constants';
 import { uploadDimBtnData } from '../../../constants';
+import { saveFile } from '../../../utils/indexedDB';
 
 interface ModelDimensions {
   height: number;
@@ -16,6 +18,7 @@ interface FileData {
   name: string;
   dimensions: ModelDimensions;
   file: File;
+  fileUrl: string;
   quantity: number;
 }
 
@@ -30,7 +33,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const fileList = event.target.files;
       if (fileList && fileList.length > 0) {
         const newFiles = Array.from(fileList).filter(
@@ -38,24 +41,33 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             file.type === 'application/vnd.ms-pki.stl' ||
             file.name.toLowerCase().endsWith('.stl')
         );
-
+  
         if (newFiles.length === 0) {
           alert('Please upload only STL files');
           return;
         }
-
-        const filesData: FileData[] = newFiles?.map((file) => ({
-          id: `${file.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          name: file.name,
-          dimensions: {
-            height: 0,
-            width: 0,
-            length: 0,
-          },
-          file: file,
-          quantity: 1,
-        }));
-
+  
+        const filesData: FileData[] = [];
+        for (const file of newFiles) {
+          const fileId = `${file.name}_${Date.now()}_${Math.random()
+            .toString(36)
+            .substr(2, 9)}`;
+          const fileUrl = fileId; // Using unique ID as key
+          await saveFile(fileUrl, file); // Save the file blob
+          filesData.push({
+            id: fileId,
+            name: file.name,
+            dimensions: {
+              height: 0,
+              width: 0,
+              length: 0,
+            },
+            file: file,
+            fileUrl: fileUrl,
+            quantity: 1,
+          });
+        }
+  
         setFiles((prevFiles) => [...prevFiles, ...filesData]);
         setActiveFileId(filesData[0].id);
       }
@@ -63,7 +75,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         fileInputRef.current.value = '';
       }
     },
-    [setFiles]
+    [setFiles, setActiveFileId]
   );
 
   const handleUnitClick = useCallback((unit: string) => {
@@ -129,10 +141,12 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             <Button
               onClick={() => handleUnitClick(item.name)}
               key={item.id}
-              sx={{
-                ...styles.unitButton,
-                ...(selectedUnit === item.name && styles.activeButton),
-              }}
+              sx={
+                {
+                  ...styles.unitButton,
+                  ...(selectedUnit === item.name && styles.activeButton),
+                } as SxProps<Theme>
+              }
             >
               {item.name}
             </Button>

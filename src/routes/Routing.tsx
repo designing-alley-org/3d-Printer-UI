@@ -18,12 +18,14 @@ import RegisterForm from '../pages/loginPage/signup.tsx';
 import DashboardLayout from '../components/DashboardLayout/index.tsx';
 import Account from '../components/accountComponent/index.tsx';
 import Services from '../components/Services/index.tsx';
+import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 
 const Routing: React.FC = () => {
   return (
     <Routes>
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
+      <Route path={ROUTES.GOOGLE_AUTH} element={<GoogleAuthHandler />} />
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} />} />
         <Route path={ROUTES.DASHBOARD} element={<DashboardLayout />}>
