@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
@@ -15,8 +15,8 @@ import {
 } from './styles';
 import { customize, vector_black } from '../../../constants';
 import Accordion from '../../Accordion';
-import ViewModelStl from '../../ViewStlFile';
-import { addFileDetails } from '../../../store/FilesDetails/reducer';
+import { addAllFiles } from '../../../store/customizeFilesDetails/reducer';
+import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 import api from '../../../axiosConfig';
 import { saveFile } from '../../../utils/indexedDB';
 // Define FileData type
@@ -29,6 +29,7 @@ interface FileData {
   material: string;
   technology: string;
   printer: string;
+  weight: number;
   dimensions: {
     height: number;
     length: number;
@@ -36,75 +37,97 @@ interface FileData {
   };
 }
 
+
+
+
 const CustomizeTab: React.FC = () => {
-  const [fetchfiles, setFetchFiles] = useState<FileData[]>([]);
+  const [files, setFetchFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
-  const [color, setColor] = useState<string>('');
- 
+  const [ weight, setWeight] = useState<number>(0);
+  console.log(activeFileId)
+
   const dispatch = useDispatch();
   const { orderId } = useParams();
+
+  const fileDetails = useSelector((state: any) => state.fileDetails.files);
+  const activeFile = useMemo(() => {
+    return fileDetails.find((file: any) => file._id === activeFileId) || null;
+  }, [fileDetails, activeFileId]);
 
   // Fetch files from the server
   useEffect(() => {
     const fetchOrder = async () => {
       try {
         const response = await api.get(`/order-show/${orderId}`);
-        const fetchedFiles = response.data.message.files.map((file: any) => ({
+        const files = response.data.message.files.map((file: any) => ({
           _id: file._id,
-          fileName: file.fileName.slice(0, 6),
+          fileName: file.fileName.split('-')[0],
           fileUrl: file.fileUrl,
           quantity: file.quantity,
           color: file.color,
-          material: file.material,
-          technology: file.technology,
+          material: file.material || '',
+          technology: file.technology || '',
+          weight: file.weight,
           printer: file.printer,
           dimensions: file.dimensions,
         }));
-        setFetchFiles(fetchedFiles);
+        setFetchFiles(files);
+        dispatch(addAllFiles(files));
       } catch (error) {
         console.error('Error fetching files:', error);
       }
     };
 
     if (orderId) fetchOrder();
-  }, [orderId]);
+  }, [orderId, dispatch]);
+
+  // Get specifications
+  const fetchSpec = useCallback(async () => {
+    try {
+      const response = await api.get(`/get-specification`);
+      const data = response.data?.data?.[0]; // Access the first object in the array
+      dispatch(addDataSpec(data));
+    } catch (error) {
+      console.error('Error fetching specification:', error);
+    }
+  }, [dispatch]);
+
   useEffect(() => {
-    const storeFileInIndexedDB = async (fileUrl: string) => {
+    fetchSpec();
+  }, [fetchSpec]);
+
+  // Get weight for stl file 
+  const selectedMat = useSelector((state: any) => state.fileDetails.files.find((file: FileData) => file._id === activeFileId)?.material);
+  const selectedMatMass = useSelector((state: any) => state.specification.material_with_mass);
+  const materialMass = selectedMatMass?.find((mat : any) => mat.material_name === selectedMat)?.material_mass;
+  
+  useEffect(() => {
+    const fetchWeight = async () => {
+      if (!selectedMat || !activeFileId || materialMass === undefined) return;
       try {
-        const response = await fetch(fileUrl);
-        const blob = await response.blob();
-        await saveFile(fileUrl, blob);
-        console.log('File saved to IndexedDB');
+        const payload = {
+          material_name: selectedMat,
+          material_mass: materialMass,
+        };
+        const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
+        console.log('Weight response:', response.data.data.files);
+        // setWeight(response.data.files[0].dimensions.weight);
       } catch (error) {
-        console.error('Error saving file to IndexedDB:', error);
+        console.error('Error fetching weight:', error);
       }
     };
+    fetchWeight();
+  }, [selectedMat, activeFileId, materialMass, orderId]);
 
-    fetchfiles.forEach(file => {
-      if (file.fileUrl) {
-        storeFileInIndexedDB(file.fileUrl);
-      }
-    });
-  }, [fetchfiles]);
-  // Store fetched files in Redux
-  useEffect(() => {
-    dispatch(addFileDetails(fetchfiles));
-  }, [dispatch, fetchfiles]);
 
-  // Save the rendering in store
-  useEffect(() => {
-    dispatch({ type: 'SAVE_RENDERING', payload: fetchfiles });
-  }, [dispatch, fetchfiles]);
+ 
 
-  // extract file from store
-  const fileDetails = useSelector((state: any) => state.fileDetails.files);
-  console.log('fileDetails:', fileDetails);
-
-  // Extract color of the active file
-  useEffect(() => {
-    const activeFile = fetchfiles.find((file) => file._id === activeFileId);
-    if (activeFile) setColor(activeFile.color);
-  }, [activeFileId, fetchfiles]);
+  // Check if all required fields are filled for the active file
+  const isApplyButtonDisabled = useMemo(() => {
+    if (!activeFile) return true;
+    const requiredFields = ['color', 'material', 'technology', 'printer', 'weight'];
+    return requiredFields.some((field) => !activeFile[field]);
+  }, [activeFile]);
 
   const handleOpenViewer = useCallback((fileId: string) => {
     setActiveFileId(fileId);
@@ -113,6 +136,20 @@ const CustomizeTab: React.FC = () => {
   const handleSetActiveFile = useCallback((fileId: string) => {
     setActiveFileId(fileId);
   }, []);
+
+  const handleApplySelection = async () => {
+    if (!activeFile) return;
+    try {
+      const response = await api.post('/apply-selection', {
+        fileDetails: activeFile,
+      });
+      console.log('Apply selection response:', response.data);
+      // Handle success response
+    } catch (error) {
+      console.error('Error applying selection:', error);
+      // Handle error response
+    }
+  };
 
   return (
     <Wrapper>
@@ -125,10 +162,10 @@ const CustomizeTab: React.FC = () => {
         <Files>
           <span className="header">
             <span className="file">Files</span>
-            <span className="count">{fetchfiles.length}</span>
+            <span className="count">{files.length}</span>
           </span>
           <UploadedFile>
-            {fetchfiles.map((file) => (
+            {files.map((file) => (
               <span
                 key={file._id}
                 className="upload-file"
@@ -142,10 +179,7 @@ const CustomizeTab: React.FC = () => {
               >
                 <Model>
                   <span className="model-preview">
-                    <ViewModelStl
-                      fileUrl={file.fileUrl}
-                      modelColor={activeFileId === file._id ? color : ''}
-                    />
+                    {/* Add STL Viewer Component Here */}
                   </span>
                   <span
                     className="view-model"
@@ -183,10 +217,20 @@ const CustomizeTab: React.FC = () => {
             ))}
           </div>
           <div className="weight-section">
-            <p>Current Weight & Volume:</p>
-            <p>100gm</p>
+            {activeFile?.weight > 0 && (
+              <>
+                <p>Current Weight & Volume:</p>
+                <p>{`${activeFile.weight}gm`}</p>
+              </>
+            )}
           </div>
-          <Button className="apply-button">Apply Selection</Button>
+          <Button
+            className="apply-button"
+            disabled={isApplyButtonDisabled}
+            onClick={handleApplySelection}
+          >
+            Apply Selection
+          </Button>
         </Customize>
       </Filescomponent>
     </Wrapper>

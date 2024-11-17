@@ -183,11 +183,11 @@ export const inputFields = [
   },
 ];
 export const scaleFields = [
-  {
-    label: 'Length',
-    name: 'length',
+ {
+    label: 'Height',
+    name: 'height',
     type: 'text',
-    placeholder: 'Enter Length',
+    placeholder: 'Enter Height',
   },
   {
     label: 'Width',
@@ -196,10 +196,10 @@ export const scaleFields = [
     placeholder: 'Enter Width',
   },
   {
-    label: 'Height',
-    name: 'height',
+    label: 'Length',
+    name: 'length',
     type: 'text',
-    placeholder: 'Enter Height',
+    placeholder: 'Enter Length',
   },
 ];
 export const customize = [
