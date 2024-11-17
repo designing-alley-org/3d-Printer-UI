@@ -1,0 +1,9 @@
+.proc {
+    padding: 1rem;
+    button {
+      background-color: #1e6fff;
+      border-radius: 40px;
+      width: 250px;
+    }
+  }
+  

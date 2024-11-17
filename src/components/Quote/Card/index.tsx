@@ -4,30 +4,38 @@ import Button from '../../../stories/button/Button';
 import Chat from '../Chat';
 import { useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
+import './style.css';
 
 export default function Quote() {
   const [showQuote, setShowQuote] = useState(false);
   return (
     <QuoteBox>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography sx={{ color: '#0B274F' }} variant="h2">
-          Connecting For Quote
-        </Typography>
-        <Button
-          label="SHOW QUOTE"
-          onClick={() => {
-            setShowQuote(!showQuote);
-          }}
-        />
+      <Typography
+        sx={{ color: '#0B274F', position: 'absolute', top: '-1%' }}
+        variant="h2"
+      >
+        Connecting For Quote
+      </Typography>
+      <Box sx={{ position: 'absolute', right: '0rem', top: '0' }}>
+        {' '}
+        <span className="proc">
+          <Button
+            label="SHOW QUOTE"
+            onClick={() => {
+              setShowQuote(!showQuote);
+            }}
+          />
+        </span>
       </Box>
       <Box
         sx={{
           display: showQuote ? 'block' : 'none',
           width: '95%',
-          top: '12%',
+          top: '10%',
           left: '2%',
-          background: 'white',
           padding: '1rem',
+          background: '#DBEAFF',
+          border: '1px solid #2359B0',
           borderRadius: '1.5rem 1.5rem 1.5rem 1.5rem',
           position: 'absolute',
           zIndex: 1,
