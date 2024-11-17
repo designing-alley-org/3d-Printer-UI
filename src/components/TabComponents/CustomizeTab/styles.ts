@@ -176,10 +176,13 @@ export const Customize = styled.article`
     width: fit-content;
     margin-top: 1rem;
     padding: 0.6rem 3rem;
-    background: #d8d8d8;
+    background: #0066ff;
+    color: #FFFFFF;
     border-radius: 40px;
-    color: #34343499;
     font-size: 20px;
     margin-bottom: -3rem;
+    &:hover {
+      transform: scale(1.01);
+    }
   }
 `;
