@@ -1,9 +1,33 @@
+import { useEffect, useState } from 'react';
 import Button from '../../../../stories/button/Button';
 import { Body, Price, Wrapper } from './styles';
+import api from '../../../../axiosConfig';
+import { useParams } from 'react-router-dom';
+
+interface QuoteProps {
+  files: {
+    fileName: string;
+  }[];
+  totalPrice: number;
+  tax: number;
+}
 
 const PaymentDetails = () => {
   const elementsArray = Array(5).fill(null);
+  const [Quote, setQuote] = useState<QuoteProps>([]);
+  const { orderId } = useParams();
+  console.log(Quote);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await api.get(`/get-all-quotes/${orderId}`);
+      setQuote(response.data.data[response.data.data.length - 1]);
+    };
+    fetchData();
+  }, []);
+  if (!Quote) {
+    return <div>Loading...</div>;
+  }
   return (
     <Wrapper>
       <header>
@@ -19,9 +43,10 @@ const PaymentDetails = () => {
         <div className="files">
           <h2>Files</h2>
           <span className="file">
-            {elementsArray.map((_, index) => (
+            {Quote.files.map((data, index) => (
               <span key={index} className="fileName">
-                <span className="dot">.</span>Name of file
+                <span className="dot">.</span>
+                {data.fileName}
               </span>
             ))}
           </span>
@@ -39,11 +64,13 @@ const PaymentDetails = () => {
             <div>
               <span className="priceDetail">
                 <span>Price</span>
-                <span className="price">$40</span>
+                <span className="price">${Quote.totalPrice}</span>
               </span>
               <span className="priceDetail">
-                <span>Accurred bonus</span>
-                <span className="price">$40</span>
+                <span>Taxes</span>
+                <span className="price">
+                  ${(Quote.totalPrice * Quote.tax) / 100}
+                </span>
               </span>
             </div>
             <div>
@@ -53,7 +80,9 @@ const PaymentDetails = () => {
               </span>
               <span className="priceDetail">
                 <span className="total">Total</span>
-                <span className="price">$80</span>
+                <span className="price">
+                  ${Quote.totalPrice + (Quote.totalPrice * Quote.tax) / 100}
+                </span>
               </span>
             </div>
           </Price>
