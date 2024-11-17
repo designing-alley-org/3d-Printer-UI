@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import Header from '../Header';
 import './styles.css';
@@ -33,6 +31,7 @@ const CardLayout = () => {
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
   const formMethods = useForm();
@@ -51,13 +50,11 @@ const CardLayout = () => {
     }
   }, [pathname]);
 
-  // Calculate progress value based on the active tab
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
 
   const onProceed = async () => {
-    // Add validation for files before proceeding from upload step
     if (pathname.includes(ROUTES.UPLOAD_STL) && files.length === 0) {
       alert('Please upload at least one file before proceeding');
       return;
@@ -65,6 +62,7 @@ const CardLayout = () => {
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       try {
+        setIsUploading(true);
         const formData = new FormData();
         files.forEach((file) => {
           formData.append('files', file.file);
@@ -81,9 +79,12 @@ const CardLayout = () => {
         }
       } catch (error) {
         console.error('Error uploading files:', error);
+      } finally {
+        setIsUploading(false);
       }
     } else if (pathname === '/get-quotes') {
       try {
+        setIsUploading(true);
         const response = await api.post(`/create-order`);
         if (response.status === 200) {
           console.log('order-created successfully successfully!');
@@ -92,6 +93,8 @@ const CardLayout = () => {
         }
       } catch (error) {
         console.error('Error uploading files:', error);
+      } finally {
+        setIsUploading(false);
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
@@ -111,6 +114,13 @@ const CardLayout = () => {
     } catch (error) {
       console.error('Error processing payment:', error);
     }
+  };
+
+  const getButtonLabel = () => {
+    if (isUploading) {
+      return 'Processing...';
+    }
+    return !pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now';
   };
 
   return (
@@ -135,10 +145,9 @@ const CardLayout = () => {
           <div></div>
           <span className="proc">
             <Button
-              label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
-              onClick={
-                !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
-              }
+              label={getButtonLabel()}
+              onClick={!pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment}
+              disabled={isUploading}
             />
           </span>
         </div>

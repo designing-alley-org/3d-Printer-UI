@@ -18,6 +18,7 @@ import Accordion from '../../Accordion';
 import { addAllFiles, updateWeight } from '../../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 import api from '../../../axiosConfig';
+import { set } from 'react-hook-form';
 
 // Define FileData type
 interface FileData {
@@ -30,6 +31,7 @@ interface FileData {
   technology: string;
   printer: string;
   weight: number;
+  unit: string;
   dimensions: {
     height: number;
     length: number;
@@ -44,10 +46,12 @@ const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [ weight, setWeight] = useState<number | null>(null);
-  console.log('Apply selectio weight:', weight);
-  console.log('Apply selection response:', weight);
-
-  console.log(activeFileId)
+  const [updateWidth, setUpdateWidth] = useState<number>(0);
+  const [updateHeight, setUpdateHeight] = useState<number>(0);
+  const [updateLength, setUpdateLength] = useState<number>(0);
+  const [lenght, setLenght] = useState<number>(0);
+  const [width, setWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
 
   const dispatch = useDispatch();
   const { orderId } = useParams();
@@ -57,7 +61,6 @@ const CustomizeTab: React.FC = () => {
     return fileDetails.find((file: any) => file._id === activeFileId) || null;
   }, [fileDetails, activeFileId]);
 
-  console.log('activeFile ', activeFile);
 
   // Fetch files from the server
   useEffect(() => {
@@ -73,8 +76,10 @@ const CustomizeTab: React.FC = () => {
           material: file.material || '',
           technology: file.technology || '',
           weight: file.weight,
+          unit: file.unit,
           printer: file.printer,
           dimensions: file.dimensions,
+
         }));
         setFetchFiles(files);
         dispatch(addAllFiles(files));
@@ -85,6 +90,27 @@ const CustomizeTab: React.FC = () => {
 
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
+
+  const dimensions = useMemo(() => {
+    if (activeFile) {
+      return {
+        height: activeFile.dimensions.height,
+        length: activeFile.dimensions.length,
+        width: activeFile.dimensions.width,
+      };
+    }
+    return {
+      height: 0,
+      length: 0,
+      width: 0,
+    };
+  }, [activeFile])
+
+  useEffect(() => {
+    
+  },[set])
+
+
 
   // Get specifications
   const fetchSpec = useCallback(async () => {
@@ -123,26 +149,24 @@ const CustomizeTab: React.FC = () => {
     }
   }, [selectedMat, activeFileId, materialMass, orderId]);
 
-const scaleStl = useCallback(async () => {
-  if (!activeFileId) return;
-  try {
-    const payload = {
-      new_length: 10,
-      new_width: 10,
-      new_height: 10,
-      unit: 'mm'
-    };
-    const response = await api.put(`/scale-order/${orderId}/file/${activeFileId}`, payload);
-    console.log('Scale STL response:', response.data.data);
-  } catch (error) {
-    console.error('Error scaling STL:', error);
-  }
-}, [activeFileId, orderId]);
+  const scaleStl = useCallback(async () => {
+    if (!activeFileId || !orderId) return;
+    try {
+      const payload = {
+        new_length: updateLength,
+        new_width: updateWidth,
+        new_height: updateHeight,
+        unit: 'mm'
+      };
+      const response = await api.put(`/scale-order/${orderId}/file/${activeFileId}`, payload);
+      console.log('Scale STL response:', response.data.data);
+    } catch (error) {
+      console.error('Error scaling STL:', error);
+    }
+  }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
  
 
   // Check if all required fields are filled for the active file
-
-
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
     const { color, material, technology, printer } = activeFile;
@@ -167,7 +191,9 @@ const scaleStl = useCallback(async () => {
       await getWeight();
 
       // scale stl
+     if(updateWidth > 0 && updateHeight > 0 && updateLength > 0) {
       await scaleStl();
+     }
 
       console.log('Apply selection response:', weight);
       // Handle success response
@@ -234,6 +260,9 @@ const scaleStl = useCallback(async () => {
           <div className="customize-container">
             {customize.map((item) => (
               <Accordion
+               setUpdateHeight={setUpdateHeight}
+               setUpdateWidth={setUpdateWidth}
+               setUpdateLength={setUpdateLength}
                 selectedId={activeFileId as string | null}
                 key={item.id}
                 icon={item.icon}
@@ -243,7 +272,7 @@ const scaleStl = useCallback(async () => {
             ))}
           </div>
           <div className="weight-section">
-            {weight > 0 && (
+            {weight !== null && weight > 0 && (
               <>
                 <p>Current Weight & Volume:</p>
                 <p>{`${weight}gm`}</p>
