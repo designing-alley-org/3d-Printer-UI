@@ -16,16 +16,27 @@ const PaymentDetails = () => {
   const elementsArray = Array(5).fill(null);
   const [Quote, setQuote] = useState<QuoteProps>([]);
   const { orderId } = useParams();
-  console.log(Quote);
+  const [address, setAddress] = useState({
+    personName: '',
+    companyName: '',
+    streetLines: [''],
+    city: '',
+    stateOrProvinceCode: '',
+    countryCode: '',
+    postalCode: '',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await api.get(`/get-all-quotes/${orderId}`);
+      const res = await api.get('/get/address');
+      setAddress(res.data.data[0]);
+
       setQuote(response.data.data[response.data.data.length - 1]);
     };
     fetchData();
   }, []);
-  if (!Quote) {
+  if (!Quote || !Quote.files) {
     return <div>Loading...</div>;
   }
   return (
@@ -43,7 +54,7 @@ const PaymentDetails = () => {
         <div className="files">
           <h2>Files</h2>
           <span className="file">
-            {Quote.files.map((data, index) => (
+            {Quote?.files?.map((data, index) => (
               <span key={index} className="fileName">
                 <span className="dot">.</span>
                 {data.fileName}
@@ -54,8 +65,19 @@ const PaymentDetails = () => {
         <div className="address">
           <h2>Shipping Address</h2>
           <span>
-            Name:poorvaGayake Companymeca Addresskothrud Pune Maharashtra 411038
-            IN
+            {address.personName +
+              ' ' +
+              address.companyName +
+              ' ' +
+              address.streetLines[0] +
+              ' ' +
+              address.city +
+              ' ' +
+              address.stateOrProvinceCode +
+              ' ' +
+              address.countryCode +
+              ' ' +
+              address.postalCode}
           </span>
         </div>
         <div className="details">
