@@ -106,6 +106,7 @@ const CustomizeTab: React.FC = () => {
   const selectedMatMass = useSelector((state: any) => state.specification.material_with_mass);
   const materialMass = selectedMatMass?.find((mat : any) => mat.material_name === selectedMat)?.material_mass;
   
+  
   const getWeight = useCallback(async () => {
     if (!selectedMat || !activeFileId || materialMass === undefined) return;
     try {
@@ -114,7 +115,7 @@ const CustomizeTab: React.FC = () => {
         material_mass: materialMass,
       };
       const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
-      // console.log('Weight response:', response.data.data.dimensions.weight);
+      console.log('Weight response:', response.data.data.dimensions.weight);
       setWeight(response.data.data.dimensions.weight);
       dispatch(updateWeight(response.data.data.dimensions.weight));
     } catch (error) {
@@ -122,7 +123,21 @@ const CustomizeTab: React.FC = () => {
     }
   }, [selectedMat, activeFileId, materialMass, orderId]);
 
-
+const scaleStl = useCallback(async () => {
+  if (!activeFileId) return;
+  try {
+    const payload = {
+      new_length: 10,
+      new_width: 10,
+      new_height: 10,
+      unit: 'mm'
+    };
+    const response = await api.put(`/scale-order/${orderId}/file/${activeFileId}`, payload);
+    console.log('Scale STL response:', response.data.data);
+  } catch (error) {
+    console.error('Error scaling STL:', error);
+  }
+}, [activeFileId, orderId]);
  
 
   // Check if all required fields are filled for the active file
@@ -150,6 +165,9 @@ const CustomizeTab: React.FC = () => {
 
       // get weight
       await getWeight();
+
+      // scale stl
+      await scaleStl();
 
       console.log('Apply selection response:', weight);
       // Handle success response

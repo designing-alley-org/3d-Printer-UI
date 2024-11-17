@@ -62,7 +62,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const [colorBtnData, setColorBtnData] = useState<string[]>([]);
   const [technologyData, setTechnologyData] = useState<string[]>([]);
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
-  const  [selectSize, setSelectSize] = useState<string>('');
   const [selectSize, setSelectSize] = useState<string>('');
   console.log('selectSize', selectSize);
   const [weight, setWeight] = useState<number>(0);
