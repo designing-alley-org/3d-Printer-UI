@@ -1,8 +1,7 @@
-import { useOutletContext } from 'react-router-dom';
-import { customize, vector_black } from '../../../constants';
-import { Button } from '@mui/material';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../../../axiosConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@mui/material';
 import {
   Customize,
   Files,
@@ -14,57 +13,78 @@ import {
   CustomizeBox,
   Heading,
 } from './styles';
-import React, { useState, useCallback, useEffect } from 'react';
+import { customize, vector_black } from '../../../constants';
 import Accordion from '../../Accordion';
-import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 import ViewModelStl from '../../ViewStlFile';
+import { addAllFiles } from '../../../store/FilesDetails/reducer';
+import api from '../../../axiosConfig';
 
-interface OutletContextType {
-  files: FileData[];
-  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
-}
-
+// Define FileData type
 interface FileData {
-  id: string;
-  name: string;
-  file: File;
+  _id: string;
+  fileName: string;
+  fileUrl: string;
   quantity: number;
+  color: string;
+  material: string;
+  technology: string;
+  printer: string;
   dimensions: {
     height: number;
-    width: number;
     length: number;
+    width: number;
   };
 }
 
 const CustomizeTab: React.FC = () => {
-  const { files, setFiles } = useOutletContext<OutletContextType>();
-  const [activeFileIndex, setActiveFileIndex] = useState<number | null>(null);
-  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [files, setFetchFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
-  const [fetchfiles, setFetchFiles] = useState<FileData[]>([]);
-  
-  const  { orderId }  = useParams();
+  const [color, setColor] = useState<string>('');
+  const [weight, setWeight] = useState<number>(0);
+  const dispatch = useDispatch();
+  const { orderId } = useParams();
 
+  // Fetch files from the server
   useEffect(() => {
     const fetchOrder = async () => {
-      const response = await api.get<{files: FileData[]}>(`/order-show/${orderId}`);
-      setFetchFiles(response.data.files);
+      try {
+        const response = await api.get(`/order-show/${orderId}`);
+        const files = response.data.message.files.map((file: any) => ({
+          _id: file._id,
+          fileName: file.fileName.split('-')[0],
+          fileUrl: file.fileUrl,
+          quantity: file.quantity,
+          color: file.color,
+          material: file.material || '',
+          technology: file.technology || '',
+          printer: file.printer,
+          dimensions: file.dimensions,
+        }));
+        setFetchFiles(files);
+        dispatch(addAllFiles(files));
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      }
     };
-    fetchOrder();
-  }, [orderId]);
+
+    if (orderId) fetchOrder();
+  }, []);
+
+  
+  // Save the rendering in store
+  useEffect(() => {
+    dispatch({ type: 'SAVE_RENDERING', payload: files });
+  }, [dispatch, files]);
 
 
-  function getFileUrl(file: File): string {
-    return URL.createObjectURL(file);
-  }
+  // Extract color of the active file
+  useEffect(() => {
+    const activeFile = files.find((file) => file._id === activeFileId);
+    if (activeFile) setColor(activeFile.color);
+  }, [activeFileId, files]);
 
   const handleOpenViewer = useCallback((fileId: string) => {
     setActiveFileId(fileId);
-    setIsViewerOpen(true);
-  }, []);
-
-  const handleCloseViewer = useCallback(() => {
-    setIsViewerOpen(false);
   }, []);
 
   const handleSetActiveFile = useCallback((fileId: string) => {
@@ -85,34 +105,37 @@ const CustomizeTab: React.FC = () => {
             <span className="count">{files.length}</span>
           </span>
           <UploadedFile>
-            {files.map((file, index) => (
+            {files.map((file) => (
               <span
-                key={file.id}
+                key={file._id}
                 className="upload-file"
-                onClick={() => setActiveFileIndex(index)}
+                onClick={() => handleSetActiveFile(file._id)}
                 style={{
                   boxShadow:
-                    activeFileIndex === index
+                    activeFileId === file._id
                       ? '0px 0px 4.8px 0px #66A3FF'
                       : 'none',
                 }}
               >
                 <Model>
                   <span className="model-preview">
-                    <ViewModelStl fileUrl={getFileUrl(file.file)} modelColor=''/>
+                    {/* <ViewModelStl
+                      fileUrl={file.fileUrl}
+                      modelColor={activeFileId === file._id ? color : ''}
+                    /> */}
                   </span>
-                  <span 
+                  <span
                     className="view-model"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleOpenViewer(file.id);
+                      handleOpenViewer(file._id);
                     }}
                   >
-                    <img src={vector_black} alt="vector_black" />
+                    <img src={vector_black} alt="View model" />
                   </span>
                 </Model>
-                <ModelName>{file.name}</ModelName>
-                {activeFileIndex === index && (
+                <ModelName>{file.fileName}</ModelName>
+                {activeFileId === file._id && (
                   <CustomizeBox>
                     {customize.slice(2, 5).map((item, idx) => (
                       <img key={idx} src={item.icon} alt={item.name} />
@@ -125,32 +148,28 @@ const CustomizeTab: React.FC = () => {
         </Files>
 
         <Customize>
-          <div className='customize-container'>
+          <div className="customize-container">
             {customize.map((item) => (
               <Accordion
+                selectedId={activeFileId as string | null}
                 key={item.id}
                 icon={item.icon}
                 id={item.id}
                 title={item.name}
-                content={'hi'}
               />
             ))}
           </div>
           <div className="weight-section">
-            <p>Current Weight & Volume:</p>
-            <p>100gm</p>
+            {weight > 0 && (
+              <>
+                <p>Current Weight & Volume:</p>
+                <p>{`${weight}gm`}</p>
+              </>
+            )}
           </div>
-          <Button className='apply-button'>Apply Selection</Button>
+          <Button className="apply-button">Apply Selection</Button>
         </Customize>
       </Filescomponent>
-
-      <ViewerStlModel
-        isOpen={isViewerOpen}
-        onClose={handleCloseViewer}
-        files={files}
-        activeFileId={activeFileId}
-        onSetActiveFile={handleSetActiveFile}
-      />
     </Wrapper>
   );
 };
