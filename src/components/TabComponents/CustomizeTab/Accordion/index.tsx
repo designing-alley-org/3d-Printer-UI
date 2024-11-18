@@ -1,21 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import './styles.css';
-import Dropdown from '../../stories/Dropdown/Dropdown';
-import {
-  sizeOption,
-  info,
-  group,
-} from '../../constants';
+import Dropdown from '../../../../stories/Dropdown/Dropdown';
+import { sizeOption, info, group } from '../../../../constants';
 import { Button, TextField } from '@mui/material';
-import PrinterCard from '../PrinterCard';
+import PrinterCard from '../../../PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   updateColor,
   updateMaterial,
   updatePrinter,
   updateTechnology,
-} from '../../store/customizeFilesDetails/reducer';
-import api from '../../axiosConfig';
+} from '../../../../store/customizeFilesDetails/reducer';
+import api from '../../../../axiosConfig';
 import { useParams } from 'react-router-dom';
 
 interface AccordionProps {
@@ -26,6 +24,12 @@ interface AccordionProps {
   setUpdateHeight: (height: number) => void;
   setUpdateLength: (length: number) => void;
   setUpdateWidth: (width: number) => void;
+  selectedMat: string;
+  selectedColor: string;
+  selectedPrinter: string;
+  setSelectedMat: (selectedMat: string) => void;
+  setSelectedColor: (selectedColor: string) => void;
+  setSelectedPrinter: (selectedPrinter: string) => void;
 }
 
 interface PrinterData {
@@ -54,11 +58,14 @@ const Accordion: React.FC<AccordionProps> = ({
   setUpdateHeight,
   setUpdateLength,
   setUpdateWidth,
+  selectedMat,
+  selectedColor,
+  selectedPrinter,
+  setSelectedMat,
+  setSelectedColor,
+  setSelectedPrinter,
 }) => {
   const [selectedTech, setSelectedTech] = useState<string>('');
-  const [selectedMat, setSelectedMat] = useState<string>('');
-  const [selectedColor, setSelectedColor] = useState<string>('');
-  const [selectedPrinter, setSelectedPrinter] = useState<string>('');
   const [printerData, setPrinterData] = useState([]);
   const [colorBtnData, setColorBtnData] = useState<string[]>([]);
   const [technologyData, setTechnologyData] = useState<string[]>([]);
@@ -113,16 +120,6 @@ useEffect(() => {
       setOriginalDimensions(initialDimensions);
     }
   }, [selectedFile]);
-
-  // useEffect(() => {
-  //   if (selectedFile) {
-  //     setSelectSize(selectedFile.unit);
-  //   }
-  // }, [selectedFile]);
-
-
-  
-
 
   const dispatch = useDispatch();
 
@@ -239,8 +236,15 @@ useEffect(() => {
       <div className="accordion-content">
         {id === '1' && (
           <div className="scale">
-            <p>Scale In</p>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div className="scaling">
+              <p>Scale In</p>
+              <p>Length</p>
+              <p>Width</p>
+              <p>Height</p>
+            </div>
+            <div
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}
+            >
               <Dropdown
                 options={sizeOption}
                 onSelect={(option: Option) => setSelectSize(option.value)}
@@ -296,7 +300,6 @@ useEffect(() => {
                   }
                 }}
               />
-              
             </div>
             <div className="revert">
               <Button className="btn" onClick={handleRevert}>Revert to original</Button>
@@ -311,7 +314,7 @@ useEffect(() => {
         )}
         {id === '2' && (
           <>
-            {technologyData && (
+            {technologyData &&
               technologyData.map((item) => (
                 <Button
                   key={item}
@@ -320,8 +323,7 @@ useEffect(() => {
                 >
                   {item}
                 </Button>
-              ))
-            )}
+              ))}
             <div className="check-box">
               {selectedTech ? (
                 <img src={group} alt="group" />
@@ -333,7 +335,7 @@ useEffect(() => {
         )}
         {id === '3' && (
           <>
-            {materialData && (
+            {materialData &&
               materialData.map((item) => (
                 <Button
                   key={item.material_name}
@@ -344,8 +346,7 @@ useEffect(() => {
                 >
                   {item.material_name}
                 </Button>
-              ))
-            )}
+              ))}
             <div className="check-box">
               {selectedMat ? (
                 <img src={group} alt="group" />
@@ -407,7 +408,9 @@ useEffect(() => {
           </>
         )}
         {id === '6' && (
-          <Dropdown options={options} onSelect={() => {}} />
+          <div className="infill">
+            <Dropdown options={options} onSelect={() => {}} />
+          </div>
         )}
       </div>
     </div>

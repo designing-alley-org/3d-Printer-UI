@@ -1,6 +1,6 @@
 .accordion {
   margin-bottom: 12px;
-  overflow-y:auto ;
+  overflow-y: auto;
 }
 .accordion-header {
   display: flex;
@@ -10,7 +10,7 @@
   .title {
     display: flex;
     align-items: center;
-    img{
+    img {
       margin-right: 8px;
     }
     h2 {
@@ -22,7 +22,7 @@
   }
   .sub-title {
     display: flex;
-    align-items: center;  
+    align-items: center;
     h2 {
       margin: unset;
       font-size: 20px;
@@ -36,8 +36,8 @@
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  background: #F1F6FE;
-  border: 0.67px solid #F1F6FE;
+  background: #f1f6fe;
+  border: 0.67px solid #f1f6fe;
   border-radius: 20px;
   position: relative;
   padding: 16px;
@@ -49,31 +49,42 @@
   .dropdown-header {
     border-radius: 2rem;
   }
-
-  .scale{
+  .infill {
+    .dropdown-wrapper {
+      .dropdown-list {
+        position: fixed;
+        max-height: unset;
+        width: 5%;
+      }
+    }
+  }
+  .scale {
     display: flex;
     flex-direction: column;
     width: 100%;
+    .scaling {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
-  .scale p{
-    font-size: .8rem;
-    color: #235AB0;
-
+  .scale p {
+    font-size: 0.8rem;
+    color: #235ab0;
   }
-  
- .revert {
-  display: flex;
-  align-items: end;
-  flex-direction: column;
-  justify-content: end;
-  margin-top: 2rem;
- }
 
- .revert p{
-  font-size: .6rem;
-  color: #235AB0;
- }
+  .revert {
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+    justify-content: end;
+    margin-top: 2rem;
+  }
+
+  .revert p {
+    font-size: 0.6rem;
+    color: #235ab0;
+  }
   .btn {
     display: flex;
     align-items: center;
@@ -83,21 +94,21 @@
     width: fit-content;
     height: 2rem;
     border-radius: 50px;
-    color: #2359B0;
-    background-color: #FFFFFF;
+    color: #2359b0;
+    background-color: #ffffff;
     font-family: 'Montserrat';
-    border: 1px solid #DDE9FC;
+    border: 1px solid #dde9fc;
     transition: background-color 0.3s ease;
   }
   .revert .btn {
     background-color: transparent;
   }
-  .check-box{
+  .check-box {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #FFFFFF;
-    border: 0.67px solid #F1F6FE;
+    background: #ffffff;
+    border: 0.67px solid #f1f6fe;
     border-radius: 12px;
     position: absolute;
     bottom: 0.8rem;
@@ -122,20 +133,18 @@
     color: #fff;
   }
 
-  .no-data{
+  .no-data {
     display: flex;
     margin-left: 1rem;
-    color: #235AB0;
-
+    color: #235ab0;
   }
 
-  .btn-color{
+  .btn-color {
     width: 1.5rem;
     height: 1.5rem;
     margin-right: 0.5rem;
     border-radius: 50%;
     box-shadow: 0px 1px 4px 0px #00000040;
-
   }
   .fields {
     > div {

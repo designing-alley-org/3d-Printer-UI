@@ -145,7 +145,7 @@ export const Customize = styled.article`
   width: 60%;
   .customize-container {
     overflow-y: auto;
-    height: 28rem;
+    height: 30rem;
   }
   .text {
     display: flex;
@@ -177,7 +177,7 @@ export const Customize = styled.article`
     margin-top: 1rem;
     padding: 0.6rem 3rem;
     background: #0066ff;
-    color: #FFFFFF;
+    color: #ffffff;
     border-radius: 40px;
     font-size: 20px;
     margin-bottom: -3rem;
