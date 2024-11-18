@@ -21,8 +21,11 @@ import printerIcon from '../../../assets/icons/printerIcon.svg';
 import {
   addAllFiles,
   updateWeight,
+  updateUnit,
+  updateInfill
 } from '../../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
+
 import api from '../../../axiosConfig';
 import { set } from 'react-hook-form';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
@@ -59,6 +62,8 @@ const CustomizeTab: React.FC = () => {
   const [selectedMate, setSelectedMate] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedPrinter, setSelectedPrinter] = useState<string>('');
+  const [selectUnit, setSelectUnit] = useState<string>('');
+  const [selectInfill, setSelectInfill] = useState<number>(0);
   const [lenght, setLenght] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
@@ -116,7 +121,22 @@ const CustomizeTab: React.FC = () => {
     };
   }, [activeFile]);
 
-  useEffect(() => {}, [set]);
+  useEffect(() => {
+    if (activeFile) {
+      dispatch(updateUnit({ id: activeFileId, unit: selectUnit }));
+    }
+  }, [selectUnit]);
+
+   // send infill corresponding to selectedId to store
+   useEffect(() => {
+    if (selectInfill && activeFileId) {
+      dispatch(updateInfill({ id: activeFileId, infill: selectInfill }));
+    }
+  }, [selectInfill]);
+
+  useEffect(()=>{
+    setWeight(null);
+  },[activeFileId])
 
   // Store files in IndexedDB
   useEffect(() => {
@@ -192,7 +212,7 @@ const CustomizeTab: React.FC = () => {
         new_length: updateLength,
         new_width: updateWidth,
         new_height: updateHeight,
-        unit: 'mm',
+        unit: selectUnit,
       };
       const response = await api.put(
         `/scale-order/${orderId}/file/${activeFileId}`,
@@ -204,11 +224,31 @@ const CustomizeTab: React.FC = () => {
     }
   }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
 
+  const updateData = useCallback(async () => {
+    if (!activeFileId || !orderId) return;
+    try {
+      const formData = new FormData();
+      formData.append('color', selectedColor);
+      formData.append('material', selectedMate);
+      formData.append('printer', selectedPrinter);
+      formData.append('infill', activeFile.infill.toString());
+      formData.append('unit', selectUnit);
+      formData.append('weight', activeFile?.weight.toString() || '');
+      formData.append('technology', activeFile?.technology || '');
+console.log('Form data:', selectInfill, selectUnit, selectedColor, selectedMate, selectedPrinter, activeFile?.weight.toString(), activeFile?.technology || '', activeFile?.infill.toString());
+      console.log('Form data:', formData);
+      const response = await api.put(`/update-user-order/${orderId}/${activeFileId}`, formData);
+      console.log('Data updated successfully:', response);
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  }, [activeFileId, orderId]);
+
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    const { color, material, technology, printer } = activeFile;
-    if (color && material && technology && printer) return false;
+    const { color, material, technology, printer , infill } = activeFile;
+    if (color && material && technology && printer && infill) return false;
     return true;
   }, [activeFile]);
 
@@ -241,6 +281,13 @@ const CustomizeTab: React.FC = () => {
       if (updateWidth > 0 && updateHeight > 0 && updateLength > 0) {
         await scaleStl();
       }
+
+      // // update data
+      // if (selectedColor || selectedMate || selectedPrinter || selectInfill) {
+      //   console.log('api update call')
+      //   await updateData();
+      // }
+
       // Handle success response
     } catch (error) {
       console.error('Error applying selection:', error);
@@ -283,7 +330,7 @@ const CustomizeTab: React.FC = () => {
                   <span className="model-preview">
                     <ViewModelStl
                       fileUrl={file.fileUrl}
-                      modelColor={activeFileId === file._id ? file.color : ''}
+                      modelColor={activeFileId === file._id ? selectedColor : ''}
                     />
                   </span>
                   <span
@@ -347,6 +394,8 @@ const CustomizeTab: React.FC = () => {
                 setUpdateHeight={setUpdateHeight}
                 setUpdateWidth={setUpdateWidth}
                 setUpdateLength={setUpdateLength}
+                setSelectUnit={setSelectUnit}
+                setSelectInfill={setSelectInfill}
                 selectedId={activeFileId as string | null}
                 key={item.id}
                 icon={item.icon}
@@ -380,6 +429,7 @@ const CustomizeTab: React.FC = () => {
         activeFileId={activeFileId}
         files={files as ViewerStlModelProps['files']}
         onSetActiveFile={handleSetActiveFile}
+        color={selectedColor}
       />
     </Wrapper>
   );
