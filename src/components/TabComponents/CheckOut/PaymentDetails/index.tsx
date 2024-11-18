@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import Button from '../../../../stories/button/Button';
 import { Body, Price, Wrapper } from './styles';
@@ -16,29 +17,40 @@ const PaymentDetails = () => {
   const elementsArray = Array(5).fill(null);
   const [Quote, setQuote] = useState<QuoteProps>([]);
   const { orderId } = useParams();
-  const [address, setAddress] = useState({
-    personName: '',
-    companyName: '',
-    streetLines: [''],
-    city: '',
-    stateOrProvinceCode: '',
-    countryCode: '',
-    postalCode: '',
-  });
+  const [selectedId, setSelectedId] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const handleChange = (event: any, data: any) => {
+    setSelectedId(event.target.value);
+    setSelectedOption(data);
+  };
+  const [address, setAddress] = useState([
+    {
+      _id: '',
+      personName: '',
+      companyName: '',
+      streetLines: [''],
+      city: '',
+      stateOrProvinceCode: '',
+      countryCode: '',
+      postalCode: '',
+    },
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await api.get(`/get-all-quotes/${orderId}`);
       const res = await api.get('/get/address');
-      setAddress(res.data.data[0]);
+      setAddress(res.data.data);
 
       setQuote(response.data.data[response.data.data.length - 1]);
     };
     fetchData();
   }, []);
-  if (!Quote || !Quote.files) {
-    return <div>Loading...</div>;
-  }
+  console.log(selectedOption);
+  // if (!Quote || !Quote.files) {
+  //   return <div>Loading...</div>;
+  // }
   return (
     <Wrapper>
       <header>
@@ -64,21 +76,37 @@ const PaymentDetails = () => {
         </div>
         <div className="address">
           <h2>Shipping Address</h2>
-          <span>
-            {address.personName +
-              ' ' +
-              address.companyName +
-              ' ' +
-              address.streetLines[0] +
-              ' ' +
-              address.city +
-              ' ' +
-              address.stateOrProvinceCode +
-              ' ' +
-              address.countryCode +
-              ' ' +
-              address.postalCode}
+          <span className="addDetails">
+            {address.map((item, idx) => (
+              <div className="details" key={idx}>
+                <label>
+                  <input
+                    type="radio"
+                    value={item?._id}
+                    checked={selectedId === item._id}
+                    onChange={(e) => handleChange(e, item)}
+                  />
+                  {item?.personName +
+                    ' ' +
+                    item?.companyName +
+                    ' ' +
+                    item?.streetLines[0] +
+                    ' ' +
+                    item?.city +
+                    ' ' +
+                    item?.stateOrProvinceCode +
+                    ' ' +
+                    item?.countryCode +
+                    ' ' +
+                    item?.postalCode}
+                </label>
+              </div>
+            ))}
           </span>
+          <div className="Another">
+            <span className="count">+ </span>
+            <span>Add Another Address</span>
+          </div>
         </div>
         <div className="details">
           <h2>Billing Details</h2>
@@ -86,12 +114,12 @@ const PaymentDetails = () => {
             <div>
               <span className="priceDetail">
                 <span>Price</span>
-                <span className="price">${Quote.totalPrice}</span>
+                <span className="price">${Quote?.totalPrice}</span>
               </span>
               <span className="priceDetail">
                 <span>Taxes</span>
                 <span className="price">
-                  ${(Quote.totalPrice * Quote.tax) / 100}
+                  ${(Quote?.totalPrice * Quote?.tax) / 100}
                 </span>
               </span>
             </div>
@@ -103,7 +131,7 @@ const PaymentDetails = () => {
               <span className="priceDetail">
                 <span className="total">Total</span>
                 <span className="price">
-                  ${Quote.totalPrice + (Quote.totalPrice * Quote.tax) / 100}
+                  ${Quote?.totalPrice + (Quote?.totalPrice * Quote?.tax) / 100}
                 </span>
               </span>
             </div>

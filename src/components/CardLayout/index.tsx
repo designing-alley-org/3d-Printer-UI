@@ -149,7 +149,7 @@ const CardLayout = () => {
   const handlePayment = async () => {
     setIsSaving(true); // Start loading spinner
     try {
-      const response = await axios.post('http://localhost:3000/payment');
+      const response = await api.post(`/checkout/${orderId}`);
       if (response.status === 200) {
         window.location.href = response.data.url;
       }
