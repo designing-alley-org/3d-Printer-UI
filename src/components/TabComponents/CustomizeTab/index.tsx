@@ -358,8 +358,8 @@ const CustomizeTab: React.FC = () => {
           <div className="weight-section">
             {weight !== null && weight > 0 && (
               <>
-                <p>Current Weight & Volume:</p>
-                <p>{`${weight}gm`}</p>
+                <p>Current Weight:</p>
+                <p>{`${weight.toFixed(2)}gm`}</p>
               </>
             )}
           </div>
