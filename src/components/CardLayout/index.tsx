@@ -140,9 +140,9 @@ const CardLayout = () => {
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       setActiveTabs([0, 1, 2]);
       navigate(`${orderId}/quote`);
-    } else if (pathname === `/get-quotes/${orderId}/quote`) {
+    } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
       setActiveTabs([0, 1, 2, 3]);
-      navigate(`/get-quotes/${orderId}/checkout`);
+      navigate(`${orderId}/checkout`);
     }
   }, [files, navigate, orderId, pathname]);
 

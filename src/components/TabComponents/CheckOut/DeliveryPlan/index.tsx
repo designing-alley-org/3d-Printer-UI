@@ -65,6 +65,10 @@ const DeliveryPlan: React.FC = () => {
     }
   };
 
+  if (!deliveryData || !deliveryData.rates) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Box
       sx={{

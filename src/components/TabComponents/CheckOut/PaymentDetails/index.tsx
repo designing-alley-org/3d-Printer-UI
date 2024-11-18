@@ -47,10 +47,10 @@ const PaymentDetails = () => {
     };
     fetchData();
   }, []);
-  console.log(selectedOption);
-  // if (!Quote || !Quote.files) {
-  //   return <div>Loading...</div>;
-  // }
+  
+  if (!Quote || !Quote.files) {
+    return <div>Loading...</div>;
+  }
   return (
     <Wrapper>
       <header>
