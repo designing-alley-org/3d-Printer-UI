@@ -40,7 +40,10 @@ interface ViewerStlModelProps {
   onSetActiveFile?: (fileId: string) => void;
   localBlobUrl?: string;
   fileUrl?: string;
+  color?: string;
 }
+
+const DEFAULT_COLOR = '#808080';
 
 const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({ 
   isOpen, 
@@ -49,12 +52,12 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
   activeFileId, 
   onSetActiveFile,
   localBlobUrl,
-  fileUrl
+  fileUrl,
+  color 
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
 
-  // Type guard to check if we're dealing with FileData
   const isFileData = (file: FileData | LocalFileData): file is FileData => {
     return '_id' in file && 'fileUrl' in file;
   };
@@ -64,15 +67,16 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
       const index = activeFileId 
         ? files.findIndex((file) => isFileData(file) ? file._id === activeFileId : file.id === activeFileId)
         : 0;
+      
       if (index !== -1) {
         setCurrentIndex(index);
-        // If we're dealing with LocalFileData, create blob URL
+        
         const currentFile = files[index];
         if (!isFileData(currentFile) && 'file' in currentFile) {
           const url = URL.createObjectURL(currentFile.file);
           setCurrentFileUrl(url);
           return () => {
-            if (url) URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url);
           };
         }
       }
@@ -80,25 +84,26 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
   }, [isOpen, activeFileId, files]);
 
   const handleNavigate = useCallback((direction: 'next' | 'previous') => {
-    if (files.length > 0) {
-      const newIndex = direction === 'next'
-        ? (currentIndex + 1) % files.length
-        : (currentIndex - 1 + files.length) % files.length;
+    if (files.length <= 1) return;
 
-      setCurrentIndex(newIndex);
-      
-      const currentFile = files[newIndex];
-      if (!isFileData(currentFile) && 'file' in currentFile) {
-        const url = URL.createObjectURL(currentFile.file);
-        setCurrentFileUrl((prevUrl) => {
-          if (prevUrl) URL.revokeObjectURL(prevUrl);
-          return url;
-        });
-      }
-      
-      if (onSetActiveFile) {
-        onSetActiveFile(isFileData(currentFile) ? currentFile._id : currentFile.id);
-      }
+    const newIndex = direction === 'next'
+      ? (currentIndex + 1) % files.length
+      : (currentIndex - 1 + files.length) % files.length;
+
+    setCurrentIndex(newIndex);
+    
+    const currentFile = files[newIndex];
+    
+    if (!isFileData(currentFile) && 'file' in currentFile) {
+      const url = URL.createObjectURL(currentFile.file);
+      setCurrentFileUrl((prevUrl) => {
+        if (prevUrl) URL.revokeObjectURL(prevUrl);
+        return url;
+      });
+    }
+    
+    if (onSetActiveFile) {
+      onSetActiveFile(isFileData(currentFile) ? currentFile._id : currentFile.id);
     }
   }, [currentIndex, files, onSetActiveFile]);
 
@@ -126,7 +131,11 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
           <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
           <Box sx={styles.viewerContent}>
             <Box sx={styles.viewModel}>
-              <ViewModelStl localBlobUrl={localBlobUrl} fileUrl={fileUrl} modelColor="" />
+              <ViewModelStl 
+                localBlobUrl={localBlobUrl} 
+                fileUrl={fileUrl} 
+                modelColor={color || DEFAULT_COLOR}
+              />
             </Box>
           </Box>
         </Box>
@@ -134,7 +143,6 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
     );
   }
 
-  // Handle no files case
   if (files.length === 0) return null;
 
   const currentFile = files[currentIndex];
@@ -142,12 +150,12 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
     ? { 
         url: currentFile.fileUrl, 
         name: currentFile.fileName,
-        color: currentFile.color 
+        modelColor: color || currentFile.color || DEFAULT_COLOR
       }
     : { 
         url: currentFileUrl!, 
         name: currentFile.name,
-        color: '' 
+        modelColor: color || DEFAULT_COLOR
       };
 
   return (
@@ -164,31 +172,31 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(({
           <Box sx={styles.viewModel}>
             <ViewModelStl 
               fileUrl={fileToShow.url}
-              modelColor={fileToShow.color}
+              modelColor={fileToShow.modelColor}
               localBlobUrl={!isFileData(currentFile) ? currentFileUrl || undefined : undefined}
             />
           </Box>
-          <Box sx={styles.navigationContainer}>
-            <ButtonIcon
-              svgPath={arrow_left}
-              onClick={() => handleNavigate('previous')}
-              disabled={files.length <= 1}
-              width="3rem"
-              height="3rem"
-              style={{ opacity: files.length <= 1 ? 0.5 : 1 }}
-            />
-            <Typography sx={styles.fileName}>
-              {fileToShow.name}
-            </Typography>
-            <ButtonIcon
-              svgPath={arrow_right}
-              onClick={() => handleNavigate('next')}
-              disabled={files.length <= 1}
-              width="3rem"
-              height="3rem"
-              style={{ opacity: files.length <= 1 ? 0.5 : 1 }}
-            />
-          </Box>
+          {files.length > 1 && (
+            <Box sx={styles.navigationContainer}>
+              <ButtonIcon
+                svgPath={arrow_left}
+                onClick={() => handleNavigate('previous')}
+                disabled={false}
+                width="3rem"
+                height="3rem"
+              />
+              <Typography sx={styles.fileName}>
+                {fileToShow.name}
+              </Typography>
+              <ButtonIcon
+                svgPath={arrow_right}
+                onClick={() => handleNavigate('next')}
+                disabled={false}
+                width="3rem"
+                height="3rem"
+              />
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

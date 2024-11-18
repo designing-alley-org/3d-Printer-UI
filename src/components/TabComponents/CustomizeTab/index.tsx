@@ -241,13 +241,13 @@ const CustomizeTab: React.FC = () => {
                   </span>
                 </Model>
                 <ModelName>{file.fileName}</ModelName>
-                {activeFileId === file._id && (
+                
                   <CustomizeBox>
                     {customize.slice(2, 5).map((item, idx) => (
                       <img key={idx} src={item.icon} alt={item.name} />
                     ))}
                   </CustomizeBox>
-                )}
+               
               </span>
             ))}
           </UploadedFile>
