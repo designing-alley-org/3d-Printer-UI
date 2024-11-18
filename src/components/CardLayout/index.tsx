@@ -191,7 +191,7 @@ const CardLayout = () => {
 
       {/* Proceed Button */}
       {pathname !== `/get-quotes/${orderId}/checkout` &&
-        pathname !== `/get-quotes/${orderId}/checkout/select-delivery` && (
+        !pathname.includes(`/get-quotes/${orderId}/checkout/select-delivery`) && (
         <div className="btn">
           <div></div>
           <span className="proc">
