@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from 'react';
 import './styles.css';
 import Dropdown from '../../stories/Dropdown/Dropdown';
 import {
-  dimensionsOption,
-  scaleFields,
   sizeOption,
   info,
   group,
@@ -17,17 +14,18 @@ import {
   updateMaterial,
   updatePrinter,
   updateTechnology,
-  updateWeight,
 } from '../../store/customizeFilesDetails/reducer';
 import api from '../../axiosConfig';
 import { useParams } from 'react-router-dom';
-import { set } from 'react-hook-form';
 
 interface AccordionProps {
   icon: string;
   id: string;
   title: string;
   selectedId: string | null;
+  setUpdateHeight: (height: number) => void;
+  setUpdateLength: (length: number) => void;
+  setUpdateWidth: (width: number) => void;
 }
 
 interface PrinterData {
@@ -53,6 +51,9 @@ const Accordion: React.FC<AccordionProps> = ({
   id,
   title,
   selectedId,
+  setUpdateHeight,
+  setUpdateLength,
+  setUpdateWidth,
 }) => {
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [selectedMat, setSelectedMat] = useState<string>('');
@@ -63,8 +64,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const [technologyData, setTechnologyData] = useState<string[]>([]);
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
   const [selectSize, setSelectSize] = useState<string>('');
-  console.log('selectSize', selectSize);
-  const [weight, setWeight] = useState<number>(0);
   const { orderId } = useParams();
   const handleColorClick = (color: string) => setSelectedColor(color);
   const handleTechClick = (technology: string) => setSelectedTech(technology);
@@ -72,6 +71,13 @@ const Accordion: React.FC<AccordionProps> = ({
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
   const dataspec = useSelector((state: any) => state.specification);
+
+  useEffect(() => {
+    if (selectedFile) {
+      setSelectSize(selectedFile.unit);
+    }
+  }, [selectedFile]);
+
   useEffect(() => {
     if (dataspec) {
       setColorBtnData(dataspec.color || []);
@@ -80,6 +86,9 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [dataspec]);
   const dimansions = selectedFile?.dimensions;
+
+  
+
   const dispatch = useDispatch();
 
   // Fetch printer data based on selected material and technology
@@ -116,6 +125,13 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [selectedColor]);
 
+  // send printer corresponding to selectedId to store
+  useEffect(() => {
+    if (selectedPrinter && selectedId) {
+      dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
+    }
+  }, [selectedPrinter]);
+
   // Send technology corresponding to selectedId to store
   useEffect(() => {
     if (selectedTech && selectedId) {
@@ -137,9 +153,20 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [selectedPrinter]);
 
+  const handelRevtbtn = () => { 
+    setUpdateHeight(0);
+    setUpdateWidth(0);
+    setUpdateLength(0);
+  }
+
   const handlePrinterSelect = (title: string) =>
     setSelectedPrinter(selectedPrinter === title ? '' : title);
 
+  const options = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    value: `${(i + 1) * 5}`,
+    label: `${(i + 1) * 5}`,
+  }));
   return (
     <div className="accordion">
       <div className="accordion-header">
@@ -156,20 +183,32 @@ const Accordion: React.FC<AccordionProps> = ({
               <Dropdown
                 options={sizeOption}
                 onSelect={(option: Option) => setSelectSize(option.value)}
-                defaultValue="mm"
               />
-              {scaleFields.map((field) => (
-                <TextField
-                  key={field.name}
-                  id={field.name}
-                  placeholder={field.placeholder}
-                  className="fields"
-                  value={dimansions ? dimansions[field.name] : ''}
+              <TextField
+                type="text"
+                placeholder={dimansions?.height.toString()}
+                variant="outlined"
+                className='fields'
+                onChange={(e) => setUpdateHeight(Number(e.target.value))}
                 />
-              ))}
+              <TextField
+                type="text"
+                placeholder={dimansions?.width.toString()}
+                variant="outlined"
+                className='fields'
+                onChange={(e) => setUpdateWidth(Number(e.target.value))}
+              />
+              <TextField
+                type="text"
+                placeholder={dimansions?.length.toString()}
+                variant="outlined"
+                className='fields'
+                onChange={(e) => setUpdateLength(Number(e.target.value))}
+              />
+              
             </div>
             <div className="revert">
-              <Button className="btn">Revert to original</Button>
+              <Button className="btn" onClick={handelRevtbtn}>Revert to original</Button>
               {dimansions && (
                 <p>
                   {dimansions.height} mm x {dimansions.width} mm x{' '}
@@ -181,7 +220,7 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '2' && (
           <>
-            {technologyData ? (
+            {technologyData && (
               technologyData.map((item) => (
                 <Button
                   key={item}
@@ -191,14 +230,19 @@ const Accordion: React.FC<AccordionProps> = ({
                   {item}
                 </Button>
               ))
-            ) : (
-              <p className="no-printer">Loading...</p>
             )}
+            <div className="check-box">
+              {selectedTech ? (
+                <img src={group} alt="group" />
+              ) : (
+                <img src={info} alt="info" />
+              )}
+            </div>
           </>
         )}
         {id === '3' && (
           <>
-            {materialData ? (
+            {materialData && (
               materialData.map((item) => (
                 <Button
                   key={item.material_name}
@@ -210,9 +254,14 @@ const Accordion: React.FC<AccordionProps> = ({
                   {item.material_name}
                 </Button>
               ))
-            ) : (
-              <p className="no-material">Loading...</p>
             )}
+            <div className="check-box">
+              {selectedMat ? (
+                <img src={group} alt="group" />
+              ) : (
+                <img src={info} alt="info" />
+              )}
+            </div>
           </>
         )}
         {id === '4' && (
@@ -267,7 +316,7 @@ const Accordion: React.FC<AccordionProps> = ({
           </>
         )}
         {id === '6' && (
-          <Dropdown options={dimensionsOption} onSelect={() => {}} />
+          <Dropdown options={options} onSelect={() => {}} />
         )}
       </div>
     </div>

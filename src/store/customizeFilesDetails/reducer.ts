@@ -6,6 +6,12 @@ interface Dimensions {
     width: number;
 }
 
+interface Updatedim{
+    height : number;
+    length : number;
+    width : number;
+}
+
 interface FileDetail {
     _id: string;
     fileName: string;
@@ -16,7 +22,9 @@ interface FileDetail {
     technology: string;
     printer: string;
     weight: number;
+    unit: string;
     dimensions: Dimensions;
+    updateDim : Updatedim;
 }
 
 interface FileDetailsState {
@@ -39,11 +47,11 @@ export const fileDetailsSlice = createSlice({
             state.files = action.payload;
         },
 
-        updateDimensions: (state, action: PayloadAction<{ id: string; dimensions: Partial<Dimensions> }>) => {
-            const { id, dimensions } = action.payload;
+        updateDimensions: (state, action: PayloadAction<{ id: string; updateDim: Partial<Updatedim> }>) => {
+            const { id, updateDim } = action.payload;
             const file = state.files.find(file => file._id === id);
             if (file) {
-                file.dimensions = { ...file.dimensions, ...dimensions };
+                file.updateDim = { ...file.updateDim, ...updateDim };
             }
         },
         updateColor: (state, action: PayloadAction<{ id: string; color: string }>) => {
@@ -76,6 +84,13 @@ export const fileDetailsSlice = createSlice({
                 file.weight = weight;
             }
         },
+        updateUnit: (state, action: PayloadAction<{ id: string; unit: string }>) => {
+            const { id, unit } = action.payload;
+            const file = state.files.find(file => file._id === id);
+            if (file) {
+                file.unit = unit;
+            }
+        },
         updatePrinter: (state, action: PayloadAction<{ id: string; printer: string }>) => {
             const { id, printer } = action.payload;
             const file = state.files.find(file => file._id === id);
@@ -94,7 +109,8 @@ export const {
     updateTechnology,
     updateMaterial,
     updatePrinter,
-    addAllFiles
+    addAllFiles,
+    updateUnit
 } = fileDetailsSlice.actions;
 
 export default fileDetailsSlice.reducer;
