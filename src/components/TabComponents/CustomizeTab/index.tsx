@@ -29,6 +29,7 @@ import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 
 import { saveFile } from '../../../utils/indexedDB';
 import ViewModelStl from '../../ViewStlFile';
+import Loader from '../../Loader/Loader';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -64,6 +65,8 @@ const CustomizeTab: React.FC = () => {
   const [isViewerOpen, setViewerOpen] = useState(false);
   const dispatch = useDispatch();
   const { orderId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const activeFile = useMemo(() => {
@@ -226,6 +229,7 @@ const CustomizeTab: React.FC = () => {
   }, []);
 
   const handleApplySelection = async () => {
+    setIsLoading(true);
     if (!activeFile) return;
     try {
       // todo : store dimension in redux
@@ -241,6 +245,9 @@ const CustomizeTab: React.FC = () => {
     } catch (error) {
       console.error('Error applying selection:', error);
       // Handle error response
+    }
+    finally{
+      setIsLoading(false);
     }
   };
 
@@ -357,16 +364,17 @@ const CustomizeTab: React.FC = () => {
             )}
           </div>
           <Button
-            className="apply-button"
-            disabled={isApplyButtonDisabled}
-            onClick={handleApplySelection}
-          >
-            Apply Selection
-          </Button>
+      className="apply-button"
+      disabled={isApplyButtonDisabled || isLoading}
+      onClick={handleApplySelection}
+    >
+     Apply Selection
+      {isLoading && <Loader />}
+    </Button>
         </Customize>
       </Filescomponent>
       <ViewerStlModel
-        fileURl={activeFile?.fileUrl}
+        fileUrl={activeFile?.fileUrl}
         isOpen={isViewerOpen}
         onClose={handleViewerClose}
         activeFileId={activeFileId}
