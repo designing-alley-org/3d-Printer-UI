@@ -18,11 +18,10 @@ import Accordion from '../../Accordion';
 import { addAllFiles, updateWeight } from '../../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 import api from '../../../axiosConfig';
-import { set } from 'react-hook-form';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
-
 import { saveFile } from '../../../utils/indexedDB';
 import ViewModelStl from '../../ViewStlFile';
+
 // Define FileData type
 interface FileData {
   _id: string;
@@ -42,30 +41,31 @@ interface FileData {
   };
 }
 
-
-
+// Define ViewerStlModelProps
+interface ViewerStlModelProps {
+  fileUrl?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  activeFileId: string | null;
+  files: FileData[];
+  onSetActiveFile: (fileId: string) => void;
+}
 
 const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
-  const [ weight, setWeight] = useState<number | null>(null);
+  const [weight, setWeight] = useState<number | null>(null);
   const [updateWidth, setUpdateWidth] = useState<number>(0);
   const [updateHeight, setUpdateHeight] = useState<number>(0);
   const [updateLength, setUpdateLength] = useState<number>(0);
-  const [lenght, setLenght] = useState<number>(0);
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
   const [isViewerOpen, setViewerOpen] = useState(false);
   const dispatch = useDispatch();
   const { orderId } = useParams();
-
-  
 
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const activeFile = useMemo(() => {
     return fileDetails.find((file: any) => file._id === activeFileId) || null;
   }, [fileDetails, activeFileId]);
-
 
   // Fetch files from the server
   useEffect(() => {
@@ -84,7 +84,6 @@ const CustomizeTab: React.FC = () => {
           unit: file.unit,
           printer: file.printer,
           dimensions: file.dimensions,
-
         }));
         setFetchFiles(files);
         dispatch(addAllFiles(files));
@@ -96,28 +95,6 @@ const CustomizeTab: React.FC = () => {
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
 
-  const dimensions = useMemo(() => {
-    if (activeFile) {
-      return {
-        height: activeFile.dimensions.height,
-        length: activeFile.dimensions.length,
-        width: activeFile.dimensions.width,
-      };
-    }
-    return {
-      height: 0,
-      length: 0,
-      width: 0,
-    };
-  }, [activeFile])
-
-  useEffect(() => {
-    
-  },[set])
-
-
-
-  
   // Store files in IndexedDB
   useEffect(() => {
     const storeFileInIndexedDB = async (fileUrl: string) => {
@@ -137,11 +114,12 @@ const CustomizeTab: React.FC = () => {
       }
     });
   }, [files]);
+
   // Get specifications
   const fetchSpec = useCallback(async () => {
     try {
       const response = await api.get(`/get-specification`);
-      const data = response.data?.data?.[0]; // Access the first object in the array
+      const data = response.data?.data?.[0];
       dispatch(addDataSpec(data));
     } catch (error) {
       console.error('Error fetching specification:', error);
@@ -155,9 +133,8 @@ const CustomizeTab: React.FC = () => {
   // Get weight for stl file 
   const selectedMat = useSelector((state: any) => state.fileDetails.files.find((file: FileData) => file._id === activeFileId)?.material);
   const selectedMatMass = useSelector((state: any) => state.specification.material_with_mass);
-  const materialMass = selectedMatMass?.find((mat : any) => mat.material_name === selectedMat)?.material_mass;
-  
-  
+  const materialMass = selectedMatMass?.find((mat: any) => mat.material_name === selectedMat)?.material_mass;
+
   const getWeight = useCallback(async () => {
     if (!selectedMat || !activeFileId || materialMass === undefined) return;
     try {
@@ -166,13 +143,12 @@ const CustomizeTab: React.FC = () => {
         material_mass: materialMass,
       };
       const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
-      console.log('Weight response:', response.data.data.dimensions.weight);
       setWeight(response.data.data.dimensions.weight);
       dispatch(updateWeight(response.data.data.dimensions.weight));
     } catch (error) {
       console.error('Error fetching weight:', error);
     }
-  }, [selectedMat, activeFileId, materialMass, orderId]);
+  }, [selectedMat, activeFileId, materialMass, orderId, dispatch]);
 
   const scaleStl = useCallback(async () => {
     if (!activeFileId || !orderId) return;
@@ -189,17 +165,12 @@ const CustomizeTab: React.FC = () => {
       console.error('Error scaling STL:', error);
     }
   }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
- 
 
-  // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
     const { color, material, technology, printer } = activeFile;
-    if (color && material && technology && printer) return false;
-    return true;
+    return !(color && material && technology && printer);
   }, [activeFile]);
-
-  
 
   const handleSetActiveFile = useCallback((fileId: string) => {
     setActiveFileId(fileId);
@@ -217,19 +188,12 @@ const CustomizeTab: React.FC = () => {
   const handleApplySelection = async () => {
     if (!activeFile) return;
     try {
-      // todo : store dimension in redux
-
-      // get weight
       await getWeight();
-
-      // scale stl
-     if(updateWidth > 0 && updateHeight > 0 && updateLength > 0) {
-      await scaleStl();
-     }
-      // Handle success response
+      if (updateWidth > 0 && updateHeight > 0 && updateLength > 0) {
+        await scaleStl();
+      }
     } catch (error) {
       console.error('Error applying selection:', error);
-      // Handle error response
     }
   };
 
@@ -261,10 +225,10 @@ const CustomizeTab: React.FC = () => {
               >
                 <Model>
                   <span className="model-preview">
-                  <ViewModelStl
-                       fileUrl={file.fileUrl}
-                         modelColor={activeFileId === file._id ? file.color : ''}
-                         />
+                    <ViewModelStl
+                      fileUrl={file.fileUrl}
+                      modelColor={activeFileId === file._id ? file.color : ''}
+                    />
                   </span>
                   <span
                     className="view-model"
@@ -293,10 +257,10 @@ const CustomizeTab: React.FC = () => {
           <div className="customize-container">
             {customize.map((item) => (
               <Accordion
-               setUpdateHeight={setUpdateHeight}
-               setUpdateWidth={setUpdateWidth}
-               setUpdateLength={setUpdateLength}
-                selectedId={activeFileId as string | null}
+                setUpdateHeight={setUpdateHeight}
+                setUpdateWidth={setUpdateWidth}
+                setUpdateLength={setUpdateLength}
+                selectedId={activeFileId}
                 key={item.id}
                 icon={item.icon}
                 id={item.id}
@@ -321,18 +285,16 @@ const CustomizeTab: React.FC = () => {
           </Button>
         </Customize>
       </Filescomponent>
+
       <ViewerStlModel
-          fileURl={activeFile?.fileUrl}
-          isOpen={isViewerOpen}
-          onClose={handleViewerClose}
-          activeFileId={activeFileId}
-          files={files as ViewerStlModelProps['files']}
-          onSetActiveFile={handleSetActiveFile}
-        />
-
-   
+        fileUrl={activeFile?.fileUrl}
+        isOpen={isViewerOpen}
+        onClose={handleViewerClose}
+        activeFileId={activeFileId}
+        files={files}
+        onSetActiveFile={handleSetActiveFile}
+      />
     </Wrapper>
-
   );
 };
 
