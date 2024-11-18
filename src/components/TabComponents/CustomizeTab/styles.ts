@@ -173,6 +173,7 @@ export const Customize = styled.article`
   }
 
   .apply-button {
+    position: relative;
     width: fit-content;
     margin-top: 1rem;
     padding: 0.6rem 3rem;
@@ -184,5 +185,12 @@ export const Customize = styled.article`
     &:hover {
       transform: scale(1.01);
     }
+
+    .loader {
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
   }
 `;
