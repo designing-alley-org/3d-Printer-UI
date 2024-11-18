@@ -1,5 +1,3 @@
-// src/components/ViewStlFile/index.tsx
-
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { StlViewer } from 'react-stl-viewer';
 import { getFile } from '../../utils/indexedDB';
@@ -14,8 +12,10 @@ interface ViewModelStlProps {
   fileUrl?: string;
   localBlobUrl?: string;
   onDimensionsCalculated?: (dimensions: ModelDimensions) => void;
-  modelColor: string;
+  modelColor?: string;
 }
+
+const DEFAULT_COLOR = '#808080';
 
 const ViewModelStl: React.FC<ViewModelStlProps> = ({
   fileUrl,
@@ -30,7 +30,6 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
   useEffect(() => {
     const loadFile = async () => {
       if (localBlobUrl) {
-        // Use the local blob URL directly
         setFileBlobUrl(localBlobUrl);
         setLoading(false);
       } else if (fileUrl) {
@@ -57,7 +56,7 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
         URL.revokeObjectURL(fileBlobUrl);
       }
     };
-  }, [fileUrl, localBlobUrl]); // Removed fileBlobUrl from dependencies to prevent infinite loops
+  }, [fileUrl, localBlobUrl]);
 
   const handleFinishLoading = useCallback(
     (dimensions: any) => {
@@ -83,7 +82,6 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
     <div className="relative" style={style}>
       {loading && (
         <div className="loading-overlay">
-          {/* Loading spinner or message */}
           Loading...
         </div>
       )}
@@ -94,7 +92,7 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
           shadows
           url={fileBlobUrl}
           modelProps={{
-            color: modelColor || '#808080',
+            color: modelColor || DEFAULT_COLOR,
           }}
           onFinishLoading={handleFinishLoading}
           ref={viewerRef}
