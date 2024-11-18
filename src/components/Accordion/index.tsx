@@ -71,12 +71,27 @@ const Accordion: React.FC<AccordionProps> = ({
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
   const dataspec = useSelector((state: any) => state.specification);
+  const dimansions = selectedFile?.dimensions;
+
+  const [dimensions, setDimensions] = useState({
+    height: dimansions?.height || 0,
+    width: dimansions?.width || 0,
+    length: dimansions?.length || 0,
+  });
+  const [originalDimensions, setOriginalDimensions] = useState({
+    height: 0,
+    width: 0,
+    length: 0,
+  });
 
   useEffect(() => {
-    if (selectedFile) {
-      setSelectSize(selectedFile.unit);
-    }
-  }, [selectedFile]);
+    setDimensions({
+      height: dimansions?.height || 0,
+      width: dimansions?.width || 0,
+      length: dimansions?.length || 0,
+    });
+  }, [dimansions]);
+
 
   useEffect(() => {
     if (dataspec) {
@@ -85,9 +100,29 @@ const Accordion: React.FC<AccordionProps> = ({
       setMaterialData(dataspec.material_with_mass || []);
     }
   }, [dataspec]);
-  const dimansions = selectedFile?.dimensions;
+  // Update useEffect to set dimensions from selectedFile
+useEffect(() => {
+    if (selectedFile?.dimensions) {
+      setSelectSize(selectedFile.unit);
+      const initialDimensions = {
+        height: selectedFile.dimensions.height || 0,
+        width: selectedFile.dimensions.width || 0,
+        length: selectedFile.dimensions.length || 0,
+      };
+      setDimensions(initialDimensions);
+      setOriginalDimensions(initialDimensions);
+    }
+  }, [selectedFile]);
+
+  // useEffect(() => {
+  //   if (selectedFile) {
+  //     setSelectSize(selectedFile.unit);
+  //   }
+  // }, [selectedFile]);
+
 
   
+
 
   const dispatch = useDispatch();
 
@@ -152,12 +187,38 @@ const Accordion: React.FC<AccordionProps> = ({
       dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
     }
   }, [selectedPrinter]);
+  
+  
 
-  const handelRevtbtn = () => { 
-    setUpdateHeight(0);
-    setUpdateWidth(0);
-    setUpdateLength(0);
-  }
+  useEffect(() => {
+    setUpdateHeight(dimensions.height);
+    setUpdateWidth(dimensions.width);
+    setUpdateLength(dimensions.length);
+  }, [dimensions, setUpdateHeight, setUpdateWidth, setUpdateLength]);
+
+  // Handle input changes
+  const handleChange = (field: 'height' | 'width' | 'length') => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = Number(event.target.value);
+    setDimensions(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Revert to original dimensions
+  const handleRevert = () => {
+    setDimensions(originalDimensions);
+  };
+
+  const handelRevtbtn = () => {
+    if (dimansions) {
+      setUpdateHeight(dimansions.height);
+      setUpdateWidth(dimansions.width);
+      setUpdateLength(dimansions.length);
+    }
+  };
 
   const handlePrinterSelect = (title: string) =>
     setSelectedPrinter(selectedPrinter === title ? '' : title);
@@ -185,34 +246,64 @@ const Accordion: React.FC<AccordionProps> = ({
                 onSelect={(option: Option) => setSelectSize(option.value)}
               />
               <TextField
-                type="text"
-                placeholder={dimansions?.height.toString()}
+                type="number"
+                // label="Height"
                 variant="outlined"
                 className='fields'
-                onChange={(e) => setUpdateHeight(Number(e.target.value))}
+                value={dimensions.height}
+                onChange={handleChange('height')}
+                inputProps={{
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                  style: { 
+                    // Optional: add any additional input styles here
+                    textAlign: 'left',
+                    paddingRight: '8px'
+                  }
+                }}
                 />
               <TextField
-                type="text"
-                placeholder={dimansions?.width.toString()}
+                type="number"
+                // label="Width"
                 variant="outlined"
                 className='fields'
-                onChange={(e) => setUpdateWidth(Number(e.target.value))}
+                value={dimensions.width}
+                onChange={handleChange('width')}
+                inputProps={{
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                  style: { 
+                    // Optional: add any additional input styles here
+                    textAlign: 'left',
+                    paddingRight: '8px'
+                  }
+                }}
               />
               <TextField
-                type="text"
-                placeholder={dimansions?.length.toString()}
+                type="number"
+                // label="Length"
                 variant="outlined"
                 className='fields'
-                onChange={(e) => setUpdateLength(Number(e.target.value))}
+                value={dimensions.length}
+                onChange={handleChange('length')}
+                inputProps={{
+                  inputMode: 'numeric',
+                  pattern: '[0-9]*',
+                  style: { 
+                    // Optional: add any additional input styles here
+                    textAlign: 'left',
+                    paddingRight: '8px'
+                  }
+                }}
               />
               
             </div>
             <div className="revert">
-              <Button className="btn" onClick={handelRevtbtn}>Revert to original</Button>
+              <Button className="btn" onClick={handleRevert}>Revert to original</Button>
               {dimansions && (
                 <p>
-                  {dimansions.height} mm x {dimansions.width} mm x{' '}
-                  {dimansions.length} mm
+              {originalDimensions.height} mm x {originalDimensions.width} mm x {originalDimensions.length} mm
+
                 </p>
               )}
             </div>

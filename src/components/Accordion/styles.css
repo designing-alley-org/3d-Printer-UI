@@ -145,13 +145,21 @@
     input {
       height: 1.3rem;
       color: #235AB0;
-
+      /* Hide spinner buttons for Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      /* Hide spinner buttons for Firefox */
+      &[type='number'] {
+        -moz-appearance: textfield;
+      }
     }
     fieldset {
       border: 1px solid #66a3ff;
       border-radius: 40px;
       box-shadow: 0px 0px 4px 0px #0047FF inset;
-
     }
   }
 }
