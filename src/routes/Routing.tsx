@@ -19,6 +19,7 @@ import DashboardLayout from '../components/DashboardLayout/index.tsx';
 import Account from '../components/accountComponent/index.tsx';
 import Services from '../components/Services/index.tsx';
 import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
+import ProtectedRoute from './ProtectedRoute.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -39,16 +40,40 @@ const Routing: React.FC = () => {
             <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
           </Route> */}
         </Route>
-        <Route path={ROUTES.GET_QUOTES} element={<CardLayout />}>
-          <Route index element={<QuoteCard />} />
-          <Route path=':orderId/'>
-            <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
-            <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
-            <Route path={ROUTES.QUOTE} element={<Quote />} />
-            <Route path={ROUTES.CHECKOUT} element={<CheckOut />}>
-              <Route index element={<ShippingDetails />} />
-              <Route path={ROUTES.DELIVERY_PLAN} element={<DeliveryPlan />} />
-              <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
+        <Route
+          path={ROUTES.GET_QUOTES}
+          element={<ProtectedRoute component={<CardLayout />} />}
+        >
+          <Route index element={<ProtectedRoute component={<QuoteCard />} />} />
+          <Route path=":orderId/">
+            <Route
+              path={ROUTES.UPLOAD_STL}
+              element={<ProtectedRoute component={<UploadStlCard />} />}
+            />
+            <Route
+              path={ROUTES.CUSTOMIZE}
+              element={<ProtectedRoute component={<Customize />} />}
+            />
+            <Route
+              path={ROUTES.QUOTE}
+              element={<ProtectedRoute component={<Quote />} />}
+            />
+            <Route
+              path={ROUTES.CHECKOUT}
+              element={<ProtectedRoute component={<CheckOut />} />}
+            >
+              <Route
+                index
+                element={<ProtectedRoute component={<ShippingDetails />} />}
+              />
+              <Route
+                path={ROUTES.DELIVERY_PLAN}
+                element={<ProtectedRoute component={<DeliveryPlan />} />}
+              />
+              <Route
+                path={ROUTES.PAYMENT}
+                element={<ProtectedRoute component={<PaymentDetails />} />}
+              />
             </Route>
           </Route>
         </Route>
