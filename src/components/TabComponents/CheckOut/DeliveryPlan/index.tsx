@@ -84,7 +84,7 @@ const DeliveryPlan: React.FC = () => {
             key={index}
             deliveryName={plan.serviceName}
             deliveryTime={plan.serviceType}
-            deliveryCost={plan.deliveryCost}
+            deliveryCost={plan?.ratedShipmentDetails?.[0]?.totalNetCharge}
             packaging={plan?.packagingType}
             active={active}
             setActive={setActive}

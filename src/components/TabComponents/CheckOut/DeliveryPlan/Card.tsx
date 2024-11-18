@@ -47,7 +47,7 @@ export default function Card({
           <span>Packaging: {packaging}</span>
         </Specs>
         <div className="btm">
-          <span className="cost">{deliveryCost}</span>
+          <span className="cost">${deliveryCost}</span>
           <span className="btn">
             <Button
               label={active !== index ? 'Select' : 'Selected'}
