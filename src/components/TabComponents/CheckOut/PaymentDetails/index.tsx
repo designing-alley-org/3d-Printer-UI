@@ -47,7 +47,7 @@ const PaymentDetails = () => {
     };
     fetchData();
   }, []);
-  
+
   if (!Quote || !Quote.files) {
     return <div>Loading...</div>;
   }
@@ -103,10 +103,10 @@ const PaymentDetails = () => {
               </div>
             ))}
           </span>
-          <div className="Another">
+          {/* <div className="Another">
             <span className="count">+ </span>
             <span>Add Another Address</span>
-          </div>
+          </div> */}
         </div>
         <div className="details">
           <h2>Billing Details</h2>
@@ -124,10 +124,10 @@ const PaymentDetails = () => {
               </span>
             </div>
             <div>
-              <span className="priceDetail">
+              {/* <span className="priceDetail">
                 <span>Print fee</span>
                 <Button label="Invoice" onClick={Function}></Button>
-              </span>
+              </span> */}
               <span className="priceDetail">
                 <span className="total">Total</span>
                 <span className="price">
