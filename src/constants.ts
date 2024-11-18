@@ -255,7 +255,7 @@ export const sizeOption = [
   {
     id: 2,
     label: 'IN',
-    value: 'in',
+    value: 'inch',
   },
 ];
 

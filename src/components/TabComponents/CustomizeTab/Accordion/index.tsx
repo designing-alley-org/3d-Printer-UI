@@ -12,6 +12,7 @@ import {
   updateMaterial,
   updatePrinter,
   updateTechnology,
+  updateInfill
 } from '../../../../store/customizeFilesDetails/reducer';
 import api from '../../../../axiosConfig';
 import { useParams } from 'react-router-dom';
@@ -30,6 +31,8 @@ interface AccordionProps {
   setSelectedMat: (selectedMat: string) => void;
   setSelectedColor: (selectedColor: string) => void;
   setSelectedPrinter: (selectedPrinter: string) => void;
+  setSelectUnit: (unit: string) => void;
+  setSelectInfill: (infill: number) => void;
 }
 
 interface PrinterData {
@@ -64,6 +67,8 @@ const Accordion: React.FC<AccordionProps> = ({
   setSelectedMat,
   setSelectedColor,
   setSelectedPrinter,
+  setSelectUnit,
+  setSelectInfill
 }) => {
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [printerData, setPrinterData] = useState([]);
@@ -77,6 +82,7 @@ const Accordion: React.FC<AccordionProps> = ({
   const handleMatClick = (material: string) => setSelectedMat(material);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
+  console.log(selectedFile);
   const dataspec = useSelector((state: any) => state.specification);
   const dimansions = selectedFile?.dimensions;
 
@@ -147,6 +153,7 @@ useEffect(() => {
       setSelectedMat(selectedFile.material);
       setSelectedColor(selectedFile.color);
       setSelectedPrinter(selectedFile.printer);
+      setSelectUnit(selectedFile.unit);
     }
   }, [selectedFile]);
 
@@ -156,6 +163,8 @@ useEffect(() => {
       dispatch(updateColor({ id: selectedId, color: selectedColor }));
     }
   }, [selectedColor]);
+
+ 
 
   // send printer corresponding to selectedId to store
   useEffect(() => {
@@ -170,6 +179,8 @@ useEffect(() => {
       dispatch(updateTechnology({ id: selectedId, technology: selectedTech }));
     }
   }, [selectedTech]);
+
+ 
 
   // Send material corresponding to selectedId to store
   useEffect(() => {
@@ -247,7 +258,7 @@ useEffect(() => {
             >
               <Dropdown
                 options={sizeOption}
-                onSelect={(option: Option) => setSelectSize(option.value)}
+                onSelect={(option: Option) => setSelectUnit(option.value)}
               />
               <TextField
                 type="number"
@@ -409,7 +420,9 @@ useEffect(() => {
         )}
         {id === '6' && (
           <div className="infill">
-            <Dropdown options={options} onSelect={() => {}} />
+            <Dropdown options={options} 
+            onSelect={(option: Option) => setSelectInfill(option.value)}
+             />
           </div>
         )}
       </div>

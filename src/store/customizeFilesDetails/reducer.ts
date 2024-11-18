@@ -6,11 +6,7 @@ interface Dimensions {
     width: number;
 }
 
-interface Updatedim{
-    height : number;
-    length : number;
-    width : number;
-}
+
 
 interface FileDetail {
     _id: string;
@@ -24,7 +20,7 @@ interface FileDetail {
     weight: number;
     unit: string;
     dimensions: Dimensions;
-    updateDim : Updatedim;
+    infill:number;
 }
 
 interface FileDetailsState {
@@ -46,14 +42,7 @@ export const fileDetailsSlice = createSlice({
         addAllFiles: (state, action: PayloadAction<FileDetail[]>) => {
             state.files = action.payload;
         },
-
-        updateDimensions: (state, action: PayloadAction<{ id: string; updateDim: Partial<Updatedim> }>) => {
-            const { id, updateDim } = action.payload;
-            const file = state.files.find(file => file._id === id);
-            if (file) {
-                file.updateDim = { ...file.updateDim, ...updateDim };
-            }
-        },
+     
         updateColor: (state, action: PayloadAction<{ id: string; color: string }>) => {
             const { id, color } = action.payload;
             const file = state.files.find(file => file._id === id);
@@ -97,20 +86,27 @@ export const fileDetailsSlice = createSlice({
             if (file) {
                 file.printer = printer;
             }
+        },
+        updateInfill: (state, action: PayloadAction<{ id: string; infill: number }>) => {
+            const { id, infill } = action.payload;
+            const file = state.files.find(file => file._id === id);
+            if (file) {
+                file.infill = infill;
+            }
         }
     },
 });
 
 export const {
     addFileDetails,
-    updateDimensions,
     updateColor,
     updateWeight,
     updateTechnology,
     updateMaterial,
     updatePrinter,
     addAllFiles,
-    updateUnit
+    updateUnit,
+    updateInfill
 } = fileDetailsSlice.actions;
 
 export default fileDetailsSlice.reducer;
