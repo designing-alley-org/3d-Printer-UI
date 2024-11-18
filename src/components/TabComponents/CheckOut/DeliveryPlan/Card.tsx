@@ -5,26 +5,32 @@ import icon from '../../../../assets/icons/avg_pace.svg';
 interface CardProps {
   deliveryName: string;
   deliveryTime: string;
-  deliveryCost: string;
+  deliveryCost: number;
+  packaging: string;
   active: number;
   setActive: (idx: number) => void;
   index: number;
+  name: string;
+  setName: (name: string) => void;
 }
 
 export default function Card({
   deliveryName,
   deliveryTime,
   deliveryCost,
+  packaging,
   active,
   setActive,
+  setName,
   index,
 }: CardProps) {
-  const handleClick = (idx: number) => {
+  const handleClick = (idx: number, name: string) => {
     if (active === idx) {
       setActive(-1);
       return;
     }
     setActive(idx);
+    setName(name);
   };
 
   return (
@@ -37,18 +43,15 @@ export default function Card({
       <Body>
         <Specs>
           <span>Time: {deliveryTime}</span>
-          <span>Cost: {}</span>
-          <span>Packaging: {}</span>
-          <span>Tracking: {}</span>
-          <span>Support: {}</span>
-          <span>Insurance: {}</span>
+          <span>Cost: {deliveryCost}</span>
+          <span>Packaging: {packaging}</span>
         </Specs>
         <div className="btm">
           <span className="cost">{deliveryCost}</span>
           <span className="btn">
             <Button
               label={active !== index ? 'Select' : 'Selected'}
-              onClick={() => handleClick(index)}
+              onClick={() => handleClick(index, deliveryName)}
             />
           </span>
         </div>

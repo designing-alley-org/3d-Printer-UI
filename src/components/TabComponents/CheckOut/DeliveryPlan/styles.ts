@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export const CardBox = styled.div`
-  display: flex;
+  display: grid;
   gap: 1.5rem;
   margin-top: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
 `;
 
 interface MainCardProps {
@@ -13,6 +14,7 @@ interface MainCardProps {
 export const MainCard = styled.div<MainCardProps>`
   background-color: #deebff;
   border-radius: 1rem;
+  flex: 0 0 33.33%;
   width: 100%;
   min-height: 32rem;
   border: 1px solid #deeeff;

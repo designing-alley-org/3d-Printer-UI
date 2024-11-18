@@ -12,7 +12,6 @@ import Button from '../../stories/button/Button';
 import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
-import { useForm } from 'react-hook-form';
 import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function
 
 interface ModelDimensions {
@@ -53,7 +52,6 @@ const CardLayout = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
-  const formMethods = useForm();
 
   // New state for managing the loading spinner
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -177,7 +175,7 @@ const CardLayout = () => {
         {pathname.includes(ROUTES.UPLOAD_STL) ? (
           <UploadStlCard files={files} setFiles={setFiles} />
         ) : (
-          <Outlet context={{ files, setFiles, formMethods }} />
+          <Outlet context={{ files, setFiles }} />
         )}
       </div>
 
@@ -192,7 +190,8 @@ const CardLayout = () => {
       )}
 
       {/* Proceed Button */}
-      {pathname !== `/get-quotes/${orderId}/checkout` && (
+      {pathname !== `/get-quotes/${orderId}/checkout` &&
+        pathname !== `/get-quotes/${orderId}/checkout/select-delivery` && (
         <div className="btn">
           <div></div>
           <span className="proc">

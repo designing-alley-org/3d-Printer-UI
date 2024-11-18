@@ -1,15 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Typography } from '@mui/material';
 import Card from './Card';
 import { CardBox } from './styles';
 import { useEffect, useState } from 'react';
-import { deliveryPlans } from '../../../../constants';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from '../../../../stories/button/Button';
+import api from '../../../../axiosConfig';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL as string;
-export default function DeliveryPlan() {
+
+const DeliveryPlan: React.FC = () => {
   const [active, setActive] = useState(-1);
+  const [deliveryData, setDeliveryData] = useState(-1);
+  const [name, setName] = useState<string>('');
 
   const orderId = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +38,7 @@ export default function DeliveryPlan() {
         }
 
         const data = await response.json();
-        console.log(data); // Process the API response
+        setDeliveryData(data); // Process the API response
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -39,6 +46,24 @@ export default function DeliveryPlan() {
 
     fetchData();
   }, [orderId]);
+
+  const onProceed = async () => {
+    try {
+      const data = {
+        service_type: name,
+      };
+      const response = await api.put(
+        `/update-user-order/${orderId.orderId}`,
+        data
+      );
+      if (response.status === 200) {
+        console.log('Files uploaded successfully!');
+        navigate(`/get-quotes/${orderId.orderId}/checkout/payment`);
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
+  };
 
   return (
     <Box
@@ -50,18 +75,29 @@ export default function DeliveryPlan() {
         Select Delivery Plan
       </Typography>
       <CardBox>
-        {deliveryPlans.map((plan, index) => (
+        {deliveryData?.rates?.map((plan: any, index: number) => (
           <Card
             key={index}
-            deliveryName={plan.deliveryName}
-            deliveryTime={plan.deliveryTime}
+            deliveryName={plan.serviceName}
+            deliveryTime={plan.serviceType}
             deliveryCost={plan.deliveryCost}
+            packaging={plan?.packagingType}
             active={active}
             setActive={setActive}
+            name={name}
+            setName={setName}
             index={index}
           />
         ))}
       </CardBox>
+      <div className="btn">
+        <div></div>
+        <span className="proc">
+          <Button label={'Proceed'} onClick={onProceed} />
+        </span>
+      </div>
     </Box>
   );
-}
+};
+
+export default DeliveryPlan;
