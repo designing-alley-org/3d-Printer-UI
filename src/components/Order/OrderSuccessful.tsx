@@ -3,8 +3,8 @@ import './style.css';
 import OrderSuccessfulIcon from '../../assets/icons/order-successful.png';
 const OrderSuccessful = () => {
   return (
-    <div className="cardLayout">
-      <div className="mainCardContent">
+    <div className="orderCardLayout">
+      <div className="orderMainCardContent">
         <img
           style={{ height: '2rem', width: '2rem' }}
           src={OrderSuccessfulIcon}
