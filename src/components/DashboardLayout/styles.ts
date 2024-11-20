@@ -12,7 +12,7 @@ export const Wrapper = styled.section`
 `;
 export const Bottom = styled.section`
   display: flex;
-  height: 56rem;
+  height: 59rem;
   align-items: end;
   justify-content: space-between;
   .btn {
@@ -26,13 +26,13 @@ export const Bottom = styled.section`
   }
   .curve {
     font-size: 32px;
-    padding: 20px 40px 0px 64px;
+    padding: 20px 12rem 0px 64px;
     border-top-right-radius: 40px;
     background: white;
     &::after {
       content: '';
       position: absolute;
-      margin-left: 2rem;
+      margin-left: 11.5rem;
       margin-top: -1rem;
       background-color: transparent;
       width: 5.25rem;

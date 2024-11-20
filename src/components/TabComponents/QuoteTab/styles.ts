@@ -8,7 +8,7 @@ export const innerBox: SxProps = {
   justifyContent: 'space-between',
 };
 export const content: SxProps = {
-  padding: '0rem 4rem 4rem',
+  padding: '0rem 4rem 1rem',
 };
 
 export const upperQuoteText: SxProps = {

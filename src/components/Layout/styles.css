@@ -1,5 +1,5 @@
 .Content {
-  min-height: 59rem;
+  min-height: 62rem;
   background-size: cover;
   background-position: center;
   border-top-left-radius: 30px;
@@ -8,4 +8,3 @@
   border-bottom-right-radius: 40px;
   background-image: url(/src/assets/images/backgroundimg.png);
 }
-
