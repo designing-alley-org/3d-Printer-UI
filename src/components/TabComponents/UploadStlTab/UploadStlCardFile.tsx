@@ -1,7 +1,7 @@
 // src/components/TabComponents/UploadStlTab/UploadStlCardFile.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, TextField} from '@mui/material';
 import ViewModelStl from '../../ViewStlFile/index';
 import { cross, plus, minus, vector } from '../../../constants';
 import * as styles from './UploadStlCardFileStyle';
@@ -61,12 +61,17 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
       }
     }, [file.file]);
 
-    const handleQuantityChange = useCallback((operation: 'increase' | 'decrease') => {
+    const handleQuantityChange = useCallback((operation: 'set' | 'increase' | 'decrease', value?: number) => {
       const minLimit = 1;
       const maxLimit = 999;
-      const newQuantity = operation === 'increase' 
-        ? Math.min(file.quantity + 1, maxLimit)
-        : Math.max(file.quantity - 1, minLimit);
+      let newQuantity = 0;
+      if (operation === 'set') {
+        newQuantity = Math.max(Math.min(value || 0, maxLimit), minLimit);
+      } else {
+        newQuantity = operation === 'increase' 
+          ? Math.min(file.quantity + 1, maxLimit)
+          : Math.max(file.quantity - 1, minLimit);
+      }
       
       if (newQuantity !== file.quantity) {
         onUpdateQuantity(file.id, newQuantity);
@@ -93,6 +98,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     return (
       <>
         <Box sx={styles.container}>
+          <Typography sx={styles.fileNumber}> {files.indexOf(file) + 1}</Typography>
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
               {localBlobUrl ? (
@@ -140,7 +146,34 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 onClick={() => handleQuantityChange('decrease')}
                 disabled={file.quantity <= 1}
               />
-              <Typography sx={styles.quantityValue}>{file.quantity}</Typography>
+              <TextField
+                value={file.quantity}
+                onChange={(e) => handleQuantityChange('set', Number(e.target.value))}
+                type="text"
+                sx={{
+                  '& fieldset': {
+                    border:'1px solid #66A3FF',
+                    boxShadow: '0px 0px 4px 0px rgba(0, 71, 255, 1) inset',
+                    borderRadius: '2rem',
+                    
+
+                  },
+                  '& input': {
+                    textAlign: 'center',
+                    padding: '0.5rem',
+                    height: '2rem',
+                    width:'4rem',
+                    '&:focus': {
+                      outline: 'none',                      
+                    },
+                  },
+                }}
+                inputProps={{
+                  min: 1,
+                  max: 999,
+                  step: 1
+                }}
+              />
               <ButtonIcon
                 width="2rem"
                 height="2rem"

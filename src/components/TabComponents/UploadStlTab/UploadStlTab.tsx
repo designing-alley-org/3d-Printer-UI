@@ -75,6 +75,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     [setFiles, setActiveFileId]
   );
 
+
   const handleUnitClick = useCallback((unit: string) => {
     setSelectedUnit(unit);
   }, []);
@@ -149,7 +150,6 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
             </Button>
           ))}
         </Box>
-
         <Box sx={styles.fileCountSection}>
           <Typography sx={styles.fileText}>Files</Typography>
           <Box sx={styles.filesBox}>

@@ -8,6 +8,19 @@ export const container: SxProps = {
   padding: '.7rem',
 };
 
+export const fileNumber : SxProps ={
+  display: 'flex',
+  justifyContent: 'center',
+  alignContent:'center',
+  padding: '.7rem',
+  color:'#FFFFFF',
+  width: '3rem',
+  height: '3rem',
+  borderRadius: '50%',
+  marginRight: '1rem',
+  backgroundColor: '#66A3FF',
+}
+
 export const viewBox: SxProps = {
   width: '20%',
 };
@@ -89,8 +102,9 @@ export const quantityValueBox: SxProps = {
 };
 
 export const quantityValue: SxProps = {
-  fontFamily: 'Michroma',
-  fontWeight: '400',
-  fontSize: '1.2rem',
-  color: '#0066FF',
+
+  marginRight:'2rem',
+ 
 };
+
+
