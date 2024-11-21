@@ -13,6 +13,7 @@ import axios from 'axios';
 import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function
+import { useSelector } from 'react-redux';
 
 interface ModelDimensions {
   height: number;
@@ -52,6 +53,15 @@ const CardLayout = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
+  const [allPrinter, setAllPrinter] = useState(false);
+  const fileDetails = useSelector((state: any) => state.fileDetails.files);
+  
+  // useEffect(() => {
+  //   const allPrinterExist = fileDetails.some((file : any) => file.printer !== '');
+  //   setAllPrinter(allPrinterExist);
+  // }, [fileDetails]);
+  
+
 
   // New state for managing the loading spinner
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -111,6 +121,7 @@ const CardLayout = () => {
 
         const response = await api.put(`/update-user-order/${orderId}`, formData);
         if (response.status === 200) {
+        setFiles([]);
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
           navigate(`${response.data.data._id}/customize`);

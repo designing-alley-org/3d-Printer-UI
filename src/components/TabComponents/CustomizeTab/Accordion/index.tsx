@@ -12,7 +12,6 @@ import {
   updateMaterial,
   updatePrinter,
   updateTechnology,
-  updateInfill
 } from '../../../../store/customizeFilesDetails/reducer';
 import api from '../../../../axiosConfig';
 import { useParams } from 'react-router-dom';
@@ -53,6 +52,9 @@ interface Specification {
   material_with_mass: MaterialWithMass[];
 }
 
+const MM_TO_INCH = 1 / 25.4;
+const INCH_TO_MM = 25.4;
+
 const Accordion: React.FC<AccordionProps> = ({
   icon,
   id,
@@ -76,13 +78,13 @@ const Accordion: React.FC<AccordionProps> = ({
   const [technologyData, setTechnologyData] = useState<string[]>([]);
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
   const [selectSize, setSelectSize] = useState<string>('');
+  const [unit, setUnit] = useState<'mm' | 'inch'>('mm');
   const { orderId } = useParams();
   const handleColorClick = (color: string) => setSelectedColor(color);
   const handleTechClick = (technology: string) => setSelectedTech(technology);
   const handleMatClick = (material: string) => setSelectedMat(material);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
-  console.log(selectedFile);
   const dataspec = useSelector((state: any) => state.specification);
   const dimansions = selectedFile?.dimensions;
 
@@ -105,6 +107,7 @@ const Accordion: React.FC<AccordionProps> = ({
     });
   }, [dimansions]);
 
+ 
 
   useEffect(() => {
     if (dataspec) {
@@ -113,6 +116,14 @@ const Accordion: React.FC<AccordionProps> = ({
       setMaterialData(dataspec.material_with_mass || []);
     }
   }, [dataspec]);
+
+  const convertDimensions = (value: number, fromUnit: 'mm' | 'inch', toUnit: 'mm' | 'inch') => {
+    if (fromUnit === toUnit) return value;
+    return fromUnit === 'mm' 
+      ? value * MM_TO_INCH 
+      : value * INCH_TO_MM;
+  };
+
   // Update useEffect to set dimensions from selectedFile
 useEffect(() => {
     if (selectedFile?.dimensions) {
@@ -164,7 +175,6 @@ useEffect(() => {
     }
   }, [selectedColor]);
 
- 
 
   // send printer corresponding to selectedId to store
   useEffect(() => {
@@ -180,8 +190,6 @@ useEffect(() => {
     }
   }, [selectedTech]);
 
- 
-
   // Send material corresponding to selectedId to store
   useEffect(() => {
     if (selectedMat && selectedId) {
@@ -196,13 +204,28 @@ useEffect(() => {
     }
   }, [selectedPrinter]);
   
-  
-
   useEffect(() => {
     setUpdateHeight(dimensions.height);
     setUpdateWidth(dimensions.width);
     setUpdateLength(dimensions.length);
   }, [dimensions, setUpdateHeight, setUpdateWidth, setUpdateLength]);
+
+  const handleUnitChange = (option: Option) => {
+    const newUnit = option.value as 'mm' | 'inch';
+    
+    // Ensure conversion happens only when units actually change
+    if (newUnit !== unit) {
+      // Convert current dimensions when unit changes
+      const convertedDimensions = {
+        height: convertDimensions(dimensions.height, unit, newUnit),
+        width: convertDimensions(dimensions.width, unit, newUnit),
+        length: convertDimensions(dimensions.length, unit, newUnit)
+      };
+      setDimensions(convertedDimensions);
+      setUnit(newUnit);
+      setSelectUnit(newUnit);
+    }
+  };
 
   // Handle input changes
   const handleChange = (field: 'height' | 'width' | 'length') => (
@@ -219,15 +242,6 @@ useEffect(() => {
   const handleRevert = () => {
     setDimensions(originalDimensions);
   };
-
-  const handelRevtbtn = () => {
-    if (dimansions) {
-      setUpdateHeight(dimansions.height);
-      setUpdateWidth(dimansions.width);
-      setUpdateLength(dimansions.length);
-    }
-  };
-
   const handlePrinterSelect = (title: string) =>
     setSelectedPrinter(selectedPrinter === title ? '' : title);
 
@@ -249,16 +263,17 @@ useEffect(() => {
           <div className="scale">
             <div className="scaling">
               <p>Scale In</p>
-              <p>Length</p>
-              <p>Width</p>
               <p>Height</p>
+              <p>Width</p>
+              <p>Length</p>
             </div>
             <div
               style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}
             >
               <Dropdown
                 options={sizeOption}
-                onSelect={(option: Option) => setSelectUnit(option.value)}
+                onSelect={handleUnitChange}
+                defaultValue={selectedFile ? selectedFile.unit : "mm"}
               />
               <TextField
                 type="number"
@@ -421,7 +436,8 @@ useEffect(() => {
         {id === '6' && (
           <div className="infill">
             <Dropdown options={options} 
-            onSelect={(option: Option) => setSelectInfill(option.value)}
+            onSelect={(option: Option) => setSelectInfill(typeof option.value === 'string' ? Number(option.value) : option.value as number)}
+            defaultValue={selectedFile ? selectedFile.infill : ''}
              />
           </div>
         )}

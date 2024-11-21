@@ -12,6 +12,8 @@ import {
   ModelName,
   CustomizeBox,
   Heading,
+  LoadingWrapper,
+  
 } from './styles';
 import { customize, vector_black } from '../../../constants';
 import Accordion from './Accordion';
@@ -71,7 +73,8 @@ const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  
 
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const activeFile = useMemo(() => {
@@ -146,6 +149,7 @@ const CustomizeTab: React.FC = () => {
         const blob = await response.blob();
         await saveFile(fileUrl, blob);
         console.log('File saved to IndexedDB');
+        setIsPageLoading(false); 
       } catch (error) {
         console.error('Error saving file to IndexedDB:', error);
       }
@@ -157,6 +161,7 @@ const CustomizeTab: React.FC = () => {
       }
     });
   }, [files]);
+
   // Get specifications
   const fetchSpec = useCallback(async () => {
     try {
@@ -172,7 +177,7 @@ const CustomizeTab: React.FC = () => {
     fetchSpec();
   }, [fetchSpec]);
 
-  // Get weight for stl file
+
   const selectedMat = useSelector(
     (state: any) =>
       state.fileDetails.files.find(
@@ -226,17 +231,26 @@ const CustomizeTab: React.FC = () => {
 
   const updateData = useCallback(async () => {
     if (!activeFileId || !orderId) return;
+    console.log('color', selectedColor);
+    console.log('material', selectedMate);
+    console.log('printer', selectedPrinter);
+    console.log('unit', selectUnit);
+    console.log('infill', selectInfill);
+    console.log('technology', activeFile?.technology);
     try {
       const formData = new FormData();
-      formData.append('color', selectedColor);
       formData.append('material', selectedMate);
+      formData.append('color', selectedColor);
       formData.append('printer', selectedPrinter);
-      formData.append('infill', activeFile.infill.toString());
+      formData.append('infill', String(selectInfill));
       formData.append('unit', selectUnit);
-      formData.append('weight', activeFile?.weight.toString() || '');
       formData.append('technology', activeFile?.technology || '');
-console.log('Form data:', selectInfill, selectUnit, selectedColor, selectedMate, selectedPrinter, activeFile?.weight.toString(), activeFile?.technology || '', activeFile?.infill.toString());
-      console.log('Form data:', formData);
+
+      
+
+      
+
+
       const response = await api.put(`/update-user-order/${orderId}/${activeFileId}`, formData);
       console.log('Data updated successfully:', response);
     } catch (error) {
@@ -268,25 +282,32 @@ console.log('Form data:', selectInfill, selectUnit, selectedColor, selectedMate,
     setViewerOpen(false);
   }, []);
 
+
+  const getFileColor = useCallback(
+    (file: FileData) => {
+      return activeFileId === file._id ? selectedColor : '';
+    },
+    [activeFileId, selectedColor] 
+  );
+
   const handleApplySelection = async () => {
     setIsLoading(true);
     if (!activeFile) return;
     try {
-      // todo : store dimension in redux
+      // scale stl
+      if (
+        updateWidth !== activeFile?.width ||
+        updateHeight !== activeFile?.height ||
+        updateLength !== activeFile?.length
+      ) {
+        await scaleStl();
+      }
 
       // get weight
       await getWeight();
 
-      // scale stl
-      if (updateWidth > 0 && updateHeight > 0 && updateLength > 0) {
-        await scaleStl();
-      }
-
-      // // update data
-      // if (selectedColor || selectedMate || selectedPrinter || selectInfill) {
-      //   console.log('api update call')
-      //   await updateData();
-      // }
+      // update data
+        await updateData();
 
       // Handle success response
     } catch (error) {
@@ -297,6 +318,16 @@ console.log('Form data:', selectInfill, selectUnit, selectedColor, selectedMate,
       setIsLoading(false);
     }
   };
+
+  if (isPageLoading) {
+    return (
+      <LoadingWrapper>
+        <Loader />
+        <p>Loading details...</p>
+      </LoadingWrapper>
+    );
+  }
+
 
   return (
     <Wrapper>
@@ -330,7 +361,7 @@ console.log('Form data:', selectInfill, selectUnit, selectedColor, selectedMate,
                   <span className="model-preview">
                     <ViewModelStl
                       fileUrl={file.fileUrl}
-                      modelColor={activeFileId === file._id ? selectedColor : ''}
+                      modelColor={getFileColor(file)}
                     />
                   </span>
                   <span
@@ -413,10 +444,13 @@ console.log('Form data:', selectInfill, selectUnit, selectedColor, selectedMate,
             )}
           </div>
           <Button
-      className="apply-button"
-      disabled={isApplyButtonDisabled || isLoading}
-      onClick={handleApplySelection}
-    >
+            className="apply-button"
+            disabled={isApplyButtonDisabled || isLoading}
+            onClick={handleApplySelection}
+            style={{
+              background: isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
+            }}
+          >
      Apply Selection
       {isLoading && <Loader />}
     </Button>
