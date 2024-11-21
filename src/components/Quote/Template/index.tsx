@@ -37,7 +37,7 @@ const QuoteTemplate: React.FC = () => {
   const [showNegotiate, setShowNegotiate] = useState<boolean>(false);
   const [updatedQuote, setUpdatedQuote] = useState<QuoteData | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
-
+  
   async function getQuotes() {
     const res = await api.get(`/get-all-quotes/${orderId}`);
     setAllQuotes(res.data.data);
@@ -51,7 +51,7 @@ const QuoteTemplate: React.FC = () => {
 
   const handlePriceChange = (index: number, newPrice: string): void => {
     if (quote) {
-      const newFiles = [...quote.files];
+      const newFiles = updatedQuote? [...updatedQuote.files] : [...quote.files];
       newFiles[index] = {
         ...newFiles[index],
         price: parseFloat(newPrice) || 0,
@@ -62,13 +62,13 @@ const QuoteTemplate: React.FC = () => {
         0
       );
 
-      const updatedQuote = {
+      const updatedNewQuote = {
         ...quote,
         files: newFiles,
         totalPrice: updatedTotalPrice,
       };
       // setQuote(updatedQuote); // Update the main quote state
-      setUpdatedQuote(updatedQuote); // Track updated data
+      setUpdatedQuote(updatedNewQuote); // Track updated data
     }
   };
 
@@ -350,14 +350,14 @@ const QuoteTemplate: React.FC = () => {
               textAlign="right"
               sx={{ fontWeight: '800' }}
             >
-              ${quote.totalPrice + (quote.tax * quote.totalPrice) / 100}
+              ${(quote.totalPrice + (quote.tax * quote.totalPrice) / 100).toFixed(2)}
             </Typography>
             {showNegotiate && (
               <Typography variant="body1" fontWeight="bold" textAlign="right">
                 $
-                {(updatedQuote?.totalPrice ?? 0) +
+                {((updatedQuote?.totalPrice ?? 0) +
                   ((updatedQuote?.tax ?? 0) * (updatedQuote?.totalPrice ?? 0)) /
-                    100}
+                    100).toFixed(2)}
               </Typography>
             )}
           </Box>
