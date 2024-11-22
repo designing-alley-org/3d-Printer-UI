@@ -18,27 +18,26 @@ export const ContactBtn = styled.section`
     width: 80%;
   }
   div {
-    width: 20%;
+    width: 25%;
     background: white;
-        padding: 1rem 4rem;
+    padding: 1rem 4rem;
     border-top-left-radius: 4rem;
     button {
-        background: #0066FF;
-    border-radius: 4rem;
-    padding: 0.5rem 3rem;
-    &::before {
-    content: '';
-      content: '';
-    position: absolute;
-    margin-top: -0.4rem;
-    margin-left: -10.4rem;
-    background-color: transparent;
-    width: 2.05rem;
-    height: 5rem;
-    rotate: 270deg;
-    border-bottom-left-radius: 9rem;
-    box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
+      background: #0066ff;
+      border-radius: 4rem;
+      padding: 0.8rem 4rem;
+      &::before {
+        content: '';
+        position: absolute;
+        margin-top: -0.2rem;
+        margin-left: -11.4rem;
+        background-color: transparent;
+        width: 2.05rem;
+        height: 5rem;
+        rotate: 270deg;
+        border-bottom-left-radius: 9rem;
+        box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
       }
-}}
+    }
   }
 `;

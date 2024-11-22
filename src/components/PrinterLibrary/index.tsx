@@ -3,8 +3,29 @@ import { useEffect, useState } from 'react';
 import PrinterLibraryCard from './printerLibraryCard';
 import { styled } from 'styled-components';
 // import { IPrinterDetails } from '../../store/types';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import api from '../../axiosConfig';
 // import { RootState } from '../../store/types';
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 5,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
 
 const PrinterLibrary = () => {
   //   const dispatch: AppDispatch = useDispatch();
@@ -36,16 +57,22 @@ const PrinterLibrary = () => {
       <h3>Check Our Comprehensive printer Library For all your Needs</h3>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
-      <div className="cards">
-        {printerDetails?.data?.map((item: any, idx: number) => (
-          <PrinterLibraryCard
-            key={idx}
-            title={item.Name}
-            subTitle={item.Model}
-            desc={item.printerName}
-            data={item}
-          />
-        ))}
+      <div className="cards" style={{ width: '100%' }}>
+        <Carousel responsive={responsive}>
+          {printerDetails ? (
+            printerDetails.data?.map((item: any, idx: number) => (
+              <PrinterLibraryCard
+                key={idx}
+                title={item.Name}
+                subTitle={item.Model}
+                desc={item.printerName}
+                data={item}
+              />
+            ))
+          ) : (
+            <div>No Printers Available</div>
+          )}
+        </Carousel>
       </div>
     </Wrapper>
   );
@@ -53,9 +80,11 @@ const PrinterLibrary = () => {
 const Wrapper = styled.section`
   margin: 4rem;
   .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 4rem;
+    li {
+      flex: unset !important;
+      margin: 2rem;
+      width: unset !important;
+    }
   }
 `;
 

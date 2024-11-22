@@ -21,28 +21,6 @@ export const Header = styled.header`
     padding: 1rem 1rem 0rem 1rem;
     display: flex;
     flex-direction: column;
-
-    &::after {
-      content: '';
-      position: absolute;
-      width: 4.1rem;
-      height: 2.75rem;
-      margin-top: -3.5rem;
-      margin-left: 16.8rem;
-      background-color: #e8f1ff;
-      border-radius: 2.3125rem 0px 0px 0px;
-    }
-    &::before {
-      content: '';
-      position: absolute;
-      background-color: transparent;
-      width: 5.25rem;
-      height: 1.5rem;
-      margin-left: 11.8rem;
-      margin-top: -2.5rem;
-      border-bottom-right-radius: 8.25rem;
-      box-shadow: 0.313rem 0.74rem 0 0 #e8f1ff;
-    }
   }
   img {
     border-radius: 2rem 2rem 0rem 0rem;
