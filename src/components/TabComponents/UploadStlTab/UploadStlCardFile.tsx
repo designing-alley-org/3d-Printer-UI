@@ -62,15 +62,15 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     }, [file.file]);
 
     const handleQuantityChange = useCallback((operation: 'set' | 'increase' | 'decrease', value?: number) => {
-      const minLimit = 1;
+      // const minLimit = 1;
       const maxLimit = 999;
       let newQuantity = 0;
       if (operation === 'set') {
-        newQuantity = Math.max(Math.min(value || 0, maxLimit), minLimit);
+        newQuantity = Math.max(Math.min(value || 0, maxLimit), 0);
       } else {
         newQuantity = operation === 'increase' 
           ? Math.min(file.quantity + 1, maxLimit)
-          : Math.max(file.quantity - 1, minLimit);
+          : Math.max(file.quantity - 1, 1);
       }
       
       if (newQuantity !== file.quantity) {

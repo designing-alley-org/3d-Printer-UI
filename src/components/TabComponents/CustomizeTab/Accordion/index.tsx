@@ -70,7 +70,7 @@ const Accordion: React.FC<AccordionProps> = ({
   setSelectedColor,
   setSelectedPrinter,
   setSelectUnit,
-  setSelectInfill
+  setSelectInfill,
 }) => {
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [printerData, setPrinterData] = useState([]);
@@ -107,8 +107,6 @@ const Accordion: React.FC<AccordionProps> = ({
     });
   }, [dimansions]);
 
- 
-
   useEffect(() => {
     if (dataspec) {
       setColorBtnData(dataspec.color || []);
@@ -117,15 +115,19 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [dataspec]);
 
-  const convertDimensions = (value: number, fromUnit: 'mm' | 'inch', toUnit: 'mm' | 'inch') => {
+  const convertDimensions = (
+    value: number,
+    fromUnit: 'mm' | 'inch',
+    toUnit: 'mm' | 'inch'
+  ) => {
     if (fromUnit === toUnit) return value;
-    return fromUnit === 'mm' 
-      ? value * MM_TO_INCH 
-      : value * INCH_TO_MM;
+    return fromUnit === 'mm'
+      ? Math.abs(value * MM_TO_INCH)
+      : Math.abs(value * INCH_TO_MM);
   };
 
   // Update useEffect to set dimensions from selectedFile
-useEffect(() => {
+  useEffect(() => {
     if (selectedFile?.dimensions) {
       setSelectSize(selectedFile.unit);
       const initialDimensions = {
@@ -136,7 +138,7 @@ useEffect(() => {
       setDimensions(initialDimensions);
       setOriginalDimensions(initialDimensions);
     }
-  }, [selectedFile]);
+  }, [selectedFile?.dimensions]);
 
   const dispatch = useDispatch();
 
@@ -175,7 +177,6 @@ useEffect(() => {
     }
   }, [selectedColor]);
 
-
   // send printer corresponding to selectedId to store
   useEffect(() => {
     if (selectedPrinter && selectedId) {
@@ -203,7 +204,7 @@ useEffect(() => {
       dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
     }
   }, [selectedPrinter]);
-  
+
   useEffect(() => {
     setUpdateHeight(dimensions.height);
     setUpdateWidth(dimensions.width);
@@ -212,14 +213,14 @@ useEffect(() => {
 
   const handleUnitChange = (option: Option) => {
     const newUnit = option.value as 'mm' | 'inch';
-    
+
     // Ensure conversion happens only when units actually change
     if (newUnit !== unit) {
       // Convert current dimensions when unit changes
       const convertedDimensions = {
-        height: convertDimensions(dimensions.height, unit, newUnit),
-        width: convertDimensions(dimensions.width, unit, newUnit),
-        length: convertDimensions(dimensions.length, unit, newUnit)
+        height: convertDimensions(dimensions.height.toFixed(3), unit, newUnit),
+        width: convertDimensions(dimensions.width.toFixed(3), unit, newUnit),
+        length: convertDimensions(dimensions.length.toFixed(3), unit, newUnit),
       };
       setDimensions(convertedDimensions);
       setUnit(newUnit);
@@ -228,15 +229,15 @@ useEffect(() => {
   };
 
   // Handle input changes
-  const handleChange = (field: 'height' | 'width' | 'length') => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = Number(event.target.value);
-    setDimensions(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  const handleChange =
+    (field: 'height' | 'width' | 'length') =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = Number(event.target.value);
+      setDimensions((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
 
   // Revert to original dimensions
   const handleRevert = () => {
@@ -273,66 +274,68 @@ useEffect(() => {
               <Dropdown
                 options={sizeOption}
                 onSelect={handleUnitChange}
-                defaultValue={selectedFile ? selectedFile.unit : "mm"}
+                defaultValue={selectedFile ? selectedFile.unit : 'mm'}
               />
               <TextField
                 type="number"
                 // label="Height"
                 variant="outlined"
-                className='fields'
-                value={dimensions.height}
+                className="fields"
+                value={dimensions.height.toFixed(2)}
                 onChange={handleChange('height')}
                 inputProps={{
                   inputMode: 'numeric',
                   pattern: '[0-9]*',
-                  style: { 
+                  style: {
                     // Optional: add any additional input styles here
                     textAlign: 'left',
-                    paddingRight: '8px'
-                  }
+                    paddingRight: '8px',
+                  },
                 }}
-                />
+              />
               <TextField
                 type="number"
                 // label="Width"
                 variant="outlined"
-                className='fields'
-                value={dimensions.width}
+                className="fields"
+                value={dimensions.width.toFixed(2)}
                 onChange={handleChange('width')}
                 inputProps={{
                   inputMode: 'numeric',
                   pattern: '[0-9]*',
-                  style: { 
+                  style: {
                     // Optional: add any additional input styles here
                     textAlign: 'left',
-                    paddingRight: '8px'
-                  }
+                    paddingRight: '8px',
+                  },
                 }}
               />
               <TextField
                 type="number"
                 // label="Length"
                 variant="outlined"
-                className='fields'
-                value={dimensions.length}
+                className="fields"
+                value={dimensions.length.toFixed(2)}
                 onChange={handleChange('length')}
                 inputProps={{
                   inputMode: 'numeric',
                   pattern: '[0-9]*',
-                  style: { 
+                  style: {
                     // Optional: add any additional input styles here
                     textAlign: 'left',
-                    paddingRight: '8px'
-                  }
+                    paddingRight: '8px',
+                  },
                 }}
               />
             </div>
             <div className="revert">
-              <Button className="btn" onClick={handleRevert}>Revert to original</Button>
+              <Button className="btn" onClick={handleRevert}>
+                Revert to original
+              </Button>
               {dimansions && (
                 <p>
-              {originalDimensions.height} mm x {originalDimensions.width} mm x {originalDimensions.length} mm
-
+                  {originalDimensions.height} mm x {originalDimensions.width} mm
+                  x {originalDimensions.length} mm
                 </p>
               )}
             </div>
@@ -435,10 +438,17 @@ useEffect(() => {
         )}
         {id === '6' && (
           <div className="infill">
-            <Dropdown options={options} 
-            onSelect={(option: Option) => setSelectInfill(typeof option.value === 'string' ? Number(option.value) : option.value as number)}
-            defaultValue={selectedFile ? selectedFile.infill : ''}
-             />
+            <Dropdown
+              options={options}
+              onSelect={(option: Option) =>
+                setSelectInfill(
+                  typeof option.value === 'string'
+                    ? Number(option.value)
+                    : (option.value as number)
+                )
+              }
+              defaultValue={selectedFile ? selectedFile.infill : ''}
+            />
           </div>
         )}
       </div>
