@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,7 +14,6 @@ import {
   CustomizeBox,
   Heading,
   LoadingWrapper,
-  
 } from './styles';
 import { customize, vector_black } from '../../../constants';
 import Accordion from './Accordion';
@@ -24,7 +24,7 @@ import {
   addAllFiles,
   updateWeight,
   updateUnit,
-  updateInfill
+  updateInfill,
 } from '../../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
 
@@ -74,7 +74,6 @@ const CustomizeTab: React.FC = () => {
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
-  
 
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const activeFile = useMemo(() => {
@@ -130,16 +129,16 @@ const CustomizeTab: React.FC = () => {
     }
   }, [selectUnit]);
 
-   // send infill corresponding to selectedId to store
-   useEffect(() => {
+  // send infill corresponding to selectedId to store
+  useEffect(() => {
     if (selectInfill && activeFileId) {
       dispatch(updateInfill({ id: activeFileId, infill: selectInfill }));
     }
   }, [selectInfill]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setWeight(null);
-  },[activeFileId])
+  }, [activeFileId]);
 
   // Store files in IndexedDB
   useEffect(() => {
@@ -150,12 +149,17 @@ const CustomizeTab: React.FC = () => {
         await saveFile(file.fileUrl, blob);
         console.log(`File ${file.fileName} saved to IndexedDB`);
       } catch (error) {
-        console.error(`Error saving file ${file.fileName} to IndexedDB:`, error);
+        console.error(
+          `Error saving file ${file.fileName} to IndexedDB:`,
+          error
+        );
       }
     };
 
     const storeAllFiles = async () => {
-      await Promise.all(files.map(file => file.fileUrl ? storeFileInIndexedDB(file) : null));
+      await Promise.all(
+        files.map((file) => (file.fileUrl ? storeFileInIndexedDB(file) : null))
+      );
       setIsPageLoading(false);
     };
 
@@ -178,7 +182,6 @@ const CustomizeTab: React.FC = () => {
   useEffect(() => {
     fetchSpec();
   }, [fetchSpec]);
-
 
   const selectedMat = useSelector(
     (state: any) =>
@@ -231,33 +234,38 @@ const CustomizeTab: React.FC = () => {
     }
   }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
 
-  console.log('matrial',activeFile?.material);
-
-  const updateData = useCallback(async () => {
-    if (!activeFileId || !orderId) return;
-    try {
-      const formData = new FormData();
-      formData.append('material', activeFile?.material || '');
-      formData.append('color', activeFile?.color || '');
-      formData.append('printer', activeFile?.printer || '');
-      formData.append('infill', activeFile?.infill || '');
-      formData.append('unit', activeFile?.unit || '');
-      formData.append('technology', activeFile?.technology || '');
-      const response = await api.put(`/update-user-order/${orderId}/${activeFileId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Data updated successfully:', response);
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
-  }, [activeFileId, orderId]);
+  const updateData = useCallback(
+    async (activeFile: any) => {
+      if (!activeFileId || !orderId) return;
+      try {
+        const formData = new FormData();
+        formData.append('material', activeFile?.material || '');
+        formData.append('color', activeFile?.color || '');
+        formData.append('printer', activeFile?.printer || '');
+        formData.append('infill', activeFile?.infill || '');
+        formData.append('unit', activeFile?.unit || '');
+        formData.append('technology', activeFile?.technology || '');
+        const response = await api.put(
+          `/update-user-order/${orderId}/${activeFileId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+        console.log('Data updated successfully:', response);
+      } catch (error) {
+        console.error('Error updating data:', error);
+      }
+    },
+    [activeFileId, orderId]
+  );
 
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    const { color, material, technology, printer , infill } = activeFile;
+    const { color, material, technology, printer, infill } = activeFile;
     if (color && material && technology && printer && infill) return false;
     return true;
   }, [activeFile]);
@@ -279,14 +287,12 @@ const CustomizeTab: React.FC = () => {
     setViewerOpen(false);
   }, []);
 
-
   const getFileColor = useCallback(
     (file: FileData) => {
       return activeFileId === file._id ? selectedColor : '';
     },
-    [activeFileId, selectedColor] 
+    [activeFileId, selectedColor]
   );
-
   const handleApplySelection = async () => {
     setIsLoading(true);
     if (!activeFile) return;
@@ -299,19 +305,17 @@ const CustomizeTab: React.FC = () => {
       ) {
         await scaleStl();
       }
-
       // get weight
       await getWeight();
 
       // update data
-        await updateData();
+      await updateData(activeFile);
 
       // Handle success response
     } catch (error) {
       console.error('Error applying selection:', error);
       // Handle error response
-    }
-    finally{
+    } finally {
       setIsLoading(false);
     }
   };
@@ -324,7 +328,6 @@ const CustomizeTab: React.FC = () => {
       </LoadingWrapper>
     );
   }
-
 
   return (
     <Wrapper>
@@ -445,12 +448,13 @@ const CustomizeTab: React.FC = () => {
             disabled={isApplyButtonDisabled || isLoading}
             onClick={handleApplySelection}
             style={{
-              background: isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
+              background:
+                isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
             }}
           >
-     Apply Selection
-      {isLoading && <Loader />}
-    </Button>
+            Apply Selection
+            {isLoading && <Loader />}
+          </Button>
         </Customize>
       </Filescomponent>
       <ViewerStlModel
