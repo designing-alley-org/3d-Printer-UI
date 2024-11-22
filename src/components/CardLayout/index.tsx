@@ -53,13 +53,18 @@ const CardLayout = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
-  const [allPrinter, setAllPrinter] = useState(false);
+const [allPrinterSelected, setAllPrinterSelected] = useState(false);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   
+
+    // Check if all files have a printer selected
   // useEffect(() => {
-  //   const allPrinterExist = fileDetails.some((file : any) => file.printer !== '');
-  //   setAllPrinter(allPrinterExist);
-  // }, [fileDetails]);
+  //   if (pathname.includes(ROUTES.CUSTOMIZE)) {
+  //     const allPrintersSelected = fileDetails.every((file: any) => file.printer !== null);
+
+  //     setAllPrinterSelected(allPrintersSelected);
+  //   }
+  // }, [fileDetails, pathname]);
   
 
 
