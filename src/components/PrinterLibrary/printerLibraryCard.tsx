@@ -59,20 +59,20 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <img src={mat} />
             <span className="name">Material Compatibility</span>
           </span>
-         <div style={{display:"flex"}}>
-         {item.materialCompatibility.map((mat: any, idx: number) => (
-            <span key={idx} className="desc">
-              {mat.material_name}
-            </span>
-          ))}
-         </div>
+          <div style={{ display: 'flex' }}>
+            {item.materialCompatibility.map((mat: any, idx: number) => (
+              <span key={idx} className="desc">
+                {mat.material_name}
+              </span>
+            ))}
+          </div>
         </span>
         <span className="data">
           <span className="head">
             <img src={tech} />
             <span className="name">Technology Type</span>
           </span>
-          <span className="desc">{item.technologyType}</span>
+          <span className="desc">{item?.technologyType}</span>
         </span>
       </>
     );
