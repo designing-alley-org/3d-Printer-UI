@@ -143,23 +143,25 @@ const CustomizeTab: React.FC = () => {
 
   // Store files in IndexedDB
   useEffect(() => {
-    const storeFileInIndexedDB = async (fileUrl: string) => {
+    const storeFileInIndexedDB = async (file: FileData) => {
       try {
-        const response = await fetch(fileUrl);
+        const response = await fetch(file.fileUrl);
         const blob = await response.blob();
-        await saveFile(fileUrl, blob);
-        console.log('File saved to IndexedDB');
-        setIsPageLoading(false); 
+        await saveFile(file.fileUrl, blob);
+        console.log(`File ${file.fileName} saved to IndexedDB`);
       } catch (error) {
-        console.error('Error saving file to IndexedDB:', error);
+        console.error(`Error saving file ${file.fileName} to IndexedDB:`, error);
       }
     };
 
-    files.forEach((file) => {
-      if (file.fileUrl) {
-        storeFileInIndexedDB(file.fileUrl);
-      }
-    });
+    const storeAllFiles = async () => {
+      await Promise.all(files.map(file => file.fileUrl ? storeFileInIndexedDB(file) : null));
+      setIsPageLoading(false);
+    };
+
+    if (files.length > 0) {
+      storeAllFiles();
+    }
   }, [files]);
 
   // Get specifications
@@ -229,29 +231,23 @@ const CustomizeTab: React.FC = () => {
     }
   }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
 
+  console.log('matrial',activeFile?.material);
+
   const updateData = useCallback(async () => {
     if (!activeFileId || !orderId) return;
-    console.log('color', selectedColor);
-    console.log('material', selectedMate);
-    console.log('printer', selectedPrinter);
-    console.log('unit', selectUnit);
-    console.log('infill', selectInfill);
-    console.log('technology', activeFile?.technology);
     try {
       const formData = new FormData();
-      formData.append('material', selectedMate);
-      formData.append('color', selectedColor);
-      formData.append('printer', selectedPrinter);
-      formData.append('infill', String(selectInfill));
-      formData.append('unit', selectUnit);
+      formData.append('material', activeFile?.material || '');
+      formData.append('color', activeFile?.color || '');
+      formData.append('printer', activeFile?.printer || '');
+      formData.append('infill', activeFile?.infill || '');
+      formData.append('unit', activeFile?.unit || '');
       formData.append('technology', activeFile?.technology || '');
-
-      
-
-      
-
-
-      const response = await api.put(`/update-user-order/${orderId}/${activeFileId}`, formData);
+      const response = await api.put(`/update-user-order/${orderId}/${activeFileId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       console.log('Data updated successfully:', response);
     } catch (error) {
       console.error('Error updating data:', error);
@@ -266,6 +262,7 @@ const CustomizeTab: React.FC = () => {
     return true;
   }, [activeFile]);
 
+  // For Viewer
   const handleSetActiveFile = useCallback((fileId: string) => {
     setActiveFileId(fileId);
   }, []);
@@ -361,7 +358,7 @@ const CustomizeTab: React.FC = () => {
                   <span className="model-preview">
                     <ViewModelStl
                       fileUrl={file.fileUrl}
-                      modelColor={getFileColor(file)}
+                      modelColor={file.color ? file.color : getFileColor(file)}
                     />
                   </span>
                   <span
