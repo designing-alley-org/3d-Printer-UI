@@ -20,7 +20,7 @@ export const fileNumber : SxProps ={
   marginRight: '1rem',
   backgroundColor: '#66A3FF',
 }
-
+export const errorText: SxProps = { color: 'red' }; 
 export const viewBox: SxProps = {
   width: '20%',
 };

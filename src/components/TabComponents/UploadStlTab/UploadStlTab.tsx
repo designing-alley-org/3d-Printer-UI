@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/system';
 import UploadStlCardFile from './UploadStlCardFile';
@@ -6,6 +6,8 @@ import * as styles from './styles';
 import { plus } from '../../../constants';
 import { uploadDimBtnData } from '../../../constants';
 import { saveFile } from '../../../utils/indexedDB';
+import { useParams } from 'react-router-dom';
+import api from '../../../axiosConfig';
 
 interface ModelDimensions {
   height: number;
@@ -14,17 +16,14 @@ interface ModelDimensions {
 }
 
 interface FileData {
-  id: string;
-  name: string;
-  dimensions: {
-    height: number;
-    width: number;
-    length: number;
-  };
+  _id: string;
+  fileName: string;
+  dimensions: ModelDimensions;
   fileUrl: string;
   fileBlob?: Blob;
-  file: File; // Added file property
+  file?: File;
   quantity: number;
+  unit: string;
 }
 
 interface UploadStlTabProps {
@@ -35,84 +34,153 @@ interface UploadStlTabProps {
 const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
+  const [fileUnit, setFileUnit] = useState<string>('');
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { orderId } = useParams();
 
+  console.log('files:', files);
+
+  // Fetch initial files
+  useEffect(() => {
+    const fetchOrderFiles = async () => {
+      try {
+        if (orderId) {
+          const response = await api.get(`/order-show/${orderId}`);
+          const fetchedFiles = response.data.message.files.map((file: FileData) => ({
+            ...file,
+          }));
+          setFiles(fetchedFiles);
+        }
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
+    
+    fetchOrderFiles();
+  }, [orderId]);
+
+  // Handle file uploads
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const fileList = event.target.files;
-      if (fileList && fileList.length > 0) {
-        const newFiles = Array.from(fileList).filter(
-          (file) =>
-            file.type === 'application/vnd.ms-pki.stl' ||
-            file.name.toLowerCase().endsWith('.stl')
-        );
-  
-        if (newFiles.length === 0) {
-          alert('Please upload only STL files');
-          return;
-        }
-  
-        const filesData: FileData[] = newFiles.map((file) => ({
-          id: `${file.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          name: file.name,
-          dimensions: {
-            height: 0,
-            width: 0,
-            length: 0,
-          },
-          fileUrl: '', // Will be set after saving to IndexedDB
-          quantity: 1,
-          file: file,
-        }));
-  
-        setFiles((prevFiles) => [...prevFiles, ...filesData]);
-        setActiveFileId(filesData[0].id);
+      if (!fileList || fileList.length === 0) return;
+
+      const newFiles = Array.from(fileList).filter(
+        (file) =>
+          file.type === 'application/vnd.ms-pki.stl' ||
+          file.name.toLowerCase().endsWith('.stl')
+      );
+      if (newFiles.length === 0) {
+        alert('Please upload only STL files');
+        return;
       }
+
+      const filesData: FileData[] = newFiles.map((file) => ({
+        _id: `${file.name}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        fileName: file.name,
+        dimensions: {
+          height: 0,
+          width: 0,
+          length: 0,
+        },
+        fileUrl: URL.createObjectURL(file),
+        file,
+        quantity: 1,
+        unit: 'mm'
+      }));
+
+      setFiles((prevFiles) => [...prevFiles, ...filesData]);
+      setActiveFileId(filesData[0]._id);
+
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     },
-    [setFiles, setActiveFileId]
+    [files, selectedUnit]
   );
 
-
+  // Handle unit changes
   const handleUnitClick = useCallback((unit: string) => {
     setSelectedUnit(unit);
-  }, []);
+    setFiles((prevFiles) =>
+      prevFiles.map((file) => ({
+        ...file,
+        unit
+      }))
+    );
+  }, [setFiles]);
 
+  // Handle file removal
   const handleRemoveFile = useCallback(
     (fileId: string) => {
-      setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
-      if (activeFileId === fileId) {
-        setActiveFileId(null);
-      }
+      setFiles((prevFiles) => {
+        const fileToRemove = prevFiles.find(file => file._id === fileId);
+        if (fileToRemove?.fileUrl) {
+          URL.revokeObjectURL(fileToRemove.fileUrl);
+        }
+        return prevFiles.filter((file) => file._id !== fileId);
+      });
+
+      setActiveFileId((prevActiveFileId) => (prevActiveFileId === fileId ? null : prevActiveFileId));
     },
-    [activeFileId, setFiles]
+    [setFiles]
   );
 
+  // Handle quantity updates
   const handleUpdateQuantity = useCallback(
     (fileId: string, newQuantity: number) => {
+      if (newQuantity < 1) return;
+      
       setFiles((prevFiles) =>
         prevFiles.map((file) =>
-          file.id === fileId ? { ...file, quantity: newQuantity } : file
+          file._id === fileId ? { ...file, quantity: newQuantity } : file
         )
       );
     },
     [setFiles]
   );
 
+  // Handle dimension updates
   const handleUpdateDimensions = useCallback(
     (fileId: string, dimensions: ModelDimensions) => {
       setFiles((prevFiles) =>
         prevFiles.map((file) =>
-          file.id === fileId ? { ...file, dimensions } : file
+          file._id === fileId ? { ...file, dimensions } : file
         )
       );
     },
     [setFiles]
   );
 
-  const convertDimensions = (dimensions: ModelDimensions, unit: string) => {
+  // Store files in IndexedDB for backend fetched files only
+  useEffect(() => {
+    const storeFileInIndexedDB = async (file: FileData) => {
+      try {
+        if (!file.fileUrl || file.file) return; 
+        const response = await fetch(file.fileUrl);
+        const blob = await response.blob();
+        await saveFile(file.fileUrl, blob);
+        console.log(`File ${file.fileName} saved to IndexedDB`);
+      } catch (error) {
+        console.error(`Error saving file ${file.fileName} to IndexedDB:`, error);
+      }
+    };
+
+    const storeAllFiles = async () => {
+      const backendFiles = files.filter(file => !file.file); 
+      await Promise.all(backendFiles.map(storeFileInIndexedDB));
+    };
+
+    if (files.some(file => !file.file)) {
+      storeAllFiles();
+    }
+  }, [files]);
+
+  // Convert dimensions between units
+  const convertDimensions = useCallback((dimensions: ModelDimensions, unit: string): ModelDimensions => {
     const mmToInch = 0.0393701;
     if (unit === 'IN') {
       return {
@@ -122,7 +190,11 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
       };
     }
     return dimensions;
-  };
+  }, []);
+
+  if (isPageLoading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <Box>
@@ -153,7 +225,9 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         <Box sx={styles.fileCountSection}>
           <Typography sx={styles.fileText}>Files</Typography>
           <Box sx={styles.filesBox}>
-            <Typography sx={styles.fileBoxText}>{files?.length}</Typography>
+            <Typography sx={styles.fileBoxText}>
+              {files.length}
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -179,13 +253,14 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         <Box sx={styles.fileCardContainer}>
           {files.map((file) => (
             <UploadStlCardFile
-              key={file.id}
+              key={file._id}
               file={file}
               onRemove={handleRemoveFile}
               onSetActiveFile={setActiveFileId}
               onUpdateQuantity={handleUpdateQuantity}
               onUpdateDimensions={handleUpdateDimensions}
               files={files}
+              // setFileUnit={file.unit}
               activeFileId={activeFileId}
               selectedUnit={selectedUnit}
               convertDimensions={convertDimensions}
