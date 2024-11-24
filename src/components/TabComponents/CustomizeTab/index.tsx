@@ -65,6 +65,7 @@ const CustomizeTab: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedPrinter, setSelectedPrinter] = useState<string>('');
   const [selectUnit, setSelectUnit] = useState<string>('');
+  const [actualUnit, setActualUnit] = useState<string>('');
   const [selectInfill, setSelectInfill] = useState<number>(0);
   const [lenght, setLenght] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
@@ -122,6 +123,15 @@ const CustomizeTab: React.FC = () => {
       width: 0,
     };
   }, [activeFile]);
+
+  // select actual unit from the file
+  useEffect(() => {
+    if (activeFileId && activeFile) {
+      const orginalUnit = files.find((file : any) => file._id === activeFileId)?.unit;
+      setActualUnit(orginalUnit);
+    }
+  }, [activeFileId]);
+
 
   useEffect(() => {
     if (activeFile) {
@@ -427,6 +437,7 @@ const CustomizeTab: React.FC = () => {
                 setUpdateLength={setUpdateLength}
                 setSelectUnit={setSelectUnit}
                 setSelectInfill={setSelectInfill}
+                actualUnit={actualUnit}
                 selectedId={activeFileId as string | null}
                 key={item.id}
                 icon={item.icon}

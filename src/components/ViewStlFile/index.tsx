@@ -56,7 +56,7 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
         URL.revokeObjectURL(fileBlobUrl);
       }
     };
-  }, [fileUrl, localBlobUrl]);
+  }, [fileUrl]);
 
   const handleFinishLoading = useCallback(
     (dimensions: any) => {
