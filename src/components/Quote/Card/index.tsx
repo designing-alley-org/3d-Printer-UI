@@ -2,12 +2,44 @@ import { Box, Typography } from '@mui/material';
 import { QuoteBox } from './styles';
 import Button from '../../../stories/button/Button';
 import Chat from '../Chat';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
 import './style.css';
+import api from '../../../axiosConfig.ts';
+import { useParams } from 'react-router-dom';
+
+interface QuoteItem {
+  fileName: string;
+  quantity: number;
+  price: number;
+}
+
+interface QuoteData {
+  quoteStatus: string;
+  isClosed: boolean;
+  approvedBy: any;
+  tax: number;
+  files: QuoteItem[];
+  Shipping: number;
+  Taxes: number;
+  totalPrice: number;
+  _id: string;
+}
 
 export default function Quote() {
+  const { orderId } = useParams<{ orderId: string }>();
+  const [quote, setQuote] = useState<QuoteData | null>(null);
+  const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
+  async function getQuotes() {
+    const res = await api.get(`/get-all-quotes/${orderId}`);
+    setAllQuotes(res.data.data);
+    setQuote(res.data.data[activeIndex]);
+  }
+  useEffect(() => {
+    getQuotes();
+  }, []);
   return (
     <QuoteBox>
       <Typography
@@ -22,6 +54,7 @@ export default function Quote() {
           <Button
             label="SHOW QUOTE"
             onClick={() => {
+              getQuotes();
               setShowQuote(!showQuote);
             }}
           />
@@ -41,7 +74,15 @@ export default function Quote() {
           zIndex: 1,
         }}
       >
-        {<QuoteTemplate />}
+        {
+          <QuoteTemplate
+            quote={quote}
+            allQuotes={allQuotes}
+            setActiveIndex={setActiveIndex}
+            setQuote={setQuote}
+            getQuotes={getQuotes}
+          />
+        }
       </Box>
       <Box sx={{ height: '100%', width: '100%' }}>
         <Chat />
