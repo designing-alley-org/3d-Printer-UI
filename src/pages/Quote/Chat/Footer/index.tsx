@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import SendIcon from '../../../../assets/images/send.svg';
 import MessageInput from '../../../../stories/MessageInput/MessageInput';
 import { Socket } from 'socket.io-client';
-import { content } from '../../../TabComponents/QuoteTab/styles';
+import { content } from '../../../GetQuote/styles';
 
 interface ChatFooterProps {
   socket: Socket | null;

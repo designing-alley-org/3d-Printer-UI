@@ -5,8 +5,8 @@ import Card from './Card';
 import { CardBox } from './styles';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Button from '../../../../stories/button/Button';
-import api from '../../../../axiosConfig';
+import Button from '../../../stories/button/Button';
+import api from '../../../axiosConfig';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL as string;
 

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import Button from '../../../../stories/button/Button';
+import Button from '../../../stories/button/Button';
 import { Body, Price, Wrapper } from './styles';
-import api from '../../../../axiosConfig';
+import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
 
 interface QuoteProps {

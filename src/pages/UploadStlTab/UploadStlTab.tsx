@@ -3,11 +3,11 @@ import { Box, Button, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/system';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
-import { plus } from '../../../constants';
-import { uploadDimBtnData } from '../../../constants';
-import { saveFile } from '../../../utils/indexedDB';
+import { plus } from '../../constants';
+import { uploadDimBtnData } from '../../constants';
+import { saveFile } from '../../utils/indexedDB';
 import { useParams } from 'react-router-dom';
-import api from '../../../axiosConfig';
+import api from '../../axiosConfig';
 
 interface ModelDimensions {
   height: number;
@@ -47,9 +47,11 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
       try {
         if (orderId) {
           const response = await api.get(`/order-show/${orderId}`);
-          const fetchedFiles = response.data.message.files.map((file: FileData) => ({
-            ...file,
-          }));
+          const fetchedFiles = response.data.message.files.map(
+            (file: FileData) => ({
+              ...file,
+            })
+          );
           setFiles(fetchedFiles);
         }
       } catch (error) {
@@ -58,7 +60,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         setIsPageLoading(false);
       }
     };
-    
+
     fetchOrderFiles();
   }, [orderId]);
 
@@ -89,7 +91,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         fileUrl: URL.createObjectURL(file),
         file,
         quantity: 1,
-        unit: 'mm'
+        unit: 'mm',
       }));
 
       setFiles((prevFiles) => [...prevFiles, ...filesData]);
@@ -103,28 +105,33 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   );
 
   // Handle unit changes
-  const handleUnitClick = useCallback((unit: string) => {
-    setSelectedUnit(unit);
-    setFiles((prevFiles) =>
-      prevFiles.map((file) => ({
-        ...file,
-        unit
-      }))
-    );
-  }, [setFiles]);
+  const handleUnitClick = useCallback(
+    (unit: string) => {
+      setSelectedUnit(unit);
+      setFiles((prevFiles) =>
+        prevFiles.map((file) => ({
+          ...file,
+          unit,
+        }))
+      );
+    },
+    [setFiles]
+  );
 
   // Handle file removal
   const handleRemoveFile = useCallback(
     (fileId: string) => {
       setFiles((prevFiles) => {
-        const fileToRemove = prevFiles.find(file => file._id === fileId);
+        const fileToRemove = prevFiles.find((file) => file._id === fileId);
         if (fileToRemove?.fileUrl) {
           URL.revokeObjectURL(fileToRemove.fileUrl);
         }
         return prevFiles.filter((file) => file._id !== fileId);
       });
 
-      setActiveFileId((prevActiveFileId) => (prevActiveFileId === fileId ? null : prevActiveFileId));
+      setActiveFileId((prevActiveFileId) =>
+        prevActiveFileId === fileId ? null : prevActiveFileId
+      );
     },
     [setFiles]
   );
@@ -133,7 +140,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const handleUpdateQuantity = useCallback(
     (fileId: string, newQuantity: number) => {
       if (newQuantity < 1) return;
-      
+
       setFiles((prevFiles) =>
         prevFiles.map((file) =>
           file._id === fileId ? { ...file, quantity: newQuantity } : file
@@ -159,38 +166,44 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   useEffect(() => {
     const storeFileInIndexedDB = async (file: FileData) => {
       try {
-        if (!file.fileUrl || file.file) return; 
+        if (!file.fileUrl || file.file) return;
         const response = await fetch(file.fileUrl);
         const blob = await response.blob();
         await saveFile(file.fileUrl, blob);
         console.log(`File ${file.fileName} saved to IndexedDB`);
       } catch (error) {
-        console.error(`Error saving file ${file.fileName} to IndexedDB:`, error);
+        console.error(
+          `Error saving file ${file.fileName} to IndexedDB:`,
+          error
+        );
       }
     };
 
     const storeAllFiles = async () => {
-      const backendFiles = files.filter(file => !file.file); 
+      const backendFiles = files.filter((file) => !file.file);
       await Promise.all(backendFiles.map(storeFileInIndexedDB));
     };
 
-    if (files.some(file => !file.file)) {
+    if (files.some((file) => !file.file)) {
       storeAllFiles();
     }
   }, [files]);
 
   // Convert dimensions between units
-  const convertDimensions = useCallback((dimensions: ModelDimensions, unit: string): ModelDimensions => {
-    const mmToInch = 0.0393701;
-    if (unit === 'IN') {
-      return {
-        height: +(dimensions.height * mmToInch).toFixed(2),
-        width: +(dimensions.width * mmToInch).toFixed(2),
-        length: +(dimensions.length * mmToInch).toFixed(2),
-      };
-    }
-    return dimensions;
-  }, []);
+  const convertDimensions = useCallback(
+    (dimensions: ModelDimensions, unit: string): ModelDimensions => {
+      const mmToInch = 0.0393701;
+      if (unit === 'IN') {
+        return {
+          height: +(dimensions.height * mmToInch).toFixed(2),
+          width: +(dimensions.width * mmToInch).toFixed(2),
+          length: +(dimensions.length * mmToInch).toFixed(2),
+        };
+      }
+      return dimensions;
+    },
+    []
+  );
 
   if (isPageLoading) {
     return <Typography>Loading...</Typography>;
@@ -225,9 +238,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         <Box sx={styles.fileCountSection}>
           <Typography sx={styles.fileText}>Files</Typography>
           <Box sx={styles.filesBox}>
-            <Typography sx={styles.fileBoxText}>
-              {files.length}
-            </Typography>
+            <Typography sx={styles.fileBoxText}>{files.length}</Typography>
           </Box>
         </Box>
       </Box>

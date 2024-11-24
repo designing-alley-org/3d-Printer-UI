@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
-import { QuoteBox } from './styles';
-import Button from '../../../stories/button/Button';
-import Chat from '../Chat';
+import { QuoteBox } from './styles.ts';
+import Button from '../../../stories/button/Button.tsx';
+import Chat from '../Chat/index.tsx';
 import { useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
 import './style.css';

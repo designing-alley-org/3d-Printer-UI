@@ -1,8 +1,8 @@
 // QuoteCard.tsx
 // import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { cardItems } from '../../../constants';
-import Card from '../../Card/Card';
+import { cardItems } from '../../constants';
+import Card from '../../components/Card/Card';
 import * as styles from './styles';
 import { styled } from 'styled-components';
 
@@ -11,7 +11,7 @@ const QuoteCard = () => {
     <Wrapper>
       <Box sx={styles.content}>
         <Typography sx={styles.instantQuoteText}>
-        Get Instant live quotes from our merchants!
+          Get Instant live quotes from our merchants!
         </Typography>
 
         <Box sx={styles.cardBox}>

@@ -2,18 +2,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import './styles.css';
-import Dropdown from '../../../../stories/Dropdown/Dropdown';
-import { sizeOption, info, group } from '../../../../constants';
+import Dropdown from '../../../stories/Dropdown/Dropdown';
+import { sizeOption, info, group } from '../../../constants';
 import { Button, TextField } from '@mui/material';
-import PrinterCard from '../../../PrinterCard';
+import PrinterCard from '../../../components/PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   updateColor,
   updateMaterial,
   updatePrinter,
   updateTechnology,
-} from '../../../../store/customizeFilesDetails/reducer';
-import api from '../../../../axiosConfig';
+} from '../../../store/customizeFilesDetails/reducer';
+import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
 
 interface AccordionProps {
@@ -117,8 +117,6 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [dataspec]);
 
- 
-
   // Update useEffect to set dimensions from selectedFile
   useEffect(() => {
     if (selectedFile?.dimensions) {
@@ -203,7 +201,7 @@ const Accordion: React.FC<AccordionProps> = ({
     setUpdateWidth(dimensions.width);
     setUpdateLength(dimensions.length);
   }, [dimensions, setUpdateHeight, setUpdateWidth, setUpdateLength]);
-  
+
   const convertDimensions = (
     value: number,
     fromUnit: 'mm' | 'inch',
@@ -338,8 +336,9 @@ const Accordion: React.FC<AccordionProps> = ({
               </Button>
               {dimansions && (
                 <p>
-                  {originalDimensions.height} {actualUnit} x {originalDimensions.width} {actualUnit}
-                  x {originalDimensions.length} {actualUnit}
+                  {originalDimensions.height} {actualUnit} x{' '}
+                  {originalDimensions.width} {actualUnit}x{' '}
+                  {originalDimensions.length} {actualUnit}
                 </p>
               )}
             </div>
@@ -451,7 +450,7 @@ const Accordion: React.FC<AccordionProps> = ({
                     : (option.value as number)
                 )
               }
-            defaultValue={selectedFile ? String(selectedFile.infill) : ''}
+              defaultValue={selectedFile ? String(selectedFile.infill) : ''}
             />
           </div>
         )}

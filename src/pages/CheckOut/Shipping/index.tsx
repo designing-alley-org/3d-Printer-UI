@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Typography } from '@mui/material';
-import Input from '../../../../stories/StandardInput/Input';
+import Input from '../../../stories/StandardInput/Input';
 import { InputWrapper, SubHeader, Wrapper } from './style';
-import { inputFields } from '../../../../constants';
+import { inputFields } from '../../../constants';
 // import Button from '../../../../stories/button/Button';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../../../axiosConfig';
+import api from '../../../axiosConfig';
 
 const ShippingDetails: React.FC = () => {
   const {

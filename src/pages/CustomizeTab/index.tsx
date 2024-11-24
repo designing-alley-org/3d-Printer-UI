@@ -15,26 +15,26 @@ import {
   Heading,
   LoadingWrapper,
 } from './styles';
-import { customize, vector_black } from '../../../constants';
+import { customize, vector_black } from '../../constants';
 import Accordion from './Accordion';
-import materialIcon from '../../../assets/icons/materialIcon.svg';
-import colorIcon from '../../../assets/icons/colorIcon.svg';
-import printerIcon from '../../../assets/icons/printerIcon.svg';
+import materialIcon from '../../assets/icons/materialIcon.svg';
+import colorIcon from '../../assets/icons/colorIcon.svg';
+import printerIcon from '../../assets/icons/printerIcon.svg';
 import {
   addAllFiles,
   updateWeight,
   updateUnit,
   updateInfill,
-} from '../../../store/customizeFilesDetails/reducer';
-import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
+} from '../../store/customizeFilesDetails/reducer';
+import { addDataSpec } from '../../store/customizeFilesDetails/SpecificationReducer';
 
-import api from '../../../axiosConfig';
+import api from '../../axiosConfig';
 import { set } from 'react-hook-form';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 
-import { saveFile } from '../../../utils/indexedDB';
-import ViewModelStl from '../../ViewStlFile';
-import Loader from '../../Loader/Loader';
+import { saveFile } from '../../utils/indexedDB';
+import ViewModelStl from '../../components/ViewStlFile';
+import Loader from '../../components/Loader/Loader';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -127,11 +127,12 @@ const CustomizeTab: React.FC = () => {
   // select actual unit from the file
   useEffect(() => {
     if (activeFileId && activeFile) {
-      const orginalUnit = files.find((file : any) => file._id === activeFileId)?.unit;
+      const orginalUnit = files.find(
+        (file: any) => file._id === activeFileId
+      )?.unit;
       setActualUnit(orginalUnit);
     }
   }, [activeFileId]);
-
 
   useEffect(() => {
     if (activeFile) {

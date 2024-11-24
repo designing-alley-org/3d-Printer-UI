@@ -1,4 +1,4 @@
-import { Bottom, Wrapper } from '../DashboardLayout/styles';
+import { Bottom, Wrapper } from '../../components/DashboardLayout/styles';
 // import { ROUTES } from '../../routes/routes-constants';
 
 const Services = () => {

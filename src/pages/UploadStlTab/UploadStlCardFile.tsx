@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Typography, TextField, CircularProgress } from '@mui/material';
-import ViewModelStl from '../../ViewStlFile/index';
-import { cross, plus, minus, vector } from '../../../constants';
+import ViewModelStl from '../../components/ViewStlFile/index';
+import { cross, plus, minus, vector } from '../../constants';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
-import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
-import { getFile } from '../../../utils/indexedDB';
+import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
+import { getFile } from '../../utils/indexedDB';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -40,7 +40,10 @@ interface UploadStlCardFileProps {
   files: FileData[];
   activeFileId: string | null;
   selectedUnit: string;
-  convertDimensions: (dimensions: ModelDimensions, unit: string) => ModelDimensions;
+  convertDimensions: (
+    dimensions: ModelDimensions,
+    unit: string
+  ) => ModelDimensions;
 }
 
 // Custom hooks
@@ -68,7 +71,7 @@ const useFileBlob = (file: FileData) => {
           blob = file.fileBlob;
         } else if (file.fileUrl) {
           const storedBlob = await getFile(file.fileUrl);
-          blob = storedBlob || await (await fetch(file.fileUrl)).blob();
+          blob = storedBlob || (await (await fetch(file.fileUrl)).blob());
         }
 
         if (!blob) {
@@ -85,10 +88,11 @@ const useFileBlob = (file: FileData) => {
         }
       } catch (error) {
         if (isMounted) {
-          setState(prev => ({
+          setState((prev) => ({
             ...prev,
             isLoading: false,
-            error: error instanceof Error ? error.message : 'Failed to load file',
+            error:
+              error instanceof Error ? error.message : 'Failed to load file',
           }));
         }
       }
@@ -168,7 +172,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     if (isLoading) {
       return (
-        <Box sx={styles.container} display="flex" justifyContent="center" alignItems="center">
+        <Box
+          sx={styles.container}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
           <CircularProgress size={24} />
           <Typography sx={{ ml: 2 }}>Loading file...</Typography>
         </Box>
@@ -222,7 +231,9 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
           {/* File Info Section */}
           <Box sx={styles.infoBox}>
-            <Typography sx={styles.fileName}>{file.fileName.split('-')[0]}</Typography>
+            <Typography sx={styles.fileName}>
+              {file.fileName.split('-')[0]}
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
@@ -269,7 +280,9 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               />
               <TextField
                 value={file.quantity}
-                onChange={(e) => handleQuantityChange('set', Number(e.target.value))}
+                onChange={(e) =>
+                  handleQuantityChange('set', Number(e.target.value))
+                }
                 type="number"
                 inputProps={{
                   min: QUANTITY_LIMITS.MIN,
@@ -314,11 +327,10 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
           localBlobUrl={blobUrl}
           isOpen={isViewerOpen}
           onClose={handleViewerClose}
-          files={[{ ...file}]}
+          files={[{ ...file }]}
           activeFileId={activeFileId}
           onSetActiveFile={onSetActiveFile}
         />
-        
       </>
     );
   }
