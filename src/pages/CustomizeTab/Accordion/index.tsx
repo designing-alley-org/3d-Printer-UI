@@ -2,18 +2,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import './styles.css';
-import Dropdown from '../../../../stories/Dropdown/Dropdown';
-import { sizeOption, info, group } from '../../../../constants';
+import Dropdown from '../../../stories/Dropdown/Dropdown';
+import { sizeOption, info, group } from '../../../constants';
 import { Button, TextField } from '@mui/material';
-import PrinterCard from '../../../PrinterCard';
+import PrinterCard from '../../../components/PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   updateColor,
   updateMaterial,
   updatePrinter,
   updateTechnology,
-} from '../../../../store/customizeFilesDetails/reducer';
-import api from '../../../../axiosConfig';
+} from '../../../store/customizeFilesDetails/reducer';
+import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
 
 interface AccordionProps {
@@ -32,6 +32,7 @@ interface AccordionProps {
   setSelectedPrinter: (selectedPrinter: string) => void;
   setSelectUnit: (unit: string) => void;
   setSelectInfill: (infill: number) => void;
+  actualUnit: string;
 }
 
 interface PrinterData {
@@ -71,6 +72,7 @@ const Accordion: React.FC<AccordionProps> = ({
   setSelectedPrinter,
   setSelectUnit,
   setSelectInfill,
+  actualUnit,
 }) => {
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [printerData, setPrinterData] = useState([]);
@@ -115,25 +117,14 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [dataspec]);
 
-  const convertDimensions = (
-    value: number,
-    fromUnit: 'mm' | 'inch',
-    toUnit: 'mm' | 'inch'
-  ) => {
-    if (fromUnit === toUnit) return value;
-    return fromUnit === 'mm'
-      ? Math.abs(value * MM_TO_INCH)
-      : Math.abs(value * INCH_TO_MM);
-  };
-
   // Update useEffect to set dimensions from selectedFile
   useEffect(() => {
     if (selectedFile?.dimensions) {
       setSelectSize(selectedFile.unit);
       const initialDimensions = {
-        height: selectedFile.dimensions.height || 0,
-        width: selectedFile.dimensions.width || 0,
-        length: selectedFile.dimensions.length || 0,
+        height: Number(selectedFile.dimensions.height.toFixed(2)) || 0,
+        width: Number(selectedFile.dimensions.width.toFixed(2)) || 0,
+        length: Number(selectedFile.dimensions.length.toFixed(2)) || 0,
       };
       setDimensions(initialDimensions);
       setOriginalDimensions(initialDimensions);
@@ -211,6 +202,17 @@ const Accordion: React.FC<AccordionProps> = ({
     setUpdateLength(dimensions.length);
   }, [dimensions, setUpdateHeight, setUpdateWidth, setUpdateLength]);
 
+  const convertDimensions = (
+    value: number,
+    fromUnit: 'mm' | 'inch',
+    toUnit: 'mm' | 'inch'
+  ) => {
+    if (fromUnit === toUnit) return value;
+    return fromUnit === 'mm'
+      ? Math.abs(value * MM_TO_INCH)
+      : Math.abs(value * INCH_TO_MM);
+  };
+
   const handleUnitChange = (option: Option) => {
     const newUnit = option.value as 'mm' | 'inch';
 
@@ -218,9 +220,9 @@ const Accordion: React.FC<AccordionProps> = ({
     if (newUnit !== unit) {
       // Convert current dimensions when unit changes
       const convertedDimensions = {
-        height: convertDimensions(dimensions.height.toFixed(3), unit, newUnit),
-        width: convertDimensions(dimensions.width.toFixed(3), unit, newUnit),
-        length: convertDimensions(dimensions.length.toFixed(3), unit, newUnit),
+        height: convertDimensions(dimensions.height.toFixed(2), unit, newUnit),
+        width: convertDimensions(dimensions.width.toFixed(2), unit, newUnit),
+        length: convertDimensions(dimensions.length.toFixed(2), unit, newUnit),
       };
       setDimensions(convertedDimensions);
       setUnit(newUnit);
@@ -334,8 +336,9 @@ const Accordion: React.FC<AccordionProps> = ({
               </Button>
               {dimansions && (
                 <p>
-                  {originalDimensions.height} mm x {originalDimensions.width} mm
-                  x {originalDimensions.length} mm
+                  {originalDimensions.height} {actualUnit} x{' '}
+                  {originalDimensions.width} {actualUnit}x{' '}
+                  {originalDimensions.length} {actualUnit}
                 </p>
               )}
             </div>
@@ -447,7 +450,7 @@ const Accordion: React.FC<AccordionProps> = ({
                     : (option.value as number)
                 )
               }
-              defaultValue={selectedFile ? selectedFile.infill : ''}
+              defaultValue={selectedFile ? String(selectedFile.infill) : ''}
             />
           </div>
         )}

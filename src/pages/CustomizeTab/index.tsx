@@ -15,26 +15,26 @@ import {
   Heading,
   LoadingWrapper,
 } from './styles';
-import { customize, vector_black } from '../../../constants';
+import { customize, vector_black } from '../../constants';
 import Accordion from './Accordion';
-import materialIcon from '../../../assets/icons/materialIcon.svg';
-import colorIcon from '../../../assets/icons/colorIcon.svg';
-import printerIcon from '../../../assets/icons/printerIcon.svg';
+import materialIcon from '../../assets/icons/materialIcon.svg';
+import colorIcon from '../../assets/icons/colorIcon.svg';
+import printerIcon from '../../assets/icons/printerIcon.svg';
 import {
   addAllFiles,
   updateWeight,
   updateUnit,
   updateInfill,
-} from '../../../store/customizeFilesDetails/reducer';
-import { addDataSpec } from '../../../store/customizeFilesDetails/SpecificationReducer';
+} from '../../store/customizeFilesDetails/reducer';
+import { addDataSpec } from '../../store/customizeFilesDetails/SpecificationReducer';
 
-import api from '../../../axiosConfig';
+import api from '../../axiosConfig';
 import { set } from 'react-hook-form';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 
-import { saveFile } from '../../../utils/indexedDB';
-import ViewModelStl from '../../ViewStlFile';
-import Loader from '../../Loader/Loader';
+import { saveFile } from '../../utils/indexedDB';
+import ViewModelStl from '../../components/ViewStlFile';
+import Loader from '../../components/Loader/Loader';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -65,6 +65,7 @@ const CustomizeTab: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [selectedPrinter, setSelectedPrinter] = useState<string>('');
   const [selectUnit, setSelectUnit] = useState<string>('');
+  const [actualUnit, setActualUnit] = useState<string>('');
   const [selectInfill, setSelectInfill] = useState<number>(0);
   const [lenght, setLenght] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
@@ -122,6 +123,16 @@ const CustomizeTab: React.FC = () => {
       width: 0,
     };
   }, [activeFile]);
+
+  // select actual unit from the file
+  useEffect(() => {
+    if (activeFileId && activeFile) {
+      const orginalUnit = files.find(
+        (file: any) => file._id === activeFileId
+      )?.unit;
+      setActualUnit(orginalUnit);
+    }
+  }, [activeFileId]);
 
   useEffect(() => {
     if (activeFile) {
@@ -427,6 +438,7 @@ const CustomizeTab: React.FC = () => {
                 setUpdateLength={setUpdateLength}
                 setSelectUnit={setSelectUnit}
                 setSelectInfill={setSelectInfill}
+                actualUnit={actualUnit}
                 selectedId={activeFileId as string | null}
                 key={item.id}
                 icon={item.icon}

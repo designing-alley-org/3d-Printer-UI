@@ -4,13 +4,18 @@ import { useEffect, useState, useCallback } from 'react';
 import Header from '../Header';
 import './styles.css';
 import { TabLine } from './styles';
-import { LinearProgress, Box, Typography, CircularProgress } from '@mui/material';
+import {
+  LinearProgress,
+  Box,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import { quoteTexts } from '../../constants';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import Button from '../../stories/button/Button';
 import axios from 'axios';
-import UploadStlCard from '../TabComponents/UploadStlTab/UploadStlTab';
+import UploadStlCard from '../../pages/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function
 import { useSelector } from 'react-redux';
@@ -45,7 +50,6 @@ const styles = {
   },
 };
 
-
 const CardLayout = () => {
   const { pathname } = useLocation();
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
@@ -53,11 +57,10 @@ const CardLayout = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
-const [allPrinterSelected, setAllPrinterSelected] = useState(false);
+  const [allPrinterSelected, setAllPrinterSelected] = useState(false);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
-  
 
-    // Check if all files have a printer selected
+  // Check if all files have a printer selected
   // useEffect(() => {
   //   if (pathname.includes(ROUTES.CUSTOMIZE)) {
   //     const allPrintersSelected = fileDetails.every((file: any) => file.printer !== null);
@@ -65,8 +68,6 @@ const [allPrinterSelected, setAllPrinterSelected] = useState(false);
   //     setAllPrinterSelected(allPrintersSelected);
   //   }
   // }, [fileDetails, pathname]);
-  
-
 
   // New state for managing the loading spinner
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -124,9 +125,12 @@ const [allPrinterSelected, setAllPrinterSelected] = useState(false);
           formData.append('dimensions', JSON.stringify(file.dimensions));
         });
 
-        const response = await api.put(`/update-user-order/${orderId}`, formData);
+        const response = await api.put(
+          `/update-user-order/${orderId}`,
+          formData
+        );
         if (response.status === 200) {
-        setFiles([]);
+          setFiles([]);
           console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
           navigate(`${response.data.data._id}/customize`);
@@ -207,20 +211,24 @@ const [allPrinterSelected, setAllPrinterSelected] = useState(false);
 
       {/* Proceed Button */}
       {pathname !== `/get-quotes/${orderId}/checkout` &&
-        !pathname.includes(`/get-quotes/${orderId}/checkout/select-delivery`) && (
-        <div className="btn">
-          <div></div>
-          <span className="proc">
-            <Button
-              label={!pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'}
-              onClick={
-                !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
-              }
-              disabled={isSaving} // Disable button while saving or processing payment
-            />
-          </span>
-        </div>
-      )}
+        !pathname.includes(
+          `/get-quotes/${orderId}/checkout/select-delivery`
+        ) && (
+          <div className="btn">
+            <div></div>
+            <span className="proc">
+              <Button
+                label={
+                  !pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'
+                }
+                onClick={
+                  !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
+                }
+                disabled={isSaving} // Disable button while saving or processing payment
+              />
+            </span>
+          </div>
+        )}
     </div>
   );
 };

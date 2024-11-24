@@ -59,7 +59,8 @@ export default function MessageInput({
         }
         const name = file.name;
         const extension = name.split('.').pop();
-        return { file, name, extension };
+        const mimeType = file.type;
+        return { file, name, extension , mimeType};
       }
 
       );
@@ -78,7 +79,8 @@ export default function MessageInput({
         }
         const name = file.name;
         const extension = name.split('.').pop();
-        return { file, name, extension };
+        const mimeType = file.type;
+        return { file, name, extension, mimeType };
       }
 
       );

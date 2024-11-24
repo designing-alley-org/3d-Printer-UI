@@ -261,11 +261,11 @@ export const sizeOption = [
 
 export const uploadDimBtnData = [
   {
-    id: 'MM',
+    id: 'mm',
     name: 'MM',
   },
   {
-    id: 'IN',
+    id: 'inch',
     name: 'IN',
   },
 ];
