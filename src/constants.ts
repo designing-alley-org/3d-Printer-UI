@@ -29,6 +29,7 @@ import arrow_dropdown_blue from './assets/icons/arrow_drop_down_blue_circle.svg'
 import aboutUs from './assets/images/aboutUS.svg';
 import aboutUs1 from './assets/images/aboutUs1.svg';
 import aboutUs2 from './assets/images/aboutUs2.svg';
+import notificationIcon from './assets/icons/notifications.svg';
 
 // export svg
 export {
@@ -43,6 +44,7 @@ export {
   info,
   group,
   arrow_dropdown_blue,
+  notificationIcon,
 };
 
 // Data for Tab
@@ -54,7 +56,10 @@ export const tabData = [
   },
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
   { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
+  { id: 4, label: ''}, // This is created for notification... 
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
+  
+  
 ];
 
 // Data for QuoteText
@@ -269,16 +274,7 @@ export const uploadDimBtnData = [
     name: 'IN',
   },
 ];
-export const technologyBtnData = [
-  {
-    id: 'FDM',
-    name: 'FDM',
-  },
-  {
-    id: 'SLA',
-    name: 'SLA',
-  },
-];
+
 export const notifyData = [
   {
     id: 1,
@@ -301,50 +297,8 @@ export const notifyData = [
     label: 'Working hours',
   },
 ];
-export const materialBtnData = [
-  {
-    id: 'nylons',
-    name: 'Nylons',
-  },
-  {
-    id: 'poly',
-    name: 'Polyester/PTEG',
-  },
-  {
-    id: 'abs',
-    name: 'ABS',
-  },
-  {
-    id: 'plastic',
-    name: 'Durable Plastics',
-  },
-  {
-    id: 'tpu',
-    name: 'Flexible TPU/TPE',
-  },
-  {
-    id: 'pla',
-    name: 'PLA',
-  },
-];
-export const colorBtnData = [
-  {
-    id: 'white',
-    name: 'White',
-  },
-  {
-    id: 'blue',
-    name: 'Blue',
-  },
-  {
-    id: 'grey',
-    name: 'Gray',
-  },
-  {
-    id: 'orange',
-    name: 'Orange',
-  },
-];
+
+
 
 export const PrinterData = [
   {
