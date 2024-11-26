@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import SendIcon from '../../../../assets/images/send.svg';
 import MessageInput from '../../../../stories/MessageInput/MessageInput';
 import { Socket } from 'socket.io-client';
-import { content } from '../../../GetQuote/styles';
 
 interface ChatFooterProps {
   socket: Socket | null;
@@ -109,36 +107,8 @@ export default function ChatFooter({
             setImages={setImages}
             file={file}
             images={images}
+            handleSendAttachment={handleSendAttachment}
           />
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '15%',
-              right: '2%',
-              bgcolor: '#0080FF',
-              p: '0.5rem',
-              borderRadius: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={() =>
-              message
-                ? document
-                    .querySelector('form')
-                    ?.dispatchEvent(
-                      new Event('submit', { cancelable: true, bubbles: true })
-                    )
-                : handleSendAttachment()
-            }
-          >
-            <img
-              style={{ height: '2rem', width: '2rem' }}
-              src={SendIcon}
-              alt="send"
-            />
-          </Box>
         </Box>
       </Box>
     </form>

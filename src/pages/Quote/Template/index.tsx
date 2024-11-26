@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Divider, Typography, TextField } from '@mui/material';
 import { TemplateWrapper } from './styles';
 import Button from '../../../stories/button/Button';
@@ -24,28 +24,24 @@ interface QuoteData {
   _id: string;
 }
 
+interface QuoteTemplateProps {
+  allQuotes: QuoteData[];
+  quote: QuoteData | null;
+  setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
 interface SummaryRow {
   label: string;
   value: number;
   updatedValue: number;
 }
 
-const QuoteTemplate: React.FC = () => {
-  const [quote, setQuote] = useState<QuoteData | null>(null);
-  const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
+const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuotes}:QuoteTemplateProps) => {
+
   const { orderId } = useParams<{ orderId: string }>();
   const [showNegotiate, setShowNegotiate] = useState<boolean>(false);
   const [updatedQuote, setUpdatedQuote] = useState<QuoteData | null>(null);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
   
-  async function getQuotes() {
-    const res = await api.get(`/get-all-quotes/${orderId}`);
-    setAllQuotes(res.data.data);
-    setQuote(res.data.data[activeIndex]);
-  }
-  useEffect(() => {
-    getQuotes();
-  }, []);
   console.log(allQuotes);
   console.log(quote);
 
@@ -157,7 +153,7 @@ const QuoteTemplate: React.FC = () => {
                 : 'repeat(3, 1fr)',
               gap: 4,
               position: 'relative',
-            }}
+                          }}
           >
             <Box
               sx={{

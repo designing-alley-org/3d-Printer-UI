@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import AttachmentIcon from '../../assets/images/attachement.png';
 import ImgUpload from '../../assets/images/imgUpload.png';
+import SendIcon from '../../assets/images/send.svg';
 import React from 'react';
 interface Attachment {
   file: File;
@@ -19,6 +20,7 @@ interface InputFieldProps {
   setImages: (images: Attachment[]) => void;
   file: Attachment[];
   images: Attachment[];
+  handleSendAttachment:any
 }
 const StyledInput = styled('input')(() => ({
   width: '86%',
@@ -44,6 +46,7 @@ export default function MessageInput({
   setImages,
   file,
   images,
+  handleSendAttachment
 }: InputFieldProps) {
   const inputRef = React.createRef<HTMLInputElement>();
   const imgRef = React.createRef<HTMLInputElement>();
@@ -160,6 +163,35 @@ export default function MessageInput({
           src={AttachmentIcon}
           alt="attachment"
           style={{ width: '1.5rem' }}
+        />
+      </Box>
+      <Box
+        sx={{
+          width: '3rem',
+          height: '3rem',
+          borderRadius: '50%',
+          bgcolor: '#0080FF',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          color: '#336DFF',
+          ml: '0.5rem',
+        }}
+        onClick={() =>
+          value
+            ? document
+                .querySelector('form')
+                ?.dispatchEvent(
+                  new Event('submit', { cancelable: true, bubbles: true })
+                )
+            : handleSendAttachment()
+        }
+      >
+        <img
+          style={{ height: '2rem', width: '2rem' }}
+          src={SendIcon}
+          alt="send"
         />
       </Box>
     </Box>
