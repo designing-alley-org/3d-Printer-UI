@@ -131,7 +131,6 @@ const CardLayout = () => {
         );
         if (response.status === 200) {
           setFiles([]);
-          console.log('Files uploaded successfully!');
           setActiveTabs([0, 1]);
           navigate(`${response.data.data._id}/customize`);
         }

@@ -21,8 +21,6 @@ import materialIcon from '../../assets/icons/materialIcon.svg';
 import colorIcon from '../../assets/icons/colorIcon.svg';
 import printerIcon from '../../assets/icons/printerIcon.svg';
 import {
-  addAllFiles,
-  updateWeight,
   updateUnit,
   updateInfill,
 } from '../../store/customizeFilesDetails/reducer';
@@ -35,6 +33,11 @@ import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 import { saveFile } from '../../utils/indexedDB';
 import ViewModelStl from '../../components/ViewStlFile';
 import Loader from '../../components/Loader/Loader';
+import { getFilesByOrderId } from '../../store/actions/getFilesByOrderId';
+import { getWeightByFileId } from '../../store/actions/getWeightByFileId';
+import { getSpecificationData } from '../../store/actions/getSpecificationData';
+import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
+import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -84,28 +87,8 @@ const CustomizeTab: React.FC = () => {
   // Fetch files from the server
   useEffect(() => {
     const fetchOrder = async () => {
-      try {
-        const response = await api.get(`/order-show/${orderId}`);
-        const files = response.data.message.files.map((file: any) => ({
-          _id: file._id,
-          fileName: file.fileName.split('-')[0],
-          fileUrl: file.fileUrl,
-          quantity: file.quantity,
-          color: file.color,
-          material: file.material || '',
-          technology: file.technology || '',
-          weight: file.weight,
-          unit: file.unit,
-          printer: file.printer,
-          dimensions: file.dimensions,
-        }));
-        setFetchFiles(files);
-        dispatch(addAllFiles(files));
-      } catch (error) {
-        console.error('Error fetching files:', error);
-      }
+     getFilesByOrderId({ orderId : orderId as string, setFetchFiles, dispatch });
     };
-
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
 
@@ -130,7 +113,7 @@ const CustomizeTab: React.FC = () => {
       const orginalUnit = files.find(
         (file: any) => file._id === activeFileId
       )?.unit;
-      setActualUnit(orginalUnit);
+      setActualUnit(orginalUnit || '');
     }
   }, [activeFileId]);
 
@@ -181,13 +164,7 @@ const CustomizeTab: React.FC = () => {
 
   // Get specifications
   const fetchSpec = useCallback(async () => {
-    try {
-      const response = await api.get(`/get-specification`);
-      const data = response.data?.data?.[0]; // Access the first object in the array
-      dispatch(addDataSpec(data));
-    } catch (error) {
-      console.error('Error fetching specification:', error);
-    }
+   getSpecificationData({ dispatch });
   }, [dispatch]);
 
   useEffect(() => {
@@ -207,70 +184,36 @@ const CustomizeTab: React.FC = () => {
     (mat: any) => mat.material_name === selectedMat
   )?.material_mass;
 
+  // Get weight of the file
   const getWeight = useCallback(async () => {
     if (!selectedMat || !activeFileId || materialMass === undefined) return;
-    try {
-      const payload = {
-        material_name: selectedMat,
-        material_mass: materialMass,
-      };
-      const response = await api.put(
-        `/process-order/${orderId}/file/${activeFileId}`,
-        payload
-      );
-      console.log('Weight response:', response.data.data.dimensions.weight);
-      setWeight(response.data.data.dimensions.weight);
-      dispatch(updateWeight(response.data.data.dimensions.weight));
-    } catch (error) {
-      console.error('Error fetching weight:', error);
-    }
+    getWeightByFileId({
+      orderId: orderId as string,
+      setWeight,
+      dispatch,
+      activeFileId,
+      selectedMat,
+      materialMass,
+    });
   }, [selectedMat, activeFileId, materialMass, orderId]);
 
   const scaleStl = useCallback(async () => {
     if (!activeFileId || !orderId) return;
-    try {
-      const payload = {
-        new_length: updateLength,
-        new_width: updateWidth,
-        new_height: updateHeight,
-        unit: selectUnit,
-      };
-      const response = await api.put(
-        `/scale-order/${orderId}/file/${activeFileId}`,
-        payload
-      );
-      console.log('Scale STL response:', response.data.data);
-    } catch (error) {
-      console.error('Error scaling STL:', error);
-    }
+    scaleTheFileByNewDimensions({
+      orderId: orderId as string,
+      activeFileId: activeFileId as string,
+      updateLength,
+      updateWidth,
+      updateHeight,
+      selectUnit,
+    })
   }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
 
   const updateData = useCallback(
     async (activeFile: any) => {
       if (!activeFileId || !orderId) return;
-      try {
-        const formData = new FormData();
-        formData.append('material', activeFile?.material || '');
-        formData.append('color', activeFile?.color || '');
-        formData.append('printer', activeFile?.printer || '');
-        formData.append('infill', activeFile?.infill || '');
-        formData.append('unit', activeFile?.unit || '');
-        formData.append('technology', activeFile?.technology || '');
-        const response = await api.put(
-          `/update-user-order/${orderId}/${activeFileId}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
-        console.log('Data updated successfully:', response);
-      } catch (error) {
-        console.error('Error updating data:', error);
-      }
-    },
-    [activeFileId, orderId]
+     updateFileDataByFileId({ orderId: orderId as string, activeFile, activeFileId });
+    },[activeFileId, orderId]
   );
 
   // Check if all required fields are filled for the active file
