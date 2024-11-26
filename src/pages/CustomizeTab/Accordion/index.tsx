@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import './styles.css';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
@@ -15,6 +13,7 @@ import {
 } from '../../../store/customizeFilesDetails/reducer';
 import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
+import { getPrintersByTechnologyAndMaterial } from '../../../store/actions/getPrintersByTechnologyAndMaterial';
 
 interface AccordionProps {
   icon: string;
@@ -136,19 +135,17 @@ const Accordion: React.FC<AccordionProps> = ({
   // Fetch printer data based on selected material and technology
   useEffect(() => {
     const fetchPrinterData = async () => {
-      try {
-        const response = await api.get(
-          `/filter?technology=${selectedTech}&materials=${selectedMat}`
-        );
-        setPrinterData(response.data.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error fetching printer data:', error);
-      }
+        if (selectedMat && selectedTech) {
+            await getPrintersByTechnologyAndMaterial({
+                selectedMat,
+                selectedTech,
+                setPrinterData,
+            });
+        }
     };
 
-    if (selectedMat && selectedTech) fetchPrinterData();
-  }, [selectedMat, selectedTech]);
+    fetchPrinterData();
+}, [selectedMat, selectedTech]);
 
   // Take selected technology and material from selected file
   useEffect(() => {

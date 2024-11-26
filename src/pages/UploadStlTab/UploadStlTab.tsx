@@ -39,7 +39,6 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { orderId } = useParams();
 
-  console.log('files:', files);
 
   // Fetch initial files
   useEffect(() => {
