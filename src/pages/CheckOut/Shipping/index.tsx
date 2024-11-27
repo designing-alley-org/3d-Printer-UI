@@ -15,7 +15,6 @@ const ShippingDetails: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate();
 
   const { orderId } = useParams();
 

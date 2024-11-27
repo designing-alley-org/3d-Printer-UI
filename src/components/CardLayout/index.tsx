@@ -14,7 +14,6 @@ import { quoteTexts } from '../../constants';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import Button from '../../stories/button/Button';
-import axios from 'axios';
 import UploadStlCard from '../../pages/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function

@@ -8,7 +8,7 @@ import Notification from './Notification';
 import Settings from './Settings';
 // import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
-import api from '../../axiosConfig';
+import { getUserOrder } from '../../store/actions/getUserOrder';
 
 const AccountLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -19,9 +19,7 @@ const AccountLayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch the data (replace URL with your API endpoint)
-        const response = await api.get('/get-user-order');
-        setOrders(response.data); // Store the data in state
+      await getUserOrder(setOrders);
       } catch (error) {
         console.log(error); // Handle errors
       } finally {
