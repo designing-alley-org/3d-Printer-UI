@@ -6,7 +6,7 @@ import { inputFields } from '../../../constants';
 // import Button from '../../../../stories/button/Button';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../../axiosConfig';
+import { createAddress } from '../../../store/actions/createAddress';
 
 const ShippingDetails: React.FC = () => {
   const {
@@ -23,13 +23,12 @@ const ShippingDetails: React.FC = () => {
     // data.orderId = `${orderId}`;
     console.log(data);
     try {
-      const response = await api.post(`/create-address`, data);
-      if (response.status === 201) {
-        navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
-      }
+      const response = await createAddress(data);
+      console.log("Address created successfully:", response);
     } catch (error) {
-      console.error('Error uploading files:', error);
+      console.error("Failed to create address:", error);
     }
+    
   };
   return (
     <Wrapper>

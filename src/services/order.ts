@@ -23,21 +23,21 @@ const getFilesByOrderIdService = async (orderId: string): Promise<object | undef
     }
 }
 
-const getFileByOrderIdUploadstlService = async (orderId: string)  => {
+const getFileByOrderIdUploadstlService = async (orderId: string) => {
     try {
-        if (orderId) {
-          const response = await api.get(`/order-show/${orderId}`);
-          const fetchedFiles = response.data.message.files.map(
-            (file: any) => ({
-              ...file,
-            })
-          );
-            return fetchedFiles;
+        if (!orderId) {
+            throw new Error("Order ID is required.");
         }
-      } catch (error) {
-        console.error('Error fetching files:', error);
-      } 
-}
+        const response = await api.get(`/order-show/${orderId}`);
+        const fetchedFiles = response.data.message.files.map((file: any) => ({
+            ...file,
+        }));
+        return fetchedFiles;
+    } catch (error) {
+        console.error("Error fetching files:", error);
+        throw error; 
+    }
+};
 
 const getWeightByFileIdService = async (
     orderId: string,
@@ -45,13 +45,8 @@ const getWeightByFileIdService = async (
     payload: object
 ): Promise<number | undefined> => {
     try {
-        console.log("activeFileId:", activeFileId);
-        console.log("orderId:", orderId);
-        console.log("payload:", payload);
-
         const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
         const weight = response.data?.data?.dimensions?.weight;
-
         return weight;
     } catch (error) {
         console.error("Error fetching weight by file ID:", error);
@@ -99,6 +94,7 @@ const updateFileDataByFileIdService = async (
     }
 }
 
+//  getSpecificationDataService
 const getSpecificationDataService = async () => {
     try {
         const response = await api.get(`/get-specification`);
@@ -109,7 +105,19 @@ const getSpecificationDataService = async () => {
     }
 }
 
+//  getQuotesService
+const getQuotesService = async (orderId: string): Promise<any> => {
+    try {
+      const res = await api.get(`/get-all-quotes/${orderId}`);
+      return res.data; 
+    } catch (error) {
+      console.error('Error fetching quotes:', error);
+      throw error; 
+    }
+  };
+  
 
-export { getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService,getFileByOrderIdUploadstlService };
+
+export { getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService };
 
 
