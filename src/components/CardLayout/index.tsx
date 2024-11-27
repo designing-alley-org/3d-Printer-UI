@@ -19,6 +19,8 @@ import UploadStlCard from '../../pages/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function
 import { useSelector } from 'react-redux';
+import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
+import { createOrder } from '../../store/actions/createOrder';
 
 interface ModelDimensions {
   height: number;
@@ -103,57 +105,31 @@ const CardLayout = () => {
     }
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
-      setIsSaving(true); // Start loading spinner
-
+      setIsSaving(true); 
       try {
-        // Save each file to IndexedDB
-        const updatedFiles = await Promise.all(
-          files.map(async (file) => {
-            const fileUrl = `${file.id}`; // Using file.id as the key
-            await saveFile(fileUrl, file.file); // Save to IndexedDB
-            return { ...file, fileUrl }; // Update fileUrl in the state
-          })
-        );
-
-        setFiles(updatedFiles); // Update state with fileUrls
-
-        // Proceed with your existing API call after saving to IndexedDB
-        const formData = new FormData();
-        updatedFiles.forEach((file) => {
-          formData.append('files', file.file);
-          formData.append('quantity', file.quantity.toString());
-          formData.append('dimensions', JSON.stringify(file.dimensions));
+        await uploadFilesByOrderId({
+            orderId:orderId as string,
+            files, 
+            setFiles, 
+            setActiveTabs, 
+            navigate,
+            setIsSaving, 
         });
-
-        const response = await api.put(
-          `/update-user-order/${orderId}`,
-          formData
-        );
-        if (response.status === 200) {
-          setFiles([]);
-          setActiveTabs([0, 1]);
-          navigate(`${response.data.data._id}/customize`);
-        }
-
-        setIsSaving(false); // Stop loading spinner
-      } catch (error) {
-        console.error('Error processing proceed action:', error);
-        setIsSaving(false); // Stop loading spinner even if there's an error
-        alert('Failed to proceed. Please try again.');
-      }
+    } catch (error) {
+        console.error("Error processing proceed action:", error);
+        alert("Failed to proceed. Please try again.");
+    }
     } else if (pathname === '/get-quotes') {
-      setIsSaving(true); // Start loading spinner
+      setIsSaving(true);
       try {
-        const response = await api.post(`/create-order`);
-        if (response.status === 200) {
-          console.log('Order created successfully!');
-          setActiveTabs([0]);
-          navigate(`${response.data.data._id}/upload-stl`);
-        }
-        setIsSaving(false); // Stop loading spinner
+        await createOrder({
+          setActiveTabs,
+          setIsSaving,
+          navigate,
+      });
       } catch (error) {
         console.error('Error creating order:', error);
-        setIsSaving(false); // Stop loading spinner even if there's an error
+        setIsSaving(false); 
         alert('Failed to create order. Please try again.');
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {

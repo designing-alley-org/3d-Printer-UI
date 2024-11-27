@@ -1,5 +1,30 @@
 import api from "../axiosConfig";
 
+// Upload files
+const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
+    try {
+        const response = await api.put(
+            `/update-user-order/${orderId}`,
+            formData
+          );
+        return response;
+    } catch (error) {
+        console.error('Error uploading files:', error);
+        throw error;
+    }
+};
+
+// Service to call the API for creating an order
+const createOrderService = async () => {
+    try {
+        const response = await api.post(`/create-order`);
+        return response;
+    } catch (error) {
+        console.error("Error creating order:", error);
+        throw error;
+    }
+};
+
 const getFilesByOrderIdService = async (orderId: string): Promise<object | undefined> => {
     try {
         const response = await api.get(`/order-show/${orderId}`);
@@ -35,7 +60,7 @@ const getFileByOrderIdUploadstlService = async (orderId: string) => {
         return fetchedFiles;
     } catch (error) {
         console.error("Error fetching files:", error);
-        throw error; 
+        throw error;
     }
 };
 
@@ -108,16 +133,18 @@ const getSpecificationDataService = async () => {
 //  getQuotesService
 const getQuotesService = async (orderId: string): Promise<any> => {
     try {
-      const res = await api.get(`/get-all-quotes/${orderId}`);
-      return res.data; 
+        const res = await api.get(`/get-all-quotes/${orderId}`);
+        return res.data;
     } catch (error) {
-      console.error('Error fetching quotes:', error);
-      throw error; 
+        console.error('Error fetching quotes:', error);
+        throw error;
     }
-  };
-  
+};
 
 
-export { getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService };
+
+
+
+export {createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService };
 
 
