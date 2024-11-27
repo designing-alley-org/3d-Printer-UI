@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -57,7 +57,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const {loading, error } = useSelector((state: RootState) => state.auth);
+  const { loading, error } = useSelector((state: RootState) => state.auth);
   const handleGoogleLogin = () => {
     window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
   };
@@ -68,159 +68,159 @@ const Login: React.FC = () => {
 
   return (
     <div className='AuthBG'>
-    <Container maxWidth="sm">
-      <Paper
-        elevation={3}
-        sx={{
-          p: 4,
-          borderRadius: '20px',
-          background: 'white',
-          mt: 4,
-        }}
-      >
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ textAlign: 'left' }}
+      <Container maxWidth="sm">
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            borderRadius: '20px',
+            background: 'white',
+            mt: 4,
+          }}
         >
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 1,
-              fontWeight: 500,
-              letterSpacing: '0.5px',
-            }}
-          >
-            WELCOME TO
-          </Typography>
-          <Typography
-            variant="h4"
-            sx={{
-              mb: 4,
-              fontWeight: 700,
-              letterSpacing: '0.5px',
-            }}
-          >
-            3D PRINT YOUR FUTURE
-          </Typography>
-
-          <Typography
-            variant="h6"
-            sx={{
-              mb: 2,
-              color: '#0066ff',
-              fontWeight: 500,
-            }}
-          >
-            Login
-          </Typography>
-
-          <Box sx={{ mb: 3 }}>
-            <Typography sx={{ mb: 1 }}>Email</Typography>
-            <StyledTextField
-              fullWidth
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Kamrul@Gmail.Com"
-              variant="outlined"
-            />
-          </Box>
-
-          <Box sx={{ mb: 3 }}>
-            <Typography sx={{ mb: 1 }}>Password</Typography>
-            <StyledTextField
-              fullWidth
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter Password Here"
-              variant="outlined"
-            />
-          </Box>
-
-          {error && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
-          )}
-
-          <Typography
-            sx={{
-              mb: 2,
-              textAlign: 'center',
-              color: 'text.secondary',
-            }}
-          >
-            Or Continue With
-          </Typography>
-
           <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              mb: 3,
-              justifyContent: 'center',
-            }}
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ textAlign: 'left' }}
           >
-            <SocialButton
-            onClick={handleGoogleLogin}
-              startIcon={
-                <GoogleIcon sx={{ animation: 'none', transform: 'none' }} />
-              }
-            >
-              Google
-            </SocialButton>
-            <SocialButton
-              startIcon={
-                <FacebookIcon sx={{ animation: 'none', transform: 'none' }} />
-              }
-            >
-              Facebook
-            </SocialButton>
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Typography sx={{ color: 'text.secondary' }}>
-              New Here?{' '}
-              <Link
-               to="/signup"
-               style={{
-                  textTransform: 'none',
-                  fontWeight: 'bold',
-                  color: '#0066ff',
-                }}
-              >
-                Register Now
-              </Link>
-            </Typography>
-
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              disabled={loading}
+            <Typography
+              variant="h5"
               sx={{
-                bgcolor: '#0066ff',
-                borderRadius: '25px',
-                py: 1.5,
-                mb: 2,
-                '&:hover': {
-                  bgcolor: '#0052cc',
-                },
+                mb: 1,
+                fontWeight: 500,
+                letterSpacing: '0.5px',
               }}
             >
-              {loading ? 'Logging in...' : 'Login'}
-            </Button>
+              WELCOME TO
+            </Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                mb: 4,
+                fontWeight: 700,
+                letterSpacing: '0.5px',
+              }}
+            >
+              3D PRINT YOUR FUTURE
+            </Typography>
+
+            <Typography
+              variant="h6"
+              sx={{
+                mb: 2,
+                color: '#0066ff',
+                fontWeight: 500,
+              }}
+            >
+              Login
+            </Typography>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography sx={{ mb: 1 }}>Email</Typography>
+              <StyledTextField
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Kamrul@Gmail.Com"
+                variant="outlined"
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography sx={{ mb: 1 }}>Password</Typography>
+              <StyledTextField
+                fullWidth
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Password Here"
+                variant="outlined"
+              />
+            </Box>
+
+            {error && (
+              <Typography color="error" sx={{ mb: 2 }}>
+                {error}
+              </Typography>
+            )}
+
+            <Typography
+              sx={{
+                mb: 2,
+                textAlign: 'center',
+                color: 'text.secondary',
+              }}
+            >
+              Or Continue With
+            </Typography>
+
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
+                mb: 3,
+                justifyContent: 'center',
+              }}
+            >
+              <SocialButton
+                onClick={handleGoogleLogin}
+                startIcon={
+                  <GoogleIcon sx={{ animation: 'none', transform: 'none' }} />
+                }
+              >
+                Google
+              </SocialButton>
+              <SocialButton
+                startIcon={
+                  <FacebookIcon sx={{ animation: 'none', transform: 'none' }} />
+                }
+              >
+                Facebook
+              </SocialButton>
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography sx={{ color: 'text.secondary' }}>
+                New Here?{' '}
+                <Link
+                  to="/signup"
+                  style={{
+                    textTransform: 'none',
+                    fontWeight: 'bold',
+                    color: '#0066ff',
+                  }}
+                >
+                  Register Now
+                </Link>
+              </Typography>
+
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={loading}
+                sx={{
+                  bgcolor: '#0066ff',
+                  borderRadius: '25px',
+                  py: 1.5,
+                  mb: 2,
+                  '&:hover': {
+                    bgcolor: '#0052cc',
+                  },
+                }}
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
     </div>
   );
 };

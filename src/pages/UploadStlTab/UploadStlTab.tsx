@@ -7,7 +7,7 @@ import { plus } from '../../constants';
 import { uploadDimBtnData } from '../../constants';
 import { saveFile } from '../../utils/indexedDB';
 import { useParams } from 'react-router-dom';
-import api from '../../axiosConfig';
+import { getFileByOrderIdUploadstlService } from '../../services/order';
 
 interface ModelDimensions {
   height: number;
@@ -40,28 +40,23 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const { orderId } = useParams();
 
 
-  // Fetch initial files
   useEffect(() => {
     const fetchOrderFiles = async () => {
       try {
-        if (orderId) {
-          const response = await api.get(`/order-show/${orderId}`);
-          const fetchedFiles = response.data.message.files.map(
-            (file: FileData) => ({
-              ...file,
-            })
-          );
+        setIsPageLoading(true); 
+        const fetchedFiles = await getFileByOrderIdUploadstlService(orderId);
+        if (fetchedFiles) {
           setFiles(fetchedFiles);
         }
       } catch (error) {
-        console.error('Error fetching files:', error);
+        console.error("Error in fetchOrderFiles:", error);
       } finally {
-        setIsPageLoading(false);
+        setIsPageLoading(false); 
       }
     };
-
+  
     fetchOrderFiles();
-  }, [orderId]);
+  }, [orderId, setFiles, setIsPageLoading]);
 
   // Handle file uploads
   const handleFileUpload = useCallback(

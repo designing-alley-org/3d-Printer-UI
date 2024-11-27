@@ -25,11 +25,9 @@ import {
   updateInfill,
 } from '../../store/customizeFilesDetails/reducer';
 import { addDataSpec } from '../../store/customizeFilesDetails/SpecificationReducer';
-
 import api from '../../axiosConfig';
 import { set } from 'react-hook-form';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
-
 import { saveFile } from '../../utils/indexedDB';
 import ViewModelStl from '../../components/ViewStlFile';
 import Loader from '../../components/Loader/Loader';
@@ -70,9 +68,6 @@ const CustomizeTab: React.FC = () => {
   const [selectUnit, setSelectUnit] = useState<string>('');
   const [actualUnit, setActualUnit] = useState<string>('');
   const [selectInfill, setSelectInfill] = useState<number>(0);
-  const [lenght, setLenght] = useState<number>(0);
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
   const [isViewerOpen, setViewerOpen] = useState(false);
   const dispatch = useDispatch();
   const { orderId } = useParams();
@@ -87,7 +82,7 @@ const CustomizeTab: React.FC = () => {
   // Fetch files from the server
   useEffect(() => {
     const fetchOrder = async () => {
-     getFilesByOrderId({ orderId : orderId as string, setFetchFiles, dispatch });
+      getFilesByOrderId({ orderId: orderId as string, setFetchFiles, dispatch });
     };
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
@@ -164,7 +159,7 @@ const CustomizeTab: React.FC = () => {
 
   // Get specifications
   const fetchSpec = useCallback(async () => {
-   getSpecificationData({ dispatch });
+    getSpecificationData({ dispatch });
   }, [dispatch]);
 
   useEffect(() => {
@@ -184,38 +179,7 @@ const CustomizeTab: React.FC = () => {
     (mat: any) => mat.material_name === selectedMat
   )?.material_mass;
 
-  // Get weight of the file
-  const getWeight = useCallback(async () => {
-    if (!selectedMat || !activeFileId || materialMass === undefined) return;
-    getWeightByFileId({
-      orderId: orderId as string,
-      setWeight,
-      dispatch,
-      activeFileId,
-      selectedMat,
-      materialMass,
-    });
-  }, [selectedMat, activeFileId, materialMass, orderId]);
-
-  const scaleStl = useCallback(async () => {
-    if (!activeFileId || !orderId) return;
-    scaleTheFileByNewDimensions({
-      orderId: orderId as string,
-      activeFileId: activeFileId as string,
-      updateLength,
-      updateWidth,
-      updateHeight,
-      selectUnit,
-    })
-  }, [activeFileId, orderId, updateLength, updateWidth, updateHeight]);
-
-  const updateData = useCallback(
-    async (activeFile: any) => {
-      if (!activeFileId || !orderId) return;
-     updateFileDataByFileId({ orderId: orderId as string, activeFile, activeFileId });
-    },[activeFileId, orderId]
-  );
-
+  
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
@@ -248,31 +212,64 @@ const CustomizeTab: React.FC = () => {
     [activeFileId, selectedColor]
   );
   const handleApplySelection = async () => {
-    setIsLoading(true);
-    if (!activeFile) return;
+    if (!activeFile) {
+      console.warn('No active file selected.');
+      return;
+    }
+  
     try {
-      // scale stl
+      setIsLoading(true);
+      const promises = [];
+  
+      // Check if scaling is required
       if (
         updateWidth !== activeFile?.width ||
         updateHeight !== activeFile?.height ||
         updateLength !== activeFile?.length
       ) {
-        await scaleStl();
+        promises.push(
+          scaleTheFileByNewDimensions({
+            orderId: orderId as string,
+            activeFileId: activeFileId as string,
+            updateLength,
+            updateWidth,
+            updateHeight,
+            selectUnit,
+          })
+        );
       }
-      // get weight
-      await getWeight();
-
-      // update data
-      await updateData(activeFile);
-
-      // Handle success response
+  
+      // Get weight of the file
+      promises.push(
+        getWeightByFileId({
+          orderId: orderId as string,
+          setWeight,
+          dispatch,
+          activeFileId,
+          selectedMat,
+          materialMass,
+        })
+      );
+  
+      // Update file data
+      promises.push(
+        updateFileDataByFileId({
+          orderId: orderId as string,
+          activeFile,
+          activeFileId,
+        })
+      );
+  
+      // Wait for all promises to complete
+      await Promise.all(promises);
     } catch (error) {
       console.error('Error applying selection:', error);
-      // Handle error response
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
 
   if (isPageLoading) {
     return (

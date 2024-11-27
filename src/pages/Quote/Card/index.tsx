@@ -5,8 +5,8 @@ import Chat from '../Chat';
 import { useEffect, useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
 import './style.css';
-import api from '../../../axiosConfig.ts';
 import { useParams } from 'react-router-dom';
+import { getQuotes } from '../../../store/actions/getQuotes.ts';
 
 interface QuoteItem {
   fileName: string;
@@ -32,14 +32,18 @@ export default function Quote() {
   const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
-  async function getQuotes() {
-    const res = await api.get(`/get-all-quotes/${orderId}`);
-    setAllQuotes(res.data.data);
-    setQuote(res.data.data[activeIndex]);
-  }
   useEffect(() => {
-    getQuotes();
-  }, []);
+    const fetchQuotes = async () => {
+      await getQuotes({
+        orderId : orderId as string, 
+        setAllQuotes,
+        setQuote,
+      });
+    };
+
+    fetchQuotes();
+  }, [orderId]);
+
   return (
     <QuoteBox>
       <Typography
