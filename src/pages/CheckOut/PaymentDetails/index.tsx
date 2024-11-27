@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import Button from '../../../stories/button/Button';
 import { Body, Price, Wrapper } from './styles';
 import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
+import { getAddress } from '../../../store/actions/getAddress';
+import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 
 interface QuoteProps {
   files: {
@@ -39,14 +40,11 @@ const PaymentDetails = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await api.get(`/get-all-quotes/${orderId}`);
-      const res = await api.get('/get/address');
-      setAddress(res.data.data);
-
-      setQuote(response.data.data[response.data.data.length - 1]);
+      await getAddress(setAddress);
+      await getAllQuotes(setQuote, orderId);
     };
     fetchData();
-  }, []);
+  }, [orderId]);
 
   if (!Quote || !Quote.files) {
     return <div>Loading...</div>;

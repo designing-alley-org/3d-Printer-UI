@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../stories/button/Button';
 import api from '../../../axiosConfig';
+import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL as string;
 
@@ -15,7 +16,7 @@ const DeliveryPlan: React.FC = () => {
   const [deliveryData, setDeliveryData] = useState(-1);
   const [name, setName] = useState<string>('');
 
-  const orderId = useParams();
+  const {orderId} = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const DeliveryPlan: React.FC = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            orderId: orderId.orderId,
+            orderId: orderId,
             units: 'KG',
             value: '5',
           }),
@@ -49,17 +50,7 @@ const DeliveryPlan: React.FC = () => {
 
   const onProceed = async () => {
     try {
-      const data = {
-        service_type: name,
-      };
-      const response = await api.put(
-        `/update-user-order/${orderId.orderId}`,
-        data
-      );
-      if (response.status === 200) {
-        console.log('Files uploaded successfully!');
-        navigate(`/get-quotes/${orderId.orderId}/checkout/payment`);
-      }
+    await updateUserOrderByOrderId(orderId, navigate, name);
     } catch (error) {
       console.error('Error uploading files:', error);
     }

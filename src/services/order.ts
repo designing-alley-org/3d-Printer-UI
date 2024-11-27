@@ -6,7 +6,7 @@ const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
         const response = await api.put(
             `/update-user-order/${orderId}`,
             formData
-          );
+        );
         return response;
     } catch (error) {
         console.error('Error uploading files:', error);
@@ -118,6 +118,18 @@ const updateFileDataByFileIdService = async (
         console.error('Error updating data:', error);
     }
 }
+const updateUserOrderByOrderIdService = async (orderId: string, data: object) => {
+    try {
+        const response = await api.put(
+            `/update-user-order/${orderId}`,
+            data
+        );
+        return response;
+    } catch (error) {
+        console.error('Error updating user order:', error);
+        throw error;
+    }
+}
 
 //  getSpecificationDataService
 const getSpecificationDataService = async () => {
@@ -142,9 +154,41 @@ const getQuotesService = async (orderId: string): Promise<any> => {
 };
 
 
+const getUserOrderService = async () => {
+    try {
+        const response = await api.get('/get-user-order');
+        return response;
+    } catch (error) {
+        console.error('Error fetching user order:', error);
+        throw error;
+    }
+}
+
+const getAllQuotesService = async (orderId: string): Promise<any> => {
+    try {
+        const response = await api.get(`/get-all-quotes/${orderId}`);
+        console.log('response get all quoat', response);
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching quotes:', error);
+        throw error;
+    }
+}
+
+const getAddressService = async () => {
+    try {
+        const res = await api.get('/get/address');
+        return res;
+    } catch (error) {
+        console.error('Error fetching address:', error);
+        throw error;
+    }
+}
 
 
 
-export {createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService };
+
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService };
 
 
