@@ -1,14 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import { QuoteBox } from './styles';
-import Button from '../../../stories/button/Button';
 import Chat from '../Chat';
 import { useEffect, useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
 import './style.css';
-import api from '../../../axiosConfig.ts';
 import { useParams } from 'react-router-dom';
 import { getQuoteByOrderId } from '../../../store/actions/getQuotes.ts';
-
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
+import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import './style.css';
+import ButtonWithIcon from '../../../stories/ButtonWithIcon/ButtonWithIcon.tsx';
 interface QuoteItem {
   fileName: string;
   quantity: number;
@@ -34,7 +35,12 @@ export default function Quote() {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
   async function getQuotes() {
-    getQuoteByOrderId({orderId: orderId as string, setAllQuotes, setQuote, activeIndex});
+    getQuoteByOrderId({
+      orderId: orderId as string,
+      setAllQuotes,
+      setQuote,
+      activeIndex,
+    });
   }
   useEffect(() => {
     getQuotes();
@@ -42,7 +48,7 @@ export default function Quote() {
   return (
     <QuoteBox>
       <Typography
-        sx={{ color: '#0B274F', position: 'absolute', top: '-1%' }}
+        sx={{ color: '#0C2850', position: 'absolute', top: '-1%' }}
         variant="h2"
       >
         Connecting For Quote
@@ -50,12 +56,23 @@ export default function Quote() {
       <Box sx={{ position: 'absolute', right: '0rem', top: '0' }}>
         {' '}
         <span className="proc">
-          <Button
+          <ButtonWithIcon
             label="SHOW QUOTE"
-            onClick={() => {
-              getQuotes();
+            handleClick={() => {
               setShowQuote(!showQuote);
+              getQuotes();
             }}
+            iconPosition="end"
+            Icon={
+              showQuote ? (
+                <ArrowCircleDownIcon
+                  sx={{ fontSize: '3rem' }}
+                  fontSize="large"
+                />
+              ) : (
+                <ArrowCircleUpIcon fontSize="large" />
+              )
+            }
           />
         </span>
       </Box>
@@ -65,8 +82,8 @@ export default function Quote() {
           width: '95%',
           top: '10%',
           left: '2%',
-          padding: '1rem',
-          background: '#DBEAFF',
+          padding: '0 1rem 0 1rem',
+          background: '#F1F6FE',
           border: '1px solid #2359B0',
           borderRadius: '1.5rem 1.5rem 1.5rem 1.5rem',
           position: 'absolute',
@@ -83,7 +100,7 @@ export default function Quote() {
           />
         }
       </Box>
-      <Box sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ height: '100%', width: '100%', mt: '1rem' }}>
         <Chat />
       </Box>
     </QuoteBox>
