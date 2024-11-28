@@ -42,11 +42,12 @@ const index: React.FC = () => {
 
   return (
     <div className="rootLayout">
+      <main className='mainContent'>
       <div className="Content">
         <div className="header">
           <Header tabData={tabData} activeTabs={activeTabs} />
         </div>
-        <div className="mainContent">
+        <div className="mContent">
           {activeTabs === 1 ? (
             <Wrap>
               <h1 style={{ color: 'white' }}>START 3D PRINTING YOUR FUTURE</h1>
@@ -57,6 +58,7 @@ const index: React.FC = () => {
           )}
         </div>
       </div>
+      </main>
       <div className="footer">
         <Footer />
       </div>

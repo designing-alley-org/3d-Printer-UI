@@ -30,8 +30,8 @@
   &::after {
     content: '';
     position: absolute;
-    margin-top: -6.1rem;
-    margin-left: 7.6%;
+    margin-top: -4.1rem;
+    margin-left: 9.6%;
     width: 3.05rem;
     height: 4rem;
     rotate: 180deg;
@@ -44,6 +44,9 @@
 }
 .tabrow li:nth-child(2) {
   border-bottom-left-radius: 3rem;
+}
+.tabrow li:nth-child(4) {
+  width: 4rem;
 }
 .tabrow li.selected:last-of-type::after {
   right: 10px;
@@ -71,14 +74,12 @@
   align-items: center;
 }
 
-
-
 .notificationIconConrtainer {
   background: #e3eeff;
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
-  margin-left: 8rem;
+  margin-right: -6rem;
   color: #0066ff;
   display: flex;
   justify-content: center;
@@ -90,7 +91,7 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  background: #0066FF;
+  background: #0066ff;
   color: white;
   font-size: 0.8rem;
   font-weight: bold;
@@ -103,10 +104,8 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-
 .notificationContainer {
   position: absolute;
   right: 2rem;
   top: 6rem;
-  
 }

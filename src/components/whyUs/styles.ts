@@ -55,11 +55,11 @@ export const Display = styled.section`
 `;
 export const DisplayInfo = styled.section`
 display: grid;
-  padding: 6rem 3rem;
-  border-radius: 2rem 0rem 2rem 2rem;
-  background: #dde9fc;
+    padding: 10rem 3rem;
+    border-radius: 2rem 0rem 2rem 2rem;
+    background: #dde9fc;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 4rem;
+    grid-gap: 8rem;
     .info {
     color: #001331;
     .title {
@@ -80,24 +80,24 @@ export const KnowMore = styled.span`
   width: 26rem;
   display: flex;
   background: #dde9fc;
-  padding: 1rem 3rem;
+  padding: 1rem 3rem 0.5rem 3rem;
   border-top-right-radius: 4rem;
   button {
     background-color: #dde9fc;
-    padding: 0.5rem 5rem;
+    padding: 0.8rem 6rem;
     border: 1px solid #0066ff;
     color: #0066ff;
-    border-radius: 20px;
+    border-radius: 2rem;
   }
   &::after {
     content: '';
     position: absolute;
-    margin-top: -0.3rem;
-    margin-left: 22.2rem;
+    margin-top: -0.4rem;
+    margin-left: 22.5rem;
     background-color: transparent;
-    width: 4.05rem;
+    width: 3.05rem;
     height: 4rem;
-    border-bottom-left-radius: 8.25rem;
-    box-shadow: -1rem 1rem 0 0 #dde9fc;
+    border-bottom-left-radius: 7.25rem;
+    box-shadow: 0rem 2rem 0 0 #dde9fc;
   }
 `;
