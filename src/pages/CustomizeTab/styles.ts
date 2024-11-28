@@ -37,7 +37,7 @@ export const LoadingWrapper = styled.section`
   `;
 
 export const Files = styled.article`
-  width: 40%;
+  width: 37%;
   border: 1px solid #66a3ff;
   border-radius: 8px;
   padding: 8px;
@@ -113,7 +113,6 @@ export const Model = styled.section`
     transition:
       background 0.2s ease,
       transform 0.2s ease;
-
     &:hover {
       transform: scale(1.1);
       box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
@@ -125,14 +124,14 @@ export const ModelName = styled.section`
   display: flex;
   justify-content: center;
   margin-top: 0.8rem;
-  margin-left: 1rem;
+  margin-left: .8rem;
   color: #0a2248;
   font-size: 1.2rem;
   &::after {
-    content: 'Customisation';
+    content: 'Customization';
     position: absolute;
-    bottom: 9px;
-    margin-left: 1.7rem;
+    bottom: .7rem;
+    left:9rem;
   }
 `;
 

@@ -21,15 +21,13 @@ export const fileNumber : SxProps ={
   backgroundColor: '#66A3FF',
 }
 export const errorText: SxProps = { color: 'red' }; 
-export const viewBox: SxProps = {
-  width: '20%',
-};
+export const viewBox: SxProps = { width: '13%' };
 
 export const viewContent: SxProps = {
   width: '7.3rem',
   height: '7.3rem',
   borderRadius: '1.2rem',
-  bgcolor: '#DDE9FC',
+  backgroundColor: '#DDE9FC',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -44,13 +42,14 @@ export const viewButton : SxProps = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  bgcolor: '#66A3FF',
+  backgroundColor: '#66A3FF',
   height: '2rem',
   width: '2rem',
   borderRadius: '50%',
   cursor: 'pointer',
+  transition: 'transform 0.3s ease',
   '&:hover': {
-    bgcolor: '#5592e6',
+    backgroundColor: '#5592e6',
     transform: 'scale(1.1)', 
   },
 };
@@ -89,11 +88,11 @@ export const quantityBox: SxProps = {
 export const quantityHeader: SxProps = {
   display: 'flex',
   justifyContent: 'space-between',
-  margin: '0  0 0 2.5rem',
+  margin: '0  0 0 3.3rem',
 };
 
 export const quantityValueBox: SxProps = {
-  width: '12rem',
+  width: '14rem',
   height: '2.3rem',
   display: 'flex',
   justifyContent: 'space-between',
