@@ -441,6 +441,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                   label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
                   onClick={handleSend}
                 />
+                <div className='curve'></div>
               </span>
             ) : null}
           </Box>
