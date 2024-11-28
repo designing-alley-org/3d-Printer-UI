@@ -15,7 +15,7 @@ interface QuoteItem {
 interface QuoteData {
   quoteStatus: string;
   isClosed: boolean;
-  approvedBy: any;
+  approvedBy: { role: string } | null;
   tax: number;
   files: QuoteItem[];
   Shipping: number;
@@ -28,6 +28,8 @@ interface QuoteTemplateProps {
   allQuotes: QuoteData[];
   quote: QuoteData | null;
   setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+  setQuote: React.Dispatch<React.SetStateAction<QuoteData | null>>;
+  getQuotes: () => void;
 }
 
 interface SummaryRow {
@@ -36,18 +38,22 @@ interface SummaryRow {
   updatedValue: number;
 }
 
-const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuotes}:QuoteTemplateProps) => {
-
+const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
+  allQuotes,
+  quote,
+  setActiveIndex,
+  setQuote,
+  getQuotes,
+}) => {
   const { orderId } = useParams<{ orderId: string }>();
   const [showNegotiate, setShowNegotiate] = useState<boolean>(false);
   const [updatedQuote, setUpdatedQuote] = useState<QuoteData | null>(null);
-  
-  console.log(allQuotes);
-  console.log(quote);
 
   const handlePriceChange = (index: number, newPrice: string): void => {
     if (quote) {
-      const newFiles = updatedQuote? [...updatedQuote.files] : [...quote.files];
+      const newFiles = updatedQuote
+        ? [...updatedQuote.files]
+        : [...quote.files];
       newFiles[index] = {
         ...newFiles[index],
         price: parseFloat(newPrice) || 0,
@@ -85,15 +91,13 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
 
   const handleSend = async () => {
     if (updatedQuote) {
-      const res = await api.post(`/negotiate-quote/${quote?._id}/${orderId}`, {
+      await api.post(`/negotiate-quote/${quote?._id}/${orderId}`, {
         data: updatedQuote.files,
       });
-      console.log('Negotiate', res);
     } else {
-      const res = await api.put(`/approved-quote/${quote?._id}`, {
+      await api.put(`/approved-quote/${quote?._id}`, {
         approved: true,
       });
-      console.log('Approve', res);
     }
     getQuotes();
   };
@@ -112,27 +116,53 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          position: 'relative',
         }}
       >
-        <Typography variant="body1" sx={{ color: '#2359B0' }}>
+        <Typography variant="body1" sx={{ color: '#2359B0', pt: '1rem' }}>
           Quote Chat
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            maxWidth: '36%',
+            overflowX: 'auto',
+            height: '100%',
+            '&::-webkit-scrollbar': {
+              height: '0.7rem',
+              cursor: 'pointer',
+            },
+          }}
+        >
           {allQuotes.map((item, index) => (
             <Box
               key={item._id}
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
                 cursor: 'pointer',
-                backgroundColor: item._id === quote?._id ? '#66A3FF' : 'white',
-                color: 'black',
-                padding: '0.5rem 1rem',
+                color: item._id === quote?._id ? '#1E6FFF' : 'black',
+                width: '10rem',
+                height: '100%',
               }}
               onClick={() => handleQuoteClick(item, index)}
             >
-              <Typography variant="body1">Quote {index + 1}</Typography>
+              <Box
+                sx={{
+                  width: '10rem',
+                  borderBottom: `10px solid ${item._id === quote?._id ? '#1E6FFF' : '#F1F6FE'}`,
+                  backgroundColor:
+                    item._id === quote?._id ? '#66A3FF' : 'white',
+                  position: 'sticky',
+                  zIndex: 9,
+                  borderRadius: '0rem 0rem 1rem 1rem',
+                }}
+              ></Box>
+              <Typography
+                sx={{ textAlign: 'center', width: '10rem', my: '1rem' }}
+                variant="body1"
+              >
+                Quote {index + 1}
+              </Typography>
             </Box>
           ))}
         </Box>
@@ -153,12 +183,14 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
                 : 'repeat(3, 1fr)',
               gap: 4,
               position: 'relative',
-                          }}
+              padding: '1rem',
+              maxHeight: '18rem',
+              overflowY: 'auto',
+            }}
           >
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
@@ -191,7 +223,6 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
@@ -251,11 +282,11 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
 
             {quote.files.map((item, index) => (
               <React.Fragment key={item.fileName}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Box sx={{ display: 'flex', gap: 4 }}>
                   <Box
                     sx={{
                       height: 32,
-                      width: 32,
+                      width: 42,
                       backgroundColor: '#66A3FF',
                       borderRadius: '50%',
                       display: 'flex',
@@ -346,14 +377,20 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
               textAlign="right"
               sx={{ fontWeight: '800' }}
             >
-              ${(quote.totalPrice + (quote.tax * quote.totalPrice) / 100).toFixed(2)}
+              $
+              {(
+                quote.totalPrice +
+                (quote.tax * quote.totalPrice) / 100
+              ).toFixed(2)}
             </Typography>
             {showNegotiate && (
               <Typography variant="body1" fontWeight="bold" textAlign="right">
                 $
-                {((updatedQuote?.totalPrice ?? 0) +
+                {(
+                  (updatedQuote?.totalPrice ?? 0) +
                   ((updatedQuote?.tax ?? 0) * (updatedQuote?.totalPrice ?? 0)) /
-                    100).toFixed(2)}
+                    100
+                ).toFixed(2)}
               </Typography>
             )}
           </Box>
@@ -373,6 +410,7 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
                 sx={{
                   display: 'flex',
                   gap: '4rem',
+                  pb: '1rem',
                   alignItems: 'center',
                 }}
               >
@@ -403,6 +441,7 @@ const QuoteTemplate: React.FC = ({allQuotes,quote,setActiveIndex,setQuote,getQuo
                   label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
                   onClick={handleSend}
                 />
+                <div className='curve'></div>
               </span>
             ) : null}
           </Box>

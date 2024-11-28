@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const QuoteBox = styled(Box)({
   background: '#DBEAFF',
   padding: '3rem 1rem 1rem 1rem',
+  height: '60rem',
   borderRadius: '1.5rem 0 1.5rem 1.5rem',
   position: 'relative',
   '&::after': {
@@ -24,7 +25,7 @@ export const QuoteBox = styled(Box)({
     right: '25%',
     backgroundColor: 'white',
     width: '75%',
-    height: '3rem',
+    height: '4rem',
     borderBottomRightRadius: '10rem',
   },
 });

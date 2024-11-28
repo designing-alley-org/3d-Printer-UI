@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  min-height: 45rem;
+  height: 50rem;
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
