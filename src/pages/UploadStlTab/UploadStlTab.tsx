@@ -8,6 +8,7 @@ import { uploadDimBtnData } from '../../constants';
 import { saveFile } from '../../utils/indexedDB';
 import { useParams } from 'react-router-dom';
 import { getFileByOrderIdUploadstlService } from '../../services/order';
+import api from '../../axiosConfig';
 
 interface ModelDimensions {
   height: number;
@@ -112,23 +113,33 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     [setFiles]
   );
 
-  // Handle file removal
+// Handle file removal  
   const handleRemoveFile = useCallback(
-    (fileId: string) => {
-      setFiles((prevFiles) => {
-        const fileToRemove = prevFiles.find((file) => file._id === fileId);
-        if (fileToRemove?.fileUrl) {
-          URL.revokeObjectURL(fileToRemove.fileUrl);
+    async (fileId: string) => {
+      try {
+        const res = await api.delete(`/delete-user-order/${orderId}/${fileId}`);
+        if (res.status === 200) {
+          console.log("File deleted successfully:", res.data);
+        } else {
+          console.warn("Failed to delete the file:", res.data);
         }
-        return prevFiles.filter((file) => file._id !== fileId);
-      });
-
-      setActiveFileId((prevActiveFileId) =>
-        prevActiveFileId === fileId ? null : prevActiveFileId
-      );
+        setFiles((prevFiles) => {
+          const fileToRemove = prevFiles.find((file) => file._id === fileId);
+          if (fileToRemove?.fileUrl) {
+            URL.revokeObjectURL(fileToRemove.fileUrl); // Revoke the Object URL
+          }
+          return prevFiles.filter((file) => file._id !== fileId);
+        });
+        setActiveFileId((prevActiveFileId) =>
+          prevActiveFileId === fileId ? null : prevActiveFileId
+        );
+      } catch (error) {
+        console.error("Error removing file:", error);
+      }
     },
-    [setFiles]
+    [orderId, setFiles, setActiveFileId]
   );
+  
 
   // Handle quantity updates
   const handleUpdateQuantity = useCallback(
