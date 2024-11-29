@@ -117,6 +117,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           position: 'relative',
+          pr: '1rem',
         }}
       >
         <Typography variant="body1" sx={{ color: '#2359B0', pt: '1rem' }}>
@@ -186,6 +187,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               padding: '1rem',
               maxHeight: '18rem',
               overflowY: 'auto',
+              mr: '1rem',
             }}
           >
             <Box
@@ -334,6 +336,8 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 : 'repeat(3, 1fr)',
               gap: 4,
               mb: 2,
+              p: '1rem',
+              mr: '1rem',
             }}
           >
             {summaryRows.map(({ label, value, updatedValue }) => (
@@ -366,6 +370,8 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 : 'repeat(3, 1fr)',
               gap: 2,
               mb: 4,
+              p: '1rem',
+              mr: '1rem',
             }}
           >
             <Typography variant="body1" fontWeight="bold">
@@ -441,7 +447,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                   label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
                   onClick={handleSend}
                 />
-                <div className='curve'></div>
+                <div className="curve"></div>
               </span>
             ) : null}
           </Box>
