@@ -82,7 +82,7 @@ export default function Quote() {
           width: '95%',
           top: '10%',
           left: '2%',
-          padding: '0 1rem 0 1rem',
+          padding: '0 0rem 0 1rem',
           background: '#F1F6FE',
           border: '1px solid #2359B0',
           borderRadius: '1.5rem 1.5rem 1.5rem 1.5rem',

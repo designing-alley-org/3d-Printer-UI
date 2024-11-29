@@ -42,22 +42,26 @@ const index: React.FC = () => {
 
   return (
     <div className="rootLayout">
-      <main className='mainContent'>
-      <div className="Content">
-        <div className="header">
-          <Header tabData={tabData} activeTabs={activeTabs} />
+      <main className="mainContent">
+        <div className="Content">
+          <div className="header">
+            <Header tabData={tabData} activeTabs={activeTabs} />
+          </div>
+          <div className="mContent">
+            {activeTabs === 1 ? (
+              <Wrap>
+                {pathname === '/get-quotes' && (
+                  <h1 style={{ color: 'white' }}>
+                    START 3D PRINTING YOUR FUTURE
+                  </h1>
+                )}
+                {<Outlet />}
+              </Wrap>
+            ) : (
+              <Outlet />
+            )}
+          </div>
         </div>
-        <div className="mContent">
-          {activeTabs === 1 ? (
-            <Wrap>
-              <h1 style={{ color: 'white' }}>START 3D PRINTING YOUR FUTURE</h1>
-              {<Outlet />}
-            </Wrap>
-          ) : (
-            <Outlet />
-          )}
-        </div>
-      </div>
       </main>
       <div className="footer">
         <Footer />

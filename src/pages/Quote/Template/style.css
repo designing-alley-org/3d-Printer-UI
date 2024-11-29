@@ -1,29 +1,33 @@
 .approve {
   button {
+    margin-right: 2rem;
     background-color: #1e6fff;
     border-radius: 40px;
-    width: max-content;
+    width: 15rem;
+    margin-bottom: 0.5rem;
     padding: 1rem;
     &::before {
       content: '';
       position: absolute;
       bottom:1px;
-      right: 14.9%;
+      right: 22.9%;
       background: transparent;
       width: 2rem;
       height: 2rem;
       box-shadow: 1rem 0rem 0 0rem #ffffff;
       border-bottom-right-radius: 10rem;
+      
       transform: rotate(15deg);
       z-index: 1;
     }
     &::after {
       content: '';
       position: absolute;
-      width: 13%;
+      width: 23%;
       height: 5rem;
       background: #FFFFFF;
-      border-top-left-radius: 2rem;
+      border-top-left-radius: 1.5rem;
+      border-bottom-right-radius: 1.5rem;
       z-index: -1;
       bottom: 0;
       right: 0;
@@ -37,7 +41,7 @@
     background-color:  #FFFFFF;
     clip-path: polygon(100% 100%, 0% 100%, 100% 0);
     bottom: 0;
-    right:12.9%;
+    right:22.9%;
   }
 }
 .proc {
