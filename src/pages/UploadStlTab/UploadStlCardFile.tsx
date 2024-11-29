@@ -280,14 +280,21 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               />
               <TextField
                 value={file.quantity}
-                onChange={(e) =>
-                  handleQuantityChange('set', Number(e.target.value))
-                }
-                type="number"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Allow only numeric values
+                  if (/^\d*$/.test(value)) {
+                    const numericValue = Number(value);
+                    if (
+                      numericValue >= QUANTITY_LIMITS.MIN &&
+                      numericValue <= QUANTITY_LIMITS.MAX
+                    ) {
+                      handleQuantityChange('set', numericValue);
+                    }
+                  }
+                }}
+                type="text" // Input type is text, but we enforce numeric validation
                 inputProps={{
-                  min: QUANTITY_LIMITS.MIN,
-                  max: QUANTITY_LIMITS.MAX,
-                  step: 1,
                   'aria-label': 'Quantity',
                 }}
                 sx={{
@@ -307,6 +314,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                   },
                 }}
               />
+
               <ButtonIcon
                 width="2rem"
                 height="2rem"

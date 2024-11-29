@@ -1,20 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { accTab } from '../../constants';
+import {  notificationTab } from '../../constants';
 import { useEffect, useState } from 'react';
-import MyProfile from './MyProfile';
-import { AccWrapper, MainComp, SideTab } from './styles';
-import Orders from './Orders';
-import Notification from './Notification';
-import Settings from './Settings';
-// import api from '../../axiosConfig';
-import { useSelector } from 'react-redux';
+import { NotWrapper, MainComp, SideTab } from './styles';
 import { getUserOrder } from '../../store/actions/getUserOrder';
+import Notification from '../YourAccount/Notification';
+import OngoingOrder from './OngoingOrder';
+import PlaceOrder from './PlaceOrder';
+import General from './General';
 
-const AccountLayout = () => {
+
+const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
   const [orders, setOrders] = useState<any>();
 
-  const user = useSelector((state: any) => state.user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +29,9 @@ const AccountLayout = () => {
   console.log(orders);
 
   return (
-    <AccWrapper>
+    <NotWrapper>
       <SideTab>
-        {accTab.map((item) => (
+        {notificationTab.map((item) => (
           <span
             key={item.id}
             className={`${activeTab === item.id ? 'selected' : ''}`}
@@ -45,13 +42,13 @@ const AccountLayout = () => {
         ))}
       </SideTab>
       <MainComp>
-        {activeTab === 1 && <MyProfile profileData={user?.user} />}
-        {activeTab === 2 && <Orders orderData={orders?.data?.order} />}
-        {activeTab === 3 && <Notification />}
-        {activeTab === 4 && <Settings />}
+        {activeTab === 1 && <OngoingOrder/>}
+        {activeTab === 2 && <PlaceOrder />}
+        {activeTab === 3 && <General/>}
+        {activeTab === 4 && <Notification />}
       </MainComp>
-    </AccWrapper>
+    </NotWrapper>
   );
 };
 
-export default AccountLayout;
+export default NotificationLayout;
