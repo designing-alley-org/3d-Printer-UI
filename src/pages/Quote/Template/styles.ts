@@ -6,7 +6,7 @@ export const TemplateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0 1rem 0 1rem;
+  padding: 0 0rem 0 1rem;
   color: #2359b0;
   position: relative;
 `;
