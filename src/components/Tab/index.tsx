@@ -16,7 +16,9 @@ interface ITabContainerProps {
 const TabComponent = (props: ITabContainerProps) => {
   const { tabs, numberId, activeTabs } = props;
   const navigate = useNavigate();
-  const [notification, setNotification] = useState<{ id: number; message: string; count: number }[]>([
+  const [notification, setNotification] = useState<
+    { id: number; message: string; count: number }[]
+  >([
     { id: 1, message: 'Quote', count: 1 },
     { id: 2, message: 'General', count: 2 },
     { id: 3, message: 'Order Updates', count: 1 },
@@ -64,7 +66,19 @@ const TabComponent = (props: ITabContainerProps) => {
                   <p>{tab.id}</p>
                 </span>
               )}
-              <p>{tab.label}</p>
+              <div
+                className="top-border"
+                style={{
+                  width: '20rem',
+                  marginTop: '-1rem',
+                  borderBottom: `10px solid ${activeTabs === tab.id ? '#1E6FFF' : 'white'}`,
+                  backgroundColor: activeTabs === tab.id ? '#66A3FF' : 'white',
+                  position: 'sticky',
+                  zIndex: 9,
+                  borderRadius: '0rem 0rem 1rem 1rem',
+                }}
+              ></div>
+              <p className="label">{tab.label}</p>
               {tab.label === '' && index === 3 && (
                 <div
                   className="notificationIconConrtainer"
@@ -83,11 +97,8 @@ const TabComponent = (props: ITabContainerProps) => {
         ))}
       </ul>
       {showNotification && (
-        <div
-          className="notificationContainer"
-          ref={notificationRef}
-        >
-         <Notifications notification={notification} />
+        <div className="notificationContainer" ref={notificationRef}>
+          <Notifications notification={notification} />
         </div>
       )}
     </TabWrapper>
@@ -95,6 +106,5 @@ const TabComponent = (props: ITabContainerProps) => {
 };
 
 const TabWrapper = styled.section``;
-
 
 export default TabComponent;

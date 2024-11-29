@@ -16,12 +16,8 @@
 .insideTab li {
   background: #ffffff;
   width: -webkit-fill-available;
-  padding: 8px 30px;
   font-size: 20px;
   cursor: pointer;
-}
-.tabrow li.selected {
-  border-top: 8px solid #1e6fff;
 }
 .tabrow li:first-child {
   background-color: unset;
@@ -30,8 +26,8 @@
   &::after {
     content: '';
     position: absolute;
-    margin-top: -4.1rem;
-    margin-left: 9.6%;
+    margin-top: -3.5rem;
+    margin-left: 9.9%;
     width: 3.05rem;
     height: 4rem;
     rotate: 180deg;
@@ -47,6 +43,19 @@
 }
 .tabrow li:nth-child(4) {
   width: 4rem;
+}
+.tabrow li:first-child,
+li:nth-child(4) {
+  .top-border {
+    display: none;
+  }
+}
+.tabrow li:nth-child(2),
+li:nth-child(3),
+li:nth-child(5) {
+  p {
+    padding: 1rem;
+  }
 }
 .tabrow li.selected:last-of-type::after {
   right: 10px;
@@ -72,6 +81,7 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  flex-direction: column;
 }
 
 .notificationIconConrtainer {
