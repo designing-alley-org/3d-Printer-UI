@@ -16,5 +16,3 @@ const CurveCard: React.FC<ICerveCardProps> = ({ children, className }) => {
 
 export default CurveCard;
 
-
-/******  a806ab6d-63ce-4054-9e8e-fd17a8b0a669  *******/

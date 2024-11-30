@@ -22,7 +22,7 @@ const AccountLayout = () => {
       try {
         await getUserOrder(setOrders);
       } catch (error) {
-        console.log(error); // Handle errors
+        console.log(error); 
       } finally {
         // Stop loading
       }

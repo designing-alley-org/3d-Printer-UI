@@ -217,7 +217,7 @@ const Accordion: React.FC<AccordionProps> = ({
     if (newUnit !== unit) {
       // Convert current dimensions when unit changes
       const convertedDimensions = {
-        height: convertDimensions(dimensions.height.toFixed(2), unit, newUnit),
+        height: convertDimensions(dimensions.height.toFixed(3), unit, newUnit),
         width: convertDimensions(dimensions.width.toFixed(2), unit, newUnit),
         length: convertDimensions(dimensions.length.toFixed(2), unit, newUnit),
       };
@@ -280,7 +280,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 // label="Height"
                 variant="outlined"
                 className="fields"
-                value={dimensions.height.toFixed(2)}
+                value={dimensions.height}
                 onChange={handleChange('height')}
                 inputProps={{
                   inputMode: 'numeric',
@@ -297,7 +297,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 // label="Width"
                 variant="outlined"
                 className="fields"
-                value={dimensions.width.toFixed(2)}
+                value={dimensions.width}
                 onChange={handleChange('width')}
                 inputProps={{
                   inputMode: 'numeric',
@@ -314,7 +314,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 // label="Length"
                 variant="outlined"
                 className="fields"
-                value={dimensions.length.toFixed(2)}
+                value={dimensions.length}
                 onChange={handleChange('length')}
                 inputProps={{
                   inputMode: 'numeric',

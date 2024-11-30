@@ -28,24 +28,24 @@ const TabComponent = (props: ITabContainerProps) => {
   const notificationRef = useRef<HTMLDivElement>(null);
 
   // Hide notification when clicking outside the container
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       notificationRef.current &&
-  //       !notificationRef.current.contains(event.target as Node)
-  //     ) {
-  //       setShowNotification(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setShowNotification(false);
+      }
+    };
 
-  //   if (showNotification) {
-  //     document.addEventListener('mousedown', handleClickOutside);
-  //   }
+    if (showNotification) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
 
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showNotification]);
 
   return (
     <TabWrapper>
@@ -82,7 +82,10 @@ const TabComponent = (props: ITabContainerProps) => {
               {tab.label === '' && index === 3 && (
                 <div
                   className="notificationIconConrtainer"
-                  onClick={() => setShowNotification(!showNotification)}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    setShowNotification(!showNotification);
+                  }}
                 >
                   <img src={notificationIcon} alt="notificationIcon" />
                   {notification.length > 0 && (
@@ -97,8 +100,11 @@ const TabComponent = (props: ITabContainerProps) => {
         ))}
       </ul>
       {showNotification && (
-        <div className="notificationContainer" ref={notificationRef}>
-          <Notifications notification={notification} />
+        <div
+          className="notificationContainer"
+          ref={notificationRef}
+        >
+          <Notifications notification={notification} setShowNotification={setShowNotification} />
         </div>
       )}
     </TabWrapper>

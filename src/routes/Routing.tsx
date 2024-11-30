@@ -20,6 +20,7 @@ import Account from '../pages/YourAccount/index.tsx';
 import Services from '../pages/Services/index.tsx';
 import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
+import Notifications from '../pages/Notification /index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -48,7 +49,11 @@ const Routing: React.FC = () => {
           <Route path=":orderId/">
             <Route
               path={ROUTES.UPLOAD_STL}
-              element={<ProtectedRoute component={<UploadStlCard />} />}
+              element={
+                <ProtectedRoute
+                  component={<UploadStlCard files={[]} setFiles={() => {}} />}
+                />
+              }
             />
             <Route
               path={ROUTES.CUSTOMIZE}
@@ -79,6 +84,7 @@ const Routing: React.FC = () => {
         </Route>
         <Route path={ROUTES.SERVICES} element={<Services />} />
         <Route path={ROUTES.ACCOUNT} element={<Account />} />
+        <Route path={ROUTES.Notification} element={<Notifications/>} />
         <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
       </Route>
 

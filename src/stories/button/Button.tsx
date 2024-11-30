@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface ButtonProps {
   label: string;
   onClick: (e?: any) => void;
-  width?: string; // Optional width
-  height?: string; // Optional height
+  width?: string; 
+  height?: string;
   disabled?: boolean;
-  color?: string; // Optional color to apply on the label
-  [key: string]: any; // Allow any additional props
+  color?: string; 
+  children?: ReactNode;
+  className?: string;
+  [key: string]: any; 
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, width, height, color, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ label, onClick, width, height, color, children, className, ...props }) => {
   const style = {
     width,
     height,
@@ -19,8 +21,9 @@ const Button: React.FC<ButtonProps> = ({ label, onClick, width, height, color, .
   };
 
   return (
-    <button style={style} onClick={onClick} {...props}>
+    <button style={style} onClick={onClick} className={className} {...props}>
       {label}
+      {children}
     </button>
   );
 };

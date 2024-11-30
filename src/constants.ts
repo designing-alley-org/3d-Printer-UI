@@ -30,7 +30,7 @@ import aboutUs from './assets/images/aboutUS.svg';
 import aboutUs1 from './assets/images/aboutUs1.svg';
 import aboutUs2 from './assets/images/aboutUs2.svg';
 import notificationIcon from './assets/icons/notifications.svg';
-
+import arrowRight from './assets/icons/right-arrow.svg';
 // export svg
 export {
   uploadIcon,
@@ -45,6 +45,7 @@ export {
   group,
   arrow_dropdown_blue,
   notificationIcon,
+  arrowRight
 };
 
 // Data for Tab
@@ -74,7 +75,12 @@ export const accTab = [
   { id: 2, label: 'MY ORDERS' },
   { id: 3, label: 'SETTINGS' },
 ];
-
+ export const notificationTab = [
+  { id: 1, label: 'ONGOING ORDER' },
+  { id: 2, label: 'PLACED ORDER' },
+  { id: 3, label: 'GENERAL' },
+  { id: 4, label: 'SETTINGS' },
+ ];
 // Data for Card
 export const cardItems = [
   {
