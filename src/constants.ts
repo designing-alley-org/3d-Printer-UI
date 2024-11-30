@@ -72,8 +72,7 @@ export const quoteTexts = [
 export const accTab = [
   { id: 1, label: 'MY PROFILE' },
   { id: 2, label: 'MY ORDERS' },
-  { id: 3, label: 'NOTIFICATIONS' },
-  { id: 4, label: 'SETTINGS' },
+  { id: 3, label: 'SETTINGS' },
 ];
 
 // Data for Card
