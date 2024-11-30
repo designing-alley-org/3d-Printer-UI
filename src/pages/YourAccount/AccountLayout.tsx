@@ -52,11 +52,11 @@ const AccountLayout = () => {
             <Box
               sx={{
                 height: '5rem',
-                borderLeft: `30px solid ${item.id === activeTab ? 'white' : 'transparent'}`,
+                borderLeft: `20px solid ${item.id === activeTab ? 'white' : 'transparent'}`,
                 backgroundColor:
                   item.id === activeTab ? 'white' : 'transparent',
                 position: 'absolute',
-                left: '2.5%',
+                left: '3.4%',
                 zIndex: 9,
                 borderRadius: '3rem 0rem 0rem 3rem',
               }}
