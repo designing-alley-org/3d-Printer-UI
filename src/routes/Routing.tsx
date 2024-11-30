@@ -20,7 +20,7 @@ import Account from '../pages/YourAccount/index.tsx';
 import Services from '../pages/Services/index.tsx';
 import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
-import Notifications from '../pages/Notification /index.tsx';
+import Notifications from '../pages/Notification/index.tsx';
 
 const Routing: React.FC = () => {
   return (
