@@ -1,18 +1,16 @@
-import { useNavigate } from "react-router-dom";
-import { CreateAddressService } from "../../services/address";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-const createAddress = async (data: any) => {
-    const navigate = useNavigate();
+import { CreateAddressService } from '../../services/address';
 
-    try {
-        const response = await CreateAddressService(data);
-        if (response.status === 201) {
-            navigate(`/get-quotes/${data.orderId}/checkout/select-delivery`);
-        }
-    } catch (error) {
-        console.error("Error in handleProceed:", error);
+const createAddress = async (data: any, navigate: any) => {
+  try {
+    const response = await CreateAddressService(data);
+    if (response.status === 201) {
+      navigate(`/get-quotes/${data.orderId}/checkout/select-delivery`);
     }
+  } catch (error) {
+    console.error('Error in handleProceed:', error);
+  }
 };
-
 
 export { createAddress };

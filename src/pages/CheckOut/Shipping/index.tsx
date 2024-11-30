@@ -8,26 +8,26 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createAddress } from '../../../store/actions/createAddress';
 
-const ShippingDetails: React.FC = () => {
+const ShippingDetails = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-
   const { orderId } = useParams();
 
-  const handleProceed = async (data: any) => {
+  const navigate = useNavigate();
+
+  const handleAddress = async (data: any) => {
     // data.orderId = `${orderId}`;
     console.log(data);
     try {
-      const response = await createAddress(data);
-      console.log("Address created successfully:", response);
+      const response = await createAddress(data, navigate);
+      console.log('Address created successfully:', response);
     } catch (error) {
-      console.error("Failed to create address:", error);
+      console.error('Failed to create address:', error);
     }
-    
   };
   return (
     <Wrapper>
@@ -36,7 +36,7 @@ const ShippingDetails: React.FC = () => {
       <form
         onSubmit={handleSubmit((data: any) => {
           data.orderId = `${orderId}`;
-          handleProceed(data);
+          handleAddress(data);
         })}
       >
         <InputWrapper>

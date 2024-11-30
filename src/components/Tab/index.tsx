@@ -66,7 +66,7 @@ const TabComponent = (props: ITabContainerProps) => {
                   <p>{tab.id}</p>
                 </span>
               )}
-              <div
+              {props.insideTab ? '' : (<div
                 className="top-border"
                 style={{
                   width: '20rem',
@@ -77,7 +77,7 @@ const TabComponent = (props: ITabContainerProps) => {
                   zIndex: 9,
                   borderRadius: '0rem 0rem 1rem 1rem',
                 }}
-              ></div>
+              ></div>)}
               <p className="label">{tab.label}</p>
               {tab.label === '' && index === 3 && (
                 <div
