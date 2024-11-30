@@ -50,6 +50,11 @@ li:nth-child(4) {
     display: none;
   }
 }
+.insideTab li:nth-child(3) {
+  p {
+    padding: unset !important;
+  }
+}
 .tabrow li:nth-child(2),
 li:nth-child(3),
 li:nth-child(5) {
