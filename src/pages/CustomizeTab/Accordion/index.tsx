@@ -11,7 +11,6 @@ import {
   updatePrinter,
   updateTechnology,
 } from '../../../store/customizeFilesDetails/reducer';
-import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
 import { getPrintersByTechnologyAndMaterial } from '../../../store/actions/getPrintersByTechnologyAndMaterial';
 
@@ -80,7 +79,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
   const [selectSize, setSelectSize] = useState<string>('');
   const [unit, setUnit] = useState<'mm' | 'inch'>('mm');
-  const { orderId } = useParams();
   const handleColorClick = (color: string) => setSelectedColor(color);
   const handleTechClick = (technology: string) => setSelectedTech(technology);
   const handleMatClick = (material: string) => setSelectedMat(material);
@@ -88,7 +86,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
   const dataspec = useSelector((state: any) => state.specification);
   const dimansions = selectedFile?.dimensions;
-
   const [dimensions, setDimensions] = useState({
     height: dimansions?.height || 0,
     width: dimansions?.width || 0,
@@ -154,7 +151,8 @@ const Accordion: React.FC<AccordionProps> = ({
       setSelectedMat(selectedFile.material);
       setSelectedColor(selectedFile.color);
       setSelectedPrinter(selectedFile.printer);
-      setSelectUnit(selectedFile.unit);
+      setSelectUnit(selectedFile?.unit);
+      setSelectInfill(selectedFile?.infill);
     }
   }, [selectedFile]);
 
@@ -447,7 +445,7 @@ const Accordion: React.FC<AccordionProps> = ({
                     : (option.value as number)
                 )
               }
-              defaultValue={selectedFile ? String(selectedFile.infill) : ''}
+              defaultValue={selectedFile ? String(selectedFile?.infill) : ''}
             />
           </div>
         )}

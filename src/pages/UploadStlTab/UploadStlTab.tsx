@@ -7,8 +7,8 @@ import { plus } from '../../constants';
 import { uploadDimBtnData } from '../../constants';
 import { saveFile } from '../../utils/indexedDB';
 import { useParams } from 'react-router-dom';
-import { getFileByOrderIdUploadstlService } from '../../services/order';
-import api from '../../axiosConfig';
+import { deleteStlFileByFileId } from '../../store/actions/deleteStlFileByFileId';
+import { getFilesByOrderIdForUploadstl } from '../../store/actions/getFilesByOrderId';
 
 interface ModelDimensions {
   height: number;
@@ -35,28 +35,27 @@ interface UploadStlTabProps {
 const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
-  const [fileUnit, setFileUnit] = useState<string>('');
   const [isPageLoading, setIsPageLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { orderId } = useParams();
 
-
   useEffect(() => {
     const fetchOrderFiles = async () => {
       try {
-        setIsPageLoading(true); 
-        const fetchedFiles = await getFileByOrderIdUploadstlService(orderId);
-        if (fetchedFiles) {
-          setFiles(fetchedFiles);
-        }
+        setIsPageLoading(true);
+        const res = await getFilesByOrderIdForUploadstl(orderId as string);
+        setFiles(res || []);
+        console.log('Files fetched successfully!', res);
       } catch (error) {
         console.error("Error in fetchOrderFiles:", error);
       } finally {
-        setIsPageLoading(false); 
+        setIsPageLoading(false);
       }
     };
-  
-    fetchOrderFiles();
+
+    if (orderId) {
+      fetchOrderFiles();
+    }
   }, [orderId, setFiles, setIsPageLoading]);
 
   // Handle file uploads
@@ -113,20 +112,18 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     [setFiles]
   );
 
-// Handle file removal  
+  // Handle file removal  
   const handleRemoveFile = useCallback(
     async (fileId: string) => {
+      const isValidMongoId = /^[0-9a-fA-F]{24}$/.test(fileId);
       try {
-        const res = await api.delete(`/delete-user-order/${orderId}/${fileId}`);
-        if (res.status === 200) {
-          console.log("File deleted successfully:", res.data);
-        } else {
-          console.warn("Failed to delete the file:", res.data);
+        if (isValidMongoId) {
+          await deleteStlFileByFileId(orderId as string, fileId);
         }
         setFiles((prevFiles) => {
           const fileToRemove = prevFiles.find((file) => file._id === fileId);
           if (fileToRemove?.fileUrl) {
-            URL.revokeObjectURL(fileToRemove.fileUrl); // Revoke the Object URL
+            URL.revokeObjectURL(fileToRemove.fileUrl); 
           }
           return prevFiles.filter((file) => file._id !== fileId);
         });
@@ -139,7 +136,6 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     },
     [orderId, setFiles, setActiveFileId]
   );
-  
 
   // Handle quantity updates
   const handleUpdateQuantity = useCallback(

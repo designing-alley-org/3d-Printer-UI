@@ -60,7 +60,7 @@ const CardLayout = () => {
   const { orderId } = useParams();
   const [allPrinterSelected, setAllPrinterSelected] = useState(false);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
-
+console.log("fileDetails", files);
   // Check if all files have a printer selected
   // useEffect(() => {
   //   if (pathname.includes(ROUTES.CUSTOMIZE)) {
