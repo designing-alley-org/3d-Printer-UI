@@ -86,7 +86,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
   const dataspec = useSelector((state: any) => state.specification);
   const dimansions = selectedFile?.dimensions;
-console.log("selectedFile", selectedFile);
   const [dimensions, setDimensions] = useState({
     height: dimansions?.height || 0,
     width: dimansions?.width || 0,

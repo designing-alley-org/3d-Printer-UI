@@ -41,9 +41,10 @@ export const getFilesByOrderIdForUploadstl = async (
                 const convertedFile = {
                     ...file,
                     dimensions: {
-                        height: 9.05 * 25.4,
-                        width: 60.95,
-                        length: 39.71,
+                        ...file.dimensions,
+                        height: file.dimensions.height * 25.4,
+                        length: file.dimensions.length * 25.4,
+                        width: file.dimensions.width * 25.4,
                     },
                     unit: "mm", 
                 };
