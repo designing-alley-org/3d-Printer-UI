@@ -14,6 +14,7 @@ export const updateFileDataByFileId = ({orderId, activeFile, activeFileId}: IUpd
         formData.append('infill', activeFile?.infill || '');
         formData.append('unit', activeFile?.unit || '');
         formData.append('technology', activeFile?.technology || '');
+        formData.append('weight', activeFile?.weight || '');
     updateFileDataByFileIdService(orderId, activeFileId, formData)
         .then((res) => {
             if (!res) {

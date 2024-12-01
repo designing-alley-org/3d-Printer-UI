@@ -219,7 +219,6 @@ const CustomizeTab: React.FC = () => {
   
     try {
       setIsLoading(true);
-      const promises = [];
   
       // Check if scaling is required
       if (
@@ -227,8 +226,8 @@ const CustomizeTab: React.FC = () => {
         updateHeight !== activeFile?.height ||
         updateLength !== activeFile?.length
       ) {
-        promises.push(
-          scaleTheFileByNewDimensions({
+  
+          await scaleTheFileByNewDimensions({
             orderId: orderId as string,
             activeFileId: activeFileId as string,
             updateLength,
@@ -236,32 +235,30 @@ const CustomizeTab: React.FC = () => {
             updateHeight,
             selectUnit,
           })
-        );
+      
       }
   
       // Get weight of the file
-      promises.push(
-        getWeightByFileId({
+      
+        await getWeightByFileId({
           orderId: orderId as string,
           setWeight,
           dispatch,
           activeFileId,
           selectedMat,
           materialMass,
+          dispatch,
         })
-      );
+      
   
       // Update file data
-      promises.push(
-        updateFileDataByFileId({
+      
+       await updateFileDataByFileId({
           orderId: orderId as string,
           activeFile,
           activeFileId,
         })
-      );
   
-      // Wait for all promises to complete
-      await Promise.all(promises);
     } catch (error) {
       console.error('Error applying selection:', error);
     } finally {

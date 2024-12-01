@@ -282,18 +282,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 value={file.quantity}
                 onChange={(e) => {
                   const value = e.target.value;
-                  // Allow only numeric values
-                  if (/^\d*$/.test(value)) {
-                    const numericValue = Number(value);
-                    if (
-                      numericValue >= QUANTITY_LIMITS.MIN &&
-                      numericValue <= QUANTITY_LIMITS.MAX
-                    ) {
-                      handleQuantityChange('set', numericValue);
-                    }
+                  // Allow only numbers and ensure it's within the limits
+                  if (/^\d*$/.test(value) && Number(value) <= QUANTITY_LIMITS.MAX && Number(value) >= QUANTITY_LIMITS.MIN) {
+                    handleQuantityChange('set', Number(value));
                   }
                 }}
-                type="text" // Input type is text, but we enforce numeric validation
+                type="text" // Keep as 'text'
                 inputProps={{
                   'aria-label': 'Quantity',
                 }}

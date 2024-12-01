@@ -186,9 +186,19 @@ const getAddressService = async () => {
     }
 }
 
+const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => {
+    try {
+        const res = await api.delete(`/delete-file/${orderId}/file/${fileId}`);
+        return res;
+    } catch (error) {
+        console.error('Error deleting STL file:', error);
+        throw error;
+    }
+}
 
 
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService };
+
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService };
 
 

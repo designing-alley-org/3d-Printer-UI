@@ -1,4 +1,5 @@
 import { getWeightByFileIdService } from "../../services/order";
+import { updateWeight } from "../customizeFilesDetails/reducer";
 
 interface IGetWeightByFileId {
     orderId: string;
@@ -15,6 +16,7 @@ export const getWeightByFileId = async ({
     activeFileId,
     selectedMat,
     materialMass,
+    dispatch,
 }: IGetWeightByFileId): Promise<void> => {
     const payload = {
         material_name: selectedMat,
@@ -27,8 +29,8 @@ export const getWeightByFileId = async ({
             console.warn("Weight data is missing");
             return;
         }
-
         setWeight(weight);
+        dispatch(updateWeight({ id: activeFileId, weight: weight }));
     } catch (err) {
         console.error("Error in getWeightByFileId:", err);
     }
