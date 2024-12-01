@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Button from '../../../stories/button/Button';
-import { Body, Price, Wrapper } from './styles';
+import { Body, Price, Wrapper, DeliveryDetails } from './styles';
 import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
 import { getAddress } from '../../../store/actions/getAddress';
@@ -52,12 +52,11 @@ const PaymentDetails = () => {
   return (
     <Wrapper>
       <header>
+      <div className="orderNo">Order No: {orderId}</div>
         <h1>Payment</h1>
-        <h3>Edit Your Files As much as you want</h3>
+        {/* <h3>Edit Your Files As much as you want</h3> */}
         <h3 className="desc">
-          Set the required quantities for each file and if their sizes appear
-          too small, change the unit of measurement to inches. Click on 3D
-          Viewer for a 360° preview of your files.
+        Please Check the Details to proceed for payment
         </h3>
       </header>
       <Body>
@@ -84,6 +83,7 @@ const PaymentDetails = () => {
                     checked={selectedId === item._id}
                     onChange={(e) => handleChange(e, item)}
                   />
+                  <span>
                   {item?.personName +
                     ' ' +
                     item?.companyName +
@@ -97,15 +97,27 @@ const PaymentDetails = () => {
                     item?.countryCode +
                     ' ' +
                     item?.postalCode}
+                    </span>
                 </label>
               </div>
             ))}
           </span>
-          {/* <div className="Another">
+          <div className="Another">
             <span className="count">+ </span>
             <span>Add Another Address</span>
-          </div> */}
+          </div>
+          <DeliveryDetails>
+    <h2>Delivery Details</h2>
+    <div className="delivery-info">
+              <p>
+                <span className="label">Delivery By</span>
+                21st Nov 2024
+              </p>
+              <p>Premium Delivery Plan</p>
+            </div>
+  </DeliveryDetails>
         </div>
+        
         <div className="details">
           <h2>Billing Details</h2>
           <Price>
