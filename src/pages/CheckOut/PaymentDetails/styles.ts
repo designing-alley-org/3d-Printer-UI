@@ -223,3 +223,17 @@ export const DeliveryDetails = styled.div`
     margin-bottom: 1rem;
   }
 `;
+
+export const ModalContent = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 2rem;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  min-width: 60rem;
+  min-height: 10rem;
+`;

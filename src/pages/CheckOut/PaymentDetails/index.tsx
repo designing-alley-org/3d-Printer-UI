@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import Button from '../../../stories/button/Button';
-import { Body, Price, Wrapper, DeliveryDetails } from './styles';
+import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
 import api from '../../../axiosConfig';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getAddress } from '../../../store/actions/getAddress';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
+import { Modal } from '@mui/material';
+import Input from '../../../stories/StandardInput/Input';
+import { inputFields } from '../../../constants';
+import { useForm } from 'react-hook-form';
+import { createAddress } from '../../../store/actions/createAddress';
 
 interface QuoteProps {
   files: {
@@ -16,10 +21,30 @@ interface QuoteProps {
 
 const PaymentDetails = () => {
   const elementsArray = Array(5).fill(null);
-  const [Quote, setQuote] = useState<QuoteProps>([]);
+  const [Quote, setQuote] = useState<QuoteProps>({ files: [], totalPrice: 0, tax: 0 });
   const { orderId } = useParams();
   const [selectedId, setSelectedId] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleAddressSubmit = async (data: any) => {
+    data.orderId = `${orderId}`;
+    try {
+      await createAddress(data, navigate);
+      // Refresh the address list after adding new address
+      await getAddress(setAddress);
+      setShowModal(false);
+    } catch (error) {
+      console.error('Failed to create address:', error);
+    }
+  };
 
   const handleChange = (event: any, data: any) => {
     setSelectedId(event.target.value);
@@ -41,7 +66,9 @@ const PaymentDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getAddress(setAddress);
-      await getAllQuotes(setQuote, orderId);
+      if (orderId) {
+        await getAllQuotes(setQuote, orderId);
+      }
     };
     fetchData();
   }, [orderId]);
@@ -52,11 +79,11 @@ const PaymentDetails = () => {
   return (
     <Wrapper>
       <header>
-      <div className="orderNo">Order No: {orderId}</div>
+        <div className="orderNo">Order No: {orderId}</div>
         <h1>Payment</h1>
         {/* <h3>Edit Your Files As much as you want</h3> */}
         <h3 className="desc">
-        Please Check the Details to proceed for payment
+          Please Check the Details to proceed for payment
         </h3>
       </header>
       <Body>
@@ -84,40 +111,59 @@ const PaymentDetails = () => {
                     onChange={(e) => handleChange(e, item)}
                   />
                   <span>
-                  {item?.personName +
-                    ' ' +
-                    item?.companyName +
-                    ' ' +
-                    item?.streetLines[0] +
-                    ' ' +
-                    item?.city +
-                    ' ' +
-                    item?.stateOrProvinceCode +
-                    ' ' +
-                    item?.countryCode +
-                    ' ' +
-                    item?.postalCode}
-                    </span>
+                    {item?.personName +
+                      ' ' +
+                      item?.companyName +
+                      ' ' +
+                      item?.streetLines[0] +
+                      ' ' +
+                      item?.city +
+                      ' ' +
+                      item?.stateOrProvinceCode +
+                      ' ' +
+                      item?.countryCode +
+                      ' ' +
+                      item?.postalCode}
+                  </span>
                 </label>
               </div>
             ))}
           </span>
           <div className="Another">
             <span className="count">+ </span>
-            <span>Add Another Address</span>
+            <span onClick={() => setShowModal(true)}>Add Another Address</span>
           </div>
+          <Modal open={showModal} onClose={() => setShowModal(false)}>
+            <ModalContent>
+              <h2>Please Enter Your Delivery Address</h2>
+              <form onSubmit={handleSubmit(handleAddressSubmit)}>
+                {inputFields.map((inputField, index) => (
+                  <Input
+                    key={index}
+                    label={inputField.label}
+                    name={inputField.name}
+                    type={inputField.type}
+                    placeholder={inputField.placeholder}
+                    register={register}
+                    errors={errors}
+                  />
+                ))}
+                <button type="submit">Add Address</button>
+              </form>
+            </ModalContent>
+          </Modal>
           <DeliveryDetails>
-    <h2>Delivery Details</h2>
-    <div className="delivery-info">
+            <h2>Delivery Details</h2>
+            <div className="delivery-info">
               <p>
                 <span className="label">Delivery By</span>
                 21st Nov 2024
               </p>
               <p>Premium Delivery Plan</p>
             </div>
-  </DeliveryDetails>
+          </DeliveryDetails>
         </div>
-        
+
         <div className="details">
           <h2>Billing Details</h2>
           <Price>
