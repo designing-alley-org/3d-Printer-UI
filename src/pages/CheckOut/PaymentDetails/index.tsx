@@ -21,7 +21,7 @@ interface QuoteProps {
 
 const PaymentDetails = () => {
   const elementsArray = Array(5).fill(null);
-  const [Quote, setQuote] = useState<QuoteProps>([]);
+  const [Quote, setQuote] = useState<QuoteProps>({ files: [], totalPrice: 0, tax: 0 });
   const { orderId } = useParams();
   const [selectedId, setSelectedId] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
@@ -66,7 +66,9 @@ const PaymentDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getAddress(setAddress);
-      await getAllQuotes(setQuote, orderId);
+      if (orderId) {
+        await getAllQuotes(setQuote, orderId);
+      }
     };
     fetchData();
   }, [orderId]);
