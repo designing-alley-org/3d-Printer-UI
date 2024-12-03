@@ -37,7 +37,7 @@ const PaymentDetails = () => {
   const handleAddressSubmit = async (data: any) => {
     data.orderId = `${orderId}`;
     try {
-      await createAddress(data, navigate);
+      await createAddress(data, navigate, true);
       // Refresh the address list after adding new address
       await getAddress(setAddress);
       setShowModal(false);
@@ -136,7 +136,7 @@ const PaymentDetails = () => {
           <Modal open={showModal} onClose={() => setShowModal(false)}>
             <ModalContent>
               <h2>Please Enter Your Delivery Address</h2>
-              <form onSubmit={handleSubmit(handleAddressSubmit)}>
+              <form className="modal" onSubmit={handleSubmit(handleAddressSubmit)}>
                 {inputFields.map((inputField, index) => (
                   <Input
                     key={index}

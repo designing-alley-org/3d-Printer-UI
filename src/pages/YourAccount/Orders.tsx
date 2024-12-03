@@ -16,6 +16,7 @@ const Orders = (props: IOrders) => {
   const toggleOrderFiles = (orderId: any) => {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId)); // Toggle visibility
   };
+  console.log(orderData);
   return (
     <ProfileWrapper>
       <h1>ORDERS IN CHAT</h1>
@@ -81,14 +82,14 @@ const Orders = (props: IOrders) => {
           {expandedOrderId === item._id && (
             <>
               {item.files.length > 0 ? (
-                <DetailsWrap>
+                item.quote[0].files.map((item: any) => (
+                  <DetailsWrap>
                   <span className="img">
                     <img src={airplane} />
                   </span>
                   <span className="details">
                     <span>
                       <p>{item.fileName}</p>
-                      <span className="data">size: </span>
                     </span>
                     <span>
                       <p>Quantity</p>
@@ -96,10 +97,11 @@ const Orders = (props: IOrders) => {
                     </span>
                     <span>
                       <p>Pricing</p>
-                      <span className="data">$12</span>
+                      <span className="data">${item.totalPrice}</span>
                     </span>
                   </span>
                 </DetailsWrap>
+                ))
               ) : (
                 <p className='no-order' >No files available for this order.</p>
               )}

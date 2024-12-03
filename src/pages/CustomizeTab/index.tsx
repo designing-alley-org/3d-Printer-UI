@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -24,9 +25,6 @@ import {
   updateUnit,
   updateInfill,
 } from '../../store/customizeFilesDetails/reducer';
-import { addDataSpec } from '../../store/customizeFilesDetails/SpecificationReducer';
-import api from '../../axiosConfig';
-import { set } from 'react-hook-form';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 import { saveFile } from '../../utils/indexedDB';
 import ViewModelStl from '../../components/ViewStlFile';
@@ -46,7 +44,7 @@ interface FileData {
   material: string;
   technology: string;
   printer: string;
-  weight: number;
+  infill: number;
   unit: string;
   dimensions: {
     height: number;
@@ -82,25 +80,14 @@ const CustomizeTab: React.FC = () => {
   // Fetch files from the server
   useEffect(() => {
     const fetchOrder = async () => {
-      getFilesByOrderId({ orderId: orderId as string, setFetchFiles, dispatch });
+      getFilesByOrderId({
+        orderId: orderId as string,
+        setFetchFiles,
+        dispatch,
+      });
     };
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
-
-  const dimensions = useMemo(() => {
-    if (activeFile) {
-      return {
-        height: activeFile.dimensions.height,
-        length: activeFile.dimensions.length,
-        width: activeFile.dimensions.width,
-      };
-    }
-    return {
-      height: 0,
-      length: 0,
-      width: 0,
-    };
-  }, [activeFile]);
 
   // select actual unit from the file
   useEffect(() => {
@@ -179,7 +166,6 @@ const CustomizeTab: React.FC = () => {
     (mat: any) => mat.material_name === selectedMat
   )?.material_mass;
 
-  
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
@@ -216,57 +202,51 @@ const CustomizeTab: React.FC = () => {
       console.warn('No active file selected.');
       return;
     }
-  
+
     try {
       setIsLoading(true);
-  
+
       // Check if scaling is required
       if (
         updateWidth !== activeFile?.width ||
         updateHeight !== activeFile?.height ||
         updateLength !== activeFile?.length
       ) {
-  
-          await scaleTheFileByNewDimensions({
-            orderId: orderId as string,
-            activeFileId: activeFileId as string,
-            updateLength,
-            updateWidth,
-            updateHeight,
-            selectUnit,
-          })
-      
+        await scaleTheFileByNewDimensions({
+          orderId: orderId as string,
+          activeFileId: activeFileId as string,
+          updateLength,
+          updateWidth,
+          updateHeight,
+          selectUnit,
+        });
       }
-  
+
       // Get weight of the file
-      
-        await getWeightByFileId({
-          orderId: orderId as string,
-          setWeight,
-          dispatch,
-          activeFileId,
-          selectedMat,
-          materialMass,
-          dispatch,
-        })
-      
-  
+
+      await getWeightByFileId({
+        orderId: orderId as string,
+        setWeight,
+        dispatch,
+        activeFileId,
+        selectedMat,
+        materialMass,
+        dispatch,
+      });
+
       // Update file data
-      
-       await updateFileDataByFileId({
-          orderId: orderId as string,
-          activeFile,
-          activeFileId,
-        })
-  
+
+      await updateFileDataByFileId({
+        orderId: orderId as string,
+        activeFile,
+        activeFileId,
+      });
     } catch (error) {
       console.error('Error applying selection:', error);
     } finally {
       setIsLoading(false);
     }
   };
-  
-  
 
   if (isPageLoading) {
     return (
@@ -374,6 +354,7 @@ const CustomizeTab: React.FC = () => {
                 setUpdateWidth={setUpdateWidth}
                 setUpdateLength={setUpdateLength}
                 setSelectUnit={setSelectUnit}
+                selectedInfill={selectInfill}
                 setSelectInfill={setSelectInfill}
                 actualUnit={actualUnit}
                 selectedId={activeFileId as string | null}

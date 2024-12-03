@@ -159,7 +159,7 @@ export const Body = styled.section`
     .dot {
       color: white;
       width: 32px;
-      height: 32px;
+      height: 20px;
       background: #e5edf9;
       border-radius: 40px;
       margin-right: 12px;
@@ -236,4 +236,9 @@ export const ModalContent = styled.div`
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   min-width: 60rem;
   min-height: 10rem;
+  .modal {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 3rem;
+  }
 `;

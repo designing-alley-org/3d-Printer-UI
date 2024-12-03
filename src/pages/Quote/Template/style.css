@@ -1,47 +1,23 @@
 .approve {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 1rem 0rem 2rem 0rem;
   button {
     margin-right: 2rem;
     background-color: #1e6fff;
     border-radius: 40px;
-    width: 15rem;
     margin-bottom: 0.5rem;
-    padding: 1rem;
+    padding: 0.5rem 2rem;
     &::before {
       content: '';
       position: absolute;
-      bottom:1px;
-      right: 22.9%;
-      background: transparent;
       width: 2rem;
-      height: 2rem;
-      box-shadow: 1rem 0rem 0 0rem #ffffff;
-      border-bottom-right-radius: 10rem;
-      
-      transform: rotate(15deg);
-      z-index: 1;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      width: 23%;
-      height: 5rem;
-      background: #FFFFFF;
-      border-top-left-radius: 1.5rem;
-      border-bottom-right-radius: 1.5rem;
-      z-index: -1;
+      height: 4.9rem;
+      background-color: #ffffff;
+      clip-path: polygon(100% 100%, 0% 100%, 100% 0);
       bottom: 0;
-      right: 0;
+      right: 13.5rem;
     }
-  }
-
-  .curve {
-    position: absolute;
-    width: 2rem;
-    height: 3.9rem;
-    background-color:  #FFFFFF;
-    clip-path: polygon(100% 100%, 0% 100%, 100% 0);
-    bottom: 0;
-    right:22.9%;
   }
 }
 .proc {

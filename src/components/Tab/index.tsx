@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import './styles.css';
 import styled from 'styled-components';
 import { Tab } from '../../types/home.types';
@@ -27,6 +28,11 @@ const TabComponent = (props: ITabContainerProps) => {
   const { orderId } = useParams();
   const notificationRef = useRef<HTMLDivElement>(null);
 
+  const handleTabClick = (index: number, tab: any, active: number) => {
+    if (index < active) {
+      navigate(`${orderId}/${tab.path}`); // Allow navigation only to previous or current tabs
+    }
+  };
   // Hide notification when clicking outside the container
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -55,9 +61,7 @@ const TabComponent = (props: ITabContainerProps) => {
             key={tab.id}
             className={`${activeTabs === tab.id ? 'selected' : ''}`}
             onClick={() =>
-              props.insideTab
-                ? navigate(`${orderId}/${tab.path}`)
-                : navigate(tab.path)
+              props.insideTab ? handleTabClick(index,tab, activeTabs) : navigate(tab.path)
             }
           >
             <span className="tabContent">
@@ -66,24 +70,29 @@ const TabComponent = (props: ITabContainerProps) => {
                   <p>{tab.id}</p>
                 </span>
               )}
-              {props.insideTab ? '' : (<div
-                className="top-border"
-                style={{
-                  width: '20rem',
-                  marginTop: '-1rem',
-                  borderBottom: `10px solid ${activeTabs === tab.id ? '#1E6FFF' : 'white'}`,
-                  backgroundColor: activeTabs === tab.id ? '#66A3FF' : 'white',
-                  position: 'sticky',
-                  zIndex: 9,
-                  borderRadius: '0rem 0rem 1rem 1rem',
-                }}
-              ></div>)}
+              {props.insideTab ? (
+                ''
+              ) : (
+                <div
+                  className="top-border"
+                  style={{
+                    width: '20rem',
+                    marginTop: '-1rem',
+                    borderBottom: `10px solid ${activeTabs === tab.id ? '#1E6FFF' : 'white'}`,
+                    backgroundColor:
+                      activeTabs === tab.id ? '#66A3FF' : 'white',
+                    position: 'sticky',
+                    zIndex: 9,
+                    borderRadius: '0rem 0rem 1rem 1rem',
+                  }}
+                ></div>
+              )}
               <p className="label">{tab.label}</p>
               {tab.label === '' && index === 3 && (
                 <div
                   className="notificationIconConrtainer"
                   onClick={(e) => {
-                    e.stopPropagation(); 
+                    e.stopPropagation();
                     setShowNotification(!showNotification);
                   }}
                 >
@@ -100,11 +109,11 @@ const TabComponent = (props: ITabContainerProps) => {
         ))}
       </ul>
       {showNotification && (
-        <div
-          className="notificationContainer"
-          ref={notificationRef}
-        >
-          <Notifications notification={notification} setShowNotification={setShowNotification} />
+        <div className="notificationContainer" ref={notificationRef}>
+          <Notifications
+            notification={notification}
+            setShowNotification={setShowNotification}
+          />
         </div>
       )}
     </TabWrapper>

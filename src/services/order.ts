@@ -36,10 +36,10 @@ const getFilesByOrderIdService = async (orderId: string): Promise<object | undef
             color: file.color,
             material: file.material || '',
             technology: file.technology || '',
-            weight: file.weight,
             unit: file.unit,
             printer: file.printer,
             dimensions: file.dimensions,
+            infill: file.infill,
         }));
 
         return files;

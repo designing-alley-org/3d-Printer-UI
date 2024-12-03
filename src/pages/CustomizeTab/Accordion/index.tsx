@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import './styles.css';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
@@ -7,6 +9,7 @@ import PrinterCard from '../../../components/PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   updateColor,
+  updateInfill,
   updateMaterial,
   updatePrinter,
   updateTechnology,
@@ -29,8 +32,9 @@ interface AccordionProps {
   setSelectedColor: (selectedColor: string) => void;
   setSelectedPrinter: (selectedPrinter: string) => void;
   setSelectUnit: (unit: string) => void;
+  selectedInfill: number;
   setSelectInfill: (infill: number) => void;
-  actualUnit: string;
+  actualUnit: string; 
 }
 
 interface PrinterData {
@@ -65,6 +69,7 @@ const Accordion: React.FC<AccordionProps> = ({
   selectedMat,
   selectedColor,
   selectedPrinter,
+  selectedInfill,
   setSelectedMat,
   setSelectedColor,
   setSelectedPrinter,
@@ -82,6 +87,7 @@ const Accordion: React.FC<AccordionProps> = ({
   const handleColorClick = (color: string) => setSelectedColor(color);
   const handleTechClick = (technology: string) => setSelectedTech(technology);
   const handleMatClick = (material: string) => setSelectedMat(material);
+  const handleInfill = (infill: number) => setSelectInfill(infill);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
   const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
   const dataspec = useSelector((state: any) => state.specification);
@@ -132,17 +138,17 @@ const Accordion: React.FC<AccordionProps> = ({
   // Fetch printer data based on selected material and technology
   useEffect(() => {
     const fetchPrinterData = async () => {
-        if (selectedMat && selectedTech) {
-            await getPrintersByTechnologyAndMaterial({
-                selectedMat,
-                selectedTech,
-                setPrinterData,
-            });
-        }
+      if (selectedMat && selectedTech) {
+        await getPrintersByTechnologyAndMaterial({
+          selectedMat,
+          selectedTech,
+          setPrinterData,
+        });
+      }
     };
 
     fetchPrinterData();
-}, [selectedMat, selectedTech]);
+  }, [selectedMat, selectedTech]);
 
   // Take selected technology and material from selected file
   useEffect(() => {
@@ -190,6 +196,11 @@ const Accordion: React.FC<AccordionProps> = ({
       dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
     }
   }, [selectedPrinter]);
+  useEffect(() => {
+    if (selectedInfill && selectedId) {
+      dispatch(updateInfill({ id: selectedId, infill: selectedInfill }));
+    }
+  }, [selectedInfill]);
 
   useEffect(() => {
     setUpdateHeight(dimensions.height);
@@ -248,6 +259,7 @@ const Accordion: React.FC<AccordionProps> = ({
     value: `${(i + 1) * 5}`,
     label: `${(i + 1) * 5}`,
   }));
+  console.log(selectedInfill);
   return (
     <div className="accordion">
       <div className="accordion-header">
@@ -439,7 +451,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Dropdown
               options={options}
               onSelect={(option: Option) =>
-                setSelectInfill(
+                handleInfill(
                   typeof option.value === 'string'
                     ? Number(option.value)
                     : (option.value as number)

@@ -58,17 +58,15 @@ const CardLayout = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
-  const [allPrinterSelected, setAllPrinterSelected] = useState(false);
+  const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
-console.log("fileDetails", files);
   // Check if all files have a printer selected
-  // useEffect(() => {
-  //   if (pathname.includes(ROUTES.CUSTOMIZE)) {
-  //     const allPrintersSelected = fileDetails.every((file: any) => file.printer !== null);
-
-  //     setAllPrinterSelected(allPrintersSelected);
-  //   }
-  // }, [fileDetails, pathname]);
+  useEffect(() => {
+    const allFilesCustom = fileDetails.every(
+      (file: any) => file?.dimensions?.weight
+    );
+    setAllFilesCustomized(allFilesCustom);
+  }, [fileDetails]);
 
   // New state for managing the loading spinner
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -91,11 +89,6 @@ console.log("fileDetails", files);
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
-
-  /**
-   * Handle the Proceed button click.
-   * Saves files to IndexedDB and proceeds based on the current route.
-   */
   const onProceed = useCallback(async () => {
     // Add validation for files before proceeding from upload step
     if (pathname.includes(ROUTES.UPLOAD_STL) && files.length === 0) {
@@ -104,20 +97,20 @@ console.log("fileDetails", files);
     }
 
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
-      setIsSaving(true); 
+      setIsSaving(true);
       try {
         await uploadFilesByOrderId({
-            orderId:orderId as string,
-            files, 
-            setFiles, 
-            setActiveTabs, 
-            navigate,
-            setIsSaving, 
+          orderId: orderId as string,
+          files,
+          setFiles,
+          setActiveTabs,
+          navigate,
+          setIsSaving,
         });
-    } catch (error) {
-        console.error("Error processing proceed action:", error);
-        alert("Failed to proceed. Please try again.");
-    }
+      } catch (error) {
+        console.error('Error processing proceed action:', error);
+        alert('Failed to proceed. Please try again.');
+      }
     } else if (pathname === '/get-quotes') {
       setIsSaving(true);
       try {
@@ -125,20 +118,24 @@ console.log("fileDetails", files);
           setActiveTabs,
           setIsSaving,
           navigate,
-      });
+        });
       } catch (error) {
         console.error('Error creating order:', error);
-        setIsSaving(false); 
+        setIsSaving(false);
         alert('Failed to create order. Please try again.');
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
-      setActiveTabs([0, 1, 2]);
-      navigate(`${orderId}/quote`);
+      if (allFilesCustomized) {
+        setActiveTabs([0, 1, 2]);
+        navigate(`${orderId}/quote`);
+      } else {
+        alert('Apply specifications to all files before proceeding');
+      }
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
       setActiveTabs([0, 1, 2, 3]);
       navigate(`${orderId}/checkout`);
     }
-  }, [files, navigate, orderId, pathname]);
+  }, [files, navigate, orderId, pathname, allFilesCustomized]);
 
   const handlePayment = async () => {
     setIsSaving(true); // Start loading spinner
@@ -163,7 +160,11 @@ console.log("fileDetails", files);
             <LinearProgress variant="determinate" value={getProgressValue()} />
           </TabLine>
         )}
-        <Header tabData={quoteTexts} insideTab={true} />
+        <Header
+          tabData={quoteTexts}
+          insideTab={true}
+          activeTabs={activeTabs.length}
+        />
       </div>
       <div className="mainCardContent">
         {pathname.includes(ROUTES.UPLOAD_STL) ? (
