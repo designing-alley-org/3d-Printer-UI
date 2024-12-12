@@ -1,14 +1,33 @@
 import { NotificationCard } from "./NotificationCard"
-import { useState } from 'react'
-const OngoingOrder = () => {
-  const [card , setCard] = useState<Array<number>>(Array.from({length: 8}, (_, i) => i + 1));
-  return (
-    <>
-    <h2>ONGOING ORDER</h2>
-  {card.map(( index) => 
-  <NotificationCard key={index} title="Ongoing Order" orderNumber="ORDER NO. 1234567890" dateTime="10TH FEB 2023, 10:30 AM" buttonLabel="open chat" />)  }
-    </>
-  )
+
+interface Order {
+  orderNumber: string;
+  dateTime: string;
+  order_status: string;
+  _id: string;
+  updatedAt: string;
 }
 
-export default OngoingOrder
+interface OngoingOrderProps {
+  orders?: Order[];
+}
+
+const OngoingOrder = ({ orders }: OngoingOrderProps) => {
+  return (
+    <>
+      <h2>ONGOING ORDER</h2>
+      {orders && orders.map((order, index) => (
+        <NotificationCard
+          key={index}
+          title={order.order_status}
+          orderNumber={order._id}
+          dateTime={new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(order.updatedAt))}
+          buttonLabel="open chat"
+        />
+      ))}
+    </>
+  );
+}
+
+export default OngoingOrder;
+

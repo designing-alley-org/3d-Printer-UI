@@ -2,11 +2,11 @@ import { notificationTab } from '../../constants';
 import { useEffect, useState } from 'react';
 import { NotWrapper, MainComp, SideTab } from './styles';
 import { getUserOrder } from '../../store/actions/getUserOrder';
-import Notification from '../YourAccount/Notification';
 import OngoingOrder from './OngoingOrder';
 import PlaceOrder from './PlaceOrder';
 import General from './General';
 import { Box } from '@mui/material';
+import Settinges from './Settinges';
 
 const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -54,10 +54,10 @@ const NotificationLayout = () => {
         ))}
       </SideTab>
       <MainComp>
-        {activeTab === 1 && <OngoingOrder />}
+        {activeTab === 1 && <OngoingOrder orders={orders} />}
         {activeTab === 2 && <PlaceOrder />}
         {activeTab === 3 && <General />}
-        {activeTab === 4 && <Notification />}
+        {activeTab === 4 && <Settinges/>}
       </MainComp>
     </NotWrapper>
   );
