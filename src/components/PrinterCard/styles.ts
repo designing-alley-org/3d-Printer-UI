@@ -5,9 +5,33 @@ export const Wrapper = styled.main`
   background-color: #e8f1ff;
   width: 100%;
   border-radius: 24px;
-  padding: 1rem;
+  padding: 1rem 1rem .5rem 1rem;
   cursor: pointer;
   margin: 1rem 0;
+  position: relative;
+  &::after {
+      content: '';
+      position: absolute;
+      bottom: 0rem;
+      right: 0;
+      background-color: #ffffff;
+      border-bottom-right-radius: 1.4rem;
+      border-top-left-radius: 1.4rem;
+      height: 3.6rem;
+      width: 13rem;
+    }
+  &::before {
+  content: '';
+  position: absolute;
+  bottom: 0rem;
+  right: 12.76rem;
+  background-color: #ffffff;
+  width: 2rem;
+  height: 3rem;
+  z-index: 1;
+  clip-path: polygon(100% 100%, 0% 100%, 100% 0);
+      
+  }
   .active-printer {
     border: unset;
     background: unset;
@@ -18,13 +42,15 @@ export const Wrapper = styled.main`
   .select {
     display: flex;
     justify-content: end;
-    padding: 0.5rem;
+    padding: 0rem 0.5rem;
     button {
       border-radius: 50px;
       font-weight: 500;
+      z-index: 1;
       color: white;
       padding: 0.4rem 2rem;
       background: #1e6fff;
+     
     }
   }
 `;
@@ -54,7 +80,7 @@ export const Body = styled.section`
     grid-template-columns: repeat(3, 1fr);
   }
 
-  padding: 0.5rem;
+  padding: 1.5rem .5rem;
   .data {
     display: flex;
     flex-direction: column;

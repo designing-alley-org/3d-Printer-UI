@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import './styles.css';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
 import { sizeOption, info, group } from '../../../constants';
@@ -14,7 +12,6 @@ import {
   updatePrinter,
   updateTechnology,
 } from '../../../store/customizeFilesDetails/reducer';
-import { useParams } from 'react-router-dom';
 import { getPrintersByTechnologyAndMaterial } from '../../../store/actions/getPrintersByTechnologyAndMaterial';
 
 interface AccordionProps {
@@ -136,19 +133,19 @@ const Accordion: React.FC<AccordionProps> = ({
   const dispatch = useDispatch();
 
   // Fetch printer data based on selected material and technology
-  useEffect(() => {
-    const fetchPrinterData = async () => {
-      if (selectedMat && selectedTech) {
-        await getPrintersByTechnologyAndMaterial({
-          selectedMat,
-          selectedTech,
-          setPrinterData,
-        });
-      }
-    };
-
-    fetchPrinterData();
+  const fetchPrinterData = useCallback(async () => {
+    if (selectedMat && selectedTech) {
+      await getPrintersByTechnologyAndMaterial({
+        selectedMat,
+        selectedTech,
+        setPrinterData,
+      });
+    }
   }, [selectedMat, selectedTech]);
+
+  useEffect(() => {
+    fetchPrinterData();
+  }, [fetchPrinterData]);
 
   // Take selected technology and material from selected file
   useEffect(() => {
@@ -161,6 +158,13 @@ const Accordion: React.FC<AccordionProps> = ({
       setSelectInfill(selectedFile?.infill);
     }
   }, [selectedFile]);
+
+  // Clear printer data when selectedId changes
+  useEffect(() => {
+    if (selectedId) {
+      setPrinterData([]);
+    }
+  }, [selectedId]);
 
   // Send color corresponding to selectedId to store
   useEffect(() => {
@@ -260,6 +264,21 @@ const Accordion: React.FC<AccordionProps> = ({
     label: `${(i + 1) * 5}`,
   }));
   console.log(selectedInfill);
+
+if (!selectedFile) {
+  return (
+    <div className="accordion">
+      <div className="accordion-header">
+        <span className="title">
+          <h2>Please select a file then proceed</h2>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+
+
   return (
     <div className="accordion">
       <div className="accordion-header">
@@ -424,14 +443,9 @@ const Accordion: React.FC<AccordionProps> = ({
             {(selectedTech === '' || selectedMat === '') && (
               <p className="no-data">Please select Material and Technology</p>
             )}
-            {printerData.length <= 0 &&
-              selectedTech !== '' &&
-              selectedMat !== '' && (
-                <p className="no-data">
-                  No Printer Data Found Please select Other Material and
-                  Technology
-                </p>
-              )}
+            {printerData.length <= 0 && selectedMat && selectedTech && (
+              <p className="no-data">Loading..</p>
+            )}
             {printerData.length > 0 &&
               printerData?.map((item: any, idx: number) => (
                 <PrinterCard
@@ -457,7 +471,7 @@ const Accordion: React.FC<AccordionProps> = ({
                     : (option.value as number)
                 )
               }
-              defaultValue={selectedFile ? String(selectedFile?.infill) : ''}
+              defaultValue={selectedFile?.infill !== undefined ? String(selectedFile?.infill) : undefined}
             />
           </div>
         )}

@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,6 +74,8 @@ const CustomizeTab: React.FC = () => {
   const activeFile = useMemo(() => {
     return fileDetails.find((file: any) => file._id === activeFileId) || null;
   }, [fileDetails, activeFileId]);
+
+  
 
   // Fetch files from the server
   useEffect(() => {
@@ -271,7 +271,7 @@ const CustomizeTab: React.FC = () => {
             <span className="count">{files.length}</span>
           </span>
           <UploadedFile>
-            {files.map((file) => (
+            {fileDetails.map((file : any ) => (
               <span
                 key={file._id}
                 className="upload-file"
@@ -309,7 +309,7 @@ const CustomizeTab: React.FC = () => {
                     alt={'material'}
                     style={{
                       filter:
-                        activeFileId === file._id && selectedMate
+                        fileDetails.some(f => f._id === file._id && f.material)
                           ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
                           : 'none',
                     }}
@@ -319,7 +319,7 @@ const CustomizeTab: React.FC = () => {
                     alt={'color'}
                     style={{
                       filter:
-                        activeFileId === file._id && selectedColor
+                        fileDetails.some(f => f._id === file._id && f.color)
                           ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
                           : 'none',
                     }}
@@ -329,7 +329,7 @@ const CustomizeTab: React.FC = () => {
                     alt={'printer'}
                     style={{
                       filter:
-                        activeFileId === file._id && selectedPrinter
+                        fileDetails.some(f => f._id === file._id && f.printer)
                           ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
                           : 'none',
                     }}
@@ -339,10 +339,15 @@ const CustomizeTab: React.FC = () => {
             ))}
           </UploadedFile>
         </Files>
-
         <Customize>
           <div className="customize-container">
-            {customize.map((item) => (
+            {
+              activeFileId===null ? 
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+              <h2>Please select a file to customize</h2>
+              </div> : null 
+            }
+            {activeFileId && customize.map((item) => (
               <Accordion
                 selectedMat={selectedMate}
                 selectedColor={selectedColor}
