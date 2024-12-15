@@ -25,6 +25,7 @@ export const Wrapper = styled.main`
 
   h1 {
     margin-top: unset;
+    margin-bottom: 0.5rem;
     font-size: 32px;
   }
   .desc {
@@ -155,11 +156,12 @@ export const Body = styled.section`
       display: flex;
       align-items: center;
       margin: 0.5rem;
+      color: #2359b0;
     }
     .dot {
       color: white;
-      width: 32px;
-      height: 20px;
+      width: 52px;
+      height: 32px;
       background: #e5edf9;
       border-radius: 40px;
       margin-right: 12px;
@@ -216,6 +218,10 @@ export const DeliveryDetails = styled.div`
   flex: 0 0 auto;
   margin-top: 0.5rem;
   padding-bottom: 0.5rem;
+
+  .delivery-info {
+    color: #2359b0;
+  }
 
   h2 {
     font-size: 20px;
