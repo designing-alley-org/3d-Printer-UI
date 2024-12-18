@@ -1,8 +1,10 @@
 .approve {
   background: #ffffff;
   padding: 1rem;
+  width:20rem;
   border-radius: 1rem 0rem 2rem 0rem;
   button {
+    width: 100%;
     margin-right: 2rem;
     background-color: #1e6fff;
     border-radius: 40px;
@@ -16,7 +18,7 @@
       background-color: #ffffff;
       clip-path: polygon(100% 100%, 0% 100%, 100% 0);
       bottom: 0;
-      right: 13.5rem;
+      right: 19.8rem;
     }
   }
 }
@@ -34,7 +36,7 @@
 
 .negotiation {
   button {
-    width: max-content;
+    /* width: max-content; */
     padding: 1rem;
     border-radius: 50px;
     padding: 1rem;

@@ -5,7 +5,7 @@ import api from '../../../axiosConfig';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAddress } from '../../../store/actions/getAddress';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
-import { Modal } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 import Input from '../../../stories/StandardInput/Input';
 import { inputFields } from '../../../constants';
 import { useForm } from 'react-hook-form';
@@ -21,7 +21,11 @@ interface QuoteProps {
 
 const PaymentDetails = () => {
   const elementsArray = Array(5).fill(null);
-  const [Quote, setQuote] = useState<QuoteProps>({ files: [], totalPrice: 0, tax: 0 });
+  const [Quote, setQuote] = useState<QuoteProps>({
+    files: [],
+    totalPrice: 0,
+    tax: 0,
+  });
   const { orderId } = useParams();
   const [selectedId, setSelectedId] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
@@ -88,7 +92,29 @@ const PaymentDetails = () => {
       </header>
       <Body>
         <div className="files">
-          <h2>Files</h2>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <h2>Files</h2>
+            <Box
+              sx={{
+                height: 32,
+                width: 32,
+                backgroundColor: '#66A3FF',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+              }}
+            >
+              {Quote?.files?.length}
+            </Box>
+          </div>
           <span className="file">
             {Quote?.files?.map((data, index) => (
               <span key={index} className="fileName">
@@ -136,7 +162,10 @@ const PaymentDetails = () => {
           <Modal open={showModal} onClose={() => setShowModal(false)}>
             <ModalContent>
               <h2>Please Enter Your Delivery Address</h2>
-              <form className="modal" onSubmit={handleSubmit(handleAddressSubmit)}>
+              <form
+                className="modal"
+                onSubmit={handleSubmit(handleAddressSubmit)}
+              >
                 {inputFields.map((inputField, index) => (
                   <Input
                     key={index}
@@ -156,8 +185,8 @@ const PaymentDetails = () => {
             <h2>Delivery Details</h2>
             <div className="delivery-info">
               <p>
-                <span className="label">Delivery By</span>
-                21st Nov 2024
+                <span className="label">Delivery By </span>
+               <span> 21st Nov 2024</span>
               </p>
               <p>Premium Delivery Plan</p>
             </div>
