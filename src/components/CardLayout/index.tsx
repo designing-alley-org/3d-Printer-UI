@@ -204,6 +204,14 @@ const CardLayout = () => {
             </span>
           </div>
         )}
+      {pathname === `/get-quotes/${orderId}/checkout` && (
+        <div className="btn">
+          <div></div>
+          <span className="proc">
+            <Button type="submit" value="Proceed" form="shipping-form" label='Proceed' onClick={Function} />
+          </span>
+        </div>
+      )}
     </div>
   );
 };

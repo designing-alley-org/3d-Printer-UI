@@ -54,7 +54,13 @@
       .dropdown-list {
         position: fixed;
         max-height: unset;
-        width: 5%;
+        width: 10%;
+        background-color: #dde9fc;
+      }
+      .dropdown-item {
+        background-color: #dde9fc;
+        display: flex;
+        justify-content: center;
       }
     }
   }
@@ -102,7 +108,7 @@
   }
   .revert .btn {
     background-color: transparent;
-    border: 1px solid #66A3FF
+    border: 1px solid #66a3ff;
   }
   .check-box {
     display: flex;
@@ -154,8 +160,7 @@
     }
     input {
       height: 1.3rem;
-      color: #235AB0;
-      ;
+      color: #235ab0;
       /* Hide spinner buttons for Chrome, Safari, Edge, Opera */
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
@@ -170,7 +175,7 @@
     fieldset {
       border: 1px solid #66a3ff;
       border-radius: 40px;
-      box-shadow: 0px 0px 4px 0px #0047FF inset;
+      box-shadow: 0px 0px 4px 0px #0047ff inset;
     }
   }
 }

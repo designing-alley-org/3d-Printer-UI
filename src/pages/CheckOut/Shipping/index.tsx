@@ -34,6 +34,7 @@ const ShippingDetails = () => {
       <Typography variant="h2">Shipping Details</Typography>
       <SubHeader>Please Enter Your Delivery Address</SubHeader>
       <form
+      id='shipping-form'
         onSubmit={handleSubmit((data: any) => {
           data.orderId = `${orderId}`;
           handleAddress(data);
@@ -52,12 +53,6 @@ const ShippingDetails = () => {
             />
           ))}
         </InputWrapper>
-        <div className="btn">
-          <div></div>
-          <span className="proc">
-            <input type="submit" value="Proceed" />
-          </span>
-        </div>
       </form>
     </Wrapper>
   );

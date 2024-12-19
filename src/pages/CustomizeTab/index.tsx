@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -227,7 +228,6 @@ const CustomizeTab: React.FC = () => {
       await getWeightByFileId({
         orderId: orderId as string,
         setWeight,
-        dispatch,
         activeFileId,
         selectedMat,
         materialMass,
