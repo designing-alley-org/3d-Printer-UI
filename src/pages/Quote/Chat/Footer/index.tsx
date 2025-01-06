@@ -34,7 +34,7 @@ export default function ChatFooter({
         files: [],
         content: message,
         order_id: orderId,
-        sender: 'user',
+        sendBy: 'user',
       });
       if (file.length > 0) {
         socket.emit('sendMessage', {
@@ -43,7 +43,7 @@ export default function ChatFooter({
           files: file,
           content: 'Attachment',
           order_id: orderId,
-          sender: 'user',
+          sendBy: 'user',
         });
         setFile([]);
       }
@@ -53,7 +53,7 @@ export default function ChatFooter({
           receiverId: receiver,
           files: images,
           order_id: orderId,
-          sender: 'user',
+          sendBy: 'user',
           content: 'Attachment',
         });
         setImages([]);
@@ -71,7 +71,7 @@ export default function ChatFooter({
           files: file,
           content: 'Attachment',
           order_id: orderId,
-          sender: 'user',
+          sendBy: 'user',
         });
         setFile([]);
       }
@@ -81,7 +81,7 @@ export default function ChatFooter({
           receiverId: receiver,
           files: images,
           order_id: orderId,
-          sender: 'user',
+          sendBy: 'user',
           content: 'Attachment',
         });
         setImages([]);

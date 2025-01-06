@@ -40,8 +40,8 @@ export default function Chat() {
     // Join the chat room with both user and merchant IDs
     newSocket.on('connect', () => {
       console.log('Connected to the server:', newSocket.id);
-      newSocket.emit('joinChat', defaultUserId);
-      newSocket.emit('joinChat', defaultMerchantId);
+      newSocket.emit('joinChat', defaultUserId,orderId);
+      newSocket.emit('joinChat', defaultMerchantId,orderId);
     });
 
     // Listen for incoming messages
