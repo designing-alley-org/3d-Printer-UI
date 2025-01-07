@@ -29,9 +29,11 @@ export default function ChatBody({ messages }: ChatBodyProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  console.log(messages);
+  
   return (
     <Wrapper ref={chatContainerRef}>
-      {messages.map((message, index) => (
+      {messages.length>0&&messages[0].messages.map((message, index) => (
         <Box key={index}>
           {message.sendBy === 'admin' ? (
             <Box
