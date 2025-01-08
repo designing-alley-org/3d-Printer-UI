@@ -10,27 +10,37 @@ import Settings from './Settings';
 import { useSelector } from 'react-redux';
 import { getUserOrder } from '../../store/actions/getUserOrder';
 import { Box } from '@mui/material';
+import Button from '../../stories/button/Button';
+import LogoutIcon from '@mui/icons-material/Logout';
+import api from '../../axiosConfig';
 
 const AccountLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
   const [orders, setOrders] = useState<any>();
-
+  const [pagination, setPagination] = useState<number>(1);
   const user = useSelector((state: any) => state.user);
-
+  const handleLogout = async () => {
+    try {
+      await api.get('/logout');
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+  console.log(pagination);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getUserOrder(setOrders);
+        await getUserOrder(setOrders,pagination);
       } catch (error) {
         console.log(error); 
       } finally {
         // Stop loading
       }
     };
-
     fetchData();
-  }, []);
-  console.log(orders);
+  }, [pagination]);
 
   return (
     <AccWrapper>
@@ -63,10 +73,14 @@ const AccountLayout = () => {
             ></Box>
           </Box>
         ))}
+        
+      <Button label='Logout' onClick={handleLogout} className="logout_btn">
+      <LogoutIcon sx={{ color: 'white', transform: 'rotate(180deg)', marginLeft: '.6rem' }} />
+      </Button>
       </SideTab>
       <MainComp>
         {activeTab === 1 && <MyProfile profileData={user?.user} />}
-        {activeTab === 2 && <Orders orderData={orders?.data?.order} />}
+        {activeTab === 2 && <Orders orderData={orders} setPagination={setPagination} />}
         {activeTab === 3 && <Settings />}
       </MainComp>
     </AccWrapper>

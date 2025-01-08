@@ -16,7 +16,8 @@ const OngoingOrder = ({ orders }: OngoingOrderProps) => {
   return (
     <>
       <h2>ONGOING ORDER</h2>
-      {orders && orders.map((order, index) => (
+      {!orders && <p>No ongoing orders</p>}
+      {orders && orders?.order?.map((order, index) => (
         <NotificationCard
           key={index}
           title={order.order_status}

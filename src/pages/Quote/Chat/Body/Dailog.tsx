@@ -14,7 +14,6 @@ interface DailogProps {
 }
 
 export default function Dailog({ Images = [], open, onClose }: DailogProps) {
-  console.log(Images);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -37,7 +36,7 @@ export default function Dailog({ Images = [], open, onClose }: DailogProps) {
             justifyContent: 'center',
           }}
         >
-          {Images.map((img, index) => (
+          {Images?.map((img, index) => (
             <Box
               key={index}
               sx={{
@@ -57,7 +56,7 @@ export default function Dailog({ Images = [], open, onClose }: DailogProps) {
                   borderRadius: '0.5rem',
                   objectFit: 'cover',
                 }}
-                src={img.fileUrl}
+                src={img?.fileUrl}
                 alt={`file-${index}`}
               />
             </Box>

@@ -154,9 +154,13 @@ const getQuotesService = async (orderId: string): Promise<any> => {
 };
 
 
-const getUserOrderService = async () => {
+const getUserOrderService = async (pagination:number) => {
     try {
-        const response = await api.get('/get-user-order');
+        const response = await api.get('/get-user-order',{
+            params: {
+                page: pagination
+            }
+        });
         return response;
     } catch (error) {
         console.error('Error fetching user order:', error);
