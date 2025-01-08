@@ -5,10 +5,11 @@ export const getPrintersByTechnologyAndMaterialService = async (
     selectedMat: string
 ): Promise<any[]> => {
     try {
-        const response = await api.get(
+        let response = await api.get(
             `/filter?technology=${selectedTech}&materials=${selectedMat}`
         );
-        console.log("response", response);
+        // Here 0 = inactive and 1 = active
+        response.data.data = response.data.data.filter((printer: any) => printer.status === 1);
         return response.data.data || []; 
     } catch (error) {
         console.error("Error fetching printer data:", error);

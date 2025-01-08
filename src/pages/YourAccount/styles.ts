@@ -15,6 +15,13 @@ export const ProfileWrapper = styled.main`
   .placed {
     margin: 2rem 0rem;
   }
+
+  .pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;    
+    }
+
 `;
 export const MainWrap = styled.section`
   p {
@@ -31,11 +38,14 @@ export const MainWrap = styled.section`
     border-radius: 2rem;
     box-shadow: 0px 0px 4px 0px #66a3ff inset;
   }
+  .input-disabled {
+   background:transparent;
+    }
   .btn {
     button {
       border-radius: 2rem;
       background: #1e6fff;
-      width: 25%;
+      width: content;
       margin-left: 5rem;
     }
   }
@@ -58,6 +68,21 @@ export const SideTab = styled.section`
   .selected {
     color: #0066ff;
   }
+    .logout_btn{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+      background: #0066ff;
+      border-radius: 2rem;
+      padding: 1rem;
+      position: absolute;
+      bottom: 0rem;
+      transition: all 0.2s ease;
+      &:hover {
+        background: #0047ff;
+      }
+      }
 `;
 export const MainComp = styled.section`
   border: 1px solid #dde9fc;

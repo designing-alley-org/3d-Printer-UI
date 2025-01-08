@@ -76,6 +76,7 @@ const Accordion: React.FC<AccordionProps> = ({
 }) => {
   const [selectedTech, setSelectedTech] = useState<string>('');
   const [printerData, setPrinterData] = useState([]);
+  const [printerMessage, setPrinterMessage] = useState('');
   const [colorBtnData, setColorBtnData] = useState<string[]>([]);
   const [technologyData, setTechnologyData] = useState<string[]>([]);
   const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
@@ -139,6 +140,7 @@ const Accordion: React.FC<AccordionProps> = ({
         selectedMat,
         selectedTech,
         setPrinterData,
+        setPrinterMessage
       });
     }
   }, [selectedMat, selectedTech]);
@@ -444,7 +446,7 @@ if (!selectedFile) {
               <p className="no-data">Please select Material and Technology</p>
             )}
             {printerData.length <= 0 && selectedMat && selectedTech && (
-              <p className="no-data">Loading..</p>
+              <p className="no-data">{printerMessage ? printerMessage : 'Loading...'}</p>
             )}
             {printerData.length > 0 &&
               printerData?.map((item: any, idx: number) => (

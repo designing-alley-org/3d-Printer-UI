@@ -33,7 +33,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
   
   return (
     <Wrapper ref={chatContainerRef}>
-      {messages.length>0&&messages[0].messages.map((message, index) => (
+      {messages.length>0&&messages[0]?.messages?.map((message, index) => (
         <Box key={index}>
           {message.sendBy === 'admin' ? (
             <Box
@@ -64,12 +64,12 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                   gap: '0.5rem',
                 }}
               >
-                <Message $sender={message.sendBy}>{message.content}</Message>
+                <Message $sender={message?.sendBy}>{message?.content}</Message>
                 <MessageIcon $color="#0080FF" $bgColor="white">
-                  {user.user.name[0]}
+                  {user?.user?.name[0]}
                 </MessageIcon>
               </Box>
-              {message.files.length > 0 && (
+              {message?.files?.length > 0 && (
                 <Box
                   sx={{
                     display: 'flex',
@@ -78,7 +78,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                     gap: '0.5rem',
                   }}
                 >
-                  {message.files.length > 0 && (
+                  {message?.files?.length > 0 && (
                     <Box
                       key={index}
                       sx={{
@@ -88,7 +88,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                         alignItems: 'center',
                       }}
                     >
-                      {message.files[0].fileName.includes('pdf') ? (
+                      {message?.files[0]?.fileName.includes('pdf') ? (
                         <Box
                           sx={{
                             display: 'flex',
@@ -96,7 +96,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                             gap: '0.5rem',
                           }}
                         >
-                          {message.files.map((file: any, index: number) => (
+                          {message?.files?.map((file: any, index: number) => (
                             <Box
                               key={index}
                               sx={{
@@ -119,7 +119,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                                 color="#1E6FFF"
                                 sx={{ cursor: 'pointer' }}
                               >
-                                {file.fileName}
+                                {file?.fileName}
                               </Typography>
                               <img
                                 src={downloadIcon}
@@ -148,11 +148,11 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                               width: '25rem',
                               borderRadius: '1rem',
                             }}
-                            src={message.files[0].fileUrl}
+                            src={message?.files[0]?.fileUrl}
                             alt="pic"
                           />
 
-                          {message.files.length > 1 && (
+                          {message?.files?.length > 1 && (
                             <Typography
                               variant="body2"
                               color="#1E6FFF"
@@ -163,17 +163,17 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                               }}
                               onClick={() => setShowMore(!showMore)}
                             >
-                              Show +{message.files.length - 1} more files
+                              Show +{message?.files?.length - 1} more files
                             </Typography>
                           )}
-                          <Dailog Images={message.files} open={showMore} onClose={() => setShowMore(false)} /> 
+                          <Dailog Images={message?.files} open={showMore} onClose={() => setShowMore(false)} /> 
                         </Box>
                         
                       )}
                     </Box>
                   )}
                   <MessageIcon $color="#0080FF" $bgColor="white">
-                    {user.user.name[0]}
+                    {user?.user?.name[0]}
                   </MessageIcon>
                 </Box>
               )}
