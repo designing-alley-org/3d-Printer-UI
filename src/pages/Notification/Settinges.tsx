@@ -12,11 +12,11 @@ const Settinges = () => {
     { key: 'orderNotifications', label: 'Order Notifications', default: notificationPreferences?.orderNotifications?.email?.frequency },
     { key: 'personalMessages', label: 'Personal Messages' ,default: notificationPreferences?.personalMessages?.email?.frequency},
     { key: 'serviceNotifications', label: 'Service Notifications',default: notificationPreferences?.serviceNotifications?.email?.frequency },
-    { key: 'newsPromotions', label: 'News & Promotions',default: notificationPreferences?.orderNotifications?.email?.frequency },
-    { key: 'rulesPolicy', label: 'Rules & Policy',default: notificationPreferences?.orderNotifications?.email?.frequency },
+    { key: 'newsAndPromotions', label: 'News & Promotions',default: notificationPreferences?.newsAndPromotions?.email?.frequency },
+    { key: 'rulesAndPolicy', label: 'Rules & Policy', default: notificationPreferences?.rulesAndPolicy?.email?.frequency },
     
   ];
-console.log(notificationPreferences)
+console.log()
   const handleDropdownSelect = async (category: string, selectedFrequency: string) => {
     try {
       await updateNotificationServicer(category, true, selectedFrequency);
