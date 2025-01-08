@@ -8,17 +8,15 @@ interface ChatFooterProps {
   sender: string;
   receiver: string;
   orderId: string;
+  onSendMessage: (content: string, files: any[]) => void;
 }
-interface Attachment {
-  file: File;
-  name: string;
-  extension: string;
-}
+
 export default function ChatFooter({
   socket,
   sender,
   receiver,
   orderId,
+  onSendMessage,
 }: ChatFooterProps) {
   const [message, setMessage] = useState('');
   const [file, setFile] = useState<Attachment[]>([]);
@@ -26,78 +24,41 @@ export default function ChatFooter({
 
   const handleSendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (message.trim() !== '' && socket) {
-      // Send message based on whether the current user is a merchant or a user
-      socket.emit('sendMessage', {
-        senderId: sender,
-        receiverId: receiver,
-        files: [],
-        content: message,
-        order_id: orderId,
-        sendBy: 'user',
-      });
+    
+    if (message.trim() !== '') {
+      // Send text message
+      onSendMessage(message, []);
+      
+      // Send attachments if any
       if (file.length > 0) {
-        socket.emit('sendMessage', {
-          senderId: sender,
-          receiverId: receiver,
-          files: file,
-          content: 'Attachment',
-          order_id: orderId,
-          sendBy: 'user',
-        });
+        onSendMessage('Attachment', file);
         setFile([]);
       }
+      
       if (images.length > 0) {
-        socket.emit('sendMessage', {
-          senderId: sender,
-          receiverId: receiver,
-          files: images,
-          order_id: orderId,
-          sendBy: 'user',
-          content: 'Attachment',
-        });
+        onSendMessage('Attachment', images);
         setImages([]);
       }
+      
       setMessage('');
     }
   };
 
   const handleSendAttachment = () => {
-    if (socket) {
-      if (file.length > 0) {
-        socket.emit('sendMessage', {
-          senderId: sender,
-          receiverId: receiver,
-          files: file,
-          content: 'Attachment',
-          order_id: orderId,
-          sendBy: 'user',
-        });
-        setFile([]);
-      }
-      if (images.length > 0) {
-        socket.emit('sendMessage', {
-          senderId: sender,
-          receiverId: receiver,
-          files: images,
-          order_id: orderId,
-          sendBy: 'user',
-          content: 'Attachment',
-        });
-        setImages([]);
-      }
+    if (file.length > 0) {
+      onSendMessage('Attachment', file);
+      setFile([]);
+    }
+    
+    if (images.length > 0) {
+      onSendMessage('Attachment', images);
+      setImages([]);
     }
   };
+
   return (
     <form onSubmit={handleSendMessage}>
-      <Box
-        sx={{
-          background: 'transparent',
-          borderRadius: '3rem',
-          position: 'relative',
-          width: '100%',
-        }}
-      >
+      <Box sx={{ background: 'transparent', borderRadius: '3rem', position: 'relative', width: '100%' }}>
         <Box sx={{ p: '0.25rem', borderRadius: '3rem', width: '100%' }}>
           <MessageInput
             value={message}

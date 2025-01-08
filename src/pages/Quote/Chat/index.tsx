@@ -9,25 +9,23 @@ import api from '../../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+
 interface Message {
   sender: string;
   content: string;
+  sendBy: string;
+  files: any[];
+  id?: string; // Add an id field to track unique messages
 }
 
 export default function Chat() {
-  const [socket, setSocket] = useState<Socket<
-    DefaultEventsMap,
-    DefaultEventsMap
-  > | null>(null);
+  const [socket, setSocket] = useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const user = useSelector((state: any) => state.user);
-  console.log(messages);
-  const {orderId} =useParams();
-  console.log(orderId);
-    
-  // Use default test IDs for sender and receiver (User and Merchant)
-  const defaultUserId = user.user._id; // Replace with actual user ID
-  const defaultMerchantId = user.user._id; // Replace with actual merchant ID
+  const { orderId } = useParams();
+
+  const defaultUserId = user.user._id;
+  const defaultMerchantId = user.user._id;
 
   useEffect(() => {
     const newSocket: Socket = io('http://localhost:5000', {
@@ -37,19 +35,20 @@ export default function Chat() {
 
     setSocket(newSocket);
 
-    // Join the chat room with both user and merchant IDs
     newSocket.on('connect', () => {
       console.log('Connected to the server:', newSocket.id);
-      newSocket.emit('joinChat', defaultUserId,orderId);
-      newSocket.emit('joinChat', defaultMerchantId,orderId);
+      newSocket.emit('joinChat', defaultUserId, orderId);
+      newSocket.emit('joinChat', defaultMerchantId, orderId);
     });
 
-    // Listen for incoming messages
+    // Only update messages when receiving messages from others
     newSocket.on('receiveMessage', (newMessage: Message) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      // Check if the message is from another user
+      if (newMessage.sender !== defaultUserId) {
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+      }
     });
 
-    // Handle disconnection and connection errors
     newSocket.on('disconnect', () => {
       console.log('Disconnected from the server');
     });
@@ -57,23 +56,51 @@ export default function Chat() {
     newSocket.on('connect_error', (error: Error) => {
       console.error('Connection error:', error);
     });
+
+    // Fetch existing messages
     async function fetchMessages() {
       try {
         const response = await api.get(`/get-message/${orderId}`);
         const fetchedMessages = response.data.data.messages;
         const fetchMessages = fetchedMessages.reverse();
-        setMessages(fetchMessages);
+        setMessages(fetchMessages[0].messages);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
     }
     fetchMessages();
 
-    // Cleanup function
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [orderId, defaultUserId, defaultMerchantId]);
+
+  // Function to handle sending messages
+  const handleSendMessage = (content: string, files: any[] = []) => {
+    if (socket) {
+      const messageData = {
+        senderId: defaultUserId,
+        receiverId: defaultMerchantId,
+        files,
+        content,
+        order_id: orderId,
+        sendBy: 'user',
+      };
+
+      // Update local messages state immediately
+      const newMessage = {
+        sender: defaultUserId,
+        content,
+        sendBy: 'user',
+        files,
+        // id: Date.now().toString(), // Add a temporary unique ID
+      };
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+
+      // Emit message to server
+      socket.emit('sendMessage', messageData);
+    }
+  };
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
@@ -83,6 +110,7 @@ export default function Chat() {
         sender={defaultUserId}
         receiver={defaultMerchantId}
         orderId={orderId}
+        onSendMessage={handleSendMessage}
       />
     </Box>
   );
