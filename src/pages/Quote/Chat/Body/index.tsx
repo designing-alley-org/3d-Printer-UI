@@ -74,7 +74,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                 >
                   <Message $sender={message.sendBy}>{message.content}</Message>
                   <MessageIcon $color="#0080FF" $bgColor="white">
-                    {user.user.name?.[0] || 'U'}
+                    {user.user.name?.[0] || 'Me'}
                   </MessageIcon>
                 </Box>
                 {message.files && message.files.length > 0 && (
@@ -183,7 +183,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
                       )}
                     </Box>
                     <MessageIcon $color="#0080FF" $bgColor="white">
-                      {user.user.name?.[0] || 'U'}
+                      {user.user.name?.[0] || 'Me'}
                     </MessageIcon>
                   </Box>
                 )}
