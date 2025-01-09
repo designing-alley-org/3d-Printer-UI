@@ -2,6 +2,7 @@ import React from 'react';
 import './InputField.css';
 
 export interface InputFieldProps {
+  disabled?: boolean;
   type?: string;
   placeholder?: string;
   value: string;
@@ -16,6 +17,7 @@ export interface InputFieldProps {
 }
 
 export const InputField = ({
+  disabled = false,
   type = 'text',
   placeholder = '',
   value,

@@ -9,3 +9,13 @@ export const updateNotificationServicerByCategory = async (data: any): Promise<a
         throw error;
     }
 };
+
+export const getNotificationServicerByCategory = async (): Promise<any> => {
+    try {
+        const response = await api.get(`/notification-preferences`);
+        return response;
+    } catch (error) {
+        console.error("Error fetching notification:", error);
+        throw error;
+    }
+}

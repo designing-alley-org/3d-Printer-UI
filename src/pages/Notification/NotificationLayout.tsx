@@ -11,11 +11,12 @@ import Settinges from './Settinges';
 const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
   const [orders, setOrders] = useState<any>();
+  const [pagination, setPagination] = useState<number>(1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getUserOrder(setOrders);
+        await getUserOrder(setOrders,pagination);
       } catch (error) {
         console.log(error);
       } finally {
@@ -24,7 +25,7 @@ const NotificationLayout = () => {
     };
 
     fetchData();
-  }, []);
+  }, [pagination]);
   console.log(orders);
 
   return (

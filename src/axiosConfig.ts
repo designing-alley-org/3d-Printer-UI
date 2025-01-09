@@ -1,6 +1,5 @@
 // src/axiosConfig.ts
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
 
 const token = localStorage.getItem('token');
 

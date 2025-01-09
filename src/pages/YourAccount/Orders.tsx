@@ -5,18 +5,20 @@ import airplane from '../../assets/images/airplane.svg';
 import arrow from '../../assets/icons/arrow_drop_down_circle.svg';
 import Button from '../../stories/button/Button';
 import { useState } from 'react';
+import Pagin from '../../components/Paging/Pagin';
 
 interface IOrders {
   orderData: any;
+  setPagination: (pageNum: number) => void;
 }
 const Orders = (props: IOrders) => {
-  const { orderData } = props;
-
+  const { orderData,setPagination } = props;
+  
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const toggleOrderFiles = (orderId: any) => {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId)); // Toggle visibility
   };
-  console.log(orderData);
+
   return (
     <ProfileWrapper>
       <h1>ORDERS IN CHAT</h1>
@@ -45,8 +47,8 @@ const Orders = (props: IOrders) => {
           </span>
         </section>
       </OrderWrap>
-      <h1 className="placed">ORDERS PLACED</h1>
-      {orderData?.map((item: any) => (
+      <h1 className="placed">ORDERS PLACED BY YOU : {orderData?.totalCount} </h1>
+      {orderData?.order?.map((item: any) => (
         <PlacedWrap isOpen={expandedOrderId === item._id ? true : false}>
           <section className="orderPlaced">
             <div className="card-container">
@@ -109,6 +111,9 @@ const Orders = (props: IOrders) => {
           )}
         </PlacedWrap>
       ))}
+      <div className='pagination'>
+      <Pagin totalPages={orderData?.totalPages} setPagination={setPagination}/>
+      </div>
     </ProfileWrapper>
   );
 };
