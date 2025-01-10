@@ -119,7 +119,7 @@ const PaymentDetails = () => {
             {Quote?.files?.map((data, index) => (
               <span key={index} className="fileName">
                 <span className="dot">.</span>
-                {data.fileName}
+                {data.fileName.split('-')[0]}
               </span>
             ))}
           </span>

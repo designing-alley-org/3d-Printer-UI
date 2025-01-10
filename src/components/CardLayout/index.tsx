@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useCallback } from 'react';
 import Header from '../Header';
 import './styles.css';
@@ -33,7 +31,7 @@ interface FileData {
   dimensions: ModelDimensions;
   file: any;
   quantity: number;
-  fileUrl?: string; // Optional, will be set upon saving to IndexedDB
+  fileUrl?: string; 
 }
 
 const styles = {
@@ -138,7 +136,7 @@ const CardLayout = () => {
   }, [files, navigate, orderId, pathname, allFilesCustomized]);
 
   const handlePayment = async () => {
-    setIsSaving(true); // Start loading spinner
+    setIsSaving(true); 
     try {
       const response = await api.post(`/checkout/${orderId}`);
       if (response.status === 200) {
