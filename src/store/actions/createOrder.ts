@@ -12,7 +12,7 @@ const createOrder = async ({
     navigate,
 }: ICreateOrder): Promise<void> => {
     try {
-        setIsSaving(true); // Start saving indicator
+        setIsSaving(true); 
 
         // Call the service to create the order
         const response = await createOrderService();

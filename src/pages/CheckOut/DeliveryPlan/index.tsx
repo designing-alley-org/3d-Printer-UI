@@ -9,7 +9,7 @@ import Button from '../../../stories/button/Button';
 import api from '../../../axiosConfig';
 import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL as string;
+const API_BASE_URL = import.meta.env.VITE_AWS_URL as string;
 
 const DeliveryPlan: React.FC = () => {
   const [active, setActive] = useState(-1);
@@ -22,17 +22,12 @@ const DeliveryPlan: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/rate/transit`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            orderId: orderId,
-            units: 'KG',
-            value: '5',
-          }),
-        });
+        const payload = {
+          orderId: orderId,
+          units: 'KG',
+          value: '5',
+        }
+        const response = await api.post(`/rate/transit`, payload);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
