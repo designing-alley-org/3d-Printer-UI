@@ -14,7 +14,6 @@ import { ROUTES } from '../../routes/routes-constants';
 import Button from '../../stories/button/Button';
 import UploadStlCard from '../../pages/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
-import { saveFile } from '../../utils/indexedDB'; // Import the saveFile function
 import { useSelector } from 'react-redux';
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
@@ -31,7 +30,7 @@ interface FileData {
   dimensions: ModelDimensions;
   file: any;
   quantity: number;
-  fileUrl?: string; 
+  fileUrl?: string;
 }
 
 const styles = {
@@ -42,11 +41,12 @@ const styles = {
     width: '100%',
     height: '100%',
     display: 'flex',
+    flexDirection: 'column' as const,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     zIndex: 9999,
-  },
+  }
 };
 
 const CardLayout = () => {
@@ -57,8 +57,13 @@ const CardLayout = () => {
   const totalTabs = quoteTexts.length;
   const { orderId } = useParams();
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  console.log("addresId cardlayout", selectedAddressId);
+  
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
-  // Check if all files have a printer selected
+
+  // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
       (file: any) => file?.dimensions?.weight
@@ -66,35 +71,53 @@ const CardLayout = () => {
     setAllFilesCustomized(allFilesCustom);
   }, [fileDetails]);
 
-  // New state for managing the loading spinner
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-
+  // Handle active tabs based on current route
   useEffect(() => {
-    if (pathname.includes(ROUTES.UPLOAD_STL)) {
-      setActiveTabs([0]);
-    } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
-      setActiveTabs([0, 1]);
-    } else if (pathname.includes(`get-quotes/${orderId}/quote`)) {
-      setActiveTabs([0, 1, 2]);
-    } else if (pathname.includes(ROUTES.CHECKOUT)) {
-      setActiveTabs([0, 1, 2, 3]);
-    } else {
-      setActiveTabs([]);
-    }
-  }, [pathname, orderId]); // Added orderId to dependencies
+    const updateActiveTabs = () => {
+      if (pathname.includes(ROUTES.UPLOAD_STL)) {
+        setActiveTabs([0]);
+      } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
+        setActiveTabs([0, 1]);
+      } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
+        setActiveTabs([0, 1, 2]);
+      } else if (pathname.includes(ROUTES.CHECKOUT) || pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+        setActiveTabs([0, 1, 2, 3]);
+      } else {
+        setActiveTabs([]);
+      }
+    };
 
-  // Calculate progress value based on the active tab
+    updateActiveTabs();
+  }, [pathname, orderId]);
+
   const getProgressValue = () => {
     return (activeTabs.length / totalTabs) * 100;
   };
-  const onProceed = useCallback(async () => {
-    // Add validation for files before proceeding from upload step
-    if (pathname.includes(ROUTES.UPLOAD_STL) && files.length === 0) {
-      alert('Please upload at least one file before proceeding');
-      return;
-    }
 
+  const handlePayment = async () => {
+    setIsSaving(true);
+    try {
+      const response = await api.post(`/checkout/${orderId}`);
+      if (response.status === 200 && response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error('Invalid payment URL received');
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      alert('Failed to process payment. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const onProceed = useCallback(async () => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
+      if (files.length === 0) {
+        alert('Please upload at least one file before proceeding');
+        return;
+      }
+
       setIsSaving(true);
       try {
         await uploadFilesByOrderId({
@@ -106,8 +129,9 @@ const CardLayout = () => {
           setIsSaving,
         });
       } catch (error) {
-        console.error('Error processing proceed action:', error);
-        alert('Failed to proceed. Please try again.');
+        console.error('Error uploading files:', error);
+        alert('Failed to upload files. Please try again.');
+        setIsSaving(false);
       }
     } else if (pathname === '/get-quotes') {
       setIsSaving(true);
@@ -119,35 +143,43 @@ const CardLayout = () => {
         });
       } catch (error) {
         console.error('Error creating order:', error);
-        setIsSaving(false);
         alert('Failed to create order. Please try again.');
+        setIsSaving(false);
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
-      if (allFilesCustomized) {
-        setActiveTabs([0, 1, 2]);
-        navigate(`${orderId}/quote`);
-      } else {
+      if (!allFilesCustomized) {
         alert('Apply specifications to all files before proceeding');
+        return;
       }
+      navigate(`/get-quotes/${orderId}/quote`);
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
-      setActiveTabs([0, 1, 2, 3]);
-      navigate(`${orderId}/checkout`);
+      navigate(`/get-quotes/${orderId}/checkout`);
+    } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+      navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
     }
   }, [files, navigate, orderId, pathname, allFilesCustomized]);
 
-  const handlePayment = async () => {
-    setIsSaving(true); 
-    try {
-      const response = await api.post(`/checkout/${orderId}`);
-      if (response.status === 200) {
-        window.location.href = response.data.url;
-      }
-    } catch (error) {
-      console.error('Error processing payment:', error);
-      alert('Failed to process payment. Please try again.');
-    } finally {
-      setIsSaving(false); // Stop loading spinner
+  const renderButton = () => {
+    const isCheckoutRoute = pathname === `/get-quotes/${orderId}/checkout`;
+    const isDeliveryRoute = pathname.includes(`/get-quotes/${orderId}/checkout/select-delivery`);
+    
+    if (isDeliveryRoute) {
+      return null;
     }
+
+    return (
+      <div className="btn">
+        <div></div>
+        <span className="proc">
+          <Button
+            label={isCheckoutRoute ? "Proceed to Delivery" : "Proceed"}
+            onClick={onProceed}
+            disabled={isSaving}
+            type={isCheckoutRoute ? "submit" : "button"}
+          />
+        </span>
+      </div>
+    );
   };
 
   return (
@@ -164,6 +196,7 @@ const CardLayout = () => {
           activeTabs={activeTabs.length}
         />
       </div>
+      
       <div className="mainCardContent">
         {pathname.includes(ROUTES.UPLOAD_STL) ? (
           <UploadStlCard files={files} setFiles={setFiles} />
@@ -172,9 +205,8 @@ const CardLayout = () => {
         )}
       </div>
 
-      {/* Loading Overlay */}
       {isSaving && (
-        <Box className="loading-overlay" sx={styles.loadingOverlay}>
+        <Box sx={styles.loadingOverlay}>
           <CircularProgress />
           <Typography variant="h6" sx={{ marginTop: '1rem' }}>
             Processing...
@@ -182,34 +214,7 @@ const CardLayout = () => {
         </Box>
       )}
 
-      {/* Proceed Button */}
-      {pathname !== `/get-quotes/${orderId}/checkout` &&
-        !pathname.includes(
-          `/get-quotes/${orderId}/checkout/select-delivery`
-        ) && (
-          <div className="btn">
-            <div></div>
-            <span className="proc">
-              <Button
-                label={
-                  !pathname.includes(ROUTES.PAYMENT) ? 'Proceed' : 'Pay now'
-                }
-                onClick={
-                  !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
-                }
-                disabled={isSaving} // Disable button while saving or processing payment
-              />
-            </span>
-          </div>
-        )}
-      {pathname === `/get-quotes/${orderId}/checkout` && (
-        <div className="btn">
-          <div></div>
-          <span className="proc">
-            <Button type="submit" value="Proceed" form="shipping-form" label='Proceed' onClick={Function} />
-          </span>
-        </div>
-      )}
+      {renderButton()}
     </div>
   );
 };
