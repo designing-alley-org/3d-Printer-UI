@@ -13,6 +13,73 @@ export const SubHeader = styled.div`
 
 export const Wrapper = styled.section`
   padding: 0rem 2rem;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      width: content;
+      border-radius: 2rem;
+      background: #1e6fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      &:hover {
+        background: rgb(132, 175, 248);
+        color: white;
+      }
+    }
+  }
+
+  .address-list {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    color: #1e6fff;
+
+    .address-card {
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem;
+      &:hover {
+        background: #f2f2f2;
+      }
+      .radio-btn {
+       margin-right: 1rem;
+       margin-top: 0.5rem;
+      }
+        .radio-btn input[type="radio"] {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                width: 1.5rem;
+                height: 1.5rem;
+                border: 3px solid #1e6fff; /* Outer circle border */
+                border-radius: 50%;
+                outline: none;
+                background-color: #fff;
+                cursor: pointer;
+                position: relative;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+              }
+              
+              .radio-btn input[type="radio"]:checked {
+                background-color: #1e6fff; /* Inner circle when selected */
+                box-shadow: 0 0 0 4px rgba(30, 111, 255, 0.3); /* Glowing effect */
+              }
+              
+              .radio-btn input[type="radio"]:hover {
+                box-shadow: 0 0 0 3px rgba(30, 111, 255, 0.5); /* Hover effect */
+              }
+              
+      .address {
+        cursor: pointer;
+      }
+    }
+  }
+
   .btn {
     input {
       width: 13rem;
