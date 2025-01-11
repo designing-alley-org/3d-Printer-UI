@@ -2,6 +2,8 @@ import Button from '../../stories/button/Button';
 import { NotificationWarper, Data } from './styles';
 import { arrowRight } from '../../constants';
 import airplane from '../../assets/images/airplane.svg';
+import { useNavigate } from 'react-router-dom';
+
 interface NotificationCardProps {
     title: string;
     orderNumber: string;
@@ -10,6 +12,8 @@ interface NotificationCardProps {
 }
 
 export const NotificationCard: React.FC<NotificationCardProps> = ({ title, orderNumber, dateTime, buttonLabel }) => {
+
+    const navigate = useNavigate();
     return (
         <NotificationWarper>
             <div className="model">
@@ -30,7 +34,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({ title, order
                 <Button
                     label={buttonLabel}
                     onClick={() => {
-                        console.log('View');
+                        navigate(`/get-quotes/${orderNumber}/quote`);
                     }}
                     className='btn-icon'
                 >

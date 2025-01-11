@@ -10,6 +10,8 @@ import Input from '../../../stories/StandardInput/Input';
 import { inputFields } from '../../../constants';
 import { useForm } from 'react-hook-form';
 import { createAddress } from '../../../store/actions/createAddress';
+import { useSelector,useDispatch } from 'react-redux';
+import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 
 interface QuoteProps {
   files: {
@@ -31,6 +33,25 @@ const PaymentDetails = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
+  console.log('addressData', addressData);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      if (!isCreateAddress) {
+        try {
+          const response = await getAddress();
+          if (response?.data?.data) {
+            dispatch(addAddress(response.data.data));
+          }
+        } catch (error) {
+          console.error('Failed to fetch address:', error);
+        }
+      }
+    };
+    fetchAddress();
+  }, [dispatch, isCreateAddress]);
 
   const {
     register,
@@ -38,12 +59,12 @@ const PaymentDetails = () => {
     formState: { errors },
   } = useForm();
 
+
   const handleAddressSubmit = async (data: any) => {
     data.orderId = `${orderId}`;
     try {
       await createAddress(data, navigate, true);
       // Refresh the address list after adding new address
-      await getAddress(setAddress);
       setShowModal(false);
     } catch (error) {
       console.error('Failed to create address:', error);
@@ -54,22 +75,10 @@ const PaymentDetails = () => {
     setSelectedId(event.target.value);
     setSelectedOption(data);
   };
-  const [address, setAddress] = useState([
-    {
-      _id: '',
-      personName: '',
-      companyName: '',
-      streetLines: [''],
-      city: '',
-      stateOrProvinceCode: '',
-      countryCode: '',
-      postalCode: '',
-    },
-  ]);
+
 
   useEffect(() => {
     const fetchData = async () => {
-      await getAddress(setAddress);
       if (orderId) {
         await getAllQuotes(setQuote, orderId);
       }
@@ -127,7 +136,7 @@ const PaymentDetails = () => {
         <div className="address">
           <h2>Shipping Address</h2>
           <span className="addDetails">
-            {address.map((item, idx) => (
+            {addressData.map((item, idx) => (
               <div className="details" key={idx}>
                 <label>
                   <input

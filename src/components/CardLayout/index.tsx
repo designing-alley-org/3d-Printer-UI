@@ -17,6 +17,7 @@ import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
+import { UseSelector } from 'react-redux';
 
 interface ModelDimensions {
   height: number;
@@ -59,8 +60,7 @@ const CardLayout = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
-  console.log("addresId cardlayout", selectedAddressId);
-  
+  const {  addressId } = useSelector((state: any) => state.address);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
 
   // Check if all files have been customized
@@ -155,9 +155,13 @@ const CardLayout = () => {
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
       navigate(`/get-quotes/${orderId}/checkout`);
     } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+     if(addressId === ""){
+        alert("Please select an address");
+        return;
+     }
       navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
     }
-  }, [files, navigate, orderId, pathname, allFilesCustomized]);
+  }, [files, navigate, orderId, pathname, allFilesCustomized, addressId]);
 
   const renderButton = () => {
     const isCheckoutRoute = pathname === `/get-quotes/${orderId}/checkout`;
