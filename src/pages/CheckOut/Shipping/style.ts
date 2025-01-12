@@ -35,13 +35,15 @@ export const Wrapper = styled.section`
 
   .address-list {
     display: grid;
-    gap: 2rem;
-    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    max-height: 26rem;
+    overflow-y: scroll;
+    grid-template-columns: repeat(3, 1fr);
     color: #1e6fff;
 
     .address-card {
       display: flex;
-      justify-content: center;
+      justify-content: start;
       padding: 0.5rem;
       &:hover {
         background: #f2f2f2;

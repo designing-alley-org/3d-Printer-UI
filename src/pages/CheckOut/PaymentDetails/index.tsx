@@ -1,219 +1,279 @@
 import { useEffect, useState } from 'react';
-import Button from '../../../stories/button/Button';
-import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
-import api from '../../../axiosConfig';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAllQuotes } from '../../../store/actions/getAllQuotes';
-import { Box, Modal } from '@mui/material';
-import Input from '../../../stories/StandardInput/Input';
-import { inputFields } from '../../../constants';
+import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { Box, Modal, CircularProgress } from '@mui/material';
+import Button from '../../../stories/button/Button';
+import Input from '../../../stories/StandardInput/Input';
+import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
+import { inputFields } from '../../../constants';
+import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import { createAddress } from '../../../store/actions/createAddress';
-import { useSelector,useDispatch } from 'react-redux';
-import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
+import { setAddressId } from '../../../store/Address/address.reducer';
 
+// Types
 interface QuoteProps {
-  files: {
+  files: Array<{
     fileName: string;
-  }[];
+    fileId?: string;
+  }>;
   totalPrice: number;
   tax: number;
 }
 
-const PaymentDetails = () => {
-  const elementsArray = Array(5).fill(null);
-  const [Quote, setQuote] = useState<QuoteProps>({
+interface AddressData {
+  _id: string;
+  personName: string;
+  companyName: string;
+  streetLines: string[];
+  city: string;
+  stateOrProvinceCode: string;
+  countryCode: string;
+  postalCode: string;
+}
+
+interface AddressFormData {
+  personName: string;
+  companyName: string;
+  streetLines: string[];
+  city: string;
+  stateOrProvinceCode: string;
+  countryCode: string;
+  postalCode: string;
+  orderId?: string;
+}
+
+const PaymentDetails: React.FC = () => {
+  // State
+  const [quoteData, setQuoteData] = useState<QuoteProps>({
     files: [],
     totalPrice: 0,
     tax: 0,
   });
-  const { orderId } = useParams();
-  const [selectedId, setSelectedId] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+
+  // Hooks
+  const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
-  console.log('addressData', addressData);
+  
+  // Redux state
+  const { addressData, addressId } = useSelector((state: { 
+    address: { 
+      addressData: AddressData[];
+      addressId: string;
+    }
+  }) => state.address);
 
- 
-
+  // Form handling
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    reset
+  } = useForm<AddressFormData>();
 
+  // Effects
+  useEffect(() => {
+    const fetchQuoteData = async () => {
+      if (!orderId) return;
 
-  const handleAddressSubmit = async (data: any) => {
-    data.orderId = `${orderId}`;
+      try {
+        setIsLoading(true);
+        setError(null);
+        await getAllQuotes(setQuoteData, orderId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch quote data');
+        console.error('Error fetching quote data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchQuoteData();
+  }, [orderId]);
+
+  // Handlers
+  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>, address: AddressData) => {
+    dispatch(setAddressId(event.target.value));
+  };
+
+  const handleAddressSubmit = async (data: AddressFormData) => {
     try {
-      await createAddress(data, navigate, true);
-      // Refresh the address list after adding new address
-      setShowModal(false);
-    } catch (error) {
-      console.error('Failed to create address:', error);
+      setIsLoading(true);
+      setError(null);
+      
+      const formData = {
+        ...data,
+        orderId: orderId,
+        streetLines: [data.streetLines[0]] // Ensure proper format
+      };
+
+      await createAddress(formData, navigate, true);
+      setShowAddressModal(false);
+      reset(); // Reset form after successful submission
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create address');
+      console.error('Error creating address:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleChange = (event: any, data: any) => {
-    setSelectedId(event.target.value);
-    setSelectedOption(data);
-  };
+  // Calculate totals
+  const taxAmount = (quoteData.totalPrice * quoteData.tax) / 100;
+  const totalAmount = quoteData.totalPrice + taxAmount;
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (orderId) {
-        await getAllQuotes(setQuote, orderId);
-      }
-    };
-    fetchData();
-  }, [orderId]);
-
-  if (!Quote || !Quote.files) {
-    return <div>Loading...</div>;
+  // Loading state
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <CircularProgress />
+      </Box>
+    );
   }
 
-  
+  // Error state
+  if (error) {
+    return (
+      <Box sx={{ padding: '2rem', textAlign: 'center' }}>
+        <h2>Error</h2>
+        <p>{error}</p>
+        <Button label="Try Again" onClick={() => window.location.reload()} />
+      </Box>
+    );
+  }
+
   return (
     <Wrapper>
       <header>
         <div className="orderNo">Order No: {orderId}</div>
         <h1>Payment</h1>
-        {/* <h3>Edit Your Files As much as you want</h3> */}
-        <h3 className="desc">
-          Please Check the Details to proceed for payment
-        </h3>
+        <h3 className="desc">Please check the details to proceed for payment</h3>
       </header>
+
       <Body>
+        {/* Files Section */}
         <div className="files">
-          <div
-            style={{
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: '1rem'
+          }}>
+            <h2>Files</h2>
+            <Box sx={{
+              height: 32,
+              width: 32,
+              backgroundColor: '#66A3FF',
+              borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <h2>Files</h2>
-            <Box
-              sx={{
-                height: 32,
-                width: 32,
-                backgroundColor: '#66A3FF',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-              }}
-            >
-              {Quote?.files?.length}
+              justifyContent: 'center',
+              color: 'white',
+            }}>
+              {quoteData.files.length}
             </Box>
-          </div>
-          <span className="file">
-            {Quote?.files?.map((data, index) => (
-              <span key={index} className="fileName">
-                <span className="dot">.</span>
-                {data.fileName.split('-')[0]}
+          </Box>
+          <div className="file">
+            {quoteData.files.map((file, index) => (
+              <span key={file.fileId || index} className="fileName">
+                <span className="dot">•</span>
+                {file.fileName.split('-')[0]}
               </span>
             ))}
-          </span>
+          </div>
         </div>
+
+        {/* Shipping Address Section */}
         <div className="address">
           <h2>Shipping Address</h2>
-          <span className="addDetails">
-            {addressData.map((item, idx) => (
-              <div className="details" key={idx}>
+          <div className="addDetails">
+            {addressData.map((address) => (
+              <div className="details" key={address._id}>
                 <label>
                   <input
                     type="radio"
-                    value={item?._id}
-                    checked={addressId === item._id}
-                    onChange={(e) => handleChange(e, item)}
+                    value={address._id}
+                    checked={addressId === address._id}
+                    onChange={(e) => handleAddressChange(e, address)}
                   />
                   <span>
-                    {item?.personName +
-                      ' ' +
-                      item?.companyName +
-                      ' ' +
-                      item?.streetLines[0] +
-                      ' ' +
-                      item?.city +
-                      ' ' +
-                      item?.stateOrProvinceCode +
-                      ' ' +
-                      item?.countryCode +
-                      ' ' +
-                      item?.postalCode}
+                    {`${address.personName} ${address.companyName} ${address.streetLines[0]} 
+                    ${address.city} ${address.stateOrProvinceCode} ${address.countryCode} 
+                    ${address.postalCode}`}
                   </span>
                 </label>
               </div>
             ))}
-          </span>
+          </div>
+          
           <div className="Another">
             <span className="count">+ </span>
-            <span onClick={() => setShowModal(true)}>Add Another Address</span>
+            <span onClick={() => setShowAddressModal(true)}>Add Another Address</span>
           </div>
-          <Modal open={showModal} onClose={() => setShowModal(false)}>
+
+          {/* Address Modal */}
+          <Modal 
+            open={showAddressModal} 
+            onClose={() => setShowAddressModal(false)}
+          >
             <ModalContent>
               <h2>Please Enter Your Delivery Address</h2>
-              <form
-                className="modal"
-                onSubmit={handleSubmit(handleAddressSubmit)}
-              >
-                {inputFields.map((inputField, index) => (
+              <form className="modal" onSubmit={handleSubmit(handleAddressSubmit)}>
+                {inputFields.map((field) => (
                   <Input
-                    key={index}
-                    label={inputField.label}
-                    name={inputField.name}
-                    type={inputField.type}
-                    placeholder={inputField.placeholder}
+                    key={field.name}
+                    label={field.label}
+                    name={field.name}
+                    type={field.type}
+                    placeholder={field.placeholder}
                     register={register}
                     errors={errors}
                   />
                 ))}
-                <button type="submit">Add Address</button>
+                <Button 
+                  label="Add Address" 
+                  type="submit" 
+                  disabled={isLoading}
+                />
               </form>
             </ModalContent>
           </Modal>
+
+          {/* Delivery Details */}
           <DeliveryDetails>
             <h2>Delivery Details</h2>
             <div className="delivery-info">
               <p>
                 <span className="label">Delivery By </span>
-               <span> 21st Nov 2024</span>
+                <span>21st Nov 2024</span>
               </p>
               <p>Premium Delivery Plan</p>
             </div>
           </DeliveryDetails>
         </div>
 
+        {/* Billing Details */}
         <div className="details">
           <h2>Billing Details</h2>
           <Price>
             <div>
               <span className="priceDetail">
                 <span>Price</span>
-                <span className="price">${Quote?.totalPrice}</span>
+                <span className="price">${quoteData.totalPrice.toFixed(2)}</span>
               </span>
               <span className="priceDetail">
                 <span>Taxes</span>
-                <span className="price">
-                  ${(Quote?.totalPrice * Quote?.tax) / 100}
-                </span>
+                <span className="price">${taxAmount.toFixed(2)}</span>
               </span>
             </div>
             <div>
-              {/* <span className="priceDetail">
-                <span>Print fee</span>
-                <Button label="Invoice" onClick={Function}></Button>
-              </span> */}
               <span className="priceDetail">
                 <span className="total">Total</span>
-                <span className="price">
-                  ${Quote?.totalPrice + (Quote?.totalPrice * Quote?.tax) / 100}
-                </span>
+                <span className="price">${totalAmount.toFixed(2)}</span>
               </span>
             </div>
           </Price>
