@@ -55,8 +55,8 @@ const NotificationLayout = () => {
         ))}
       </SideTab>
       <MainComp>
-        {activeTab === 1 && <OngoingOrder orders={orders} />}
-        {activeTab === 2 && <PlaceOrder />}
+        {activeTab === 1 && <OngoingOrder orders={orders} setPagination={setPagination} />}
+        {activeTab === 2 && <PlaceOrder orders={orders} setPagination={setPagination} />}
         {activeTab === 3 && <General />}
         {activeTab === 4 && <Settinges/>}
       </MainComp>
