@@ -3,7 +3,6 @@ import Button from '../../../stories/button/Button';
 import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
 import api from '../../../axiosConfig';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAddress } from '../../../store/actions/getAddress';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import { Box, Modal } from '@mui/material';
 import Input from '../../../stories/StandardInput/Input';
@@ -37,21 +36,7 @@ const PaymentDetails = () => {
   const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
   console.log('addressData', addressData);
 
-  useEffect(() => {
-    const fetchAddress = async () => {
-      if (!isCreateAddress) {
-        try {
-          const response = await getAddress();
-          if (response?.data?.data) {
-            dispatch(addAddress(response.data.data));
-          }
-        } catch (error) {
-          console.error('Failed to fetch address:', error);
-        }
-      }
-    };
-    fetchAddress();
-  }, [dispatch, isCreateAddress]);
+ 
 
   const {
     register,
@@ -89,6 +74,8 @@ const PaymentDetails = () => {
   if (!Quote || !Quote.files) {
     return <div>Loading...</div>;
   }
+
+  
   return (
     <Wrapper>
       <header>
@@ -142,7 +129,7 @@ const PaymentDetails = () => {
                   <input
                     type="radio"
                     value={item?._id}
-                    checked={selectedId === item._id}
+                    checked={addressId === item._id}
                     onChange={(e) => handleChange(e, item)}
                   />
                   <span>

@@ -8,32 +8,34 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../stories/button/Button';
 import api from '../../../axiosConfig';
 import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
+import { useSelector } from 'react-redux';
+import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 
 const API_BASE_URL = import.meta.env.VITE_AWS_URL as string;
 
 const DeliveryPlan: React.FC = () => {
   const [active, setActive] = useState(-1);
-  const [deliveryData, setDeliveryData] = useState(-1);
+  const [deliveryData, setDeliveryData] = useState([]);
   const [name, setName] = useState<string>('');
-
+  const {  addressId } = useSelector((state: any) => state.address);
   const {orderId} = useParams();
   const navigate = useNavigate();
-
+console.log('deliveryData', deliveryData);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const payload = {
-          orderId: orderId,
+          addressId: addressId,
           units: 'KG',
           value: '5',
         }
         const response = await api.post(`/rate/transit`, payload);
 
-        if (!response.ok) {
+        if (!response?.data) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        const data = await response?.data;
         setDeliveryData(data); // Process the API response
       } catch (error) {
         console.error('Error fetching data:', error);
