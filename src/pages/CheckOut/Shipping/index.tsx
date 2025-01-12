@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import Input from '../../../stories/StandardInput/Input';
 import { InputWrapper, SubHeader, Wrapper } from './style';
 import { cross, inputFields } from '../../../constants';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { createAddress } from '../../../store/actions/createAddress';
 import Button from '../../../stories/button/Button';
@@ -24,6 +24,7 @@ const ShippingDetails = () => {
   const dispatch = useDispatch();
   
   const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
+
   useEffect(() => {
     const fetchAddress = async () => {
       if (!isCreateAddress) {
@@ -44,13 +45,12 @@ const ShippingDetails = () => {
     try {
       const response = await createAddress(data);
       console.log('Address created successfully:', response);
-      
+      dispatch(toggleCreateAddress());
       // Refresh the address list after creating new address
-      const updatedAddresses = await getAddress();
-      if (updatedAddresses?.data?.data) {
-        dispatch(addAddress(updatedAddresses.data.data));
-      }
-      
+      // const updatedAddresses = await getAddress();
+      // if (updatedAddresses?.data?.data) {
+      //   dispatch(addAddress(updatedAddresses.data.data));
+      // }
       reset();
     } catch (error) {
       console.error('Failed to create address:', error);

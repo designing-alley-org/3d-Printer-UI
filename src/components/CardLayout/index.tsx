@@ -160,6 +160,8 @@ const CardLayout = () => {
         return;
      }
       navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
+    }else if (pathname.includes(`/get-quotes/${orderId}/checkout/select-delivery`)) {
+      handlePayment();
     }
   }, [files, navigate, orderId, pathname, allFilesCustomized, addressId]);
 
@@ -176,8 +178,10 @@ const CardLayout = () => {
         <div></div>
         <span className="proc">
           <Button
-            label={isCheckoutRoute ? "Proceed to Delivery" : "Proceed"}
-            onClick={onProceed}
+            label={isCheckoutRoute ? "Proceed to Delivery" : !pathname.includes(ROUTES.PAYMENT) ? "process" : "pay"}
+            onClick={
+              !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
+            }
             disabled={isSaving}
             type={isCheckoutRoute ? "submit" : "button"}
           />
