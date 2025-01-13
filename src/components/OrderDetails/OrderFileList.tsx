@@ -17,11 +17,11 @@ export function OrderFilesList({ selectedOrder }: IselectedOrder) {
 
   return (
     <div className="order-files-list">
-        <h3>Order Files</h3>
+        <h3 className="order-files-title">Order Files</h3>
         <div className="order-files-space">
-          {orderFiles.map((file) => (
+          {orderFiles.map((file,index) => (
             <OrderFile
-              key={file.id}
+              key={file.index}
               fileName={file.fileName.split('-')[0]}
               quantity={file.quantity}
               pricing={file.pricing}
@@ -29,6 +29,8 @@ export function OrderFilesList({ selectedOrder }: IselectedOrder) {
             />
           ))}
         </div>
+      
+
     </div>
   );
 }

@@ -1,6 +1,6 @@
 .order-files-list {
   min-height: 100vh;
-  background-color: #e3f0fa;
+  background-color: #ffffff;
   padding: 2rem;
   border-radius: 1.5rem;
 }
@@ -9,6 +9,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   text-align: start;
+  color: black;
   margin-bottom: 1.5rem;
 }
 

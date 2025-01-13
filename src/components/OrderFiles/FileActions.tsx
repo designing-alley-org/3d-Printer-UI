@@ -1,7 +1,6 @@
 import { FileDown, ChevronDown } from 'lucide-react';
 import './FileActions.css';
 import { useState } from 'react';
-import Button from '../../stories/button/Button';
 
 interface FileActionsProps {
   quantity: number;
