@@ -1,19 +1,23 @@
 import Button from '../../stories/button/Button';
 import { NotificationWarper, Data } from './styles';
-import { arrowRight } from '../../constants';
 import airplane from '../../assets/images/airplane.svg';
-import { useNavigate } from 'react-router-dom';
+import { arrowRight } from '../../constants';
 
 interface NotificationCardProps {
     title: string;
     orderNumber: string;
     dateTime: string;
     buttonLabel: string;
+    onButtonClick?: () => void;
 }
 
-export const NotificationCard: React.FC<NotificationCardProps> = ({ title, orderNumber, dateTime, buttonLabel }) => {
-
-    const navigate = useNavigate();
+export const NotificationCard: React.FC<NotificationCardProps> = ({ 
+    title, 
+    orderNumber, 
+    dateTime, 
+    buttonLabel, 
+    onButtonClick 
+}) => {
     return (
         <NotificationWarper>
             <div className="model">
@@ -33,15 +37,12 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({ title, order
             <div className="btn">
                 <Button
                     label={buttonLabel}
-                    onClick={() => {
-                        navigate(`/get-quotes/${orderNumber}/quote`);
-                    }}
+                    onClick={() => onButtonClick && onButtonClick()} 
                     className='btn-icon'
                 >
-                    <img src={arrowRight} alt="" />
+                        <img src={arrowRight} alt="" />
                 </Button>
             </div>
         </NotificationWarper>
     );
 };
-

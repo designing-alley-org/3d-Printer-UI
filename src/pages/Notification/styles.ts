@@ -23,6 +23,13 @@ export const MainComp = styled.section`
   width: 80%;
   padding:2rem;
   border-radius: 2rem;
+  min-height: 30rem;
+
+  .pagination{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
 `;
 export const MainWrapper = styled.main`
   margin: 4rem;
@@ -49,7 +56,7 @@ export const NotificationWarper = styled.main`
   background-color: #A1C3FF;
   border-radius: 44px;
   height: 2.3rem;
-  width: 10rem;
+  width: content;
   padding: 1rem;
   display: flex;
   align-items: center;
@@ -72,7 +79,11 @@ export const NotificationWarper = styled.main`
   justify-content: space-between;
   font-size: .7rem;
 
-  img{width: 1rem;}
+
+  img{
+  width: 1rem;
+  margin-left:0.4rem;
+  }
   }
   }
 
@@ -117,3 +128,112 @@ export const Data = styled.main`
     }
 
     `;
+
+
+export const ViewDetailsWrapper = styled.main`
+margin-top: 1rem;
+width: 100%;
+padding: .5rem;
+background: #F6FAFF;
+border: 1px solid #BBD6FF;
+border-radius: 1.25rem;
+position: relative;
+
+
+
+button{
+  background: #DDE9FC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0066FF;
+  border-radius: 44px;
+  height: 2.3rem;
+  width: content;
+  padding: 1rem;
+  border: 1px solid #0066FF;
+  transition: all 0.2s ease;
+  position: absolute;
+  bottom: .5rem;
+  right: .5rem;
+  &:hover{
+    background-color: #85B3FF;
+  }
+}
+`;
+
+export const CreateDisputeWrapper = styled.div`
+  padding: 2rem;
+  background: #FFFFFF;
+  max-width: 800px;
+  margin: 1rem auto;
+  border-radius: 1.3rem;
+  border: 1px solid #336DFF;
+
+  .header {
+    margin-bottom: 2rem;
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: #666;
+    }
+  }
+
+  .dispute-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+        input[type="text"]{
+          background: #E6F0FF;
+          width: 100%;
+          color: #2359B0;
+          }
+
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        background: #E6F0FF;
+        width: 100%;
+        color: #2359B0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+        font-family: inherit;
+
+        &.error {
+          border-color: #dc3545;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #0066cc;
+        }
+      }
+
+      .btn-dispute{
+        background: #0066FF;
+        }
+      
+
+      .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+      }
+    }
+  }
+`;

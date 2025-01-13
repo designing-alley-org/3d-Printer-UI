@@ -80,6 +80,7 @@ export const accTab = [
   { id: 2, label: 'PLACED ORDER' },
   { id: 3, label: 'GENERAL' },
   { id: 4, label: 'SETTINGS' },
+  { id: 5, label: 'MY DISPUTES' },
  ];
 // Data for Card
 export const cardItems = [
