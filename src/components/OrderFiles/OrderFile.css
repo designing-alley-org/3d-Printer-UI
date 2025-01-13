@@ -1,0 +1,24 @@
+.order-file-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: rgba(236, 243, 255, 1);
+  border-radius: 25rem;
+  height: 4.5rem;
+}
+
+.order-file-header_seleceted {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: rgba(236, 243, 255, 1);
+  border-radius: 25rem;
+  height: 4.5rem;
+  border: 0.97px solid #66a3ff;
+}
+
+.order-file-details {
+  margin-top: 0.5rem;
+}

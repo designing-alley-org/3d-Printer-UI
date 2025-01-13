@@ -1,0 +1,82 @@
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.file-actions__quantity,
+.file-actions__pricing {
+  display: flex;
+  align-items: center;
+}
+
+.file-actions__label {
+  color: #6b7280; 
+  font-size: 0.875rem;
+}
+
+.file-actions__value {
+  color: #3b82f6; 
+  font-weight: 500;
+  background: #D0E2FF;
+  border-radius: 50%;
+  padding: .7rem;
+}
+
+.file-actions__value_selected {
+  background: #ffffff; 
+  border-radius: 50%;
+  padding: .7rem;
+}
+
+.file-actions__button {
+  display: flex;
+  height: 2.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  background-color: #980000;
+  color: #3b82f6;
+  border: 1px solid #1E6FFF;
+  border-radius: 9999px; 
+  transition: all 0.2s ease;
+}
+
+.file-actions__button:hover {
+  background-color: #eff6ff; 
+}
+
+.file-actions__icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* New styles for the circular chevron container */
+.file-actions__chevron-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #e5e7eb; 
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.file-actions__chevron-container--rotated {
+  transform: rotate(180deg);
+}
+
+/* Button specific styles */
+.file-actions__button--details {
+  padding-right: 1rem; 
+}
+
+.file-actions__button--download {
+  padding: 0.5rem 1.25rem;
+}
+
+/* Hover effects */
+.file-actions__button:hover .file-actions__chevron-container {
+  border-color: #93c5fd; 
+}

@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import { NotWrapper, MainComp, SideTab } from './styles';
 import { getUserOrder } from '../../store/actions/getUserOrder';
 import OngoingOrder from './OngoingOrder';
-import PlaceOrder from './PlaceOrder';
+import PlaceOrder from './placeOrder/PlaceOrder';
 import General from './General';
 import { Box } from '@mui/material';
 import Settinges from './Settinges';
+import MyDisputes from './myDispute';
 
 const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -59,6 +60,7 @@ const NotificationLayout = () => {
         {activeTab === 2 && <PlaceOrder orders={orders} setPagination={setPagination} />}
         {activeTab === 3 && <General />}
         {activeTab === 4 && <Settinges/>}
+        {activeTab === 5 && <MyDisputes/>}
       </MainComp>
     </NotWrapper>
   );

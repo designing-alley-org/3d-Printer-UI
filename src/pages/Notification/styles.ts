@@ -133,27 +133,13 @@ export const Data = styled.main`
 export const ViewDetailsWrapper = styled.main`
 margin-top: 1rem;
 width: 100%;
-height: 10rem;
 padding: .5rem;
-display: flex !important;
 background: #F6FAFF;
 border: 1px solid #BBD6FF;
 border-radius: 1.25rem;
 position: relative;
 
-.left-side{
-  width: 75%;
-  padding: 1rem;
-  font-size: 1rem;
-  color: #002E72;
-}
 
-.right-side{
-  width: 25%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 button{
   background: #DDE9FC;
@@ -239,6 +225,9 @@ export const CreateDisputeWrapper = styled.div`
         }
       }
 
+      .btn-dispute{
+        background: #0066FF;
+        }
       
 
       .error-message {

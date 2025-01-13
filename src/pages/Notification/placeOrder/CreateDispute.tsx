@@ -1,17 +1,19 @@
 import React, { useState, FormEvent } from 'react';
-import { CreateDisputeWrapper } from './styles';
-import { InputField } from '../../stories/Input/InputField';
-import Dropdown from '../../stories/Dropdown/Dropdown';
-import Button from '../../stories/button/Button';
+import { CreateDisputeWrapper } from '../styles';
+import { InputField } from '../../../stories/Input/InputField';
+import Dropdown from '../../../stories/Dropdown/Dropdown';
+import Button from '../../../stories/button/Button';
+import { createDispute } from '../../../store/actions/CreateDispute';
 
 interface DisputeForm {
   disputeType: string;
-  description: string;
+  reason: string;
+  status?: string;
 }
 
 interface FormErrors {
   disputeType?: string;
-  description?: string;
+  reason?: string;
 }
 
 interface CreateDisputeProps {
@@ -22,7 +24,8 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
   // Form state - removed orderId since it comes from props
   const [formData, setFormData] = useState<DisputeForm>({
     disputeType: '',
-    description: ''
+    reason: '',
+    status: 'InProgress'
   });
 
   // Error state
@@ -45,10 +48,10 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
       newErrors.disputeType = 'Please select a dispute type';
     }
     
-    if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
-    } else if (formData.description.trim().length < 10) {
-      newErrors.description = 'Description must be at least 10 characters long';
+    if (!formData.reason.trim()) {
+      newErrors.reason = 'Reason is required';
+    } else if (formData.reason.trim().length < 10) {
+      newErrors.reason = 'Reason must be at least 10 characters long';
     }
 
     setErrors(newErrors);
@@ -96,28 +99,17 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
 
     setIsSubmitting(true);
     try {
-      // Include orderId from props in the submission
-      const disputeData = {
-        orderId,
-        ...formData
-      };
+      // Call API to create dispute
+      const response = await createDispute(formData, orderId);
 
-      const response = await fetch('/api/disputes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(disputeData),
-      });
-
-      if (!response.ok) {
+      if (!response) {
         throw new Error('Failed to create dispute');
       }
 
       // Reset form after successful submission
       setFormData({
         disputeType: '',
-        description: ''
+        reason: ''
       });
       alert('Dispute created successfully!');
       
@@ -157,20 +149,20 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="dispute-description">
-              Dispute Description
-              {errors.description && (
-                <span className="error-message"> - {errors.description}</span>
+            <label htmlFor="dispute-reason">
+              Dispute reason
+              {errors.reason && (
+                <span className="error-message"> - {errors.reason}</span>
               )}
             </label>
             <textarea
-              name="dispute-description"
-              id="dispute-description"
-              value={formData.description}
-              onChange={handleInputChange('description')}
+              name="dispute-reason"
+              id="dispute-reason"
+              value={formData.reason}
+              onChange={handleInputChange('reason')}
               cols={30}
               rows={10}
-              className={errors.description ? 'error' : ''}
+              className={errors.reason ? 'error' : ''}
             />
           </div>
           <div className="form-group">
@@ -178,6 +170,7 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
               type="submit"
               label={isSubmitting ? 'Creating...' : 'Create Dispute'}
               disabled={isSubmitting}
+              className='btn-dispute'
             />
           </div>
         </form>

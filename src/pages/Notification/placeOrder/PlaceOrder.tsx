@@ -1,4 +1,4 @@
-import { NotificationCard } from "./NotificationCard";
+import { NotificationCard } from "../NotificationCard";
 import { useState } from "react";
 import ViewDetails from "./ViewDetails";
 import CreateDispute from "./CreateDispute";

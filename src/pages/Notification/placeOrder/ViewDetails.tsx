@@ -1,8 +1,9 @@
-import { ViewDetailsWrapper } from './styles'
-import Button from '../../stories/button/Button'
+import { ViewDetailsWrapper } from '../styles'
+import Button from '../../../stories/button/Button'
 import CreateDispute from './CreateDispute';
 import {Modal} from '@mui/material'
 import { useState } from 'react';
+import { OrderFilesList } from '../../../components/OrderDetails/OrderFileList';
 
 interface IViewDetails {
     orderId: string;
@@ -15,7 +16,7 @@ const ViewDetails = ({orderId}:IViewDetails) => {
   return (
     <ViewDetailsWrapper>
         <div className='left-side'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta laboriosam deleniti quaerat nulla, reprehenderit saepe sapiente necessitatibus nobis tenetur amet. Eius iusto laudantium esse. Quis reiciendis nihil porro consequuntur iste.
+        <OrderFilesList selectedOrder = {orderId} />
         </div>
         <div className='right-side'>
             <Button label='Create Dispute' onClick={() => setIsCreateDispute(true)} />

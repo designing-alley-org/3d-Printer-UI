@@ -25,6 +25,17 @@ const createOrderService = async () => {
     }
 };
 
+// Service to call the API for getting order by ID
+const getOrderByIdService = async (orderId: string) => {
+    try {
+      const response = await api.get(`/order-show/${orderId}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching user order:', error);
+      throw error;
+    }
+  };
+
 const getFilesByOrderIdService = async (orderId: string): Promise<object | undefined> => {
     try {
         const response = await api.get(`/order-show/${orderId}`);
@@ -203,6 +214,6 @@ const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => 
 
 
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService };
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService };
 
 
