@@ -32,9 +32,9 @@ const AccountLayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getUserOrder(setOrders,pagination);
+        await getUserOrder(setOrders, pagination);
       } catch (error) {
-        console.log(error); 
+        console.log(error);
       } finally {
         // Stop loading
       }
@@ -45,42 +45,52 @@ const AccountLayout = () => {
   return (
     <AccWrapper>
       <SideTab>
-        {accTab.map((item) => (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <span
-              key={item.id}
-              className={`${activeTab === item.id ? 'selected' : ''}`}
-              onClick={() => setActiveTab(item.id)}
-            >
-              {item.label}
-            </span>
+        <section className="group">
+          {accTab.map((item) => (
             <Box
               sx={{
-                height: '5rem',
-                borderLeft: `20px solid ${item.id === activeTab ? 'white' : 'transparent'}`,
-                backgroundColor:
-                  item.id === activeTab ? 'white' : 'transparent',
-                position: 'absolute',
-                left: '3.4%',
-                zIndex: 9,
-                borderRadius: '3rem 0rem 0rem 3rem',
+                display: 'flex',
+                alignItems: 'center',
               }}
-            ></Box>
-          </Box>
-        ))}
-        
-      <Button label='Logout' onClick={handleLogout} className="logout_btn">
-      <LogoutIcon sx={{ color: 'white', transform: 'rotate(180deg)', marginLeft: '.6rem' }} />
-      </Button>
+            >
+              <span
+                key={item.id}
+                className={`${activeTab === item.id ? 'selected' : ''}`}
+                onClick={() => setActiveTab(item.id)}
+              >
+                {item.label}
+              </span>
+              <Box
+                sx={{
+                  height: '5rem',
+                  borderLeft: `20px solid ${item.id === activeTab ? 'white' : 'transparent'}`,
+                  backgroundColor:
+                    item.id === activeTab ? 'white' : 'transparent',
+                  position: 'absolute',
+                  left: '3.4%',
+                  zIndex: 9,
+                  borderRadius: '3rem 0rem 0rem 3rem',
+                }}
+              ></Box>
+            </Box>
+          ))}
+        </section>
+
+        <Button label="Logout" onClick={handleLogout} className="logout_btn">
+          <LogoutIcon
+            sx={{
+              color: 'white',
+              transform: 'rotate(180deg)',
+              marginLeft: '.6rem',
+            }}
+          />
+        </Button>
       </SideTab>
       <MainComp>
         {activeTab === 1 && <MyProfile profileData={user?.user} />}
-        {activeTab === 2 && <Orders orderData={orders} setPagination={setPagination} />}
+        {activeTab === 2 && (
+          <Orders orderData={orders} setPagination={setPagination} />
+        )}
         {activeTab === 3 && <Settings />}
       </MainComp>
     </AccWrapper>

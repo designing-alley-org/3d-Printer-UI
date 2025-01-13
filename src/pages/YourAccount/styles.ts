@@ -16,12 +16,11 @@ export const ProfileWrapper = styled.main`
     margin: 2rem 0rem;
   }
 
-  .pagination{
+  .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;    
-    }
-
+    margin-top: 2rem;
+  }
 `;
 export const MainWrap = styled.section`
   p {
@@ -39,8 +38,8 @@ export const MainWrap = styled.section`
     box-shadow: 0px 0px 4px 0px #66a3ff inset;
   }
   .input-disabled {
-   background:transparent;
-    }
+    background: transparent;
+  }
   .btn {
     button {
       border-radius: 2rem;
@@ -59,6 +58,7 @@ export const AccWrapper = styled.section`
 export const SideTab = styled.section`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 20%;
   span {
     padding: 2rem;
@@ -68,21 +68,24 @@ export const SideTab = styled.section`
   .selected {
     color: #0066ff;
   }
-    .logout_btn{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 2rem;
-      background: #0066ff;
-      border-radius: 2rem;
-      padding: 1rem;
-      position: absolute;
-      bottom: 0rem;
-      transition: all 0.2s ease;
-      &:hover {
-        background: #0047ff;
-      }
-      }
+  .group {
+    display: flex;
+    flex-direction: column;
+  }
+  .logout_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    background: #0066ff;
+    border-radius: 2rem;
+    padding: 1rem;
+    width: 50%;
+    transition: all 0.2s ease;
+    &:hover {
+      background: #0047ff;
+    }
+  }
 `;
 export const MainComp = styled.section`
   border: 1px solid #dde9fc;

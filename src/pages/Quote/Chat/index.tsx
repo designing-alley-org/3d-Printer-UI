@@ -9,7 +9,6 @@ import api from '../../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-
 interface Message {
   sender: string;
   content: string;
@@ -19,7 +18,10 @@ interface Message {
 }
 
 export default function Chat() {
-  const [socket, setSocket] = useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+  const [socket, setSocket] = useState<Socket<
+    DefaultEventsMap,
+    DefaultEventsMap
+  > | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const user = useSelector((state: any) => state.user);
   const { orderId } = useParams();
@@ -45,7 +47,7 @@ export default function Chat() {
     newSocket.on('receiveMessage', (newMessage: Message) => {
       // Check if the message is from another user
       if (newMessage.sender !== defaultUserId) {
-        setMessages(prevMessages => [...prevMessages, newMessage]);
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     });
 
@@ -95,7 +97,7 @@ export default function Chat() {
         files,
         // id: Date.now().toString(), // Add a temporary unique ID
       };
-      setMessages(prevMessages => [...prevMessages, newMessage]);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       // Emit message to server
       socket.emit('sendMessage', messageData);
