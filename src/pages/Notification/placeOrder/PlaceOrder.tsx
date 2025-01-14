@@ -20,7 +20,7 @@ interface PlaceOrderProps {
 const PlaceOrder = ({ orders, setPagination }: PlaceOrderProps) => {
   // State to track which order's details are being viewed
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-
+console.log("orders", orders)
   // Filter orders with a specific status
   const newOrders = orders?.order.filter(
     (order: Order) => order.order_status === "order_quote_negotiated"
@@ -34,7 +34,7 @@ const PlaceOrder = ({ orders, setPagination }: PlaceOrderProps) => {
   return (
     <>
       <h2>PLACED ORDER</h2>
-      {newOrders && newOrders.length > 0 ? (
+      {orders && orders?.order?.length > 0 ? (
         orders?.order?.map((item) => (
           <div key={item._id}>
             <NotificationCard
