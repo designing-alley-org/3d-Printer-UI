@@ -213,6 +213,7 @@ const CustomizeTab: React.FC = () => {
         updateHeight !== activeFile?.height ||
         updateLength !== activeFile?.length
       ) {
+        console.log('Scaling the file...',activeFileId);
         await scaleTheFileByNewDimensions({
           orderId: orderId as string,
           activeFileId: activeFileId as string,

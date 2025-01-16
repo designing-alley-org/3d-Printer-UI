@@ -63,7 +63,11 @@ export default function Chat() {
     async function fetchMessages() {
       try {
         const response = await api.get(`/get-message/${orderId}`);
+        if (response.data.status === 'error') {
+          throw new Error(response.data.message);
+        }
         const fetchedMessages = response.data.data.messages;
+
         const fetchMessages = fetchedMessages.reverse();
         setMessages(fetchMessages[0].messages);
       } catch (error) {

@@ -1,30 +1,26 @@
 import { NotificationCard } from "../NotificationCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
-import CreateDispute from "./CreateDispute";
+import { getPlacedOrder } from "../../../store/actions/getPlacedOrder";
 
-interface Order {
-  order_status: string;
-  _id: string;
-  updatedAt: string;
-}
 
-interface PlaceOrderProps {
-  orders?: {
-    order: Order[];
-    totalPages: number;
-  };
-  setPagination: (pageNum: number) => void;
-}
 
-const PlaceOrder = ({ orders, setPagination }: PlaceOrderProps) => {
+const PlaceOrder = () => {
+
+  const[allPlacedOrder, setAllPlacedOrder] = useState<any>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      // Fetch orders
+      const response = await getPlacedOrder();
+      setAllPlacedOrder(response.orders);
+    };
+    fetch();
+  }, []);
+
   // State to track which order's details are being viewed
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-console.log("orders", orders)
-  // Filter orders with a specific status
-  const newOrders = orders?.order.filter(
-    (order: Order) => order.order_status === "order_quote_negotiated"
-  );
+
 
   // Handler for viewing details
   const handleViewDetails = (orderId: string) => {
@@ -34,11 +30,11 @@ console.log("orders", orders)
   return (
     <>
       <h2>PLACED ORDER</h2>
-      {orders && orders?.order?.length > 0 ? (
-        orders?.order?.map((item) => (
+      {allPlacedOrder && allPlacedOrder?.length > 0 ? (
+       allPlacedOrder?.map((item:any) => (
           <div key={item._id}>
             <NotificationCard
-              title={item.order_status}
+              title={item.order_status.replace(/_/g, " ").replace(/^./, (match) => match.toUpperCase())}
               orderNumber={item._id}
               dateTime={new Intl.DateTimeFormat("en-US", {
                 year: "numeric",
@@ -52,7 +48,7 @@ console.log("orders", orders)
             />
             {/* Show ViewDetails only for the selected order */}
             {selectedOrderId === item._id && (
-              <div>
+              <div className="view-details-container">
               <ViewDetails orderId={item._id} />
               </div>
             )}

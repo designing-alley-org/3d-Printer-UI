@@ -16,7 +16,7 @@ const Orders = (props: IOrders) => {
   
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const toggleOrderFiles = (orderId: any) => {
-    setExpandedOrderId((prev) => (prev === orderId ? null : orderId)); // Toggle visibility
+    setExpandedOrderId((prev) => (prev === orderId ? null : orderId)); 
   };
 
   return (

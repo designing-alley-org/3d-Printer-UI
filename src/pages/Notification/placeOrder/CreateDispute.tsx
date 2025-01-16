@@ -6,13 +6,13 @@ import Button from '../../../stories/button/Button';
 import { createDispute } from '../../../store/actions/CreateDispute';
 
 interface DisputeForm {
-  disputeType: string;
+  dispute_type: string;
   reason: string;
   status?: string;
 }
 
 interface FormErrors {
-  disputeType?: string;
+  dispute_type?: string;
   reason?: string;
 }
 
@@ -23,7 +23,7 @@ interface CreateDisputeProps {
 const CreateDispute = ({ orderId }: CreateDisputeProps) => {
   // Form state - removed orderId since it comes from props
   const [formData, setFormData] = useState<DisputeForm>({
-    disputeType: '',
+    dispute_type: '',
     reason: '',
     status: 'InProgress'
   });
@@ -44,8 +44,8 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     
-    if (!formData.disputeType) {
-      newErrors.disputeType = 'Please select a dispute type';
+    if (!formData.dispute_type) {
+      newErrors.dispute_type = 'Please select a dispute type';
     }
     
     if (!formData.reason.trim()) {
@@ -79,12 +79,12 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
   const handleDisputeTypeSelect = (selected: { value: string }) => {
     setFormData(prev => ({
       ...prev,
-      disputeType: selected.value
+      dispute_type: selected.value
     }));
-    if (errors.disputeType) {
+    if (errors.dispute_type) {
       setErrors(prev => ({
         ...prev,
-        disputeType: undefined
+        dispute_type: undefined
       }));
     }
   };
@@ -108,7 +108,7 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
 
       // Reset form after successful submission
       setFormData({
-        disputeType: '',
+        dispute_type: '',
         reason: ''
       });
       alert('Dispute created successfully!');
@@ -143,9 +143,9 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
             <Dropdown
               options={disputeTypes}
               onSelect={handleDisputeTypeSelect}
-              defaultValue={formData.disputeType}
+              defaultValue={formData.dispute_type}
               titleHelper="Select Dispute Type"
-              error={errors.disputeType}
+              error={errors.dispute_type}
             />
           </div>
           <div className="form-group">
