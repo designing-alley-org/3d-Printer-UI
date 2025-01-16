@@ -35,7 +35,7 @@ useEffect(() => {
        {allDisputes && allDisputes.map((dispute:any, index:string) => (
               <NotificationCard
                 key={dispute._id} 
-                title={dispute.reason}
+                title={`Type : ` + dispute.dispute_type.charAt(0).toUpperCase() + dispute.dispute_type.slice(1)}
                 orderNumber={dispute.orderId}
                 dateTime={new Intl.DateTimeFormat('en-US', {
                   year: 'numeric',

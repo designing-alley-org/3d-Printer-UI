@@ -15,13 +15,8 @@ const ViewDetails = ({orderId}:IViewDetails) => {
 
   return (
     <ViewDetailsWrapper>
-        <div className='left-side'>
         <OrderFilesList selectedOrder = {orderId} />
-        </div>
-        <div className='right-side'>
-            <Button label='Create Dispute' onClick={() => setIsCreateDispute(true)} />
-        </div>
-
+        <Button className='createDispute-btn' label='Create Dispute' onClick={() => setIsCreateDispute(true)} />
         {isCreateDispute &&
         <Modal open={isCreateDispute} onClose={() => setIsCreateDispute(false)}>
         <CreateDispute orderId={orderId} />

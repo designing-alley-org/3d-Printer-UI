@@ -7,6 +7,7 @@ interface IUpdateFileDataByFileId {
 }
 export const updateFileDataByFileId = ({orderId, activeFile, activeFileId}: IUpdateFileDataByFileId
 ) => {
+    console.log('updateFileDataByFileId',  activeFile, activeFileId)
     const formData = new FormData();
         formData.append('material', activeFile?.material || '');
         formData.append('color', activeFile?.color || '');

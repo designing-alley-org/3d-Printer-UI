@@ -141,7 +141,7 @@ position: relative;
 
 
 
-button{
+.createDispute-btn{
   background: #DDE9FC;
   display: flex;
   align-items: center;
