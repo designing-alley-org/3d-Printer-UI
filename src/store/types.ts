@@ -15,6 +15,7 @@ import { ADD_USER } from './user/action_types';
 
 export interface RootState {
   auth: AuthState;
+  address: AddressState;
   fileState: FileReducerState;
   register: RegisterState;
   printerDetails: IPrinterDetails[];
@@ -38,6 +39,10 @@ export interface user{
   email: string;
   name: string;
   role: string;
+}
+
+export interface AddressState {
+  addressId: string;
 }
 
 interface AddUserAction {

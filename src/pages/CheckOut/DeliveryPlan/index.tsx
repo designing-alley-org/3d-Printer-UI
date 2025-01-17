@@ -1,7 +1,7 @@
 import { Box, Typography, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Card from './Card';
 import { CardBox } from './styles';
 import Button from '../../../stories/button/Button';
@@ -9,7 +9,7 @@ import api from '../../../axiosConfig';
 import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
 import { RootState } from '../../../store/types';
 import { getOrderByIdService } from '../../../services/order';
-
+import { addDeliveryData,selectDeliveryPlan } from '../../../store/Address/deliveryDetails';
 // Types
 interface Rate {
   serviceName: string;
@@ -30,84 +30,110 @@ interface ApiError {
   message: string;
   status?: number;
 }
+
+interface OrderFile {
+  quantity: number;
+  dimensions: {
+    weight: number;
+  };
+}
+
+interface Order {
+  files: OrderFile[];
+}
+
 // 
 const DeliveryPlan: React.FC = () => {
-  // State
-  const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
-  const [deliveryData, setDeliveryData] = useState<DeliveryData | null>(null);
-  const [selectedPlanName, setSelectedPlanName] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // Redux
+  const dispatch = useDispatch();
+
+   // State management
+   const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
+   const [selectedPlanName, setSelectedPlanName] = useState<string>('');
+   console.log('selectedPlanName', selectedPlanName);
+   const [deliveryData, setDeliveryData] = useState<DeliveryData | null>(null);
+   const [order, setOrder] = useState<Order | null>(null);
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+   const [error, setError] = useState<string | null>(null);
 
   // Hooks
   const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
   const addressId = useSelector((state: RootState) => state.address.addressId);
-  const [getorder, setOrder] = useState<any>([]);
-  const [Totalweight, setTotalWeight] = useState<number>(0);
 
-  const calculateWeight = () => {
-    let weight = 0;
-    getorder?.files.map((file: any) => {
-      const quantity = file?.quantity;
-      const fileWeight = file?.dimensions?.weight;
-      weight += quantity * fileWeight;
-    });
-    setTotalWeight(weight);
-  }
-
-  useEffect(() => {
-    const getOrderById = async () => {
-      try {
-        const response = await getOrderByIdService(orderId as string);
-        setOrder(response.data.message);
-        await calculateWeight();
-      } catch (error) {
-        console.error('Error fetching user order:', error);
-        throw error;
-      }
-    };
-     getOrderById();
+  
+  // Calculate total weight from order files
+  const calculateTotalWeight = useCallback((orderData: Order): number => {
+    if (!orderData?.files?.length) return 0;
+    
+    return orderData.files.reduce((total, file) => {
+      const quantity = file?.quantity || 0;
+      const fileWeight = file?.dimensions?.weight || 0;
+      return (total + (quantity * fileWeight)/1000);
+    }, 0);
   }, []);
 
-  // Constants
-  const DELIVERY_PAYLOAD = {
-    addressId,
-    units: 'KG',
-    value: Totalweight/1000,
-  };
+   // Fetch order data
+   useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        if (!orderId) throw new Error('Order ID is required');
+        
+        const response = await getOrderByIdService(orderId);
+        if (!response?.data?.message) throw new Error('Invalid order data');
+        
+        setOrder(response.data.message);
+      } catch (error) {
+        const err = error as Error;
+        setError(`Error fetching order: ${err.message}`);
+        console.error('Error fetching order:', error);
+      }
+    };
 
+    void fetchOrder();
+  }, [orderId]);
 
-  // Effects
-  useEffect(() => {
+  
+ // Fetch delivery rates when order and address are available
+ useEffect(() => {
+  const fetchDeliveryRates = async () => {
     if (!addressId) {
       navigate(`/get-quotes/${orderId}/checkout`);
       return;
     }
 
-    const fetchDeliveryRates = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+    if (!order) return;
 
-        const response = await api.post<DeliveryData>('/rate/transit', DELIVERY_PAYLOAD);
-
-        if (!response?.data?.rates?.length) {
-          throw new Error('No delivery rates available');
-        }
-
-        setDeliveryData(response.data);
-      } catch (err) {
-        const error = err as ApiError;
-        setError(error.message || 'Failed to fetch delivery rates');
-        console.error('Error fetching delivery rates:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    const totalWeight = calculateTotalWeight(order);
+    
+    const DELIVERY_PAYLOAD = {
+      addressId,
+      units: 'KG',
+      value: totalWeight,
     };
 
-    void fetchDeliveryRates();
-  }, [addressId, orderId, navigate]);
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await api.post<DeliveryData>('/rate/transit', DELIVERY_PAYLOAD);
+
+      if (!response?.data?.rates?.length) {
+        throw new Error('No delivery rates available');
+      }
+      dispatch(addDeliveryData(response?.data?.rates));
+      setDeliveryData(response.data);
+    } catch (err) {
+      const error = err as ApiError;
+      setError(error.message || 'Failed to fetch delivery rates');
+      console.error('Error fetching delivery rates:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  void fetchDeliveryRates();
+}, [addressId, order, orderId, navigate, calculateTotalWeight]);
 
   // Handlers
   const handleProceed = async () => {
@@ -118,6 +144,7 @@ const DeliveryPlan: React.FC = () => {
 
     try {
       setIsLoading(true);
+      dispatch(selectDeliveryPlan(selectedPlanName));
       await updateUserOrderByOrderId(orderId as string, navigate, selectedPlanName);
     } catch (err) {
       const error = err as ApiError;

@@ -6,7 +6,8 @@ import { printerReducer } from './printer/printerReducer';
 import userReducer from './user/reducer';
 import  fileDetailsReducer  from './customizeFilesDetails/reducer';
 import  specificationReducer  from './customizeFilesDetails/SpecificationReducer';
-import addressReducerfrom from './Address/address.reducer.ts';
+import addressReducer from './Address/address.reducer.ts';
+import DeliveryReducer from './Address/deliveryDetails.ts';
 
 const store = configureStore({
   reducer: {
@@ -17,8 +18,8 @@ const store = configureStore({
     user: userReducer,
     fileDetails: fileDetailsReducer,
     specification: specificationReducer,
-    address: addressReducerfrom,
-
+    address: addressReducer,
+    delivery: DeliveryReducer,
   },
 });
 

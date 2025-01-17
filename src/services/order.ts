@@ -182,8 +182,6 @@ const getUserOrderService = async (pagination:number) => {
 const getAllQuotesService = async (orderId: string): Promise<any> => {
     try {
         const response = await api.get(`/get-all-quotes/${orderId}`);
-        console.log('response get all quoat', response);
-
         return response;
     } catch (error) {
         console.error('Error fetching quotes:', error);

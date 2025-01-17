@@ -10,7 +10,7 @@ import { getFile } from '../../utils/indexedDB';
 // Constants
 const QUANTITY_LIMITS = {
   MIN: 1,
-  MAX: 5000,
+  MAX: 1000000000,
 } as const;
 
 // Types
@@ -301,7 +301,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                     textAlign: 'center',
                     padding: '0.5rem',
                     height: '2rem',
-                    width: '4rem',
+                    width: '6rem',
                     '&:focus': {
                       outline: 'none',
                     },
