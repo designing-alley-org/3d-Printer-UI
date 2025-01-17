@@ -2,6 +2,7 @@ import { NotificationCard } from "../NotificationCard";
 import { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
 import { getPlacedOrder } from "../../../store/actions/getPlacedOrder";
+import Pagin from "../../../components/Paging/Pagin";
 
 
 
@@ -52,6 +53,9 @@ const PlaceOrder = () => {
               <ViewDetails orderId={item._id} />
               </div>
             )}
+            <div className='pagination'>
+                            <Pagin totalPages={allPlacedOrder?.totalPages} />
+            </div>
           </div>
         ))
       ) : (

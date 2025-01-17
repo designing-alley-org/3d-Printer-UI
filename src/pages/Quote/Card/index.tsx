@@ -28,7 +28,8 @@ interface QuoteData {
   _id: string;
 }
 
-export default function Quote() {
+
+export default function Quote({selectOrderIdProps: selectOrderIdProps}: any) {
   const { orderId } = useParams<{ orderId: string }>();
   const [quote, setQuote] = useState<QuoteData | null>(null);
   const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
@@ -36,7 +37,7 @@ export default function Quote() {
   const [showQuote, setShowQuote] = useState(false);
   async function getQuotes() {
     getQuoteByOrderId({
-      orderId: orderId as string,
+      orderId: orderId as string || selectOrderIdProps || "",
       setAllQuotes,
       setQuote,
       activeIndex,
@@ -51,7 +52,7 @@ export default function Quote() {
         sx={{ color: '#0C2850', position: 'absolute', top: '-1%' }}
         variant="h2"
       >
-        Connecting For Quote
+        Connecting For {selectOrderIdProps ? "Dispute":"Quote"}
       </Typography>
       <Box sx={{ position: 'absolute', right: '0rem', top: '0' }}>
         {' '}
