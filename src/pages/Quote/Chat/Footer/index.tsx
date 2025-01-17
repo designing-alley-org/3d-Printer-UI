@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { Socket } from 'socket.io-client';
+import MessageInput from '../../../../stories/MessageInput/MessageInput';
 import AttachmentPreview from './AttachmentPreview';
 import "./footer.css";
-import MessageInput from '../../../../stories/MessageInput/MessageInput';
 
 interface ChatFooterProps {
   socket: Socket | null;
@@ -85,7 +85,8 @@ export default function ChatFooter({
   return (
     <form onSubmit={handleSendMessage}>
       <Box sx={{ background: 'transparent', borderRadius: '3rem', position: 'relative', width: '100%' }}>
-      {file.length > 0 && (
+        <Box sx={{ p: '0.25rem', borderRadius: '3rem', width: '100%' }}>
+          {file.length > 0 && (
             <AttachmentPreview
               attachments={file}
               onRemove={(index) => setFile(file.filter((_, i) => i !== index))}
@@ -99,8 +100,6 @@ export default function ChatFooter({
               title="Image Name"
             />
           )}
-        <Box sx={{ p: '0.25rem', borderRadius: '3rem', width: '100%' }}>
-         
           <MessageInput
             value={message}
             setValue={setMessage}

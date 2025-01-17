@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from '@mui/material';
 import ChatFooter from './Footer';
 import ChatBody from './Body';
