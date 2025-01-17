@@ -10,7 +10,7 @@ import { getFile } from '../../utils/indexedDB';
 // Constants
 const QUANTITY_LIMITS = {
   MIN: 1,
-  MAX: 5000,
+  MAX: 100000,
 } as const;
 
 // Types
