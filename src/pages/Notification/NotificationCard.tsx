@@ -8,6 +8,7 @@ interface NotificationCardProps {
     orderNumber: string;
     dateTime: string;
     buttonLabel: string;
+    status?: string;
     onButtonClick?: () => void;
 }
 
@@ -16,7 +17,8 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
     orderNumber, 
     dateTime, 
     buttonLabel, 
-    onButtonClick 
+    onButtonClick ,
+    status
 }) => {
     return (
         <NotificationWarper>
@@ -42,6 +44,12 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
                 >
                         <img src={arrowRight} alt="" />
                 </Button>
+                { status && <Button
+                    label={status == "Resolved" ? "Closed" : "InProgress"}
+                    style={{backgroundColor: status === "Resolved" ? 'rgb(244, 68, 68)' : 'rgb(93, 214, 93)'}}
+                    onClick={() => onButtonClick && onButtonClick()}
+                    className='btn-status'
+                />}
             </div>
         </NotificationWarper>
     );

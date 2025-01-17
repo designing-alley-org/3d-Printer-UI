@@ -45,6 +45,7 @@ useEffect(() => {
                   minute: '2-digit'
                 }).format(new Date(dispute.createdAt))}
                 buttonLabel="Chat"
+                status={dispute.status}
                 // onButtonClick={() => ("")} // Fixed syntax error in URL
               />
             ))}

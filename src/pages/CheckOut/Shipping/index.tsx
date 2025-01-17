@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import Input from '../../../stories/StandardInput/Input';
 import { InputWrapper, SubHeader, Wrapper } from './style';
-import { cross, inputFields } from '../../../constants';
+import {  cross, inputFields } from '../../../constants';
 import { set, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { createAddress } from '../../../store/actions/createAddress';

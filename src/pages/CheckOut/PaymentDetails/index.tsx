@@ -10,6 +10,7 @@ import { inputFields } from '../../../constants';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import { createAddress } from '../../../store/actions/createAddress';
 import { setAddressId } from '../../../store/Address/address.reducer';
+import { UseSelector } from 'react-redux';
 
 // Types
 interface QuoteProps {
@@ -58,14 +59,31 @@ const PaymentDetails: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   // Redux state
-  const { addressData, addressId } = useSelector((state: { 
-    address: { 
+  const { deliveryData, selectedServiceType } = useSelector((state: any) => state.delivery);
+  const [showDeliveryData, setShowDeliveryData] = useState([]);
+  const { addressData, addressId } = useSelector((state: {
+    address: {
       addressData: AddressData[];
       addressId: string;
     }
   }) => state.address);
+
+  // Filter delivery data
+  useEffect(() => {
+    if (!deliveryData || !selectedServiceType) {
+      alert('Please select a delivery address');
+      navigate(`/get-quotes/${orderId}/checkout`);
+      return;
+    };
+    const filteredData = deliveryData.find((data: any) => data.serviceType === selectedServiceType);
+    setShowDeliveryData(filteredData?.ratedShipmentDetails ?? [{}]);
+  }, [deliveryData, selectedServiceType]);
+
+
+
+
 
   // Form handling
   const {
@@ -79,7 +97,6 @@ const PaymentDetails: React.FC = () => {
   useEffect(() => {
     const fetchQuoteData = async () => {
       if (!orderId) return;
-
       try {
         setIsLoading(true);
         setError(null);
@@ -104,7 +121,7 @@ const PaymentDetails: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const formData = {
         ...data,
         orderId: orderId,
@@ -157,9 +174,9 @@ const PaymentDetails: React.FC = () => {
       <Body>
         {/* Files Section */}
         <div className="files">
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             marginBottom: '1rem'
           }}>
@@ -201,23 +218,23 @@ const PaymentDetails: React.FC = () => {
                     onChange={(e) => handleAddressChange(e, address)}
                   />
                   <span>
-                    {`${address.personName} ${address.companyName} ${address.streetLines[0]} 
-                    ${address.city} ${address.stateOrProvinceCode} ${address.countryCode} 
+                    {`${address.personName}, ${address.companyName}, ${address.streetLines[0]} 
+                    ${address.city}, ${address.stateOrProvinceCode}, ${address.countryCode}, 
                     ${address.postalCode}`}
                   </span>
                 </label>
               </div>
             ))}
           </div>
-          
+
           <div className="Another">
             <span className="count">+ </span>
             <span onClick={() => setShowAddressModal(true)}>Add Another Address</span>
           </div>
 
           {/* Address Modal */}
-          <Modal 
-            open={showAddressModal} 
+          <Modal
+            open={showAddressModal}
             onClose={() => setShowAddressModal(false)}
           >
             <ModalContent>
@@ -234,9 +251,9 @@ const PaymentDetails: React.FC = () => {
                     errors={errors}
                   />
                 ))}
-                <Button 
-                  label="Add Address" 
-                  type="submit" 
+                <Button
+                  label="Add Address"
+                  type="submit"
                   disabled={isLoading}
                 />
               </form>
@@ -248,36 +265,45 @@ const PaymentDetails: React.FC = () => {
             <h2>Delivery Details</h2>
             <div className="delivery-info">
               <p>
-                <span className="label">Delivery By </span>
-                <span>21st Nov 2024</span>
+                <span className="label">Delivery plan :</span>
               </p>
-              <p>Premium Delivery Plan</p>
+              <p>{selectedServiceType}</p>
             </div>
           </DeliveryDetails>
         </div>
 
         {/* Billing Details */}
         <div className="details">
-          <h2>Billing Details</h2>
-          <Price>
-            <div>
-              <span className="priceDetail">
-                <span>Price</span>
-                <span className="price">${quoteData.totalPrice.toFixed(2)}</span>
-              </span>
-              <span className="priceDetail">
-                <span>Taxes</span>
-                <span className="price">${taxAmount.toFixed(2)}</span>
-              </span>
-            </div>
-            <div>
-              <span className="priceDetail">
-                <span className="total">Total</span>
-                <span className="price">${totalAmount.toFixed(2)}</span>
-              </span>
-            </div>
-          </Price>
-        </div>
+  <h2>Billing Details</h2>
+  <Price>
+    <div>
+      <span className="priceDetail">
+        <span>Price</span>
+        <span className="price">${quoteData.totalPrice.toFixed(2)}</span>
+      </span>
+      <span className="priceDetail">
+        <span>Delivery Price</span>
+        <span className="price">${showDeliveryData?.[0]?.totalNetCharge}</span>
+      </span>
+      <span className="priceDetail">
+        <span>Taxes</span>
+        <span className="price">${taxAmount.toFixed(2)}</span>
+      </span>
+    </div>
+    <div>
+      <span className="priceDetail">
+        <span className="total">Total</span>
+        <span className="price">
+          ${(
+            Number(quoteData.totalPrice) + 
+            Number(showDeliveryData?.[0]?.totalNetCharge || 0) + 
+            Number(taxAmount)
+          ).toFixed(2)}
+        </span>
+      </span>
+    </div>
+  </Price>
+</div>
       </Body>
     </Wrapper>
   );

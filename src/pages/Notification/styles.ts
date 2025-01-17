@@ -78,13 +78,17 @@ export const NotificationWarper = styled.main`
   align-items: center;
   justify-content: space-between;
   font-size: .7rem;
-
-
   img{
   width: 1rem;
   margin-left:0.4rem;
   }
   }
+  .btn-status{
+  font-size: .7rem;
+  border-radius: 44px;
+  position: absolute;
+  top: 4.5rem;
+  right: 0rem;}
   }
 
   .model {

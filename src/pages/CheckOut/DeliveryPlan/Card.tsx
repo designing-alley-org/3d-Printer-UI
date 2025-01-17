@@ -51,7 +51,7 @@ export default function Card({
           <span className="btn">
             <Button
               label={active !== index ? 'Select' : 'Selected'}
-              onClick={() => handleClick(index, deliveryName)}
+              onClick={() => handleClick(index, deliveryTime)}
             />
           </span>
         </div>
