@@ -8,6 +8,7 @@ import Button from '../../../stories/button/Button';
 import api from '../../../axiosConfig';
 import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
 import { RootState } from '../../../store/types';
+import { getOrderByIdService } from '../../../services/order';
 
 // Types
 interface Rate {
@@ -29,7 +30,7 @@ interface ApiError {
   message: string;
   status?: number;
 }
-
+// 
 const DeliveryPlan: React.FC = () => {
   // State
   const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
@@ -42,13 +43,40 @@ const DeliveryPlan: React.FC = () => {
   const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
   const addressId = useSelector((state: RootState) => state.address.addressId);
+  const [getorder, setOrder] = useState<any>([]);
+  const [Totalweight, setTotalWeight] = useState<number>(0);
+
+  const calculateWeight = () => {
+    let weight = 0;
+    getorder?.files.map((file: any) => {
+      const quantity = file?.quantity;
+      const fileWeight = file?.dimensions?.weight;
+      weight += quantity * fileWeight;
+    });
+    setTotalWeight(weight);
+  }
+
+  useEffect(() => {
+    const getOrderById = async () => {
+      try {
+        const response = await getOrderByIdService(orderId as string);
+        setOrder(response.data.message);
+        await calculateWeight();
+      } catch (error) {
+        console.error('Error fetching user order:', error);
+        throw error;
+      }
+    };
+     getOrderById();
+  }, []);
 
   // Constants
   const DELIVERY_PAYLOAD = {
     addressId,
     units: 'KG',
-    value: '5',
+    value: Totalweight/1000,
   };
+
 
   // Effects
   useEffect(() => {
