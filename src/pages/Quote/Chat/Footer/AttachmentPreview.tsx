@@ -1,11 +1,14 @@
 // AttachmentPreview.tsx
-import React from 'react';
 import "./footer.css";
 import { cross } from '../../../../constants';
 import ButtonIcon from '../../../../stories/BottonIcon/ButtonIcon';
 
 interface AttachmentPreviewProps {
-  attachments: Attachment[];
+  attachments: {
+    name: string;
+    file: File;
+    preview: string;
+  }[];
   onRemove: (index: number) => void;
   title: string;
 }

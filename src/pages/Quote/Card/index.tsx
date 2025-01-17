@@ -101,7 +101,7 @@ export default function Quote({selectOrderIdProps: selectOrderIdProps}: any) {
           />
         }
       </Box>
-      <Box sx={{ height: '100%', width: '100%', mt: '1rem' }}>
+      <Box sx={{ height: '90%', width: '100%', mt: '1rem' }}>
         <Chat />
       </Box>
     </QuoteBox>

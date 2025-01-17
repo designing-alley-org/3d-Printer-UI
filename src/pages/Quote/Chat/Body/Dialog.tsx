@@ -7,16 +7,15 @@ import {
   Typography,
 } from '@mui/material';
 
-interface DailogProps {
-  Images: { fileUrl: string }[];
+interface DialogProps {
+  images: { fileUrl: string; fileName?: string }[];
   open: boolean;
   onClose: () => void;
 }
 
-export default function Dailog({ Images = [], open, onClose }: DailogProps) {
-
+export const FilePreviewDialog = ({ images, open, onClose }: DialogProps) => {
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         More Files
         <IconButton
@@ -34,11 +33,12 @@ export default function Dailog({ Images = [], open, onClose }: DailogProps) {
             flexWrap: 'wrap',
             gap: '1rem',
             justifyContent: 'center',
+            padding: '1rem',
           }}
         >
-          {Images?.map((img, index) => (
+          {images.map((image, index) => (
             <Box
-              key={index}
+              key={`dialog-image-${image.fileName || index}`}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -47,22 +47,30 @@ export default function Dailog({ Images = [], open, onClose }: DailogProps) {
                 borderRadius: '1rem',
                 border: '1px solid #1E6FFF',
                 padding: '1rem',
+                maxWidth: '45rem',
               }}
             >
-              <img
-                style={{
-                  height: '25rem',
-                  width: '45rem',
+              <Box
+                component="img"
+                src={image.fileUrl}
+                alt={image.fileName || `file-${index}`}
+                sx={{
+                  maxHeight: '25rem',
+                  width: '100%',
                   borderRadius: '0.5rem',
-                  objectFit: 'cover',
+                  objectFit: 'contain',
                 }}
-                src={img?.fileUrl}
-                alt={`file-${index}`}
               />
+              {image.fileName && (
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  {image.fileName}
+                </Typography>
+              )}
             </Box>
           ))}
         </Box>
       </DialogContent>
     </Dialog>
   );
-}
+};
+

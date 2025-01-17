@@ -2,26 +2,26 @@ import { Box, styled } from '@mui/material';
 import AttachmentIcon from '../../assets/images/attachement.png';
 import ImgUpload from '../../assets/images/imgUpload.png';
 import SendIcon from '../../assets/images/send.svg';
-import React from 'react';
+import React, { useRef } from 'react';
+
 interface Attachment {
   file: File;
   name: string;
-  extension: string | undefined;
+  extension: string;
+  mimeType: string;
 }
 
 interface InputFieldProps {
   value: string;
   setValue: (value: string) => void;
   disabled?: boolean;
-  setAttachment: (attachment: Attachment) => void;
-  inputRef?: React.RefObject<HTMLInputElement>;
-  attachment: Attachment;
-  setFile: (file: Attachment[]) => void;
+  setFile: (files: Attachment[]) => void;
   setImages: (images: Attachment[]) => void;
   file: Attachment[];
   images: Attachment[];
-  handleSendAttachment:any
+  handleSendAttachment: () => void;
 }
+
 const StyledInput = styled('input')(() => ({
   width: '86%',
   height: 'inherit',
@@ -38,6 +38,15 @@ const StyledInput = styled('input')(() => ({
   },
 }));
 
+const ALLOWED_FILE_TYPES = {
+  documents: [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ],
+  images: ['image/jpeg', 'image/png', 'image/jpg']
+};
+
 export default function MessageInput({
   value,
   setValue,
@@ -48,47 +57,70 @@ export default function MessageInput({
   images,
   handleSendAttachment
 }: InputFieldProps) {
-  const inputRef = React.createRef<HTMLInputElement>();
-  const imgRef = React.createRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const imgRef = useRef<HTMLInputElement>(null);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files){
-      const files = Array.from(e.target.files);
-      const attachments = files.map((file) => {
-        if(file.type!=='application/pdf' && file.type!=='application/msword' && file.type!=='application/vnd.openxmlformats-officedocument.wordprocessingml.document'){
-          return;
-        }
-        const name = file.name;
-        const extension = name.split('.').pop();
-        const mimeType = file.type;
-        return { file, name, extension , mimeType};
-      }
+    if (!e.target.files?.length) return;
 
-      );
+    const files = Array.from(e.target.files);
+    const validAttachments: Attachment[] = files
+      .filter(file => ALLOWED_FILE_TYPES.documents.includes(file.type))
+      .map(file => ({
+        file,
+        name: file.name,
+        extension: file.name.split('.').pop() || '',
+        mimeType: file.type
+      }))
+      .filter((attachment): attachment is Attachment => attachment !== undefined);
 
-      setFile([...attachments,...file])
-
+    if (validAttachments.length) {
+      setFile([...file, ...validAttachments]);
     }
-  }
+
+    // Clear the input for future selections
+    if (e.target) {
+      e.target.value = '';
+    }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files){
-      const files = Array.from(e.target.files);
-      const attachments = files.map((file) => {
-        if(file.type!=='image/jpeg' && file.type!=='image/png' && file.type!=='image/jpg'){
-          return;
-        }
-        const name = file.name;
-        const extension = name.split('.').pop();
-        const mimeType = file.type;
-        return { file, name, extension, mimeType };
-      }
+    if (!e.target.files?.length) return;
 
-      );
+    const files = Array.from(e.target.files);
+    const validImages: Attachment[] = files
+      .filter(file => ALLOWED_FILE_TYPES.images.includes(file.type))
+      .map(file => ({
+        file,
+        name: file.name,
+        extension: file.name.split('.').pop() || '',
+        mimeType: file.type
+      }))
+      .filter((attachment): attachment is Attachment => attachment !== undefined);
 
-      setImages([...attachments,...images])
-
+    if (validImages.length) {
+      setImages([...images, ...validImages]);
     }
-  }
+
+    // Clear the input for future selections
+    if (e.target) {
+      e.target.value = '';
+    }
+  };
+
+  const handleSend = () => {
+    if (value.trim()) {
+      // Dispatch form submit event for text message
+      const form = document.querySelector('form');
+      if (form) {
+        const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+        form.dispatchEvent(submitEvent);
+      }
+    } else if (file.length > 0 || images.length > 0) {
+      // Handle attachment-only send
+      handleSendAttachment();
+    }
+  };
 
   return (
     <Box
@@ -110,7 +142,7 @@ export default function MessageInput({
         multiple
         style={{ display: 'none' }}
         onChange={handleImageChange}
-        accept="image/*"
+        accept={ALLOWED_FILE_TYPES.images.join(',')}
       />
       <input
         ref={inputRef}
@@ -118,7 +150,7 @@ export default function MessageInput({
         multiple
         style={{ display: 'none' }}
         onChange={handleFileChange}
-        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        accept={ALLOWED_FILE_TYPES.documents.join(',')}
       />
 
       <StyledInput
@@ -128,8 +160,9 @@ export default function MessageInput({
         type="text"
         placeholder="Type Here.."
       />
+      
       <Box
-        onClick={() => imgRef?.current?.click()}
+        onClick={() => imgRef.current?.click()}
         sx={{
           width: '3rem',
           height: '3rem',
@@ -144,8 +177,9 @@ export default function MessageInput({
       >
         <img src={ImgUpload} alt="attachment" style={{ width: '1.5rem' }} />
       </Box>
+      
       <Box
-        onClick={() => inputRef?.current?.click()}
+        onClick={() => inputRef.current?.click()}
         sx={{
           width: '3rem',
           height: '3rem',
@@ -165,6 +199,7 @@ export default function MessageInput({
           style={{ width: '1.5rem' }}
         />
       </Box>
+      
       <Box
         sx={{
           width: '3rem',
@@ -178,15 +213,7 @@ export default function MessageInput({
           color: '#336DFF',
           ml: '0.5rem',
         }}
-        onClick={() =>
-          value
-            ? document
-                .querySelector('form')
-                ?.dispatchEvent(
-                  new Event('submit', { cancelable: true, bubbles: true })
-                )
-            : handleSendAttachment()
-        }
+        onClick={handleSend}
       >
         <img
           style={{ height: '2rem', width: '2rem' }}
