@@ -213,7 +213,6 @@ const CustomizeTab: React.FC = () => {
         updateHeight !== activeFile?.height ||
         updateLength !== activeFile?.length
       ) {
-        console.log('Scaling the file...',activeFileId);
         await scaleTheFileByNewDimensions({
           orderId: orderId as string,
           activeFileId: activeFileId as string,
@@ -224,24 +223,24 @@ const CustomizeTab: React.FC = () => {
         });
       }
 
-      // Get weight of the file
-
+     // Get weight of the file
       await getWeightByFileId({
         orderId: orderId as string,
         setWeight,
-        activeFileId,
+        activeFileId: activeFileId as string,
         selectedMat,
         materialMass,
         dispatch,
       });
 
       // Update file data
-
       await updateFileDataByFileId({
         orderId: orderId as string,
         activeFile,
-        activeFileId,
+        activeFileId: activeFileId as string,
+        dispatch,
       });
+
     } catch (error) {
       console.error('Error applying selection:', error);
     } finally {

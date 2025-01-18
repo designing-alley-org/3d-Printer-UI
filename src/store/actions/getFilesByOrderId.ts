@@ -15,6 +15,7 @@ export const getFilesByOrderId = ({ orderId, setFetchFiles, dispatch }: IGetFile
                 res = [];
             }
             setFetchFiles(res)
+            console.log('Files fetched Starting successfully:', res);
             dispatch(addAllFiles(res));
         })
         .catch((err) => {

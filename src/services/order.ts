@@ -109,24 +109,18 @@ const scaleTheFileByNewDimensionsService = async (
 const updateFileDataByFileIdService = async (
     orderId: string,
     activeFileId: string,
-    formData: object
+    payload: object
 ): Promise<number | undefined> => {
     try {
         const response = await api.put(
             `/update-user-order/${orderId}/${activeFileId}`,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            }
+            payload
         );
-        if (response.status === 200) {
-            return response.data.data;
-        }
+        return response.data.data;
 
     } catch (error) {
         console.error('Error updating data:', error);
+        throw error;
     }
 }
 const updateUserOrderByOrderIdService = async (orderId: string, data: object) => {
