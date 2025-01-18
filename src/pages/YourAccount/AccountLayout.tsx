@@ -76,7 +76,7 @@ const AccountLayout = () => {
           ))}
         </section>
 
-        <Button label="Logout" onClick={handleLogout} className="logout_btn">
+       {activeTab === 1 && <Button label="Logout" onClick={handleLogout} className="logout_btn">
           <LogoutIcon
             sx={{
               color: 'white',
@@ -84,7 +84,7 @@ const AccountLayout = () => {
               marginLeft: '.6rem',
             }}
           />
-        </Button>
+        </Button>}
       </SideTab>
       <MainComp>
         {activeTab === 1 && <MyProfile profileData={user?.user} />}

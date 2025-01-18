@@ -108,7 +108,7 @@ export default function Chat() {
   };
 
   return (
-    <Box sx={{ width: '100%', height: '100%' }}>
+    <Box sx={{ width: '100%', height: '110%', display: 'flex', flexDirection: 'column' }}>
       <ChatBody messages={messages} />
       <ChatFooter
         socket={socket}
