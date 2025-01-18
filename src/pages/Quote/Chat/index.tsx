@@ -16,6 +16,7 @@ interface Message {
   id?: string; // Add an id field to track unique messages
 }
 
+const  API_URL =  import.meta.env.VITE_AWS_URL as string;
 export default function Chat() {
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
@@ -28,8 +29,9 @@ export default function Chat() {
   const defaultUserId = user.user._id;
   const defaultMerchantId = user.user._id;
 
+
   useEffect(() => {
-    const newSocket: Socket = io('http://localhost:5000', {
+    const newSocket: Socket = io( API_URL, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
     });

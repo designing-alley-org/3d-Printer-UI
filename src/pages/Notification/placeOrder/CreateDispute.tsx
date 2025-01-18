@@ -18,9 +18,10 @@ interface FormErrors {
 
 interface CreateDisputeProps {
   orderId: string;
+  setIsCreateDispute: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateDispute = ({ orderId }: CreateDisputeProps) => {
+const CreateDispute = ({ orderId,setIsCreateDispute }: CreateDisputeProps) => {
   // Form state - removed orderId since it comes from props
   const [formData, setFormData] = useState<DisputeForm>({
     dispute_type: '',
@@ -112,6 +113,7 @@ const CreateDispute = ({ orderId }: CreateDisputeProps) => {
         reason: ''
       });
       alert('Dispute created successfully!');
+      setIsCreateDispute(false);
       
     } catch (error) {
       console.error('Error creating dispute:', error);
