@@ -8,6 +8,7 @@ import General from './General';
 import { Box } from '@mui/material';
 import Settinges from './Settinges';
 import MyDisputes from './myDispute';
+import { getOngoingOrder } from '../../store/actions/getOngoingOrder';
 
 const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -18,6 +19,7 @@ const NotificationLayout = () => {
     const fetchData = async () => {
       try {
         await getUserOrder(setOrders,pagination);
+        // await getOngoingOrder(setOrders);
       } catch (error) {
         console.log(error);
       } finally {

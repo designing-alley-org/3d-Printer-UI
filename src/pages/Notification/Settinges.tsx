@@ -40,7 +40,7 @@ console.log()
           <div className="email">
             <div className="notify">Email</div>
             <label className="switch">
-              <input type="checkbox" />
+              <input type="checkbox" defaultChecked={true} />
               <span className="slider round"></span>
             </label>
           </div>

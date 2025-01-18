@@ -19,7 +19,7 @@ const ViewDetails = ({orderId}:IViewDetails) => {
         <Button className='createDispute-btn' label='Create Dispute' onClick={() => setIsCreateDispute(true)} />
         {isCreateDispute &&
         <Modal open={isCreateDispute} onClose={() => setIsCreateDispute(false)}>
-        <CreateDispute orderId={orderId} />
+        <CreateDispute orderId={orderId} setIsCreateDispute={setIsCreateDispute} />
         </Modal>
         }        
 

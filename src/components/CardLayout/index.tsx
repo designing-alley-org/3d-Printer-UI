@@ -97,8 +97,10 @@ const CardLayout = () => {
   const handlePayment = async () => {
     setIsSaving(true);
     try {
+
       const response = await api.post(`/checkout/${orderId}`);
       if (response.status === 200 && response.data.url) {
+        console.log('Payment URL:', response.data.url);
         window.location.href = response.data.url;
       } else {
         throw new Error('Invalid payment URL received');

@@ -173,6 +173,16 @@ const getUserOrderService = async (pagination:number) => {
     }
 }
 
+const getOngoingOrderService = async () => {
+    try {
+        const response = await api.get('/api/v1/get-ongoing-orders');
+        return response;
+    } catch (error) {
+        console.error('Error fetching user order:', error);
+        throw error;
+    }
+}
+
 const getAllQuotesService = async (orderId: string): Promise<any> => {
     try {
         const response = await api.get(`/get-all-quotes/${orderId}`);
@@ -206,6 +216,6 @@ const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => 
 
 
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService };
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService };
 
 
