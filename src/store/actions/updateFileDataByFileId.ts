@@ -1,32 +1,27 @@
-import { useDispatch } from "react-redux";
-import {  updateFileDataByFileIdService } from "../../services/order"
+import { updateFileDataByFileIdService } from "../../services/order"
 import { addAllFiles } from "../customizeFilesDetails/reducer";
-import { UseDispatch } from "react-redux";
 interface IUpdateFileDataByFileId {
-    orderId: string ,
+    orderId: string,
     activeFile: any,
     activeFileId: string,
+    dispatch: React.Dispatch<any>
 }
-export const updateFileDataByFileId = async ({orderId, activeFile, activeFileId}: IUpdateFileDataByFileId
+export const updateFileDataByFileId = async ({orderId, activeFile, activeFileId, dispatch}: IUpdateFileDataByFileId
 ) => {
-    const dispatch = useDispatch();
-    const formData = new FormData();
-        formData.append('material', activeFile?.material || '');
-        formData.append('color', activeFile?.color || '');
-        formData.append('printer', activeFile?.printer || '');
-        formData.append('infill', activeFile?.infill || '');
-        formData.append('unit', activeFile?.unit || '');
-        formData.append('technology', activeFile?.technology || '');
-        formData.append('weight', activeFile?.weight || '');
-    await updateFileDataByFileIdService(orderId, activeFileId, formData)
-        .then((res) => {
-            if (!res) {
-                res = [];
-            }
-            dispatch(addAllFiles(res));
-            console.log('updateFileDataByFileIdService', res);
-        })
-        .catch((err) => {
-            console.error('Error fetching files:', err);
-        })
+    try {
+        const payload = {
+            material: activeFile?.material || '',
+            color: activeFile?.color || '',
+            printer: activeFile?.printer || '',
+            infill: activeFile?.infill || '',
+            unit: activeFile?.unit || '',
+            technology: activeFile?.technology || '',
+            weight: activeFile?.weight || '',
+        };
+        const res = await updateFileDataByFileIdService(orderId, activeFileId, payload);
+        
+    } catch (err) {
+        console.error('Error fetching files:', err);
+    }
 }
+
