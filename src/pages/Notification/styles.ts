@@ -33,6 +33,7 @@ export const MainComp = styled.section`
 `;
 export const MainWrapper = styled.main`
   margin: 4rem;
+  padding-bottom: 2rem;
   h1 {
     color: white;
   }`;
