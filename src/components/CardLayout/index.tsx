@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
 import { UseSelector } from 'react-redux';
+import {  toast } from 'react-toastify';
 
 interface ModelDimensions {
   height: number;
@@ -107,7 +108,10 @@ const CardLayout = () => {
       }
     } catch (error) {
       console.error('Error processing payment:', error);
-      alert('Failed to process payment. Please try again.');
+      toast.error('Failed to process payment!', {
+        position: "bottom-right",
+        });
+     
     } finally {
       setIsSaving(false);
     }
@@ -116,7 +120,7 @@ const CardLayout = () => {
   const onProceed = useCallback(async () => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
       if (files.length === 0) {
-        alert('Please upload at least one file before proceeding');
+        toast.warning('Please upload at least one file!');
         return;
       }
 
@@ -132,7 +136,7 @@ const CardLayout = () => {
         });
       } catch (error) {
         console.error('Error uploading files:', error);
-        alert('Failed to upload files. Please try again.');
+        toast.error('Failed to upload files!');
         setIsSaving(false);
       }
     } else if (pathname === '/get-quotes') {
@@ -145,12 +149,14 @@ const CardLayout = () => {
         });
       } catch (error) {
         console.error('Error creating order:', error);
-        alert('Failed to create order. Please try again.');
+        toast.error('Failed to create order.', {
+          position: "bottom-right",
+          });
         setIsSaving(false);
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
       if (!allFilesCustomized) {
-        alert('Apply specifications to all files before proceeding');
+        toast.warning('Apply specifications to all files before proceeding.');
         return;
       }
       navigate(`/get-quotes/${orderId}/quote`);
@@ -158,7 +164,7 @@ const CardLayout = () => {
       navigate(`/get-quotes/${orderId}/checkout`);
     } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
      if(addressId === ""){
-        alert("Please select an address");
+        toast.warning('Please select a delivery address!');
         return;
      }
       navigate(`/get-quotes/${orderId}/checkout/select-delivery`);

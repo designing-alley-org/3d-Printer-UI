@@ -16,6 +16,7 @@ import { AppDispatch } from '../../store/store';
 import { login } from '../../store/auth/actions';
 import { RootState } from '../../store/types';
 import "./styles.css";
+import { toast } from 'react-toastify';
 
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -61,9 +62,14 @@ const Login: React.FC = () => {
   const handleGoogleLogin = () => {
     window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login(email, password, navigate));
+    try {
+      await dispatch(login(email, password, navigate));
+      toast.success('Login Successful');
+    } catch (error) {
+      toast.error('Login failed. Please try again.');
+    }
   };
 
   return (

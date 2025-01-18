@@ -5,9 +5,12 @@ import { updateNotificationServicer } from '../../store/actions/updateNotificati
 import { useEffect } from 'react';
 import { getNotificationPreferences } from '../../store/actions/getNotificationPreferences';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 const Settinges = () => {
   
   const [notificationPreferences,setNotificationPreferences] = useState<any>([]);
+  const [isEmailNotificationEnabled, setIsEmailNotificationEnabled] = useState<boolean>(true);
+
   const notificationCategories = [
     { key: 'orderNotifications', label: 'Order Notifications', default: notificationPreferences?.orderNotifications?.email?.frequency },
     { key: 'personalMessages', label: 'Personal Messages' ,default: notificationPreferences?.personalMessages?.email?.frequency},
@@ -16,17 +19,41 @@ const Settinges = () => {
     { key: 'rulesAndPolicy', label: 'Rules & Policy', default: notificationPreferences?.rulesAndPolicy?.email?.frequency },
     
   ];
-console.log()
   const handleDropdownSelect = async (category: string, selectedFrequency: string) => {
     try {
       await updateNotificationServicer(category, true, selectedFrequency);
+      toast.success(`Notification settings updated for ${category.toLocaleUpperCase()}`);
     } catch (error) {
+      toast.error(`Failed to update notification for ${category}`);
       console.error(`Failed to update notification settings for ${category}:`, error);
     }
   };
 
+  const handelEmailToggle = async () => {
+    try {
+      setIsEmailNotificationEnabled((prev) => !prev);
+      // await Promise.all(
+      //   notificationCategories.map(async (category) => {
+      //     await updateNotificationServicer(category.key, isEmailNotificationEnabled, category.default);
+      //   })
+      // );
+      toast.warning('Not implemented yet');
+    } catch (error) {
+      toast.error('Failed to update email notifications');
+      console.error('Failed to update email notifications:', error);
+    }
+  };
+
   useEffect(() => {
-    getNotificationPreferences(setNotificationPreferences);
+    const getNotificationPreferencesAsync = async () => {
+      try {
+        await getNotificationPreferences(setNotificationPreferences);
+      } catch (error) {
+        toast.error('Error getting notification preferences');
+        console.error('Error getting notification preferences:', error);
+      }
+    };
+    getNotificationPreferencesAsync();
   }, []);
 
 
@@ -40,7 +67,7 @@ console.log()
           <div className="email">
             <div className="notify">Email</div>
             <label className="switch">
-              <input type="checkbox" defaultChecked={true} />
+              <input type="checkbox" defaultChecked={isEmailNotificationEnabled} onClick={handelEmailToggle} />
               <span className="slider round"></span>
             </label>
           </div>

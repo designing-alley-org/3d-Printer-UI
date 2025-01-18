@@ -51,7 +51,7 @@ export const Body = styled.section`
     padding-right: 1rem;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    min-height: 04rem;
     height: 100%;
 
     h2 {
@@ -62,7 +62,7 @@ export const Body = styled.section`
   .addDetails {
     // display: flex;
     flex: 1;
-    min-height: 0;
+    min-height: 4rem;
     flex-direction: column;
     // max-height: 12rem;
     overflow: hidden;
@@ -146,6 +146,15 @@ export const Body = styled.section`
     margin: 0.25rem 0;
     align-items: center;
     color: #2359b0;
+
+    span {
+      padding: 0.25rem 0.5rem;
+      border-radius: 40px;
+      transition: background 0.3s;
+      &:hover {
+        background:rgb(150, 182, 238);
+      }
+    }
   }
   .file {
     display: flex;

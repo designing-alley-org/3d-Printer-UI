@@ -11,6 +11,7 @@ import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 import { getAddress } from '../../../store/actions/getAddress';
+import { toast } from 'react-toastify';
 
 const ShippingDetails = () => {
   const {
@@ -34,6 +35,7 @@ const ShippingDetails = () => {
             dispatch(addAddress(response.data.data));
           }
         } catch (error) {
+          toast.error('Failed to fetch address');
           console.error('Failed to fetch address:', error);
         }
       }
@@ -44,8 +46,8 @@ const ShippingDetails = () => {
   const handleAddress = async (data: any) => {
     try {
       const response = await createAddress(data);
-      console.log('Address created successfully:', response);
       dispatch(toggleCreateAddress());
+      toast.success('Address created successfully');
       // Refresh the address list after creating new address
       // const updatedAddresses = await getAddress();
       // if (updatedAddresses?.data?.data) {
@@ -53,6 +55,7 @@ const ShippingDetails = () => {
       // }
       reset();
     } catch (error) {
+      toast.error('Failed to create address');
       console.error('Failed to create address:', error);
     }
   };
