@@ -13,6 +13,7 @@ import { Box } from '@mui/material';
 import Button from '../../stories/button/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
 import api from '../../axiosConfig';
+import { toast } from 'react-toastify';
 
 const AccountLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -24,7 +25,9 @@ const AccountLayout = () => {
       await api.get('/logout');
       localStorage.removeItem('token');
       window.location.href = '/login';
+      toast.success('Logout successfull');
     } catch (error) {
+      toast.error('Logout failed');
       console.error('Logout failed', error);
     }
   };

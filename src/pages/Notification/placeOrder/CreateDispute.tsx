@@ -4,6 +4,7 @@ import { InputField } from '../../../stories/Input/InputField';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
 import Button from '../../../stories/button/Button';
 import { createDispute } from '../../../store/actions/CreateDispute';
+import { toast } from 'react-toastify';
 
 interface DisputeForm {
   dispute_type: string;
@@ -104,6 +105,7 @@ const CreateDispute = ({ orderId,setIsCreateDispute }: CreateDisputeProps) => {
       const response = await createDispute(formData, orderId);
 
       if (!response) {
+        toast.error('Failed to create dispute');
         throw new Error('Failed to create dispute');
       }
 
@@ -112,7 +114,7 @@ const CreateDispute = ({ orderId,setIsCreateDispute }: CreateDisputeProps) => {
         dispute_type: '',
         reason: ''
       });
-      alert('Dispute created successfully!');
+      toast.success('Dispute created successfully');
       setIsCreateDispute(false);
       
     } catch (error) {

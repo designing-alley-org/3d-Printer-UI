@@ -1,6 +1,7 @@
 import { FileDown, ChevronDown } from 'lucide-react';
 import './FileActions.css';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface FileActionsProps {
   quantity: number;
@@ -22,24 +23,31 @@ export function FileActions({
   const downloadFromS3 = async (stlFileUrl: string | undefined) => {
     setIsDownloading(true);
     if (!stlFileUrl) {
+      toast.error('File not found in S3');
+      setIsDownloading(false);
       return;
     }
     const fileName = stlFileUrl.split('/').pop() + '.stl';
 
-    const response = await fetch(stlFileUrl);
-    const blob = await response.blob();
-    const urlObject = window.URL.createObjectURL(blob);
+    try {
+      const response = await fetch(stlFileUrl);
+      const blob = await response.blob();
+      const urlObject = window.URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    a.href = urlObject;
-    a.download = fileName;
-    a.click();
+      const a = document.createElement('a');
+      a.href = urlObject;
+      a.download = fileName;
+      a.click();
 
-    setTimeout(() => {
-      window.URL.revokeObjectURL(urlObject);
-    }, 250);
-
-    setIsDownloading(false);
+      setTimeout(() => {
+        window.URL.revokeObjectURL(urlObject);
+      }, 250);
+      toast.success('File downloaded successfully');
+    } catch (error) {
+      toast.error('Error downloading file from S3');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (

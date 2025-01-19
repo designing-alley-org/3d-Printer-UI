@@ -9,11 +9,12 @@ import Pagin from "../../../components/Paging/Pagin";
 const PlaceOrder = () => {
 
   const[allPlacedOrder, setAllPlacedOrder] = useState<any>([]);
+  const[pagination, setPagination] = useState<number>(1);
 
   useEffect(() => {
     const fetch = async () => {
       // Fetch orders
-      const response = await getPlacedOrder();
+      const response = await getPlacedOrder(pagination);
       setAllPlacedOrder(response.orders);
     };
     fetch();
@@ -54,7 +55,7 @@ const PlaceOrder = () => {
               </div>
             )}
             <div className='pagination'>
-                            <Pagin totalPages={allPlacedOrder?.totalPages} />
+              <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
             </div>
           </div>
         ))

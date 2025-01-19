@@ -10,6 +10,7 @@ import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderB
 import { RootState } from '../../../store/types';
 import { getOrderByIdService } from '../../../services/order';
 import { addDeliveryData,selectDeliveryPlan } from '../../../store/Address/deliveryDetails';
+import { toast } from 'react-toastify';
 // Types
 interface Rate {
   serviceName: string;
@@ -50,7 +51,6 @@ const DeliveryPlan: React.FC = () => {
    // State management
    const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
    const [selectedPlanName, setSelectedPlanName] = useState<string>('');
-   console.log('selectedPlanName', selectedPlanName);
    const [deliveryData, setDeliveryData] = useState<DeliveryData | null>(null);
    const [order, setOrder] = useState<Order | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -138,6 +138,7 @@ const DeliveryPlan: React.FC = () => {
   // Handlers
   const handleProceed = async () => {
     if (selectedPlanIndex === -1) {
+      toast.warning('Please select a delivery plan');
       setError('Please select a delivery plan');
       return;
     }
@@ -150,6 +151,7 @@ const DeliveryPlan: React.FC = () => {
       const error = err as ApiError;
       setError(error.message || 'Failed to update order');
       console.error('Error updating order:', error);
+      toast.error('Failed to update order');
     } finally {
       setIsLoading(false);
     }

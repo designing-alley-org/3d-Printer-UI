@@ -129,6 +129,7 @@ export const ModelName = styled.section`
   font-size: 1.2rem;
   &::after {
     content: 'Customization';
+    font-size: 1rem;
     position: absolute;
     bottom: .7rem;
     left:9rem;
@@ -146,7 +147,7 @@ export const CustomizeBox = styled.section`
   bottom: 0.6rem;
   right: 0.4rem;
   height: 2.4rem;
-  width: 6rem;
+  width: 7rem;
   img {
     margin: 1px;
     width: 1.3rem;

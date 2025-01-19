@@ -7,7 +7,6 @@ const updateNotificationServicer = async (category: string, enabled: boolean, fr
             enabled: enabled,
             frequency: frequency
         };
-        console.log(data);
         const response = await updateNotificationServicerByCategory(data);
         return response;
     } catch (error) {

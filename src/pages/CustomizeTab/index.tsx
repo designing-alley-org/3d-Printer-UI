@@ -20,6 +20,7 @@ import Accordion from './Accordion';
 import materialIcon from '../../assets/icons/materialIcon.svg';
 import colorIcon from '../../assets/icons/colorIcon.svg';
 import printerIcon from '../../assets/icons/printerIcon.svg';
+import infil from '../../assets/icons/infillIcon.svg';
 import {
   updateUnit,
   updateInfill,
@@ -332,6 +333,17 @@ const CustomizeTab: React.FC = () => {
                         fileDetails.some(f => f._id === file._id && f.printer)
                           ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
                           : 'none',
+                    }}
+                  />
+                   <img
+                    src={infil}
+                    alt={'infill'}
+                    style={{
+                      filter:
+                        fileDetails.some(f => f._id === file._id && f.infill)
+                          ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
+                          : 'none',
+                          width: '2rem',
                     }}
                   />
                 </CustomizeBox>

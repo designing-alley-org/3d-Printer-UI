@@ -70,7 +70,7 @@ export const Body = styled.section`
       display: flex;
       margin-left: 1rem;
       p {
-        margin: 0rem 0.5rem;
+        margin: 0rem 0.7rem;
       }
       font-size: 12px;
     }

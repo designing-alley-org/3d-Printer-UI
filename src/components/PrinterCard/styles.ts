@@ -15,22 +15,19 @@ export const Wrapper = styled.main`
       bottom: 0rem;
       right: 0;
       background-color: #ffffff;
-      border-bottom-right-radius: 1.4rem;
-      border-top-left-radius: 1.4rem;
-      height: 3.6rem;
-      width: 13rem;
+      border-radius: 24px 0px 24px 0px;
+      height: 3.4rem;
+      width: 12.3rem;
     }
   &::before {
   content: '';
   position: absolute;
   bottom: 0rem;
-  right: 12.76rem;
-  background-color: #ffffff;
+  right: 11.76rem;
   width: 2rem;
-  height: 3rem;
+  height: 2rem;
   z-index: 1;
   clip-path: polygon(100% 100%, 0% 100%, 100% 0);
-      
   }
   .active-printer {
     border: unset;
@@ -42,7 +39,6 @@ export const Wrapper = styled.main`
   .select {
     display: flex;
     justify-content: end;
-    padding: 0rem 0.5rem;
     button {
       border-radius: 50px;
       font-weight: 500;
