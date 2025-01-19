@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import PrinterLibraryCard from './printerLibraryCard';
-import { styled } from 'styled-components';
-// import { IPrinterDetails } from '../../store/types';
+import styled from 'styled-components';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import api from '../../axiosConfig';
-// import { RootState } from '../../store/types';
+import { Loader } from 'lucide-react';
+
+// Define the responsive breakpoints for the carousel
 const responsive = {
   superLargeDesktop: {
-    // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 3,
   },
@@ -19,30 +19,43 @@ const responsive = {
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 3,
+    items: 2,
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 3,
+    items: 1,
   },
 };
 
+// Define the type for the printer details
+interface IPrinterDetails {
+  id: number;
+  Name: string;
+  Model: string;
+  printerName: string;
+  buildVolume: { x: number; y: number; z: number };
+  layerResolution: { min: number; max: number };
+  nozzleSize: string;
+  printSpeed: string;
+  materialCompatibility: { material_name: string }[];
+  technologyType: string;
+}
+
 const PrinterLibrary = () => {
-  //   const dispatch: AppDispatch = useDispatch();
-  const [printerDetails, setPrinterDetails] = useState(); // State to hold the fetched data
-  const [loading, setLoading] = useState(true); // State to indicate loading
-  const [error, setError] = useState(null);
-  //   console.log(details);
+  const [printerDetails, setPrinterDetails] = useState<IPrinterDetails[]>([]); // State to hold the fetched data
+  const [loading, setLoading] = useState<boolean>(true); 
+  const [error, setError] = useState<string | null>(null); 
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        // Fetch the data (replace URL with your API endpoint)
+        // Fetch the data from the API endpoint
         const response = await api.get('/printers');
-        setPrinterDetails(response.data); // Store the data in state
-      } catch (error) {
-        setError(error.message); // Handle errors
+        setPrinterDetails(response.data.data); 
+      } catch (err: any) {
+        setError(err.message || 'Failed to fetch printers'); 
       } finally {
         setLoading(false); // Stop loading
       }
@@ -53,16 +66,22 @@ const PrinterLibrary = () => {
 
   return (
     <Wrapper>
-      <h1>PRINTER LIBRARY</h1>
-      <h3>Check Our Comprehensive printer Library For all your Needs</h3>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-      <div className="cards" style={{ width: '100%' }}>
-        <Carousel responsive={responsive}>
-          {printerDetails ? (
-            printerDetails.data?.map((item: any, idx: number) => (
+      <h1>Printer Library</h1>
+      <h3>Check Our Comprehensive Printer Library For All Your Needs</h3>
+
+      {/* Show loading or error message */}
+      {loading && 
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Loader size={32} style={{color: '#1e6fff'}} />
+        </div>}
+      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+      <div className="cards">
+        <Carousel responsive={responsive} infinite={true} autoPlay={false}>
+          {printerDetails.length > 0 ? (
+            printerDetails.map((item: IPrinterDetails, idx: number) => (
               <PrinterLibraryCard
-                key={idx}
+                key={item.id || idx}
                 title={item.Name}
                 subTitle={item.Model}
                 desc={item.printerName}
@@ -70,21 +89,49 @@ const PrinterLibrary = () => {
               />
             ))
           ) : (
-            <div>No Printers Available</div>
+            !loading && <div>No Printers Available</div>
           )}
         </Carousel>
       </div>
     </Wrapper>
   );
 };
+
+// Styled Components
 const Wrapper = styled.section`
-  margin: 4rem;
+  margin: 2rem 6rem;
+
+  h1 {
+    font-size: 2.5rem;
+    color: #001331;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    color: #525e86;
+    margin-bottom: 2rem;
+  }
+
   .cards {
-    li {
-      flex: unset !important;
-      margin: 2rem;
-      width: unset !important;
+    .react-multi-carousel-list {
+      padding: 1rem 0;
     }
+
+    .react-multi-carousel-item {
+      padding: 0.5rem;
+    }
+
+    .react-multi-carousel-track {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  p {
+    color: #333;
+    font-size: 1rem;
   }
 `;
 

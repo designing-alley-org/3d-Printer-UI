@@ -45,8 +45,17 @@ export const Wrapper = styled.section`
       display: flex;
       justify-content: start;
       padding: 0.5rem;
+      position: relative;
       &:hover {
+        border-radius: 1rem;
         background: #f2f2f2;
+        cursor: pointer;
+      }
+
+      .delete-icon{
+        cursor: pointer;
+        position: absolute;
+        right: 1.5rem;
       }
       .radio-btn {
        margin-right: 1rem;
@@ -58,7 +67,7 @@ export const Wrapper = styled.section`
                 appearance: none;
                 width: 1.5rem;
                 height: 1.5rem;
-                border: 3px solid #1e6fff; /* Outer circle border */
+                border: 3px solid #1e6fff; 
                 border-radius: 50%;
                 outline: none;
                 background-color: #fff;

@@ -12,6 +12,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 import { getAddress } from '../../../store/actions/getAddress';
 import { toast } from 'react-toastify';
+import { Delete } from 'lucide-react';
+import { deleteAddress } from '../../../store/actions/deleteAddress';
 
 const ShippingDetails = () => {
   const {
@@ -24,7 +26,7 @@ const ShippingDetails = () => {
   const { orderId } = useParams();
   const dispatch = useDispatch();
   
-  const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
+  const { addressData, addressId, isCreateAddress,deleteAddressRedux } = useSelector((state: any) => state.address);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -57,6 +59,20 @@ const ShippingDetails = () => {
     } catch (error) {
       toast.error('Failed to create address');
       console.error('Failed to create address:', error);
+    }
+  };
+
+  const handelDeleteAddress = async (addressId: string) => {
+    try {
+       await deleteAddress(addressId);
+       const response = await getAddress();
+          if (response?.data?.data) {
+            dispatch(addAddress(response.data.data));
+          }
+      toast.success('Address deleted successfully');
+    } catch (error) {
+      toast.error('Failed to delete address');
+      console.error('Failed to delete address:', error);
     }
   };
 
@@ -106,6 +122,7 @@ const ShippingDetails = () => {
                 />
               </div>
               <span className='address'>
+                <Delete onClick={() => {handelDeleteAddress(address._id)}} className='delete-icon' />
                 <Typography variant="h5">{address.personName}</Typography>
                 <Typography>{address.phoneNumber}</Typography>
                 <Typography>

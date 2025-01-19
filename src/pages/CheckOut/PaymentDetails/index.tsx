@@ -95,6 +95,10 @@ const PaymentDetails: React.FC = () => {
         setIsLoading(true);
         setError(null);
         await getAllQuotes(setQuoteData, orderId);
+        if(quoteData.files.length === 0) {
+          navigate(`/get-quotes/${orderId}/quote`);
+          toast.error('Your quote is empty.');
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch quote data');
         console.error('Error fetching quote data:', err);
