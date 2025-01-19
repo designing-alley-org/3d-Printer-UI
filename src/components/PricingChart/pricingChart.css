@@ -1,5 +1,6 @@
 .pricing-chart {
   background-color: #ebf8ff;
+  margin: 0 1.2rem;
   border-radius: 1rem;
   overflow: hidden;
 }

@@ -443,3 +443,19 @@ export const NotifyWrap = styled.section`
 `;
 
 
+export const OrderWrapper = styled.main`
+  padding: 2rem;
+  min-height: 40rem;
+  h1 {
+    color: black !important;
+    margin: unset;
+    padding-bottom: 1rem;
+    font-size: 24px;
+    border-bottom: 1px solid #1e6fff;
+  }
+    .pagination{
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+`;
