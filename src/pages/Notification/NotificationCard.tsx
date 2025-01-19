@@ -10,6 +10,7 @@ interface NotificationCardProps {
     buttonLabel: string;
     status?: string;
     onButtonClick?: () => void;
+    myOrders?: string;
 }
 
 export const NotificationCard: React.FC<NotificationCardProps> = ({ 
@@ -18,7 +19,9 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
     dateTime, 
     buttonLabel, 
     onButtonClick ,
-    status
+    status,
+    myOrders
+
 }) => {
     return (
         <NotificationWarper>
@@ -50,6 +53,14 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
                     onClick={() => onButtonClick && onButtonClick()}
                     className='btn-status'
                 />}
+                {
+                    myOrders && <Button
+                    label={myOrders.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ').replace("Order", "")}
+                    style={{backgroundColor:"rgb(93, 151, 214)"}}
+                    onClick={() => onButtonClick && onButtonClick()}
+                    className='btn-status'
+                />
+                }
             </div>
         </NotificationWarper>
     );

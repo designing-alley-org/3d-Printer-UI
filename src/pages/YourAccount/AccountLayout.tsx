@@ -3,8 +3,7 @@ import { accTab } from '../../constants';
 import { useEffect, useState } from 'react';
 import MyProfile from './MyProfile';
 import { AccWrapper, MainComp, SideTab } from './styles';
-import Orders from './Orders';
-import Notification from './Notification';
+import MyOrders from './MyOrders';
 import Settings from './Settings';
 // import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
@@ -92,7 +91,7 @@ const AccountLayout = () => {
       <MainComp>
         {activeTab === 1 && <MyProfile profileData={user?.user} />}
         {activeTab === 2 && (
-          <Orders orderData={orders} setPagination={setPagination} />
+          <MyOrders orderData={orders} setPagination={setPagination} />
         )}
         {activeTab === 3 && <Settings />}
       </MainComp>
