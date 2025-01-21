@@ -152,7 +152,7 @@ export const Body = styled.section`
       border-radius: 40px;
       transition: background 0.3s;
       &:hover {
-        background:rgb(150, 182, 238);
+        background:rgb(213, 226, 248);
       }
     }
   }
