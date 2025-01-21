@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useCallback } from 'react';
 import Header from '../Header';
 import './styles.css';
@@ -17,7 +18,6 @@ import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
-import { UseSelector } from 'react-redux';
 import {  toast } from 'react-toastify';
 
 interface ModelDimensions {
@@ -60,7 +60,6 @@ const CardLayout = () => {
   const { orderId } = useParams();
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const {  addressId } = useSelector((state: any) => state.address);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
 
@@ -186,10 +185,11 @@ const CardLayout = () => {
         <div></div>
         <span className="proc">
           <Button
-            label={isCheckoutRoute ? "Proceed to Delivery" : !pathname.includes(ROUTES.PAYMENT) ? "process" : "pay"}
+            label={isCheckoutRoute ? "Proceed to Delivery" : !pathname.includes(ROUTES.PAYMENT) ? "Proceed" : "pay"}
             onClick={
               !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
             }
+            className={isCheckoutRoute ? 'delivery' : 'proceed'}
             disabled={isSaving}
             type={isCheckoutRoute ? "submit" : "button"}
           />

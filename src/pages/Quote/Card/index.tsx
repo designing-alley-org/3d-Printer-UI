@@ -6,8 +6,7 @@ import QuoteTemplate from '../Template/index.tsx';
 import './style.css';
 import { useParams } from 'react-router-dom';
 import { getQuoteByOrderId } from '../../../store/actions/getQuotes.ts';
-import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import arrow from '../../../assets/icons/arrow_drop_down_circle.svg';
 import './style.css';
 import ButtonWithIcon from '../../../stories/ButtonWithIcon/ButtonWithIcon.tsx';
 interface QuoteItem {
@@ -28,8 +27,7 @@ interface QuoteData {
   _id: string;
 }
 
-
-export default function Quote({selectOrderIdProps: selectOrderIdProps}: any) {
+export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
   const { orderId } = useParams<{ orderId: string }>();
   const [quote, setQuote] = useState<QuoteData | null>(null);
   const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
@@ -37,7 +35,7 @@ export default function Quote({selectOrderIdProps: selectOrderIdProps}: any) {
   const [showQuote, setShowQuote] = useState(false);
   async function getQuotes() {
     getQuoteByOrderId({
-      orderId: orderId as string || selectOrderIdProps || "",
+      orderId: (orderId as string) || selectOrderIdProps || '',
       setAllQuotes,
       setQuote,
       activeIndex,
@@ -52,11 +50,11 @@ export default function Quote({selectOrderIdProps: selectOrderIdProps}: any) {
         sx={{ color: '#0C2850', position: 'absolute', top: '-1%' }}
         variant="h2"
       >
-        Connecting For {selectOrderIdProps ? "Dispute":"Quote"}
+        Connecting For {selectOrderIdProps ? 'Dispute' : 'Quote'}
       </Typography>
       <Box sx={{ position: 'absolute', right: '0rem', top: '0' }}>
         {' '}
-        <span className="proc">
+        <span className="quoteBtn">
           <ButtonWithIcon
             label="SHOW QUOTE"
             handleClick={() => {
@@ -66,12 +64,20 @@ export default function Quote({selectOrderIdProps: selectOrderIdProps}: any) {
             iconPosition="end"
             Icon={
               showQuote ? (
-                <ArrowCircleDownIcon
-                  sx={{ fontSize: '3rem' }}
-                  fontSize="large"
+                <img
+                  src={arrow}
+                  style={{
+                    rotate: '180deg',
+                    filter: 'brightness(0) invert(1)',
+                  }}
                 />
               ) : (
-                <ArrowCircleUpIcon fontSize="large" />
+                <img
+                  src={arrow}
+                  style={{
+                    filter: 'brightness(0) invert(1)',
+                  }}
+                />
               )
             }
           />

@@ -93,3 +93,4 @@ export const Specs = styled.div`
   color: #2359b0;
   padding: 0rem 2rem;
 `;
+export const ButtonWrap = styled.div``;
