@@ -52,6 +52,8 @@ const PaymentDetails: React.FC = () => {
     totalPrice: 0,
     tax: 0,
   });
+
+  console.log('quoteData', quoteData?.files?.length);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -71,6 +73,8 @@ const PaymentDetails: React.FC = () => {
     }
   }) => state.address);
 
+
+  
   // Filter delivery data
   useEffect(() => {
     if (!deliveryData || !selectedServiceType) {
@@ -95,10 +99,6 @@ const PaymentDetails: React.FC = () => {
         setIsLoading(true);
         setError(null);
         await getAllQuotes(setQuoteData, orderId);
-        if(quoteData.files.length === 0) {
-          navigate(`/get-quotes/${orderId}/quote`);
-          toast.error('Your quote is empty.');
-        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch quote data');
         console.error('Error fetching quote data:', err);
@@ -237,7 +237,7 @@ const PaymentDetails: React.FC = () => {
       </span>
       <span className="priceDetail">
         <span>Taxes</span>
-        <span className="price">${taxAmount.toFixed(2)}</span>
+        <span className="price">${quoteData?.tax.toFixed(2)}</span>
       </span>
     </div>
     <div>
@@ -247,7 +247,7 @@ const PaymentDetails: React.FC = () => {
           ${(
             Number(quoteData.totalPrice) + 
             Number(showDeliveryData?.[0]?.totalNetCharge || 0) + 
-            Number(taxAmount)
+            Number(quoteData?.tax)
           ).toFixed(2)}
         </span>
       </span>

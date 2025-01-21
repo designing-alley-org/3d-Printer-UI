@@ -18,6 +18,18 @@ export const Wrapper = styled.section`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+
+    .create-new-add{
+    position:absolute;
+    right:2rem;
+    }
+
+    .cross-btn{
+    position:absolute;
+    top:0.3rem;
+    right:-3rem;
+    }
 
     button {
       width: content;

@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 import { getAddress } from '../../../store/actions/getAddress';
 import { toast } from 'react-toastify';
-import { Delete } from 'lucide-react';
+import {  Trash } from 'lucide-react';
 import { deleteAddress } from '../../../store/actions/deleteAddress';
 
 const ShippingDetails = () => {
@@ -82,7 +82,8 @@ const ShippingDetails = () => {
         <Typography variant="h2">Shipping Details</Typography>
         <span>
           <Button
-            label={!isCreateAddress ? "Create New" : "Save Address"}
+            label={!isCreateAddress ? "Create New" : "Save "}
+            className='create-new-add'
             onClick={!isCreateAddress ? 
               () => dispatch(toggleCreateAddress()) : 
               handleSubmit(handleAddress)
@@ -91,6 +92,7 @@ const ShippingDetails = () => {
           {isCreateAddress && (
             <ButtonIcon
               svgPath={cross}
+              className='cross-btn'
               onClick={() => dispatch(toggleCreateAddress())}
             />
           )}
@@ -122,7 +124,7 @@ const ShippingDetails = () => {
                 />
               </div>
               <span className='address'>
-                <Delete onClick={() => {handelDeleteAddress(address._id)}} className='delete-icon' />
+                <Trash onClick={() => {handelDeleteAddress(address._id)}} className='delete-icon' />
                 <Typography variant="h5">{address.personName}</Typography>
                 <Typography>{address.phoneNumber}</Typography>
                 <Typography>
