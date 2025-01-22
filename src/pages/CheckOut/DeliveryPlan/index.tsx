@@ -153,7 +153,8 @@ const DeliveryPlan: React.FC = () => {
       await updateUserOrderByOrderId(
         orderId as string,
         navigate,
-        selectedPlanName
+        selectedPlanName,
+        addressId
       );
     } catch (err) {
       const error = err as ApiError;

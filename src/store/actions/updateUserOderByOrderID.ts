@@ -1,10 +1,11 @@
 import { updateUserOrderByOrderIdService } from "../../services/order";
 
 
-export const updateUserOrderByOrderId = async ( orderId: string, navigate: any, name: string) => {
+export const updateUserOrderByOrderId = async ( orderId: string, navigate: any, name: string, addressId: string) => {
     try {
         const data = {
             service_type: name,
+            address:addressId
         };
         const response = await updateUserOrderByOrderIdService(orderId, data);
         if (response.status === 200) {
