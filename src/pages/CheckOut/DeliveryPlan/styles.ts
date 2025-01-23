@@ -1,10 +1,20 @@
 import styled from 'styled-components';
 
 export const CardBox = styled.div`
-  display: grid;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-  grid-template-columns: repeat(3, 1fr);
+.cards {
+    .react-multi-carousel-list {
+      padding: 1rem 0;
+    }
+
+    .react-multi-carousel-item {
+      padding: 0.5rem;
+    }
+
+    .react-multi-carousel-track {
+      display: flex;
+      align-items: center;
+    }
+  }
 `;
 
 interface MainCardProps {
@@ -13,10 +23,13 @@ interface MainCardProps {
 
 export const MainCard = styled.div<MainCardProps>`
   background-color: #deebff;
+  position: relative;
   border-radius: 1rem;
   flex: 0 0 33.33%;
+  justify-content: space-between;
   width: 100%;
   min-height: 32rem;
+  gap: 1.5rem;
   border: 1px solid #deeeff;
   transition: all 0.3s ease-in-out;
   ${(props) =>
@@ -26,7 +39,7 @@ export const MainCard = styled.div<MainCardProps>`
         box-shadow: 0px 4px 20px rgba(0, 71, 255, 0.2);
         .btm {
           button {
-            background: black;
+            background: #0047FF;
           }
         }
       `
@@ -43,7 +56,7 @@ export const Header = styled.div`
   .name {
     font-size: 20px;
   }
-  padding: 6rem 2rem 0rem 2rem;
+  padding: 4rem 2rem 0rem 2rem;
   img {
     width: 3rem;
     margin-bottom: 2rem;
@@ -62,6 +75,9 @@ export const Body = styled.div`
   }
   .btm {
     display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
     justify-content: space-between;
     .cost {
       color: #235ab0;
@@ -73,17 +89,7 @@ export const Body = styled.div`
       background: white;
       border-top-left-radius: 3rem;
       border-bottom-right-radius: 1rem;
-      &::before {
-        content: '';
-        position: absolute;
-        margin-top: 0.5rem;
-        width: 2.3rem;
-        margin-left: -6rem;
-        height: 4rem;
-        rotate: 270deg;
-        border-bottom-left-radius: 9rem;
-        box-shadow: -1px 2rem 0px 0px #ffffff;
-      }
+      
     }
   }
 `;
@@ -93,4 +99,7 @@ export const Specs = styled.div`
   color: #2359b0;
   padding: 0rem 2rem;
 `;
-export const ButtonWrap = styled.div``;
+export const ButtonWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;`;
