@@ -14,6 +14,7 @@ import {
   selectDeliveryPlan,
 } from '../../../store/Address/deliveryDetails';
 import { toast } from 'react-toastify';
+import Carousel from 'react-multi-carousel';
 // Types
 interface Rate {
   serviceName: string;
@@ -45,6 +46,27 @@ interface OrderFile {
 interface Order {
   files: OrderFile[];
 }
+
+// Define the responsive breakpoints for the carousel
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 3,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
+
 
 //
 const DeliveryPlan: React.FC = () => {
@@ -198,12 +220,13 @@ const DeliveryPlan: React.FC = () => {
 
   // Render main content
   return (
-    <Box sx={{ padding: '0 2rem' }}>
+    <Box sx={{ padding: '0 1rem' }}>
       <Typography variant="h2" sx={{ color: '#001047', marginBottom: '2rem' }}>
         Select Delivery Plan
       </Typography>
-
-      <CardBox>
+       <CardBox>
+        <div className="cards">
+        <Carousel responsive={responsive} infinite={true} autoPlay={false}>
         {deliveryData?.rates?.map((plan, index) => (
           <Card
             key={`delivery-plan-${index}`}
@@ -218,6 +241,8 @@ const DeliveryPlan: React.FC = () => {
             index={index}
           />
         ))}
+      </Carousel>
+      </div>
       </CardBox>
       <ButtonWrap>
         <div className="btn"> 
