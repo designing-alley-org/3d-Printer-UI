@@ -1,9 +1,9 @@
 import { getOngoingOrderService } from "../../services/order";
 
-export const getOngoingOrder = async (setOrders: any) => {
+export const getOngoingOrder = async (setOrders: any,filter: any) => {
     try {
-        const response = await getOngoingOrderService();
-        setOrders(response.data.data);
+        const response = await getOngoingOrderService(filter);
+        setOrders(response?.data);
         return response;
     } catch (error) {
         console.error('Error fetching user order:', error);

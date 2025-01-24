@@ -173,9 +173,13 @@ const getUserOrderService = async (pagination:number) => {
     }
 }
 
-const getOngoingOrderService = async () => {
+const getOngoingOrderService = async (filter: any) => {
     try {
-        const response = await api.get('/api/v1/get-ongoing-orders');
+        const response = await api.get('/get-user-ongoing-orders', {
+            params: {
+                filter
+            }
+        });
         return response;
     } catch (error) {
         console.error('Error fetching user order:', error);

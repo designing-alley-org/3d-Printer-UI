@@ -1,26 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Pagin from "../../components/Paging/Pagin";
 import { NotificationCard } from "./NotificationCard";
 import { useNavigate } from "react-router-dom";
+import { getOngoingOrder } from '../../store/actions/getOngoingOrder';
+import { toast } from 'react-toastify';
+import { Loader } from 'lucide-react';
+import Dropdown from '../../stories/Dropdown/Dropdown';
+import { OngoingOrderWrapper } from './styles';
+import { set } from 'react-hook-form';
 
 interface Order {
-  orderNumber: string;
-  dateTime: string;
-  order_status: string;
-  _id: string;
-  updatedAt: string;
+  orders: {
+    _id: string;
+    order_status: string;
+    updatedAt: string;
+  }[]
 }
 
-interface OngoingOrderProps {
-  orders?: {
-    order: Order[];
-    totalPages: number;
-  };
-  setPagination: (pageNum: number) => void;
-}
-
-const OngoingOrder = ({ orders, setPagination }: OngoingOrderProps) => {
+const OngoingOrder = () => {
   const navigate = useNavigate();
+  const [pagination, setPagination] = useState(1);
+  const [orders, setOrders] = useState<{ order: Order[]; totalPages: number } | null>(null);
+  const ITEMS_PER_PAGE = 5;
+  const [filter, setFilter] = useState('week');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getOngoingOrder(setOrders, filter);
+      } catch (error) {
+        toast.error('Failed to fetch ongoing orders');
+        console.log(error);
+      } 
+    };
+
+    fetchData();
+  }, [pagination,filter]);
 
   // Map of order statuses to their corresponding routes
   const ORDER_STATUS_ROUTES = {
@@ -53,15 +68,49 @@ const OngoingOrder = ({ orders, setPagination }: OngoingOrderProps) => {
     }
   };
 
-  return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-bold">ONGOING ORDER</h2>
-      
-      {(!orders?.order || orders.order.length === 0) && (
-        <p className="text-gray-500">No ongoing orders</p>
-      )}
+  // Calculate paginated orders
+  const paginatedOrders = orders?.orders
+    ? orders.orders.slice().reverse().slice((pagination - 1) * ITEMS_PER_PAGE, pagination * ITEMS_PER_PAGE)
+    : [];
 
-      {orders?.order?.map((order) => (
+  // Calculate total pages
+  const totalPages = orders?.orders 
+    ? Math.ceil(orders.orders.length / ITEMS_PER_PAGE)
+    : 0;
+
+  return (
+    <OngoingOrderWrapper>
+      <div className="header">     
+     <h2>ONGOING ORDER</h2>
+      <Dropdown 
+      className='dropdown'
+      options={[
+        {id: 1, value: 'month', label: 'Month'},
+        {id: 2, value: '3months', label: '3 Months'},
+        {id: 3, value: '6months', label: '6 Months'},
+        {id: 4, value: '1year', label: '1 Year'},
+        {id: 5, value: 'all', label: 'All'},
+        {id: 6, value: 'week', label: 'Week'}
+      ]}
+      onSelect={(selected: Option) => {setFilter(selected.value)}}
+      defaultValue={filter}
+      />
+      </div>
+
+      
+      
+      {!orders?.orders || orders?.orders.length === 0 ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+          {orders === null ? (
+            <Loader size="50" color="#0066ff" />
+          ) : (
+            <p>No ongoing orders found</p>
+          )}
+        </div>
+      ) : null}
+
+
+      {paginatedOrders.map((order: any) => (
         <NotificationCard
           key={order._id}
           title={formatOrderStatus(order.order_status)}
@@ -72,15 +121,15 @@ const OngoingOrder = ({ orders, setPagination }: OngoingOrderProps) => {
         />
       ))}
 
-      {orders?.totalPages > 1 && (
+      {totalPages > 1 && (
         <div className="pagination">
           <Pagin 
-            totalPages={orders.totalPages} 
+            totalPages={totalPages} 
             setPagination={setPagination} 
           />
         </div>
       )}
-    </div>
+    </OngoingOrderWrapper>
   );
 };
 
