@@ -8,28 +8,12 @@ import General from './General';
 import { Box } from '@mui/material';
 import Settinges from './Settinges';
 import MyDisputes from './myDispute';
-import { getOngoingOrder } from '../../store/actions/getOngoingOrder';
+
 
 const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
-  const [orders, setOrders] = useState<any>();
-  const [pagination, setPagination] = useState<number>(1);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getUserOrder(setOrders,pagination);
-        // await getOngoingOrder(setOrders);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        // Stop loading
-      }
-    };
 
-    fetchData();
-  }, [pagination]);
-  console.log(orders);
 
   return (
     <NotWrapper>
@@ -58,7 +42,7 @@ const NotificationLayout = () => {
         ))}
       </SideTab>
       <MainComp>
-        {activeTab === 1 && <OngoingOrder orders={orders} setPagination={setPagination} />}
+        {activeTab === 1 && <OngoingOrder />}
         {activeTab === 2 && <PlaceOrder/>}
         {activeTab === 3 && <General />}
         {activeTab === 4 && <Settinges/>}

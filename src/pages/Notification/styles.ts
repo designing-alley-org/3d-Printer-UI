@@ -242,3 +242,40 @@ export const CreateDisputeWrapper = styled.div`
     }
   }
 `;
+
+export const OngoingOrderWrapper = styled.div`
+
+.header{
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin:0  1rem;
+
+ .dropdown {
+      background: #dde9fc;
+      border-radius: 2rem;
+      button {
+        border-radius: 2rem;
+        width: -webkit-fill-available;
+      }
+      .dropdown-header {
+        background: #dde9fc;
+      }
+        .dropdown-list {
+          max-height: unset;
+          min-width: 10rem;
+          border-radius: 1rem;
+        }
+        .dropdown-item {
+          display: flex;
+          justify-content: center;
+        }
+        .dropdown-item:hover {
+          border-radius: 0rem;
+        }
+          .dropdown-item.selected {
+            border-radius: 0rem;
+          }
+    }
+
+}`;
