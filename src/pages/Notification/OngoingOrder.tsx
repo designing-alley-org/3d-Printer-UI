@@ -17,6 +17,12 @@ interface Order {
   }[]
 }
 
+interface Option {
+  id: number;
+  value: string;
+  label: string;
+}
+
 const OngoingOrder = () => {
   const navigate = useNavigate();
   const [pagination, setPagination] = useState(1);
