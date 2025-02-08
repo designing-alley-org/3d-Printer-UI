@@ -226,7 +226,7 @@ const DeliveryPlan: React.FC = () => {
       </Typography>
        <CardBox>
         <div className="cards">
-        <Carousel responsive={responsive} infinite={true} autoPlay={false}>
+        <Carousel responsive={responsive} infinite={false} autoPlay={false}>
         {deliveryData?.rates?.map((plan, index) => (
           <Card
             key={`delivery-plan-${index}`}
