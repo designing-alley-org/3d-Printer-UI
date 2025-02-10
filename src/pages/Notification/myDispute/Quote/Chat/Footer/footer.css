@@ -1,0 +1,17 @@
+.file-container {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.file-selected{
+    display: flex;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+}
+
