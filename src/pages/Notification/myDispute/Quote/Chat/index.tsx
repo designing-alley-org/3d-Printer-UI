@@ -31,8 +31,8 @@ export default function Chat({ disputeId }: IChatProps) {
   const defaultUserId = user?.user?._id;
   const defaultMerchantId = user?.user?._id;
 
-  console.log("defaultUserId in dispute", defaultUserId);
-  console.log("defaultMerchantId in dispute", defaultMerchantId);
+  console.log(disputeId);
+  
   
 
   useEffect(() => {
@@ -67,10 +67,10 @@ export default function Chat({ disputeId }: IChatProps) {
     // Fetch existing messages
     async function fetchMessages() {
       try {
-        const response = await api.get(`/get-message/${disputeId}`);
+        const response = await api.get(`/api/v1/get-disputes/${disputeId}`);
         const fetchedMessages = response.data.data.messages;
-        const fetchMessages = fetchedMessages.reverse();
-        if(fetchMessages.length > 0)   setMessages(fetchMessages[0].messages);
+        const fetchMessages = fetchedMessages[0].messages.reverse();
+        if(fetchMessages.length > 0)   setMessages(fetchMessages);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
