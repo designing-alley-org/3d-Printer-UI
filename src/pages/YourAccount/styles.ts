@@ -48,6 +48,8 @@ export const MainWrap = styled.section`
       margin-left: 5rem;
     }
   }
+
+ 
 `;
 export const AccWrapper = styled.section`
   background: white;
