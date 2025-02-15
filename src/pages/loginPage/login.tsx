@@ -60,7 +60,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const handleGoogleLogin = () => {
-    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
+    window.open(`${import.meta.env.VITE_AWS_URL}/auth/google`, '_self');
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

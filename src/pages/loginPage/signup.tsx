@@ -64,7 +64,7 @@ const RegisterForm: React.FC = () => {
   );
 
   const handleGoogleSignup = () => {
-    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
+    window.open(`${import.meta.env.VITE_AWS_URL}/auth/google`, '_self');
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
