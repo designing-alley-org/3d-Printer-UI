@@ -4,8 +4,7 @@ import { MyDisputesWrapper } from './styles';
 import { getAllDispute } from '../../../store/actions/getAllDispute';
 import Pagin from '../../../components/Paging/Pagin';
 import { ArrowLeftIcon } from 'lucide-react';
-import Chat from '../../Quote/Chat';
-import Quote from '../../Quote/Card';
+import Quote from './Quote/Card';
 
 interface Dispute {
   _id: string;
@@ -116,7 +115,7 @@ const MyDisputes: React.FC = () => {
 
           </div>
             <div>
-              <Quote selectOrderIdProps={selectedDispute?.orderId} />
+              <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId} />
             </div>
         </>
       ) : (
