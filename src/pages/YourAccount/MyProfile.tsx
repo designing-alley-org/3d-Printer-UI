@@ -1,24 +1,57 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect } from 'react';
+import { cross } from '../../constants';
+import { updateUser, User } from '../../store/actions/updateUser';
+import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import Button from '../../stories/button/Button';
 import { MainWrap, ProfileWrapper } from './styles';
-import { useState } from 'react';
-interface IPRofile {
-  profileData: any;
+import { toast } from 'react-toastify';
+import { addUserDetails } from '../../store/user/reducer';
+import { useDispatch } from 'react-redux';
+
+interface IProfile {
+  profileData: User;
 }
-const MyProfile = (props: IPRofile) => {
-  const { profileData } = props;
-  const [inputDisabled, setInputDisabled] = useState<boolean>(true);
-  const [formData, setFormData] = useState<any>({
-    name: profileData?.name,
-    email: profileData?.email,
-  });
+
+const MyProfile = ({ profileData }: IProfile) => {
+  const [inputDisabled, setInputDisabled] = useState(true);
+  const [formData, setFormData] = useState<User>({ ...profileData, phone_no:profileData.phone_no || '' });
+  const [hasChanges, setHasChanges] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setHasChanges(
+      formData.name !== profileData.name ||
+      formData.email !== profileData.email ||
+      formData.phone_no !== profileData.phone_no
+    );
+  }, [formData, profileData]);
 
   const handleEdit = () => {
-    setInputDisabled(prev => !prev);
+    setInputDisabled(false);
   };
+
+  const handleCancel = () => {
+    setFormData({ ...profileData });
+    setInputDisabled(true);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!hasChanges) return; 
+    try {
+      const res = await updateUser(formData); 
+      await dispatch(addUserDetails(res.data.data));
+      toast.success('Profile updated successfully');
+      setInputDisabled(true);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+    }
+  };
+
   return (
     <ProfileWrapper>
       <h1 className="prof">PROFILE INFORMATION</h1>
+      <form onSubmit={handleSave}>
       <MainWrap>
         <span>
           <p>Full Name</p>
@@ -27,41 +60,41 @@ const MyProfile = (props: IPRofile) => {
             placeholder="Enter Name"
             value={formData.name}
             disabled={inputDisabled}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, name: e.target.value }))
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className={inputDisabled ? 'input-disabled' : ''}
-          ></input>
-        </span>
-        <span>
-          <p>User Name</p>
-          <span className="btn">
-            <input type="text" placeholder="Enter User Name" disabled={inputDisabled} className={inputDisabled ? 'input-disabled' : ''}></input>
-          </span>
+          />
         </span>
         <span>
           <p>Email</p>
-          <span className="btn">
-            <input
-              type="email"
-              placeholder="Enter Email"
-              value={formData.email}
-              disabled={inputDisabled}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, email: e.target.value }))
-              }
-              className={inputDisabled ? 'input-disabled' : ''}
-            ></input>
-          </span>
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={formData.email}
+            disabled={inputDisabled}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className={inputDisabled ? 'input-disabled' : ''}
+          />
         </span>
         <span>
           <p>Phone Number</p>
           <span className="btn">
-            <input type="text" placeholder="Enter Phone Number" disabled={inputDisabled} className={inputDisabled ? 'input-disabled' : ''}></input>
-            <Button label={inputDisabled ? 'Edit Details' : 'Save Details'} onClick={handleEdit} />
+            <input
+              type="text"
+              placeholder="Enter Phone Number"
+              value={formData.phone_no}
+              disabled={inputDisabled}
+              onChange={(e) => setFormData({ ...formData, phone_no: e.target.value })}
+              className={inputDisabled ? 'input-disabled' : ''}
+            />
+            {inputDisabled ? (
+              <Button label="Edit" onClick={handleEdit} />
+            ) : (
+                <Button label="Save Data" onClick={handleSave} disabled={!hasChanges} />
+            )}
           </span>
         </span>
       </MainWrap>
+      </form>
     </ProfileWrapper>
   );
 };
