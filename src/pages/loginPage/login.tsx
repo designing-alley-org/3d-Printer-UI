@@ -66,7 +66,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await dispatch(login(email, password, navigate));
-      toast.success('Login Successful');
     } catch (error) {
       toast.error('Login failed. Please try again.');
     }

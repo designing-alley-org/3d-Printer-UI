@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from './action_types';
 import { AuthActionTypes } from '../types';
 import api from '../../axiosConfig';
+import { toast } from 'react-toastify';
 
 export const login =
   (email: string, password: string, navigate: (path: string) => void) =>
@@ -19,8 +20,10 @@ export const login =
         type: LOGIN_SUCCESS,
         payload: user,
       });
+      toast.success('Login successful');
       navigate('/dashboard');
     } catch (error: any) {
+      toast.error('Login failed. Please try again.');
       dispatch({
         type: LOGIN_FAILURE,
         payload: error.response?.data?.message || 'Login failed',

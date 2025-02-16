@@ -1,99 +1,122 @@
-import { useState, useEffect } from 'react';
-import { cross } from '../../constants';
+import { useState } from 'react';
 import { updateUser, User } from '../../store/actions/updateUser';
-import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
-import Button from '../../stories/button/Button';
 import { MainWrap, ProfileWrapper } from './styles';
 import { toast } from 'react-toastify';
 import { addUserDetails } from '../../store/user/reducer';
 import { useDispatch } from 'react-redux';
+import { Edit2, SaveIcon } from 'lucide-react';
 
 interface IProfile {
   profileData: User;
 }
 
 const MyProfile = ({ profileData }: IProfile) => {
-  const [inputDisabled, setInputDisabled] = useState(true);
-  const [formData, setFormData] = useState<User>({ ...profileData, phone_no:profileData.phone_no || '' });
-  const [hasChanges, setHasChanges] = useState(false);
+  const [isNameEdit, setIsNameEdit] = useState(false);
+  const [isEmailEdit, setIsEmailEdit] = useState(false);
+  const [isPhoneEdit, setIsPhoneEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<User>({
+    name: profileData.name,
+    email: profileData.email,
+    phone_no: profileData.phone_no
+  });
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setHasChanges(
-      formData.name !== profileData.name ||
-      formData.email !== profileData.email ||
-      formData.phone_no !== profileData.phone_no
-    );
-  }, [formData, profileData]);
-
-  const handleEdit = () => {
-    setInputDisabled(false);
+  const handleInputChange = (field: keyof User, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const handleCancel = () => {
-    setFormData({ ...profileData });
-    setInputDisabled(true);
+  const resetEditStates = () => {
+    setIsNameEdit(false);
+    setIsEmailEdit(false);
+    setIsPhoneEdit(false);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!hasChanges) return; 
+  const handleSave = async (field: keyof User) => {
+    if (!formData[field]) {
+      toast.error(`${field.charAt(0).toUpperCase() + field.slice(1)} cannot be empty`);
+      return;
+    }
+
     try {
-      const res = await updateUser(formData); 
-      await dispatch(addUserDetails(res.data.data));
-      toast.success('Profile updated successfully');
-      setInputDisabled(true);
-    } catch (error) {
-      console.error('Failed to update profile:', error);
+      setIsLoading(true);
+      
+      // Only update the field that was edited
+      const updateData = { [field]: formData[field] };
+      const res = await updateUser(updateData);
+      
+      // Update Redux store
+      dispatch(addUserDetails(res.data.data));
+      
+      // Reset edit state for the specific field
+      switch (field) {
+        case 'name':
+          setIsNameEdit(false);
+          break;
+        case 'email':
+          setIsEmailEdit(false);
+          break;
+        case 'phone_no':
+          setIsPhoneEdit(false);
+          break;
+      }
+
+      toast.success(`${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully`);
+    } catch (error: any) {
+      if(error.response) {
+      toast.error(error.response.data.message);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const renderField = (
+    label: string,
+    field: keyof User,
+    type: string,
+    isEditing: boolean,
+    setEditing: (value: boolean) => void
+  ) => (
+    <span>
+      <p>{label}</p>
+      <input
+        type={type}
+        placeholder={`Enter ${label}`}
+        value={formData[field] || ''}
+        disabled={!isEditing || isLoading}
+        onChange={(e) => handleInputChange(field, e.target.value)}
+        className={!isEditing ? 'input-disabled' : ''}
+      />
+      <span 
+        className="edit-btn" 
+        onClick={() => {
+          if (isLoading) return;
+          if (!isEditing) {
+            setEditing(true);
+          } else {
+            handleSave(field);
+          }
+        }}
+      >
+        {!isEditing ? <Edit2 /> : <SaveIcon />}
+      </span>
+    </span>
+  );
 
   return (
     <ProfileWrapper>
       <h1 className="prof">PROFILE INFORMATION</h1>
-      <form onSubmit={handleSave}>
-      <MainWrap>
-        <span>
-          <p>Full Name</p>
-          <input
-            type="text"
-            placeholder="Enter Name"
-            value={formData.name}
-            disabled={inputDisabled}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className={inputDisabled ? 'input-disabled' : ''}
-          />
-        </span>
-        <span>
-          <p>Email</p>
-          <input
-            type="email"
-            placeholder="Enter Email"
-            value={formData.email}
-            disabled={inputDisabled}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className={inputDisabled ? 'input-disabled' : ''}
-          />
-        </span>
-        <span>
-          <p>Phone Number</p>
-          <span className="btn">
-            <input
-              type="text"
-              placeholder="Enter Phone Number"
-              value={formData.phone_no}
-              disabled={inputDisabled}
-              onChange={(e) => setFormData({ ...formData, phone_no: e.target.value })}
-              className={inputDisabled ? 'input-disabled' : ''}
-            />
-            {inputDisabled ? (
-              <Button label="Edit" onClick={handleEdit} />
-            ) : (
-                <Button label="Save Data" onClick={handleSave} disabled={!hasChanges} />
-            )}
-          </span>
-        </span>
-      </MainWrap>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <MainWrap>
+          {renderField('Full Name', 'name', 'text', isNameEdit, setIsNameEdit)}
+          {renderField('Email', 'email', 'email', isEmailEdit, setIsEmailEdit)}
+          {renderField('Phone Number', 'phone_no', 'tel', isPhoneEdit, setIsPhoneEdit)}
+        </MainWrap>
       </form>
     </ProfileWrapper>
   );

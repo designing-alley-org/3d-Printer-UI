@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { accTab } from '../../constants';
 import { useEffect, useState } from 'react';
 import MyProfile from './MyProfile';
 import { AccWrapper, MainComp, SideTab } from './styles';
 import MyOrders from './MyOrders';
 import Settings from './Settings';
-// import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { getUserOrder } from '../../store/actions/getUserOrder';
 import { Box } from '@mui/material';
@@ -13,6 +11,7 @@ import Button from '../../stories/button/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
 import api from '../../axiosConfig';
 import { toast } from 'react-toastify';
+import Password from './Password';
 
 const AccountLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -93,7 +92,8 @@ const AccountLayout = () => {
         {activeTab === 2 && (
           <MyOrders orderData={orders} setPagination={setPagination} />
         )}
-        {activeTab === 3 && <Settings />}
+        {activeTab === 3 && <Password />}
+        {activeTab === 4 && <Settings />}
       </MainComp>
     </AccWrapper>
   );

@@ -10,6 +10,12 @@
   color: #333;
 }
 
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .input-field {
   padding: 10px;
   border: 1px solid #ccc;
@@ -40,4 +46,31 @@
 .input-field:focus {
   outline: none;
   border-color: #1ea7fd;
+}
+
+.password-toggle {
+  background-color: transparent;
+  width: 3rem;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-icon {
+  color: #666;
+  background-color: none;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover .password-icon {
+  color: #333;
+}
+
+/* Adjust input padding when password toggle is present */
+input[type="password"],
+input[type="text"] {
+  padding-right: 40px;
 }
