@@ -12,18 +12,18 @@ export const login =
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-      const response = await api.post('login', { email, password });
-      const token = response.data.token;
+      const response =  api.post('login', { email, password });
+      const res = await toast.promise(response, { pending: 'Logging in...', success: 'Login successful' });
+      const token = res.data.token;
       localStorage.setItem('token', token);
-      const user = response.data;
+      const user = res.data;
       dispatch({
         type: LOGIN_SUCCESS,
         payload: user,
       });
-      toast.success('Login successful');
+      
       navigate('/dashboard');
     } catch (error: any) {
-      toast.error('Login failed. Please try again.');
       dispatch({
         type: LOGIN_FAILURE,
         payload: error.response?.data?.message || 'Login failed',

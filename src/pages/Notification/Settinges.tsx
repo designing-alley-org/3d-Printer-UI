@@ -21,8 +21,11 @@ const Settinges = () => {
   ];
   const handleDropdownSelect = async (category: string, selectedFrequency: string) => {
     try {
-      await updateNotificationServicer(category, true, selectedFrequency);
-      toast.success(`Notification settings updated for ${category.toLocaleUpperCase()}`);
+      const res =  updateNotificationServicer(category, true, selectedFrequency);
+      await toast.promise(res, {
+        pending: `Updating notification for ${category}`,
+        success: ` Updated  for ${category}`,
+      });
     } catch (error) {
       toast.error(`Failed to update notification for ${category}`);
       console.error(`Failed to update notification settings for ${category}:`, error);

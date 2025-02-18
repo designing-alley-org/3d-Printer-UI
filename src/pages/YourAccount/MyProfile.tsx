@@ -47,8 +47,11 @@ const MyProfile = ({ profileData }: IProfile) => {
       
       // Only update the field that was edited
       const updateData = { [field]: formData[field] };
-      const res = await updateUser(updateData);
-      
+      const response =  updateUser(updateData);
+      const res = await toast.promise(response, {
+        pending: 'Updating...',
+        success: `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully`,
+      });
       // Update Redux store
       dispatch(addUserDetails(res.data.data));
       
@@ -64,8 +67,6 @@ const MyProfile = ({ profileData }: IProfile) => {
           setIsPhoneEdit(false);
           break;
       }
-
-      toast.success(`${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully`);
     } catch (error: any) {
       if(error.response) {
       toast.error(error.response.data.message);

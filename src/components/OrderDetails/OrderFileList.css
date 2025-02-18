@@ -1,5 +1,5 @@
 .order-files-list {
-  min-height: 30rem;
+  min-height: 10rem;
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 1.5rem;
@@ -22,4 +22,12 @@
 .order-files-space {
   margin-top: 24px;
   grid-column: span 4;
+}
+
+.no-files{
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #f85074;
+  margin-bottom: 1.5rem;
 }

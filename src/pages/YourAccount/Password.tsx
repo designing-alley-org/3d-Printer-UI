@@ -78,8 +78,8 @@ const Password = () => {
         try {
             setLoading(true);
             const { old_password, new_password } = form;
-            await updatePassword(old_password, new_password);
-            toast.success('Password changed successfully');
+            const response =  updatePassword(old_password, new_password);
+            await toast.promise(response, { pending: 'Updating...', success: 'Password updated successfully' });
             setForm({ old_password: '', new_password: '', confirmPassword: '' });
             setLoading(false);
         } catch (error:any) {

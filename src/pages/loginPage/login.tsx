@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -64,12 +64,13 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
       await dispatch(login(email, password, navigate));
-    } catch (error) {
-      toast.error('Login failed. Please try again.');
-    }
   };
+
+useEffect(()=>{
+  if(error) toast.error(error)
+},[error])
+
 
   return (
     <div className='AuthBG'>
@@ -142,13 +143,6 @@ const Login: React.FC = () => {
                 variant="outlined"
               />
             </Box>
-
-            {error && (
-              <Typography color="error" sx={{ mb: 2 }}>
-                {error}
-              </Typography>
-            )}
-
             <Typography
               sx={{
                 mb: 2,
