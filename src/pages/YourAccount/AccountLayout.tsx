@@ -20,10 +20,11 @@ const AccountLayout = () => {
   const user = useSelector((state: any) => state.user);
   const handleLogout = async () => {
     try {
-      await api.get('/logout');
+      await toast.promise(api.get('/logout'), {
+        pending: 'Logging out...',
+      });
       localStorage.removeItem('token');
       window.location.href = '/login';
-      toast.success('Logout successfull');
     } catch (error) {
       toast.error('Logout failed');
       console.error('Logout failed', error);
