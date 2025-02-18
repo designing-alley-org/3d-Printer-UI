@@ -49,6 +49,20 @@ export const MainWrap = styled.section`
     }
   }
 
+  .edit-btn{
+    cursor: pointer;
+    margin-left: 1rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background:rgb(139, 177, 243);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    transition: all 0.2s ease;
+    }
+
  
 `;
 export const AccWrapper = styled.section`
@@ -443,8 +457,6 @@ export const NotifyWrap = styled.section`
     }
   }
 `;
-
-
 export const OrderWrapper = styled.main`
   padding: 2rem;
   min-height: 40rem;
@@ -461,3 +473,74 @@ export const OrderWrapper = styled.main`
       margin-top: 2rem;
     }
 `;
+
+export const PasswordWrapper = styled.main`
+  padding: 2rem;
+  padding: 2rem;
+  min-height: 40rem;
+  position: relative;
+  h1 {
+    color: black !important;
+    margin: unset;
+    padding-bottom: 1rem;
+    font-size: 24px;
+  }
+
+  .header {
+    border-bottom: 1px solid #1e6fff;
+  }
+
+  .main{
+   margin-top: 2rem;
+   display: flex;
+
+   .form{
+   width:60%;
+    display: flex;
+   .form-inputs{width: 70%;}
+   }
+
+    .error{
+    color: red;
+    font-size: 12px;
+    margin: 0rem;
+    padding: 0rem;
+    }
+
+   .label{
+    color: #2359b0;
+    }
+
+  .form-inputs{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    input {
+    background: #e6f0ff;
+    border: 1px solid #0066ff47;
+    color: black;
+    padding: 1rem;
+    width: 90%;
+    border-radius: 2rem;
+    box-shadow: 0px 0px 4px 0px #66a3ff inset;
+  }
+  }
+
+  .button-wrapper{
+    position: relative;
+   .button-save{
+      position: absolute;
+      width:10rem;
+      left:0;
+      bottom:0;
+      border-radius: 2rem;
+      background: #1e6fff;
+      margin-left: 5rem;
+      transition: all 0.2s ease;
+      &:hover{
+        background: #0047ff;
+      }
+}}
+  }
+  `;

@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from './action_types';
 import { AuthActionTypes } from '../types';
 import api from '../../axiosConfig';
+import { toast } from 'react-toastify';
 
 export const login =
   (email: string, password: string, navigate: (path: string) => void) =>
@@ -11,14 +12,16 @@ export const login =
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-      const response = await api.post('login', { email, password });
-      const token = response.data.token;
+      const response =  api.post('login', { email, password });
+      const res = await toast.promise(response, { pending: 'Logging in...', success: 'Login successful' });
+      const token = res.data.token;
       localStorage.setItem('token', token);
-      const user = response.data;
+      const user = res.data;
       dispatch({
         type: LOGIN_SUCCESS,
         payload: user,
       });
+      
       navigate('/dashboard');
     } catch (error: any) {
       dispatch({

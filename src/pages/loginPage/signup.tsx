@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { register } from '../../store/auth/registerActions';
@@ -7,6 +7,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Box, Button, Container, TextField, Typography, Paper, styled } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import { toast } from 'react-toastify';
 
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -37,6 +38,12 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const { loading, error, success } = useSelector((state: RootState) => state.register);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   const validateForm = (): boolean => {
     const errors: { [key: string]: string } = {};
@@ -85,8 +92,6 @@ const RegisterForm: React.FC = () => {
                 />
               </Box>
             ))}
-            {error && <Typography color="error" sx={{ mb: 2 }}>{error}</Typography>}
-            {success && <Typography color="success.main" sx={{ mb: 2 }}>Registration successful! Please log in.</Typography>}
             <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary' }}>Or Continue With</Typography>
             <Box sx={{ display: 'flex', gap: 2, mb: 3, justifyContent: 'center' }}>
               <SocialButton onClick={() => window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self')} startIcon={<GoogleIcon />}>

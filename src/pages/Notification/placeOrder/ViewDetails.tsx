@@ -12,7 +12,7 @@ interface ViewDetailsProps {
 
 const ViewDetails = ({ orderId, myOrders = 'no' }: ViewDetailsProps) => {
   const [isCreateDispute, setIsCreateDispute] = useState(false);
-  const showDispute = myOrders !== 'yes'; // Simplified logic
+  const showDispute = myOrders !== 'yes'; 
 
   return (
     <ViewDetailsWrapper>

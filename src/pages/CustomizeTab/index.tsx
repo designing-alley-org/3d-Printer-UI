@@ -303,7 +303,9 @@ const CustomizeTab: React.FC = () => {
                     <img src={vector_black} alt="View model" />
                   </span>
                 </Model>
-                <ModelName>{file.fileName}</ModelName>
+                <ModelName>
+                  {file?.fileName.split('_')[1] || file?.fileName.split('/').pop()}
+                </ModelName>
                 <CustomizeBox>
                   <img
                     src={materialIcon}

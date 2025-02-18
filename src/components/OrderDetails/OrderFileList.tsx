@@ -19,6 +19,7 @@ export function OrderFilesList({ selectedOrder }: IselectedOrder) {
     <div className="order-files-list">
         <h3 className="order-files-title">Order Files</h3>
         <div className="order-files-space">
+          {orderFiles.length === 0 && <p className='no-files'>No files found</p>}
           {orderFiles.map((file,index) => (
             <OrderFile
               key={file.index}
