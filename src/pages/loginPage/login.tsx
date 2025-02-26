@@ -127,7 +127,7 @@ useEffect(()=>{
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Kamrul@Gmail.Com"
+                placeholder="someone@example.com"
                 variant="outlined"
               />
             </Box>
@@ -142,6 +142,15 @@ useEffect(()=>{
                 placeholder="Enter Password Here"
                 variant="outlined"
               />
+            </Box>
+            {/* Added Forgot Password link */}
+            <Box sx={{ textAlign: 'right', mb: 2 }}>
+              <Link
+                to="/forgot-password"
+                style={{ textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize: '14px' }}
+              >
+                Forgot Password?
+              </Link>
             </Box>
             <Typography
               sx={{
