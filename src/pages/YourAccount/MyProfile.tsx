@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { addUserDetails } from '../../store/user/reducer';
 import { useDispatch } from 'react-redux';
 import { Edit2, SaveIcon } from 'lucide-react';
+import PhoneInput from '../../components/Account/PhoneNumber';
 
 interface IProfile {
   profileData: User;
@@ -47,7 +48,7 @@ const MyProfile = ({ profileData }: IProfile) => {
       
       // Only update the field that was edited
       const updateData = { [field]: formData[field] };
-      const response =  updateUser(updateData);
+      const response = updateUser(updateData);
       const res = await toast.promise(response, {
         pending: 'Updating...',
         success: `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully`,
@@ -69,7 +70,7 @@ const MyProfile = ({ profileData }: IProfile) => {
       }
     } catch (error: any) {
       if(error.response) {
-      toast.error(error.response.data.message);
+        toast.error(error.response.data.message);
       }
     } finally {
       setIsLoading(false);
@@ -91,7 +92,7 @@ const MyProfile = ({ profileData }: IProfile) => {
         value={formData[field] || ''}
         disabled={!isEditing || isLoading}
         onChange={(e) => handleInputChange(field, e.target.value)}
-        className={!isEditing ? 'input-disabled' : ''}
+        className={`input ${!isEditing ? 'input-disabled' : ''}`}
       />
       <span 
         className="edit-btn" 
@@ -116,7 +117,17 @@ const MyProfile = ({ profileData }: IProfile) => {
         <MainWrap>
           {renderField('Full Name', 'name', 'text', isNameEdit, setIsNameEdit)}
           {renderField('Email', 'email', 'email', isEmailEdit, setIsEmailEdit)}
-          {renderField('Phone Number', 'phone_no', 'tel', isPhoneEdit, setIsPhoneEdit)}
+          <p>Phone Number</p>
+          <PhoneInput
+            phoneNumber={formData.phone_no}
+            extension="+44"
+            disabled={!isPhoneEdit}
+            isLoading={isLoading}
+            handleSave={() => handleSave('phone_no')}
+            onPhoneChange={(value) => handleInputChange('phone_no', value)}
+            setEditing={setIsPhoneEdit}
+            isEditing={isPhoneEdit}
+          />
         </MainWrap>
       </form>
     </ProfileWrapper>
