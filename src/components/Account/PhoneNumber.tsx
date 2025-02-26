@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { TextField, MenuItem, Box, IconButton, colors } from "@mui/material";
+import { TextField, MenuItem, Box, Button, colors } from "@mui/material";
 import { Edit2, SaveIcon } from "lucide-react";
 
 // Props Type Definition
@@ -91,7 +91,7 @@ const inputStyles = {
         value={selectedExtension}
         onChange={handleExtensionChange}
         disabled={!isEditing || disabled}
-        sx={{ ...inputStyles, width: 100 }}
+        sx={{ ...inputStyles, width: 112 }}
       >
         {countryExtensions.map((option) => (
           <MenuItem key={option.code} value={option.code} sx={{ bgcolor: "#C9E4CA" }}>
@@ -108,21 +108,21 @@ const inputStyles = {
         sx={{ ...inputStyles, width: 447 }}
       />
 
-      <IconButton
+      <Button
         onClick={toggleEdit}
         disabled={isLoading}
         sx={{
-          bgcolor: isEditing ? "rgb(139, 177, 243)" : "rgb(139, 177, 243)",
-          width: '35px',
-          height: '35px',
-          padding: 1.1,
+          bgcolor: isEditing ? "#1E6FFF" : "#1E6FFF",
+          borderRadius: 6,
+          padding: "0.8rem 1rem",
+          color: "white",
           "&:hover": {
             bgcolor: "rgb(119, 157, 223)",
           },
         }}
       >
-        {!isEditing ? <Edit2 /> : <SaveIcon />}
-      </IconButton>
+        {!isEditing ? 'Change Number' : 'Save'}
+      </Button>
     </Box>
   );
 };

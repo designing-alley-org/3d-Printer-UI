@@ -8,6 +8,8 @@ import { Loader } from 'lucide-react';
 import Dropdown from '../../stories/Dropdown/Dropdown';
 import { OngoingOrderWrapper } from './styles';
 import { set } from 'react-hook-form';
+import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
+import { filterByDayMonthYear } from '../../utils/OptionDropDowns';
 
 interface Order {
   orders: {
@@ -28,7 +30,7 @@ const OngoingOrder = () => {
   const [pagination, setPagination] = useState(1);
   const [orders, setOrders] = useState<{ order: Order[]; totalPages: number } | null>(null);
   const ITEMS_PER_PAGE = 5;
-  const [filter, setFilter] = useState('week');
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,20 +54,7 @@ const OngoingOrder = () => {
     order_quote_negotiated: 'checkout'
   } as const;
 
-  const formatOrderStatus = (status: string): string => {
-    return status.replace(/_/g, ' ')
-            .replace(/(?:^|\s)\S/g, letter => letter.toUpperCase());
-  };
-
-  const formatDateTime = (dateString: string): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(dateString));
-  };
+ 
 
   const handleNavigate = (orderStatus: string, orderId: string) => {
     const route = ORDER_STATUS_ROUTES[orderStatus as keyof typeof ORDER_STATUS_ROUTES];
@@ -90,14 +79,7 @@ const OngoingOrder = () => {
      <h2>ONGOING ORDER</h2>
       <Dropdown 
       className='dropdown'
-      options={[
-        {id: 1, value: 'month', label: 'Month'},
-        {id: 2, value: '3months', label: '3 Months'},
-        {id: 3, value: '6months', label: '6 Months'},
-        {id: 4, value: '1year', label: '1 Year'},
-        {id: 5, value: 'all', label: 'All'},
-        {id: 6, value: 'week', label: 'Week'}
-      ]}
+      options={filterByDayMonthYear}
       onSelect={(selected: Option) => {setFilter(selected.value)}}
       defaultValue={filter}
       />

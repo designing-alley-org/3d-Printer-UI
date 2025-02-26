@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ Dropdown.css';
 import { arrow_dropdown_blue } from '../../constants';
-type Option = {
+export type Option = {
   id: number;
   value: string;
   label: string;
