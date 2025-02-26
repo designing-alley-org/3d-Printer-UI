@@ -9,21 +9,21 @@ const Settings = () => {
         <span>
           <p>Language</p>
           <span className="btn">
-            <input type="text" placeholder="Enter Language"></input>
+            <input type="text" placeholder="Enter Language" className='input'></input>
             <Button label="Change Language" onClick={Function} />
           </span>
         </span>
         <span>
           <p>Measurement Preference</p>
           <span className="btn">
-            <input type="text" placeholder="Enter Measurement"></input>
-            <Button label="Change Measurement Preference" onClick={Function} />
+            <input type="text" placeholder="Enter Measurement" className='input'></input>
+            <Button label="Change Measurement " onClick={Function} />
           </span>
         </span>
         <span>
           <p>TimeZone</p>
           <span className="btn">
-            <input type="email" placeholder="Enter timeZone"></input>
+            <input type="email" placeholder="Enter timeZone" className='input'></input>
             <Button label="Change TimeZone" onClick={Function} />
           </span>
         </span>

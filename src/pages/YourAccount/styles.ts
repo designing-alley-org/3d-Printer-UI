@@ -28,7 +28,7 @@ export const MainWrap = styled.section`
     color: #2359b0;
     margin-top: 2rem;
   }
-  input {
+  .input {
     background: #e6f0ff;
     border: 1px solid #0066ff47;
     color: black;
@@ -460,6 +460,14 @@ export const NotifyWrap = styled.section`
 export const OrderWrapper = styled.main`
   padding: 2rem;
   min-height: 40rem;
+  .no-orders-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p{
+      color: #2359b0;
+      }
+    }
   h1 {
     color: black !important;
     margin: unset;

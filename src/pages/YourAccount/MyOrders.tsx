@@ -78,7 +78,9 @@ const MyOrders = () => {
         <h2 className="orders-title">TOTAL ORDERS</h2>
 
         {!orders?.order?.length ? (
+          <div className="no-orders-container">
           <p className="no-orders">No orders found.</p>
+          </div>
         ) : (
           <div className="orders-list">
             {orders.order.map((item: Order) => (
