@@ -3,8 +3,9 @@ import { NotificationCard } from '../NotificationCard';
 import { MyDisputesWrapper } from './styles';
 import { getAllDispute } from '../../../store/actions/getAllDispute';
 import Pagin from '../../../components/Paging/Pagin';
-import { ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeftIcon, Loader } from 'lucide-react';
 import Quote from './Quote/Card';
+import { formatDateTime } from '../../../utils/Validation';
 
 interface Dispute {
   _id: string;
@@ -26,21 +27,19 @@ const MyDisputes: React.FC = () => {
   });
   const [pagination, setPagination] = useState<number>(1);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDisputes = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        setIsLoading(true);
-        setError(null);
         const response = await getAllDispute(pagination);
-        
         if (!response) {
           throw new Error('Failed to fetch disputes');
         }
-
         setDisputeData({
           disputes: response.disputes || [],
           totalPages: response.totalPages || 0
@@ -52,23 +51,11 @@ const MyDisputes: React.FC = () => {
         setIsLoading(false);
       }
     };
-
-    void fetchDisputes();
+    fetchDisputes();
   }, [pagination]);
 
-  const formatDate = (dateString: string): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(dateString));
-  };
-
-  const capitalizeFirstLetter = (str: string): string => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
+  const capitalizeFirstLetter = (str: string): string =>
+    str.charAt(0).toUpperCase() + str.slice(1);
 
   const handleChatOpen = (dispute: Dispute) => () => {
     setSelectedDispute(dispute);
@@ -84,7 +71,9 @@ const MyDisputes: React.FC = () => {
     return (
       <MyDisputesWrapper>
         <h2>MY DISPUTES</h2>
-        <div className="loading">Loading...</div>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
+          <Loader size="50" color="#0066ff" />
+        </div>
       </MyDisputesWrapper>
     );
   }
@@ -109,14 +98,13 @@ const MyDisputes: React.FC = () => {
               style={{ cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <p> Order No. - {selectedDispute?.orderId}</p>
-            <p> Dispute Type. - {selectedDispute?.dispute_type}</p>
+              <p> Order No. - {selectedDispute?.orderId}</p>
+              <p> Dispute Type. - {selectedDispute?.dispute_type}</p>
             </div>
-
           </div>
-            <div>
-              <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId} />
-            </div>
+          <div>
+            <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId} />
+          </div>
         </>
       ) : (
         <>
@@ -132,13 +120,12 @@ const MyDisputes: React.FC = () => {
                   key={dispute._id}
                   title={`Type: ${capitalizeFirstLetter(dispute.dispute_type)}`}
                   orderNumber={dispute.orderId}
-                  dateTime={formatDate(dispute.createdAt)}
+                  dateTime={formatDateTime(dispute.createdAt)}
                   buttonLabel="Chat"
                   status={dispute.status}
                   onButtonClick={handleChatOpen(dispute)}
                 />
               ))}
-              
               {disputeData.totalPages > 1 && (
                 <div className="pagination">
                   <Pagin 

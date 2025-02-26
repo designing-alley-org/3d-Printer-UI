@@ -3,65 +3,64 @@ import { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
 import { getPlacedOrder } from "../../../store/actions/getPlacedOrder";
 import Pagin from "../../../components/Paging/Pagin";
-
-
+import { formatDateTime, formatOrderStatus } from "../../../utils/Validation";
+import { Loader } from "lucide-react";
 
 const PlaceOrder = () => {
-
-  const[allPlacedOrder, setAllPlacedOrder] = useState<any>([]);
-  const[pagination, setPagination] = useState<number>(1);
-
-  useEffect(() => {
-    const fetch = async () => {
-      // Fetch orders
-      const response = await getPlacedOrder(pagination);
-      setAllPlacedOrder(response.orders);
-    };
-    fetch();
-  }, []);
-
-  // State to track which order's details are being viewed
+  const [allPlacedOrder, setAllPlacedOrder] = useState<any>([]);
+  const [pagination, setPagination] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setIsLoading(true);
+        const response = await getPlacedOrder(pagination);
+        setAllPlacedOrder(response.orders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [pagination]);
 
-  // Handler for viewing details
   const handleViewDetails = (orderId: string) => {
-    setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
+    setSelectedOrderId(prevId => (prevId === orderId ? null : orderId));
   };
 
   return (
     <>
       <h2>PLACED ORDER</h2>
-      {allPlacedOrder && allPlacedOrder?.length > 0 ? (
-       allPlacedOrder?.map((item:any) => (
+      {isLoading ? (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
+          <Loader size="50" color="#0066ff" />
+        </div>
+      ) : allPlacedOrder && allPlacedOrder.length > 0 ? (
+        allPlacedOrder.map((item: any) => (
           <div key={item._id}>
             <NotificationCard
-              title={item.order_status.replace(/_/g, " ").replace(/^./, (match) => match.toUpperCase())}
+              title={formatOrderStatus(item.order_status)}
               orderNumber={item._id}
-              dateTime={new Intl.DateTimeFormat("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              }).format(new Date(item.updatedAt))}
+              dateTime={formatDateTime(item.updatedAt)}
               buttonLabel={selectedOrderId === item._id ? "Hide Details" : "View Details"}
               onButtonClick={() => handleViewDetails(item._id)}
             />
-            {/* Show ViewDetails only for the selected order */}
             {selectedOrderId === item._id && (
               <div className="view-details-container">
-              <ViewDetails orderId={item._id} />
+                <ViewDetails orderId={item._id} />
               </div>
             )}
-            <div className='pagination'>
-              <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
-            </div>
           </div>
         ))
       ) : (
         <p>No orders found.</p>
       )}
+      <div className='pagination'>
+        <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
+      </div>
     </>
   );
 };

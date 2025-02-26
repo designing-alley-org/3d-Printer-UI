@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const ProfileWrapper = styled.main`
   padding: 2rem;
+  width: 100%;
   min-height: 40rem;
   h1 {
     color: black !important;

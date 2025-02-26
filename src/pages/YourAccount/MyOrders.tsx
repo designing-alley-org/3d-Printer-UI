@@ -5,6 +5,7 @@ import { getUserOrder } from "../../store/actions/getUserOrder";
 import Pagin from "../../components/Paging/Pagin";
 import { OrderWrapper } from "./styles";
 import { Loader } from "lucide-react";
+import { formatDateTime, formatOrderStatus } from "../../utils/Validation";
 
 // Define interfaces for type safety
 interface Order {
@@ -46,21 +47,8 @@ const MyOrders = () => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
   };
 
-  const formatOrderStatus = (status: string): string => {
-    return status
-      .replace(/_/g, " ")
-      .replace(/^./, (match) => match.toUpperCase());
-  };
 
-  const formatDateTime = (dateString: string): string => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(dateString));
-  };
+  
 
   if (isLoading) {
     return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>

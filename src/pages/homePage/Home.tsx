@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import Layout from '../../components/Layout/index';
-// import CardLayout from '../../components/CardLayout';
 
 const Home: React.FC = () => {
+  
   return (
     <Wrapper>
       <Layout>
