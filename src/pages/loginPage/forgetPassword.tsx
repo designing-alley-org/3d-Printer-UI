@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Button, Container, TextField, Typography, Paper, styled } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Paper, styled, useMediaQuery } from '@mui/material';
 import { toast } from 'react-toastify';
 import { ROUTES } from '../../routes/routes-constants';
 
@@ -17,6 +17,7 @@ const StyledTextField = styled(TextField)({
 const ForgetPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   const handleForgotSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,17 +28,18 @@ const ForgetPassword: React.FC = () => {
 
   return (
     <div className='AuthBG'>
-      <Container maxWidth="sm">
-        <Paper elevation={3} sx={{ p: 4, borderRadius: '20px', background: 'white', mt: 4 }}>
+      <Container maxWidth={isSmallScreen ? 'xs' : 'sm'}>
+        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white', mt: 4 }}>
+         
           <Box component="form" onSubmit={handleForgotSubmit} sx={{ textAlign: 'left' }}>
-            <Typography variant="h5" sx={{ mb: 1, fontWeight: 500 }}>
+          <Typography variant={isSmallScreen ? 'h6' : 'h5'} sx={{ mb: 1, fontWeight: 500 }}>
               Forgot Password
             </Typography>
-            <Typography sx={{ mb: 3, color: 'text.secondary' }}>
+            <Typography sx={{ mb: 3, color: 'text.secondary', fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>
               Enter your email address to reset your password.
             </Typography>
             <Box sx={{ mb: 3 }}>
-              <Typography sx={{ mb: 1 }}>Email</Typography>
+            <Typography sx={{ mb: 1, fontSize: isSmallScreen ? '0.85rem' : '1rem' }}>Email</Typography>
               <StyledTextField
                 fullWidth
                 value={email}
@@ -50,12 +52,12 @@ const ForgetPassword: React.FC = () => {
               type="submit"
               variant="contained"
               fullWidth
-              sx={{ bgcolor: '#0066ff', borderRadius: '25px', py: 1.5, '&:hover': { bgcolor: '#0052cc' } }}
+              sx={{ bgcolor: '#0066ff', borderRadius: '25px', py: 1.5, '&:hover': { bgcolor: '#0052cc' }, fontSize: isSmallScreen ? '0.9rem' : '1rem', }}
             >
               Submit
             </Button>
             <Box sx={{ textAlign: 'center', mt: 2 }}>
-              <Typography>
+            <Typography sx={{ fontSize: isSmallScreen ? '0.85rem' : '1rem' }}>
                 Back to <Link to={ROUTES.LOGIN}>Login</Link>
               </Typography>
             </Box>
