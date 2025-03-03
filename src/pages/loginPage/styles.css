@@ -16,5 +16,8 @@
 @media (max-width: 600px) {
   .AuthBG {
     padding: .5rem;
+    margin: 0px;
+    border-radius: 0%;
+    height: 100vh;
   }
 }
