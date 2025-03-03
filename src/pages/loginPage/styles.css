@@ -11,3 +11,10 @@
   margin: 20px;
   background-image: url(/src/assets/images/backgroundimg.png);
 }
+
+
+@media (max-width: 600px) {
+  .AuthBG {
+    padding: .5rem;
+  }
+}
