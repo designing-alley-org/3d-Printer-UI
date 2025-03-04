@@ -19,7 +19,6 @@ export const ProtectedRoute: React.FC<Props> = ({ component }) => {
         return;
       }
 
-      // Validate token with backend or check cookie presence for session validation
 
       // If the user is authenticated, stop loading
       setIsCheckingSession(false);

@@ -31,6 +31,7 @@ import aboutUs1 from './assets/images/aboutUs1.svg';
 import aboutUs2 from './assets/images/aboutUs2.svg';
 import notificationIcon from './assets/icons/notifications.svg';
 import arrowRight from './assets/icons/right-arrow.svg';
+import navtabSmallScreen from './assets/icons/navtabSmallScreen.svg';
 // export svg
 export {
   uploadIcon,
@@ -45,7 +46,8 @@ export {
   group,
   arrow_dropdown_blue,
   notificationIcon,
-  arrowRight
+  arrowRight,
+  navtabSmallScreen
 };
 
 // Data for Tab
@@ -59,8 +61,17 @@ export const tabData = [
   { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
   { id: 4, label: ''}, // This is created for notification... 
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
-  
-  
+];
+
+export const MobiltabData = [
+  {
+    id: 0,
+    label: '3D PRINT YOUR FUTURE',
+    path: 'dashboard',
+  },
+  { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
+  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
+  { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
 ];
 
 // Data for QuoteText
