@@ -71,90 +71,19 @@
         transform: skew(155deg);
       }
     }
-  
-    @media (max-width: 971px) and (min-width: 964px) {
-      position: absolute;
-      top: 5rem;
-    }
-    
-    @media (max-width: 777px ) and (min-width: 400px) {
-      .curve {
-        font-size: 12px;
-        padding: 1rem 1rem 0.3rem 2rem;
-        border-top-right-radius: 4rem;
-        background: white;
-        position: absolute;
-        left: 0rem;
-        bottom: -4.8rem;
-        &::after {
-        content: '';
-        position: absolute;
-        margin-left: 0.7rem;
-        margin-top: -0.6rem;
-        background-color: transparent;
-        width: 3.25rem;
-        height: 2.1rem;
-        border-bottom-left-radius: 8.25rem;
-        box-shadow: -1rem 1rem 0 0 rgb(255, 255, 255);
-      }
 
-        &::before {
-          content: '';
-          position: absolute;
-          margin-left: -3.1rem;
-          margin-top: -4.3rem;
-          background-color: transparent;
+    .btnMobile{
+        button{
+        background-color: #1e6fff;
+        border-radius: 40px;
         }
       }
-      .btn {
-        padding: 1rem;
-        position: absolute;
-        right: 1rem;
-        bottom: -5rem;
-        button {
-          font-size: 12px;
-          width: 8rem;
-        }
-      }
-    }
-      @media (max-width: 400px )  {
-      .curve {
-        font-size: 12px;
-        padding: 1rem 1rem 0.3rem 2rem;
-        border-top-right-radius: 4rem;
-        background: white;
-        position: absolute;
-        left: 0rem;
-        bottom:-10.3rem;
-        &::after {
-        content: '';
-        position: absolute;
-        margin-left: 0.7rem;
-        margin-top: -0.6rem;
-        background-color: transparent;
-        width: 3.25rem;
-        height: 2.1rem;
-        border-bottom-left-radius: 8.25rem;
-        box-shadow: -1rem 1rem 0 0 rgb(255, 255, 255);
-      }
-
-        &::before {
-          content: '';
-          position: absolute;
-          margin-left: -3.1rem;
-          margin-top: -4.3rem;
-          background-color: transparent;
-        }
-      }
-      .btn {
-        padding: 1rem;
-        position: absolute;
-        right: 1rem;
-        bottom: -10.5rem;
-        button {
-          font-size: 12px;
-          width: 8rem;
-        }
+       @media (max-width:600px)  {
+     
+        .btnMobile{
+         position: absolute;
+         bottom:2.7rem;
+         right:1.3rem;
       }
     }
   `;
