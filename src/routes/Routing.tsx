@@ -44,7 +44,7 @@ const Routing: React.FC = () => {
               path={ROUTES.UPLOAD_STL}
               element={
                 <ProtectedRoute
-                  component={<UploadStlCard files={[]} setFiles={() => {}} />}
+                  component={<UploadStlCard files={[]} setFiles={() => { }} />}
                 />
               }
             />
@@ -77,7 +77,7 @@ const Routing: React.FC = () => {
         </Route>
         <Route path={ROUTES.SERVICES} element={<Services />} />
         <Route path={ROUTES.ACCOUNT} element={<Account />} />
-        <Route path={ROUTES.Notification} element={<Notifications/>} />
+        <Route path={ROUTES.Notification} element={<Notifications />} />
         <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
       </Route>
 
