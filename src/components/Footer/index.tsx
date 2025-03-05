@@ -4,7 +4,6 @@ import { footerData, HowISWork } from '../../constants';
 import PrinterLibrary from '../PrinterLibrary';
 import WhyUs from '../whyUs';
 import Contact from '../contactInfo';
-// import PrinterLibrary from '../PrinterLibrary';
 import numbers from '../../assets/images/numbersIcon.jpeg';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
