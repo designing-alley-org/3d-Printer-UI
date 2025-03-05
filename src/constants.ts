@@ -32,6 +32,7 @@ import aboutUs2 from './assets/images/aboutUs2.svg';
 import notificationIcon from './assets/icons/notifications.svg';
 import arrowRight from './assets/icons/right-arrow.svg';
 import navtabSmallScreen from './assets/icons/navtabSmallScreen.svg';
+import HowISWork from './assets/images/HowISWork.svg'
 // export svg
 export {
   uploadIcon,
@@ -47,7 +48,8 @@ export {
   arrow_dropdown_blue,
   notificationIcon,
   arrowRight,
-  navtabSmallScreen
+  navtabSmallScreen,
+  HowISWork
 };
 
 // Data for Tab
@@ -383,14 +385,6 @@ export const footerData = [
   },
   {
     name: 'CONTACT US',
-    url: '',
-  },
-  {
-    name: 'YOUTUBE',
-    url: '',
-  },
-  {
-    name: 'NEWSLETTER',
     url: '',
   },
   {

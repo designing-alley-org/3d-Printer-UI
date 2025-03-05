@@ -27,9 +27,30 @@ export const Wrapper = styled.section`
       color: #101a36;
     }
   }
+  @media (max-width: 768px) {
+    h2 {
+    font-size: 15px;
+    width: 100%;
+  }
+  h1{
+    font-size: 20px;
+    }
+   .footer-data {
+    grid-template-columns: repeat(2, 12rem);
+    grid-row-gap: 2rem;
+    font-size: 12px;
+    margin-bottom: 10rem;
+  }
+    .checkout {
+    margin: 0rem .5rem;
+  }
+  }
 `;
 export const FooterData = styled.section`
   margin: 0rem 4rem;
+  @media (max-width: 768px) {
+    margin: 0rem 2rem;
+  }
 `;
 
 export const Numbers = styled.section`
@@ -56,5 +77,11 @@ export const Numbers = styled.section`
   h1 {
     font-size: 24px;
     color: #0066ff;
+  }
+    @media (max-width: 768px) {
+    padding: 2rem 2rem;
+    img{
+      width: 100%;
+      height: 100%;}
   }
 `;

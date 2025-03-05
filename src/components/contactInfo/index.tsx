@@ -15,7 +15,7 @@ const Contact = () => {
       </h2>
       <ContactBtn>
         <span>.</span>
-        <div>
+        <div className='btn-container'>
           <Button label="Contact Us" onClick={Function} />
         </div>
       </ContactBtn>

@@ -1,4 +1,3 @@
-import { Card } from '@mui/material';
 import { MobiltabData, navtabSmallScreen, notificationIcon } from '../../constants'
 import { useRef, useState } from 'react'
 import './style.css'

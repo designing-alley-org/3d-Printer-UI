@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.main`
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 1024px) {
     .desktop-navBar-container {
       display: none;
     }
   }
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1025px) {
     .mobile-navBar-container {
       display: none;
     }

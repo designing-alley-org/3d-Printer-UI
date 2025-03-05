@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import MobileHeader from '../Responsive/Header';
 import TabComponent from '../Tab/index';
 import { Wrapper } from './styles';
