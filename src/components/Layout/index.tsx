@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from 'react';
 import Footer from '../Footer';
 import Header from '../Header';
@@ -9,8 +8,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import api from '../../axiosConfig';
 import { useDispatch } from 'react-redux';
-// import { ADD_USER } from '../../store/user/action_types';
-// import { addUser } from '../../store/user/actions';
 import { addUserDetails } from '../../store/user/reducer';
 
 const index: React.FC = () => {

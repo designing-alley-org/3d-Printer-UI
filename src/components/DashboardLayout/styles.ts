@@ -78,12 +78,21 @@
         border-radius: 40px;
         }
       }
-       @media (max-width:600px)  {
-     
+       @media (max-width:600px) and (min-width: 400px) {
         .btnMobile{
          position: absolute;
          bottom:2.7rem;
          right:1.3rem;
+      }
+    }
+    @media (max-width: 399px)  {
+    .textMobile{
+      font-size: 20px;
+      }
+      .btnMobile{
+        position: absolute;
+        bottom:-3rem;
+        right:1.3rem;
       }
     }
   `;

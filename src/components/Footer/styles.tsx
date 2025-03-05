@@ -38,11 +38,13 @@ export const Wrapper = styled.section`
    .footer-data {
     grid-template-columns: repeat(2, 12rem);
     grid-row-gap: 2rem;
-    font-size: 12px;
+    font-size: 20px;
     margin-bottom: 10rem;
   }
     .checkout {
-    margin: 0rem .5rem;
+    margin: 0rem .1rem;
+    font-size: 18px;
+    padding-left: .5rem;
   }
   }
 `;
@@ -79,7 +81,7 @@ export const Numbers = styled.section`
     color: #0066ff;
   }
     @media (max-width: 768px) {
-    padding: 2rem 2rem;
+    padding: 1rem 1rem;
     img{
       width: 100%;
       height: 100%;}
