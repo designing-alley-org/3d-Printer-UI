@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
             }
         </>
       )}
-      {/* {pathname.includes(ROUTES.DASHBOARD) && <PrinterLibrary />} */}
+      {pathname.includes(ROUTES.DASHBOARD) && <PrinterLibrary />}
       {pathname.includes(ROUTES.SERVICES) && <AboutUs />}
       {(pathname === '/services' || pathname === '/dashboard') && (
         <>
