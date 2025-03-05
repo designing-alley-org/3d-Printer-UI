@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+import MobileHeader from '../Responsive/Header';
 import TabComponent from '../Tab/index';
 import { Wrapper } from './styles';
 
@@ -13,7 +12,12 @@ const Header = (props: IHeader) => {
   return (
     <Wrapper>
       <section>
+        <span className='desktop-navBar-container'>
         <TabComponent tabs={tabData} numberId={false} activeTabs={props.activeTabs} insideTab={props.insideTab}/>
+        </span>
+        <span className='mobile-navBar-container'>
+        <MobileHeader/>
+        </span>
       </section>
     </Wrapper>
   );

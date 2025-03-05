@@ -4,6 +4,9 @@
   background-position: center;
   border-radius: 40px;
   background-image: url(/src/assets/images/backgroundimg.png);
+  @media (max-width: 768px) {
+    min-width: 10rem;
+  }
 }
 /* .rootLayout {
   padding: 20px;

@@ -6,9 +6,6 @@ const Home: React.FC = () => {
   return (
     <Wrapper>
       <Layout>
-        {/* <div>
-          <CardLayout />
-        </div> */}
       </Layout>
     </Wrapper>
   );

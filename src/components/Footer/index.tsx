@@ -1,6 +1,6 @@
 import React from 'react';
 import { FooterData, Numbers, Wrapper } from './styles';
-import { footerData } from '../../constants';
+import { footerData, HowISWork } from '../../constants';
 import PrinterLibrary from '../PrinterLibrary';
 import WhyUs from '../whyUs';
 import Contact from '../contactInfo';
@@ -9,9 +9,11 @@ import numbers from '../../assets/images/numbersIcon.jpeg';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import AboutUs from '../../pages/Services/AboutUs';
+import { useMediaQuery } from '@mui/material';
 
 const Footer: React.FC = () => {
   const { pathname } = useLocation();
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   return (
     <Wrapper>
       {pathname.includes(ROUTES.DASHBOARD) && (
@@ -20,7 +22,7 @@ const Footer: React.FC = () => {
             Checkout our special editions curated collections and merchant
             specials and more in our 3d assets library
           </h2>
-          <Numbers>
+         {!isSmallScreen ? <Numbers>
             <img src={numbers} />
             <section>
               <span className="sect">
@@ -36,10 +38,11 @@ const Footer: React.FC = () => {
                 <h3>FUTURE PRINTED</h3>
               </span>
             </section>
-          </Numbers>
+          </Numbers> : <Numbers><img src={HowISWork} /></Numbers>
+            }
         </>
       )}
-      {pathname.includes(ROUTES.DASHBOARD) && <PrinterLibrary />}
+      {/* {pathname.includes(ROUTES.DASHBOARD) && <PrinterLibrary />} */}
       {pathname.includes(ROUTES.SERVICES) && <AboutUs />}
       {(pathname === '/services' || pathname === '/dashboard') && (
         <>

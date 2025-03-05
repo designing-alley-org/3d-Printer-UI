@@ -32,6 +32,7 @@ export const Display = styled.section`
     display: flex;
     h2 {
       width: 80%;
+      color: black;
       padding: 4px;
     }
     span {
@@ -54,7 +55,7 @@ export const Display = styled.section`
   }
 `;
 export const DisplayInfo = styled.section`
-display: grid;
+    display: grid;
     padding: 10rem 3rem;
     border-radius: 2rem 0rem 2rem 2rem;
     background: #dde9fc;
@@ -72,8 +73,13 @@ display: grid;
     img {
     width: 2rem;
     }
-        display: flex;
+    display: flex;
     flex-direction: column;
+    }
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, 0.5fr);
+        padding: 5rem 3rem;
+        grid-gap: 5rem;
     }
 }`;
 export const KnowMore = styled.span`
@@ -99,5 +105,25 @@ export const KnowMore = styled.span`
     height: 4rem;
     border-bottom-left-radius: 7.25rem;
     box-shadow: 0rem 2rem 0 0 #dde9fc;
+  }
+  @media (max-width: 768px) {
+  width: 18rem;
+  font-size: 16px;
+  padding: 1rem 1rem 0.5rem 3rem;
+  border-top-right-radius: 4rem;
+  button {
+    padding: 0.8rem 1.5rem;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    margin-top: -0.4rem;
+    margin-left: 14.5rem;
+    background-color: transparent;
+    width: 3.05rem;
+    height: 4rem;
+    border-bottom-left-radius: 7.25rem;
+    box-shadow: 0rem 2rem 0 0 #dde9fc;
+  }
   }
 `;
