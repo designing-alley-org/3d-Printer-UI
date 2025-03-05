@@ -1,4 +1,5 @@
 import MobileHeader from '../Responsive/Header';
+import MianHeader from '../Responsive/MainHeader';
 import TabComponent from '../Tab/index';
 import { Wrapper } from './styles';
 
@@ -14,6 +15,7 @@ const Header = (props: IHeader) => {
       <section>
         <span className='desktop-navBar-container'>
         <TabComponent tabs={tabData} numberId={false} activeTabs={props.activeTabs} insideTab={props.insideTab}/>
+        {/* <MianHeader/> */}
         </span>
         <span className='mobile-navBar-container'>
         <MobileHeader/>

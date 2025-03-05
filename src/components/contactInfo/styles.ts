@@ -16,12 +16,13 @@ export const Wrapper = styled.main`
     padding: 1rem 0rem 0rem 2rem;
     h1 {
       padding: 1rem 0rem;
-      font-size: 24px;
+      font-size: 30px;
     }
     h2 {
-      width: 95% !important;
+      width: 90% !important;
+      line-height: 1rem;
       margin-bottom: 2.5rem;
-      font-size: 18px;
+      font-size: 13px;
     }
   }
 
@@ -65,14 +66,17 @@ export const ContactBtn = styled.section`
     .btn-container{
     position: relative;
     width: 100%;
-    
     button {
-    width: 18rem;
+    width: 12rem;
+    height: 2rem;
+    padding: 0rem 1rem;
+    font-size: 15px;
      &::before {
         content: '';
+         rotate: 290deg;
         position: absolute;
-        margin-top: -0.2rem;
-        margin-left: -12.8rem;
+        margin-top: -1rem;
+        margin-left: -10.1rem;
       }
       }
       }

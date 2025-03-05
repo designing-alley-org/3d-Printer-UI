@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.main`
+
   @media screen and (max-width: 1024px) {
     .desktop-navBar-container {
       display: none;

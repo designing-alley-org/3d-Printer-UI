@@ -9,9 +9,7 @@
     min-height: 100%;
   } 
 }
-/* .rootLayout {
-  padding: 20px;
-} */
+
 .mainContent {
   padding: 1rem;
   @media (max-width: 768px) {
