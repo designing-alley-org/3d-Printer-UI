@@ -11,17 +11,17 @@ export const Wrapper = styled.main`
       content: '';
       position: absolute;
       margin-top: -2.3rem;
-      margin-left: 9.4rem;
+      margin-left: 9.5rem;
       background-color: transparent;
-      width: 3.05rem;
-      height: 5rem;
-      rotate: 90deg;
+      width: 3.8rem;
+      height: 6rem;
+      rotate: 98deg;
       border-bottom-left-radius: 9rem;
-      box-shadow: -1rem 3rem 0rem 0rem #ffffff;
+      box-shadow: -1rem 3rem 0rem 0rem rgb(255, 255, 255);
     }
   }
   h3 {
-    width: 40%;
+    width: 50%;
     margin: 4rem 3rem;
   }
   background-image: url(/src/assets/images/whyUSImg.svg);
@@ -40,6 +40,7 @@ export const Display = styled.section`
   margin: 3rem;
   .head {
     display: flex;
+    position: relative;
     h2 {
       width: 80%;
       color: white;
@@ -47,17 +48,21 @@ export const Display = styled.section`
     }
     span {
       background: #dde9fc;
+      position: absolute;
+      right: 0rem;
+      height: 4rem;
+      bottom: 0;
       width: 20%;
       border-radius: 3rem 2rem 0rem 0rem;
       &::before {
         content: '';
         position: absolute;
         margin-top: 0.8rem;
-        margin-left: -2.8rem;
+        margin-left: -2.94rem;
         background-color: transparent;
         width: 3.05rem;
         height: 3.5rem;
-        rotate: 270deg;
+        rotate: 272deg;
         border-bottom-left-radius: 8.25rem;
         box-shadow: -1rem 1rem 0 0 #dde9fc;
       }
@@ -97,20 +102,21 @@ export const Display = styled.section`
   }
 `;
 export const DisplayInfo = styled.section`
+  padding: 4rem 4rem;
   display: grid;
-  padding: 10rem 3rem;
   border-radius: 2rem 0rem 2rem 2rem;
   background: #dde9fc;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 8rem;
+  grid-row-gap: 6rem;
+  grid-column-gap: 4rem;
   .info {
     color: #001331;
     .title {
-      font-size: 20px;
+      font-size: 1.2rem;
       margin: 20px 0px;
     }
     .sub {
-      font-size: 16px;
+      font-size: 0.8rem;
     }
     img {
       width: 2rem;

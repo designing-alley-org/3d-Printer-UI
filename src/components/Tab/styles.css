@@ -16,7 +16,7 @@
 .insideTab li {
   background: #ffffff;
   width: -webkit-fill-available;
-  font-size: 20px;
+  font-size: 1rem;
   cursor: pointer;
 }
 .tabrow li:first-child {

@@ -102,19 +102,20 @@ const Wrapper = styled.section`
   margin: 2rem 6rem;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     color: #001331;
     margin-bottom: 0.5rem;
     font-weight: bold;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #525e86;
     margin-bottom: 2rem;
   }
 
   .cards {
+  width: 100%;
     .react-multi-carousel-list {
       padding: 1rem 0;
     }

@@ -14,8 +14,7 @@ const Header = (props: IHeader) => {
     <Wrapper>
       <section>
         <span className='desktop-navBar-container'>
-        <TabComponent tabs={tabData} numberId={false} activeTabs={props.activeTabs} insideTab={props.insideTab}/>
-        {/* <MianHeader/> */}
+        <MianHeader/>
         </span>
         <span className='mobile-navBar-container'>
         <MobileHeader/>

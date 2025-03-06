@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
 import {  toast } from 'react-toastify';
+import TabComponent from '../Tab';
 
 interface ModelDimensions {
   height: number;
@@ -206,11 +207,12 @@ const CardLayout = () => {
             <LinearProgress variant="determinate" value={getProgressValue()} />
           </TabLine>
         )}
-        <Header
+        {/* <Header
           tabData={quoteTexts}
           insideTab={true}
           activeTabs={activeTabs.length}
-        />
+        /> */}
+        <TabComponent tabs={quoteTexts} numberId={false} activeTabs={activeTabs.length} insideTab={true}/>
       </div>
       
       <div className="mainCardContent">

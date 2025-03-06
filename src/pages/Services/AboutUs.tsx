@@ -44,7 +44,7 @@ const AboutUs = () => {
   );
 };
 const Wrapper = styled.section`
-  margin: 2rem 5rem;
+  margin: 2rem 3rem;
   color: #2359b0;
   h2 {
     margin-bottom: unset;
@@ -56,16 +56,25 @@ const Wrapper = styled.section`
 `;
 
 export const CardWrapper = styled.section`
+
   h1 {
     color: #2359b0;
-    font-size: 40px;
+    font-size: 2rem;
   }
   .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    column-gap: 2rem;
+    column-gap: 1rem;
   }
   margin-bottom: 4rem;
+
+  @media (max-width: 768px) {
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      column-gap: 1rem;
+    }
+  }
 `;
 export const Card = styled.span`
   box-shadow: 3px 4px #dddddd;

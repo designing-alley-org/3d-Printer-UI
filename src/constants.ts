@@ -33,6 +33,7 @@ import notificationIcon from './assets/icons/notifications.svg';
 import arrowRight from './assets/icons/right-arrow.svg';
 import navtabSmallScreen from './assets/icons/navtabSmallScreen.svg';
 import HowISWork from './assets/images/HowISWork.svg'
+import footerImg from './assets/images/Footer.svg';
 // export svg
 export {
   uploadIcon,
@@ -49,7 +50,8 @@ export {
   notificationIcon,
   arrowRight,
   navtabSmallScreen,
-  HowISWork
+  HowISWork,
+  footerImg
 };
 
 // Data for Tab
@@ -369,7 +371,7 @@ export const footerData = [
     url: '',
   },
   {
-    name: 'HOW IT WORKS',
+    name: 'WORKS',
     url: '',
   },
   {
