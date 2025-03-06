@@ -5,17 +5,15 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 0 0 0 .5rem;
-  }
+    }
   
   .notificationNumber{
-    font-size: 1.5rem;
     font-weight: bold;
     background: #0066FF;
     color: #ffffff;
-    font-size: 2rem;
-    width: 5rem;
-    height: 5rem;
+    font-size: 1.3rem;
+    width: 3.5rem;
+    height: 3.5rem;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -26,9 +24,9 @@
   .notificationWarper p{
   color: #0047FF;
   font-family: Michroma;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 1rem;
   }
   
   .notificationList {

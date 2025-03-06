@@ -39,7 +39,7 @@ const Card: React.FC<CardProps> = ({ sx, id, icon, upperText, bottomText }) => {
         </Box>
         <UpperText>{upperText}</UpperText>
       </BlackBox>
-      <Box sx={{ padding: '1.2rem 1.5rem' }}>
+      <Box sx={{ padding: '1rem 1.5rem' }}>
         <BottomText>{bottomText}</BottomText>
       </Box>
     </BoxWrapper>

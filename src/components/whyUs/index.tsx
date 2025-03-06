@@ -12,7 +12,7 @@ const WhyUs = () => {
             We turn your ideas into reality through 3D printing, offering
             tailored services to meet your specific needs.
           </h2>
-          <span>.</span>
+          <span></span>
         </span>
         <DisplayInfo>
           {whyUSData.map((item, idx) => (

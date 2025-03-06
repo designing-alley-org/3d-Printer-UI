@@ -2,6 +2,7 @@ import { MobiltabData, navtabSmallScreen, notificationIcon } from '../../constan
 import { useRef, useState } from 'react'
 import './style.css'
 import { useNavigate } from 'react-router-dom';
+import Notifications from '../NotificationDropdown';
 
 const NavTabMenu = ({ setShowTab }: { setShowTab: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ const MobileHeader = () => {
 
     return (
         <>
-            <div className='mobile-navBar'>
+            <nav className='mobile-navBar'>
                 <span className='notification-container'>
                     <div
                         className="notificationIconConrtainer"
@@ -65,12 +66,20 @@ const MobileHeader = () => {
                 <span className='nav-tav'>
                     <img src={navtabSmallScreen} alt="tab" className='tab-img' onClick={tabOnClick} />
                 </span>
-            </div>
+            </nav>
             {showTab &&
             <div > 
             <NavTabMenu setShowTab={setShowTab} />
             </div>
             }
+              {showNotification && (
+        <div className="notificationContainer" ref={notificationRef}>
+          <Notifications
+            notification={notification}
+            setShowNotification={setShowNotification}
+          />
+        </div>
+      )}
         </>
 
     )

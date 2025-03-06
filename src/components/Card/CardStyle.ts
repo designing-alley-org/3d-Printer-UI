@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const BoxWrapper = styled(Box)({
-  height: '22.4rem',
+  padding:'1rem 0rem',
   backgroundColor: '#DDE9FC',
   boxShadow: '0px 0px 2.1px 0px #0066FFB2',
   borderRadius: '1.3rem',
@@ -15,33 +15,13 @@ export const BlackBox = styled(Box)({
   borderTopRightRadius: '1.3rem',
   position: 'relative',
   overflow: 'hidden',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    width: '2.98125rem',
-    height: '1.75rem',
-    backgroundColor: '#DDE9FC',
-    bottom: '-0.2%',
-    right: 0,
-    borderRadius: '2.3125rem 0px 0px 0px',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    bottom: 0.3,
-    right: '2.6rem',
-    backgroundColor: 'transparent',
-    width: '5.25rem',
-    height: '1.5rem',
-    borderBottomRightRadius: '8.25rem',
-    boxShadow: '0.313rem .74rem 0 0 #DDE9FC',
-  },
+ 
 });
 
 export const IdText = styled(Typography)({
   fontFamily: 'Michroma, sans-serif',
   fontWeight: 400,
-  fontSize: '1.8rem',
+  fontSize: '1.5rem',
   position: 'absolute',
   left: '1.3rem',
   top: '1.3rem',
@@ -49,8 +29,8 @@ export const IdText = styled(Typography)({
 });
 
 export const IconBox = styled(Box)({
-  height: '6.6rem',
-  width: '6.6rem',
+  height: '6rem',
+  width: '6rem',
   borderRadius: '50%',
   backgroundColor: '#0066FF',
   display: 'flex',
@@ -61,7 +41,7 @@ export const IconBox = styled(Box)({
 export const UpperText = styled(Typography)({
   fontFamily: 'Michroma, sans-serif',
   fontWeight: 400,
-  fontSize: '1.2rem',
+  fontSize: '1rem',
   position: 'absolute',
   bottom: '0.7rem',
   left: '1rem',
@@ -73,6 +53,6 @@ export const UpperText = styled(Typography)({
 export const BottomText = styled(Typography)({
   fontFamily: 'Montserrat, sans-serif',
   fontWeight: 400,
-  fontSize: '1rem',
+  fontSize: '0.9rem',
   color: '#001331',
 });

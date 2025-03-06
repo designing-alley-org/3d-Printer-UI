@@ -9,7 +9,8 @@ export const Wrapper = styled.main`
   }
   h2 {
     margin-bottom: 5rem;
-    width: 50% !important;
+    width: 65% !important;
+    font-size: 1rem;
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -41,13 +42,13 @@ export const ContactBtn = styled.section`
     button {
       background: #0066ff;
       border-radius: 4rem;
-      padding: 0.8rem 4rem;
-      width: 20rem;
+      padding: 0.8rem rem;
+      width: 15rem;
       &::before {
         content: '';
         position: absolute;
-        margin-top: -0.2rem;
-        margin-left: -13.8rem;
+        margin-top: -0.4rem;
+        margin-left: -11.1rem;
         background-color: transparent;
         width: 2.05rem;
         height: 5rem;

@@ -2,18 +2,24 @@ import styled from 'styled-components';
 
 export const Wrapper = styled.main`
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (min-width: 700px) {
     .desktop-navBar-container {
+      display: flex;
+    }
+      .mobile-navBar-container {
       display: none;
     }
   }
-  @media screen and (min-width: 1025px) {
+  @media screen and (max-width: 699px) {
     .mobile-navBar-container {
+      display: flex;
+    }
+      .desktop-navBar-container {
       display: none;
     }
   }
 `;
 
 export const Wrap = styled.section`
-  margin: 0 10rem;
+  margin: 5rem 5rem;
 `;
