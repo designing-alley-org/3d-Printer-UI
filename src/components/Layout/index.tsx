@@ -48,7 +48,7 @@ const index: React.FC = () => {
             {activeTabs === 1 ? (
               <Wrap>
                 {pathname === '/get-quotes' && (
-                  <h1 style={{ color: 'white', fontSize: '2.4rem' }}>
+                  <h1  className='get-quote-heading'>
                     START 3D PRINTING YOUR FUTURE
                   </h1>
                 )}

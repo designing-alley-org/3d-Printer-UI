@@ -18,6 +18,9 @@
   width: -webkit-fill-available;
   font-size: 1rem;
   cursor: pointer;
+  @media screen and (max-width: 1000px){
+    font-size: 0.8rem;
+  }
 }
 .tabrow li:first-child {
   background-color: unset;
