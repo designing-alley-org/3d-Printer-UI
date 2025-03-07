@@ -22,6 +22,10 @@ export const instantQuoteText: SxProps = {
   color: '#1E6FFF',
   padding: '1rem 0rem',
   marginBottom: '1rem',
+
+  '@media (max-width: 1020px)': {
+    fontSize: '1.25rem',
+  },
 };
 
 export const cardBox: SxProps = {
@@ -29,8 +33,8 @@ export const cardBox: SxProps = {
   gridTemplateColumns: 'repeat(4, 1fr)',
   gap: '20px',
 
-  '@media (max-width: 768px)': {
-    gridTemplateColumns: 'repeat(1, 1fr)',
+  '@media (max-width: 1020px)': {
+    gridTemplateColumns: 'repeat(2, 1fr)',
   },
 };
 
