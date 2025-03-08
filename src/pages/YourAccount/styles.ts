@@ -366,7 +366,7 @@ export const NotifyWrapper = styled.main`
     color: black !important;
     margin: unset;
     padding-bottom: 1rem;
-    font-size: 24px;
+    font-size: 1.3rem;
     border-bottom: 1px solid #1e6fff;
   }
 `;
@@ -374,30 +374,48 @@ export const NotifyWrap = styled.section`
   .cate {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    margin: 1rem;
+    margin: .8rem;
     p {
       color: #2359b0;
     }
     .notify {
-      font-size: 20px;
+      font-size: 1rem;
     }
-    .dropdown {
+     .dropdown {
+     margin-left: 1rem;
+     margin-top: 1rem;
       background: #dde9fc;
       border-radius: 2rem;
-      width: 15rem;
+      height: 2rem;
       button {
         border-radius: 2rem;
         width: -webkit-fill-available;
+        padding: 0.5rem 1rem;
       }
       .dropdown-header {
         background: #dde9fc;
       }
+        .dropdown-list {
+          max-height: unset;
+          min-width: 2rem;
+          border-radius: 1rem;
+        }
+        .dropdown-item {
+          display: flex;
+          justify-content: center;
+        }
+        .dropdown-item:hover {
+          border-radius: 0rem;
+        }
+          .dropdown-item.selected {
+            border-radius: 0rem;
+          }
     }
     .switch {
       position: relative;
       display: inline-block;
       width: 60px;
-      height: 34px;
+      height: 29px;
       margin-left: 1rem;
     }
 
@@ -424,9 +442,9 @@ export const NotifyWrap = styled.section`
     .slider:before {
       position: absolute;
       content: '';
-      height: 26px;
-      width: 26px;
-      left: 4px;
+      height: 22px;
+      width: 22px;
+      left: 7px;
       bottom: 4px;
       background-color: white;
       -webkit-transition: 0.4s;
@@ -461,7 +479,7 @@ export const NotifyWrap = styled.section`
   }
 `;
 export const OrderWrapper = styled.main`
-  padding: 2rem;
+  padding: 1rem 2rem 2rem 2rem;
   min-height: 40rem;
   .no-orders-container{
     display: flex;
@@ -494,7 +512,7 @@ export const PasswordWrapper = styled.main`
     color: black !important;
     margin: unset;
     padding-bottom: 1rem;
-    font-size: 24px;
+    font-size: 1.2rem;
   }
 
   .header {
@@ -513,7 +531,7 @@ export const PasswordWrapper = styled.main`
 
     .error{
     color: red;
-    font-size: 12px;
+    font-size: .7rem;
     margin: 0rem;
     padding: 0rem;
     }
@@ -531,6 +549,8 @@ export const PasswordWrapper = styled.main`
     background: #e6f0ff;
     border: 1px solid #0066ff47;
     color: black;
+    height: 2.5rem;
+    font-size: .8rem;
     padding: 1rem;
     width: 90%;
     border-radius: 2rem;

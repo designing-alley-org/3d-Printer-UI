@@ -10,8 +10,8 @@ export const SideTab = styled.section`
   flex-direction: column;
   width: 20%;
   span {
-    padding: 2rem;
-    font-size: 1rem;
+    padding: 1.5rem;
+    font-size: .9rem;
     cursor: pointer;
   }
   .selected {
@@ -36,13 +36,15 @@ export const MainWrapper = styled.main`
   padding-bottom: 2rem;
   h1 {
     color: white;
+    font-size: 1.9rem;
   }`;
+
 export const NotificationWarper = styled.main`
   width: 100%;
-  height: 8.0625rem; 
+  height: 7.0625rem; 
   display: flex;
   align-items: center; 
-  padding: 1rem;
+  padding: .8rem;
   border-radius: 1.25rem; 
   border: 1px solid #bbd6ff; 
   background: #f6faff;
@@ -56,7 +58,7 @@ export const NotificationWarper = styled.main`
   .btn{
   background-color: #A1C3FF;
   border-radius: 44px;
-  height: 2.3rem;
+  height: 2rem;
   width: content;
   padding: 1rem;
   display: flex;
@@ -78,17 +80,17 @@ export const NotificationWarper = styled.main`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: .7rem;
+  font-size: .6rem;
   img{
-  width: 1rem;
+  width: .9rem;
   margin-left:0.4rem;
   }
   }
   .btn-status{
-  font-size: .7rem;
+  font-size: .6rem;
   border-radius: 44px;
   position: absolute;
-  top: 4.5rem;
+  top: 3.9rem;
   right: 0rem;}
   }
 
@@ -96,7 +98,7 @@ export const NotificationWarper = styled.main`
     background: #F0F6FF;
     box-shadow: 0px 4px 4px rgba(205, 225, 255, 1);
     height: 95%; 
-    width: 7rem;
+    width: 6rem;
     border-radius: 0.5rem; 
   }
   .modelView{
@@ -117,15 +119,15 @@ export const Data = styled.main`
 
     .title{
     font-family: Montserrat;
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: 500;
     }
     .description{
-    font-size: 12px;
+    font-size: .6rem;
     font-weight: 400;
 
     span{
-    font-size: 12px;
+    font-size: .6rem;
     font-weight: 500;
     color: #002E72;
     margin-left: 0.5rem;
@@ -249,7 +251,7 @@ export const OngoingOrderWrapper = styled.div`
 display: flex;
 align-items: center;
 justify-content: space-between;
-margin:0  1rem;
+margin:0  .5rem;
 
  .dropdown {
       background: #dde9fc;
@@ -257,13 +259,14 @@ margin:0  1rem;
       button {
         border-radius: 2rem;
         width: -webkit-fill-available;
+        padding: 0.5rem 1rem;
       }
       .dropdown-header {
         background: #dde9fc;
       }
         .dropdown-list {
           max-height: unset;
-          min-width: 10rem;
+          min-width: 9rem;
           border-radius: 1rem;
         }
         .dropdown-item {
