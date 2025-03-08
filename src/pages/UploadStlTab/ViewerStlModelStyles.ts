@@ -11,6 +11,11 @@ export const modalContainer = {
   justifyContent: 'center',
   alignItems: 'center',
   zIndex: 1000,
+
+  '@media (max-width: 768px)': {
+    width: '100%',
+    height: '100%',
+  },
 };
 
 export const modalContent = {
@@ -22,20 +27,33 @@ export const modalContent = {
   height: '40.7rem',
   border: '1px solid #FFFFFF',
   boxShadow: '0px 4px 4px 0px #0047FF',
+
+  '@media (max-width: 768px)': {
+    width: '90%',
+    height: '60%',
+    padding: '1rem 1rem 2rem 1rem',
+  },
 };
 
 export const closeButton = {
   position: 'absolute',
   top: '0.4rem',
   right: '1rem',
+  '@media (max-width: 768px)': {
+    top: '-.3rem',
+    right: '0rem',
+  },
 };
 
 export const modalTitle = {
   fontFamily: 'Michroma',
-  fontSize: '1.5rem', // 24px
+  fontSize: '1.2rem', // 24px
   fontWeight: 400,
   lineHeight: '2.6rem',
   color: '#0066FF',
+  '@media (max-width: 768px)': {
+    fontSize: '1rem',
+  },
 };
 
 export const viewerContent = {
@@ -50,30 +68,7 @@ export const viewerContent = {
   justifyContent: 'space-between',
   alignItems: 'center',
   position: 'relative',
-  // '&::after': {
-  //   content: '""',
-  //   position: 'absolute',
-  //   width: '45.1rem',
-  //   height: '2.75rem',
-  //   backgroundColor: '#FFFFFF',
-  //   top: '-9.4%',
-  //   right: '-0.1rem',
-  //   border: ' 1px solid #C6C6C6',
-  //   borderBottom: 'none',
-  //   borderRadius: '2.3125rem 2.3rem 0px 0px',
-  //   zIndex:'1',
-  // },
-  // '&::before': {
-  //   content: '""',
-  //   position: 'absolute',
-  //   top: '-4.3%',
-  //   left: '7.8rem',
-  //   backgroundColor: 'blue',
-  //   width: '9.25rem',
-  //   height: '1.5rem',
-  //   borderBottomRightRadius: '8.25rem',
-  //   boxShadow: '0.313rem .74rem 0 0 #fff',
-  // },
+ 
 };
 
 export const viewModel = {

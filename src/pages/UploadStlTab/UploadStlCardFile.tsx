@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Typography, TextField, CircularProgress } from '@mui/material';
+import { Box, Typography, TextField, CircularProgress, useMediaQuery } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import { cross, plus, minus, vector } from '../../constants';
 import * as styles from './UploadStlCardFileStyle';
@@ -125,6 +125,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
   }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
     const { blobUrl, isLoading, error } = useFileBlob(file);
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
@@ -229,6 +230,8 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
             </Box>
           </Box>
 
+    
+          <Box sx={{ display: 'flex', flexDirection: isSmallScreen ? 'column ' : 'row', width: '80%' }}>
           {/* File Info Section */}
           <Box sx={styles.infoBox}>
             <Typography sx={styles.fileName}>
@@ -253,75 +256,80 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               </Typography>
             </Box>
           </Box>
-
+          
           {/* Quantity Control Section */}
           <Box sx={styles.quantityBox}>
             <Box sx={styles.quantityHeader}>
               <Typography sx={styles.fileName}>Quantity</Typography>
+            </Box>
+            <Box sx={styles.quantityValueBox}>
               <ButtonIcon
+              width={isSmallScreen ? '1.5rem' : '1.8rem'}
+              height={isSmallScreen ? '1.5rem' : '1.8rem'}
+              bgColor="#DDE9FC"
+              border="1px solid #66A3FF"
+              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+              svgPath={minus}
+              onClick={() => handleQuantityChange('decrease')}
+              disabled={file.quantity <= QUANTITY_LIMITS.MIN}
+              aria-label="Decrease quantity"
+              imagePadding="0.1rem"
+              />
+              <TextField
+              value={file.quantity}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Allow only numbers and ensure it's within the limits
+                if (/^\d*$/.test(value) && Number(value) <= QUANTITY_LIMITS.MAX && Number(value) >= QUANTITY_LIMITS.MIN) {
+                handleQuantityChange('set', Number(value));
+                }
+              }}
+              type="text" // Keep as 'text'
+              inputProps={{
+                'aria-label': 'Quantity',
+              }}
+              sx={{
+                '& fieldset': {
+                border: '1px solid #66A3FF',
+                boxShadow: '0px 0px 4px 0px rgba(0, 71, 255, 1) inset',
+                borderRadius: '2rem',
+                },
+                '& input': {
+                textAlign: 'center',
+                padding: '0.5rem',
+                fontSize: isSmallScreen ? '.7rem' : '1rem',
+                height: isSmallScreen ? '1.2rem' : '1.4rem',
+                width: isSmallScreen ? '3rem' : '4rem',
+                '&:focus': {
+                  outline: 'none',
+                },
+                },
+              }}
+              />
+
+              <ButtonIcon
+              width={isSmallScreen ? '1rem' : '1.8rem'}
+              height={isSmallScreen ? '1rem' : '1.8rem'}
+              border="1px solid #66A3FF"
+              bgColor="#DDE9FC"
+              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+              svgPath={plus}
+              onClick={() => handleQuantityChange('increase')}
+              disabled={file.quantity >= QUANTITY_LIMITS.MAX}
+              aria-label="Increase quantity"
+              imagePadding={isSmallScreen ? '0.2rem' : '0.1rem'}
+              />
+            </Box>
+          </Box>
+          </Box>
+          <ButtonIcon
                 width="3rem"
                 height="3rem"
                 svgPath={cross}
                 onClick={handleRemove}
                 aria-label="Remove file"
+                 imagePadding="0.1rem"
               />
-            </Box>
-            <Box sx={styles.quantityValueBox}>
-              <ButtonIcon
-                width="2rem"
-                height="2rem"
-                bgColor="#DDE9FC"
-                border="1px solid #66A3FF"
-                style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-                svgPath={minus}
-                onClick={() => handleQuantityChange('decrease')}
-                disabled={file.quantity <= QUANTITY_LIMITS.MIN}
-                aria-label="Decrease quantity"
-              />
-              <TextField
-                value={file.quantity}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  // Allow only numbers and ensure it's within the limits
-                  if (/^\d*$/.test(value) && Number(value) <= QUANTITY_LIMITS.MAX && Number(value) >= QUANTITY_LIMITS.MIN) {
-                    handleQuantityChange('set', Number(value));
-                  }
-                }}
-                type="text" // Keep as 'text'
-                inputProps={{
-                  'aria-label': 'Quantity',
-                }}
-                sx={{
-                  '& fieldset': {
-                    border: '1px solid #66A3FF',
-                    boxShadow: '0px 0px 4px 0px rgba(0, 71, 255, 1) inset',
-                    borderRadius: '2rem',
-                  },
-                  '& input': {
-                    textAlign: 'center',
-                    padding: '0.5rem',
-                    height: '2rem',
-                    width: '6rem',
-                    '&:focus': {
-                      outline: 'none',
-                    },
-                  },
-                }}
-              />
-
-              <ButtonIcon
-                width="2rem"
-                height="2rem"
-                border="1px solid #66A3FF"
-                bgColor="#DDE9FC"
-                style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-                svgPath={plus}
-                onClick={() => handleQuantityChange('increase')}
-                disabled={file.quantity >= QUANTITY_LIMITS.MAX}
-                aria-label="Increase quantity"
-              />
-            </Box>
-          </Box>
         </Box>
 
         {/* 3D Viewer Modal */}
