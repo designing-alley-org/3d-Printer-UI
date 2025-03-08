@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { TextField, MenuItem, Box, Button, colors } from "@mui/material";
-import { Edit2, SaveIcon } from "lucide-react";
+import { TextField, MenuItem, Box, Button } from "@mui/material";
 
-// Props Type Definition
 type PhoneInputProps = {
   extension?: string;
   phoneNumber?: string;
@@ -12,6 +10,7 @@ type PhoneInputProps = {
   setEditing: (value: boolean) => void;
   handleSave: () => void;
   onPhoneChange: (value: string) => void;
+  onExtensionChange?: (value: string) => void;
 };
 
 interface CountryExtension {
@@ -40,36 +39,43 @@ const countryExtensions: CountryExtension[] = [
 
 
 const PhoneInput: React.FC<PhoneInputProps> = ({
-  extension,
+  extension = "+44",
   phoneNumber = "",
   disabled = false,
   isLoading = false,
   handleSave,
   onPhoneChange,
+  onExtensionChange,
   isEditing,
   setEditing
 }) => {
   // Input Styling
-const inputStyles = {
-  height: 50,
-  outline: "none",
-  borderRadius: 9,
-  backgroundColor: disabled ? "transparent" : "#e6f0ff",
-  colors: "black",
-  "& .MuiOutlinedInput-root": {
-    height: 50,
+  const inputStyles = {
+    height: 40,
+    outline: "none",
     borderRadius: 9,
-    boxShadow: "0px 0px 4px 0px #66a3ff inset",
-    border: "1px solid #0066ff47",
-    "&:hover": { borderColor: "#0066ff47" },
-    "&.Mui-focused": { borderColor: "#0066ff47" },
-  },
-};
+    backgroundColor: disabled ? "transparent" : "#e6f0ff",
+    colors: "black",
+    "& .MuiOutlinedInput-root": {
+      height: 40,
+      fontSize: 14,
+      borderRadius: 9,
+      boxShadow: "0px 0px 4px 0px #66a3ff inset",
+      border: "1px solid #0066ff47",
+      "&:hover": { borderColor: "#0066ff47" },
+      "&.Mui-focused": { borderColor: "#0066ff47" },
+    },
+  };
+  
   const [selectedExtension, setSelectedExtension] = useState(extension);
 
   const handleExtensionChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedExtension(event.target.value);
-  }, []);
+    const newExtension = event.target.value;
+    setSelectedExtension(newExtension);
+    if (onExtensionChange) {
+      onExtensionChange(newExtension);
+    }
+  }, [onExtensionChange]);
 
   const handlePhoneChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     onPhoneChange(event.target.value);
@@ -114,7 +120,7 @@ const inputStyles = {
         sx={{
           bgcolor: isEditing ? "#1E6FFF" : "#1E6FFF",
           borderRadius: 6,
-          padding: "0.8rem 1rem",
+          fontSize: 12,
           color: "white",
           "&:hover": {
             bgcolor: "rgb(119, 157, 223)",

@@ -6,6 +6,8 @@ import { ROUTES } from '../../routes/routes-constants';
 
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
+    marginTop: '0.5rem',
+    height: '2.5rem',
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '25px',
     '& fieldset': { borderColor: 'transparent' },
@@ -28,18 +30,18 @@ const ForgetPassword: React.FC = () => {
 
   return (
     <div className='AuthBG'>
-      <Container maxWidth={isSmallScreen ? 'xs' : 'sm'}>
-        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white', mt: 4 }}>
+      <Container maxWidth='xs'>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: '20px', background: 'white', mt: 3 }}>
          
           <Box component="form" onSubmit={handleForgotSubmit} sx={{ textAlign: 'left' }}>
-          <Typography variant={isSmallScreen ? 'h6' : 'h5'} sx={{ mb: 1, fontWeight: 500 }}>
+          <Typography  sx={{ mb: 1, fontWeight: 500,fontSize: isSmallScreen ? '1rem' : '1.2rem' }}>
               Forgot Password
             </Typography>
-            <Typography sx={{ mb: 3, color: 'text.secondary', fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>
+            <Typography sx={{ mb: 3, color: 'text.secondary', fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>
               Enter your email address to reset your password.
             </Typography>
             <Box sx={{ mb: 3 }}>
-            <Typography sx={{ mb: 1, fontSize: isSmallScreen ? '0.85rem' : '1rem' }}>Email</Typography>
+            <Typography sx={{ mb: 1, fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>Email</Typography>
               <StyledTextField
                 fullWidth
                 value={email}
@@ -52,12 +54,12 @@ const ForgetPassword: React.FC = () => {
               type="submit"
               variant="contained"
               fullWidth
-              sx={{ bgcolor: '#0066ff', borderRadius: '25px', py: 1.5, '&:hover': { bgcolor: '#0052cc' }, fontSize: isSmallScreen ? '0.9rem' : '1rem', }}
+              sx={{ bgcolor: '#0066ff', borderRadius: '25px', py: 1, '&:hover': { bgcolor: '#0052cc' }, fontSize: isSmallScreen ? '0.8rem' : '1rem', }}
             >
               Submit
             </Button>
             <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography sx={{ fontSize: isSmallScreen ? '0.85rem' : '1rem' }}>
+            <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>
                 Back to <Link to={ROUTES.LOGIN}>Login</Link>
               </Typography>
             </Box>

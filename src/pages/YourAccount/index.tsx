@@ -5,7 +5,7 @@ import { MainWrapper } from './styles';
 const Account = () => {
   return (
     <MainWrapper>
-      <h1>MY ACCOUNT</h1>
+      <h1 className="heading">MY ACCOUNT</h1>
       <AccountLayout />
       <section className="bottom">
         <span className="text">
