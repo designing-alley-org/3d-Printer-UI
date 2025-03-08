@@ -23,6 +23,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '25px',
+    height: '2.2rem',
+    fontSize: '0.9rem',
+    marginTop: '0.5rem',
     '& fieldset': {
       borderColor: 'transparent',
     },
@@ -35,10 +38,10 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     '& .MuiOutlinedInput-input, & .MuiInputLabel-outlined': {
-      fontSize: '0.75rem', // reduce text size
+      fontSize: '0.65rem',
     },
     '& .MuiInputLabel-shrink': {
-      transform: 'translate(14px, -6px) scale(0.75)', // adjust placeholder size
+      transform: 'translate(14px, -6px) scale(0.75)',
     },
   },
 }));
@@ -74,32 +77,32 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-      await dispatch(login(email, password, navigate));
+    await dispatch(login(email, password, navigate));
   };
 
-useEffect(()=>{
-  if(error) toast.error(error)
-},[error])
+  useEffect(() => {
+    if (error) toast.error(error)
+  }, [error])
 
 
   return (
     <div className='AuthBG' >
-      <Container maxWidth={isSmallScreen ? 'xs' : 'sm'}>
-        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white', mt: 4 }}>
+      <Container maxWidth={'xs'}>
+        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white' }}>
           <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
-            <Typography variant={isSmallScreen ? 'h6' : 'h5'} sx={{ mb: 1, fontWeight: 500 }}>
+            <Typography sx={{ fontWeight: 500, fontSize:  '1rem' }}>
               WELCOME TO
             </Typography>
-            <Typography variant={isSmallScreen ? 'h5' : 'h4'} sx={{ mb: 4, fontWeight: 700 }}>
+            <Typography sx={{ mb: 1, fontWeight: 700, fontSize: isSmallScreen ? '1.2rem' : '1.3rem' }}>
               3D PRINT YOUR FUTURE
             </Typography>
 
-            <Typography variant={isSmallScreen ? 'h6' : 'h5'} sx={{ mb: 2, color: '#0066ff', fontWeight: 500 }}>
+            <Typography sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize:'1rem' }}>
               Login
             </Typography>
 
-            <Box sx={{ mb: 3 }}>
-              <Typography>Email</Typography>
+            <Box sx={{ mb: 2 }}>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>Email</Typography>
               <StyledTextField
                 fullWidth
                 value={email}
@@ -110,7 +113,7 @@ useEffect(()=>{
             </Box>
 
             <Box sx={{ mb: 2 }}>
-              <Typography>Password</Typography>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>Password</Typography>
               <StyledTextField
                 fullWidth
                 type="password"
@@ -121,27 +124,21 @@ useEffect(()=>{
               />
             </Box>
 
-            <Box sx={{ textAlign: 'right', mb: 2 }}>
-              <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize: '14px' }}>
+            <Box sx={{ textAlign: 'right', mb: 1 }}>
+              <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize :'.6rem' }}>
                 Forgot Password?
               </Link>
             </Box>
 
-            <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary', fontSize: isSmallScreen ? '0.85rem' : '1rem' }}>
+            <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary', fontSize: isSmallScreen ? '0.8rem' : '.7rem' }}>
               Or Continue With
             </Typography>
 
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
-                mb: 3,
-                justifyContent: 'center',
-                '& .MuiButton-root': {
-                  fontSize: isSmallScreen ? '0.8rem' : '1rem',
-                },
-              }}
-            >
+            <Box sx={{
+              display: 'flex', gap: 1, mb: 2, justifyContent: 'center', '& .MuiButton-root': {
+                fontSize:'.6rem',
+              },
+            }}>
               <SocialButton onClick={handleGoogleLogin} startIcon={<GoogleIcon />}>
                 Google
               </SocialButton>
@@ -150,30 +147,30 @@ useEffect(()=>{
               </SocialButton>
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-              <Typography sx={{ fontSize: isSmallScreen ? '0.85rem' : '1rem' }}>
-                New Here?{' '}
-                <Link to="/signup" style={{ fontWeight: 'bold', color: '#0066ff', fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>
+            <Box sx={{ display: 'flex', gap: .6, justifyContent: 'space-between', mb: 2 }}>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem', textAlign: 'start' }}>
+                New Here?{' '} <br />
+                <Link to="/signup" style={{ fontWeight: 'bold', color: '#0066ff', fontSize: isSmallScreen ? '0.6rem' : '.9rem' }}>
                   Register Now
                 </Link>
               </Typography>
 
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              disabled={loading}
-              sx={{
-                height: '50px',
-                bgcolor: '#0066ff',
-                borderRadius: '25px',
-                py: 1.5,
-                fontSize: isSmallScreen ? '0.9rem' : '1rem',
-                '&:hover': { bgcolor: '#0052cc' },
-              }}
-            >
-              {loading ? 'Logging in...' : 'Login'}
-            </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={loading}
+                sx={{
+                  width: '11rem',
+                  height: '2.3rem',
+                  bgcolor: '#0066ff',
+                  borderRadius: '25px',
+                  fontSize: isSmallScreen ? '0.85rem' : '.7rem',
+                  '&:hover': { bgcolor: '#0052cc' },
+                }}
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </Button>
             </Box>
 
           </Box>

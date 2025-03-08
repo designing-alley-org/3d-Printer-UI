@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import PhoneInput from '../../components/Account/PhoneNumber';
 import EditableInput from '../../components/Account/EditableInput';
 
+
+
 interface IProfile {
   profileData: User;
 }
@@ -27,12 +29,23 @@ const MyProfile = ({ profileData }: IProfile) => {
       toast.error(`${field.charAt(0).toUpperCase() + field.slice(1)} cannot be empty`);
       return;
     }
+    
     try {
       setIsLoading(true);
-      const res = await toast.promise(updateUser({ [field]: formData[field] }), {
-        pending: 'Updating...',
-        success: `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully`,
-      });
+      
+      // Special case for phone_no to include extension
+      const updateData = field === 'phone_no' 
+        ? { phone_no: formData.phone_no, phone_ext: formData.phone_ext }
+        : { [field]: formData[field] };
+
+      const res = await toast.promise(
+        updateUser(updateData),
+        {
+          pending: 'Updating...',
+          success: `${field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')} updated successfully`,
+        },
+      );
+      
       dispatch(addUserDetails(res.data.data));
       setEditState(prev => ({ ...prev, [field]: false }));
     } catch (error: any) {
@@ -66,11 +79,12 @@ const MyProfile = ({ profileData }: IProfile) => {
           <p>Phone Number</p>
           <PhoneInput
             phoneNumber={formData.phone_no}
-            extension="+44"
+            extension={formData.phone_ext} 
             disabled={!editState.phone_no}
             isLoading={isLoading}
             handleSave={() => handleSave('phone_no')}
             onPhoneChange={(value) => handleInputChange('phone_no', value)}
+            onExtensionChange={(value) => handleInputChange('phone_ext', value)} 
             setEditing={(state) => setEditState(prev => ({ ...prev, phone_no: state }))}
             isEditing={!!editState.phone_no}
           />

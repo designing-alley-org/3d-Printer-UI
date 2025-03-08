@@ -27,12 +27,13 @@ const EditableInput: React.FC<InputProps> = ({
 }) => {
   // Input Styling
   const inputStyles = {
-    height: 50,
+    height: 40,
     outline: "none",
     borderRadius: 9,
     backgroundColor: disabled ? "transparent" : "#e6f0ff",
     "& .MuiOutlinedInput-root": {
-      height: 50,
+      height: 40,
+      fontSize: 14,
       borderRadius: 9,
       boxShadow: "0px 0px 4px 0px #66a3ff inset",
       border: "1px solid #0066ff47",
@@ -66,6 +67,7 @@ const EditableInput: React.FC<InputProps> = ({
         sx={{
           bgcolor: "#1E6FFF",
           borderRadius: 6,
+          fontSize: 12,
           color: "white",
           "&:hover": {
             bgcolor: "rgb(119, 157, 223)",

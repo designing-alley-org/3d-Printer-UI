@@ -8,7 +8,7 @@ export const ProfileWrapper = styled.main`
     color: black !important;
     margin: unset;
     padding-bottom: 1rem;
-    font-size: 24px;
+    font-size: 1.4rem;
   }
   .prof {
     border-bottom: 1px solid #1e6fff;
@@ -79,7 +79,7 @@ export const SideTab = styled.section`
   width: 20%;
   span {
     padding: 2rem;
-    font-size: 20px;
+    font-size: 1rem;
     cursor: pointer;
   }
   .selected {
@@ -93,7 +93,9 @@ export const SideTab = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 1rem;
+    font-size: .8rem;
+    height: 1.9rem;
     background: #0066ff;
     border-radius: 2rem;
     padding: 1rem;
@@ -111,33 +113,33 @@ export const MainComp = styled.section`
 `;
 
 export const MainWrapper = styled.main`
-  margin: 4rem;
-  h1 {
+  margin: 3rem;
+  .heading{
     color: white;
+    font-size: 2.5rem;
   }
   .bottom {
     display: flex;
-    justify-content: space-between;
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
   .text {
-    width: 60%;
+    width: 55%;
     color: white;
     padding-bottom: 1.5rem;
   }
   .contactBtn {
-    width: 30%;
+    width: 25%;
     display: flex;
     justify-content: end;
     background: white;
     position: absolute;
-    right: 0;
-    padding: 1rem;
+    right: -.2rem;
+    padding: 1rem 1rem 1rem 2rem;
     border-top-left-radius: 4rem;
     &::before {
       content: '';
       position: absolute;
-      margin-right: 33.8rem;
+      margin-right: 21.4rem;
       background-color: transparent;
       width: 2rem;
       height: 5rem;

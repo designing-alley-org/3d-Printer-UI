@@ -13,6 +13,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '25px',
+    height:'2.2rem',
+    fontSize: '0.9rem',
+    marginTop: '0.5rem',
     '& fieldset': {
       borderColor: 'transparent',
     },
@@ -25,7 +28,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     '& .MuiOutlinedInput-input, & .MuiInputLabel-outlined': {
-      fontSize: '0.75rem', 
+      fontSize: '0.65rem', 
     },
     '& .MuiInputLabel-shrink': {
       transform: 'translate(14px, -6px) scale(0.75)',
@@ -71,23 +74,23 @@ const RegisterForm: React.FC = () => {
 
   return (
     <Box className='AuthBG' >
-      <Container maxWidth={isSmallScreen ? 'xs' : 'sm'}>
-        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white', mt: 4 }}>
-          <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
-            <Typography variant={isSmallScreen ? 'h6' : 'h5'} sx={{ mb: 1, fontWeight: 500,  }}>
+      <Container maxWidth={'xs'}>
+        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white' }}>
+                  <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
+                    <Typography sx={{ fontWeight: 500, fontSize:  '1rem' }}>
               WELCOME TO
             </Typography>
-            <Typography variant={isSmallScreen ? 'h5' : 'h4'} sx={{ mb: 4, fontWeight: 700,  }}>
+            <Typography sx={{ mb: 1, fontWeight: 700, fontSize: isSmallScreen ? '1.2rem' : '1.3rem' }}>
               3D PRINT YOUR FUTURE
             </Typography>
 
-            <Typography variant={isSmallScreen ? 'h6' : 'h5'} sx={{ mb: 2, color: '#0066ff', fontWeight: 500,  }}>
+            <Typography  sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize: '1rem' }}>
               Sign Up
             </Typography>
 
             {['name', 'email', 'password'].map(field => (
               <Box key={field} sx={{ mb: 3 }}>
-                <Typography>{field.charAt(0).toUpperCase() + field.slice(1)}</Typography>
+                <Typography sx={{  fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>{field.charAt(0).toUpperCase() + field.slice(1)}</Typography>
                 <StyledTextField
                   fullWidth
                   name={field}
@@ -102,12 +105,12 @@ const RegisterForm: React.FC = () => {
               </Box>
             ))}
 
-            <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary', fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>
+            <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary', fontSize: isSmallScreen ? '0.8rem' : '.7rem' }}>
               Or Continue With
             </Typography>
 
-            <Box sx={{ display: 'flex', gap: 2, mb: 3, justifyContent: 'center','& .MuiButton-root': {
-                  fontSize: isSmallScreen ? '0.8rem' : '1rem',
+            <Box sx={{ display: 'flex', gap: 1, mb: 2, justifyContent: 'center','& .MuiButton-root': {
+                  fontSize:'.6rem',
                 }, }}>
               <SocialButton startIcon={<GoogleIcon />}>
                 Google
@@ -117,9 +120,9 @@ const RegisterForm: React.FC = () => {
               </SocialButton>
             </Box>
             
-            <Box sx={{ display: 'flex', gap:.6, justifyContent: 'center', mb: 2 }}>
-            <Typography sx={{ fontSize: isSmallScreen ? '0.85rem' : '1rem', textAlign: 'start' }}>
-              Have an account?{' '}
+            <Box sx={{ display: 'flex', gap:.6, justifyContent: 'space-between', mb: 2 }}>
+            <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem', textAlign: 'start' }}>
+              Have an account?{' '} <br />
               <Link to="/login" style={{ color: '#0066ff', textDecoration: 'none', fontWeight: 'bold' }}>
                 Login
               </Link>
@@ -130,11 +133,11 @@ const RegisterForm: React.FC = () => {
               fullWidth
               disabled={loading}
               sx={{
-                height: '50px',
+                width: '9rem',
+                height: '2.3rem',
                 bgcolor: '#0066ff',
                 borderRadius: '25px',
-                py: 1.5,
-                fontSize: isSmallScreen ? '0.9rem' : '1rem',
+                fontSize: isSmallScreen ? '0.85rem' : '.7rem',
                 '&:hover': { bgcolor: '#0052cc' },
               }}
             >
