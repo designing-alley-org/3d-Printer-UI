@@ -1,11 +1,10 @@
 import React from 'react'
 import { DesktoptabData, notificationIcon } from '../../constants'
-import './style.css'
 import { useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Notifications from '../NotificationDropdown'
 import { ROUTES } from '../../routes/routes-constants'
-
+import './MainHeader.css'
 const MianHeader = () => {
   const navigate = useNavigate();
     const [notification, setNotification] = useState<
@@ -47,13 +46,13 @@ const MianHeader = () => {
         <div className='tab'>
           <span className='notification-container'>
             <div
-              className="notificationIconConrtainer notificationDesktop"
+              className="notificationIconConrtainer "
               onClick={(e) => {
                 e.stopPropagation();
                 setShowNotification(!showNotification);
               }}
             >
-              <img src={notificationIcon} alt="notificationIcon  notification" />
+              <img src={notificationIcon} alt="notificationIcon  " />
               {notification.length > 0 && (
                 <div className="notificationBadge">
                   {notification.length}
