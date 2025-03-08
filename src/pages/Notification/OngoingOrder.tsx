@@ -65,18 +65,18 @@ const OngoingOrder = () => {
 
   // Calculate paginated orders
   const paginatedOrders = orders?.orders
-    ? orders.orders.slice().reverse().slice((pagination - 1) * ITEMS_PER_PAGE, pagination * ITEMS_PER_PAGE)
+    ? orders?.orders.slice().reverse().slice((pagination - 1) * ITEMS_PER_PAGE, pagination * ITEMS_PER_PAGE)
     : [];
 
   // Calculate total pages
   const totalPages = orders?.orders 
-    ? Math.ceil(orders.orders.length / ITEMS_PER_PAGE)
+    ? Math.ceil(orders?.orders.length / ITEMS_PER_PAGE)
     : 0;
 
   return (
     <OngoingOrderWrapper>
       <div className="header">     
-     <h2>ONGOING ORDER</h2>
+     <h3>ONGOING ORDER</h3>
       <Dropdown 
       className='dropdown'
       options={filterByDayMonthYear}

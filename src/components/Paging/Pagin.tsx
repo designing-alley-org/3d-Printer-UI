@@ -14,7 +14,7 @@ interface IPagin {
 export default function Pagin({setPagination,totalPages}: IPagin) {
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={1} >
       <Pagination
         count={totalPages}
         onChange={(_, pageNum) => setPagination(pageNum)}

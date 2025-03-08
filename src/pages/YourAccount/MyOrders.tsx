@@ -48,14 +48,6 @@ const MyOrders = () => {
   };
 
 
-  
-
-  if (isLoading) {
-    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-      <Loader size="50" color="#0066ff" />
-    </div>;
-  }
-
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -63,11 +55,15 @@ const MyOrders = () => {
   return (
     <OrderWrapper>
       <div className="orders-container">
-        <h2 className="orders-title">TOTAL ORDERS</h2>
+        <h3 className="orders-title">TOTAL ORDERS</h3>
 
-        {!orders?.order?.length ? (
+        {isLoading ? (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
+            <Loader size="35" color="#0066ff" />
+          </div>
+        ) : !orders?.order?.length ? (
           <div className="no-orders-container">
-          <p className="no-orders">No orders found.</p>
+            <p className="no-orders">No orders found.</p>
           </div>
         ) : (
           <div className="orders-list">
@@ -89,15 +85,14 @@ const MyOrders = () => {
                 )}
               </div>
             ))}
-
-            <div className="pagination">
-              <Pagin
-                setPagination={setPagination}
-                totalPages={orders.totalPages}
-              />
-            </div>
           </div>
         )}
+        <div className="pagination">
+          <Pagin
+            setPagination={setPagination}
+            totalPages={orders?.totalPages ?? 1}
+          />
+        </div>
       </div>
     </OrderWrapper>
   );

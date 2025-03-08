@@ -33,7 +33,7 @@ const NotificationLayout = () => {
                 backgroundColor:
                   item.id === activeTab ? 'white' : 'transparent',
                 position: 'absolute',
-                left: '3.4%',
+                left: '4.8%',
                 zIndex: 9,
                 borderRadius: '3rem 0rem 0rem 3rem',
               }}
