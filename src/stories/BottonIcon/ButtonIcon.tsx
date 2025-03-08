@@ -11,6 +11,7 @@ export interface ButtonIconProps
   borderRadius?: string;
   size?: 'small' | 'medium' | 'large';
   onClick?: () => void;
+  imagePadding?: string;
   [key: string]: any; // This allows for any additional props
 }
 
@@ -25,6 +26,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
   onClick,
   className,
   style,
+  imagePadding,
   ...rest // This will capture any additional props
 }) => {
   const sizeClass = `button-icon--${size}`;
@@ -45,7 +47,7 @@ export const ButtonIcon: React.FC<ButtonIconProps> = ({
       onClick={onClick}
       {...rest} // This spreads any additional props onto the button element
     >
-      <img src={svgPath} alt="icon" style={{ width: '1.3rem', height: '1.3rem' }} />
+      <img src={svgPath} alt="icon" style={{ width: '1.3rem', height: '1.3rem', padding: imagePadding }} />
     </button>
   );
 };

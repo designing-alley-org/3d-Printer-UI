@@ -49,7 +49,7 @@ const MobileHeader = () => {
             <nav className='mobile-navBar'>
                 <span className='notification-container'>
                     <div
-                        className="notificationIconConrtainer"
+                        className="noti_Mobile_IconContainer"
                         onClick={(e) => {
                             e.stopPropagation();
                             setShowNotification(!showNotification);
@@ -57,7 +57,7 @@ const MobileHeader = () => {
                     >
                         <img src={notificationIcon} alt="notificationIcon" />
                         {notification.length > 0 && (
-                            <div className="notificationBadge">
+                            <div className="noti_mobile_count">
                                 {notification.length}
                             </div>
                         )}

@@ -1,0 +1,82 @@
+
+  /*  =========================  Desktop NavHeader ==================================  */
+  .mainHeader {
+    position: relative;
+    display: flex;
+    top: 1rem;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0rem 4rem;
+    height: 4rem;
+}
+
+.mainHeader h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e3eeff;
+    cursor: pointer;
+    @media (max-width: 900px) {
+      font-size: 1rem;
+    }
+}
+
+.header-nav {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    font-size: .6rem;
+    justify-content: space-between;
+    border-radius: 32px;
+    padding: 0rem 3rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+
+  @media (max-width: 1236px) and (min-width: 1090px) {
+      font-size: .5rem;
+  }
+
+  @media (max-width: 1090px) and (min-width: 900px) {
+    padding: 0rem 2rem;
+    font-size: .5rem;
+  }
+}
+.header-nav .tab{
+    cursor: pointer;
+}
+.header-nav .tab .notificationIconConrtainer{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    margin-right: 0rem;
+    img{
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+    @media (max-width: 1236px) and (min-width: 1024px) {
+      width: 1.6rem;
+      height: 1.6rem;
+      img{
+        width: 1rem;
+        height: 1rem;
+      }
+    }
+
+  }
+
+.notificationIconConrtainer .notificationBadge{
+    font-size: .6rem;
+    width: 1rem;
+    height: 1rem;
+
+    @media (max-width: 1236px) and (min-width: 1024px) {
+      font-size: .5rem;
+      width: 0.8rem;
+      height: 0.8rem;
+      
+    }
+}
