@@ -8,6 +8,7 @@ import {
   Box,
   Typography,
   CircularProgress,
+  useMediaQuery,
 } from '@mui/material';
 import { quoteTexts } from '../../constants';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -63,7 +64,7 @@ const CardLayout = () => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const {  addressId } = useSelector((state: any) => state.address);
   const fileDetails = useSelector((state: any) => state.fileDetails.files);
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
@@ -224,9 +225,9 @@ const CardLayout = () => {
       </div>
 
       {isSaving && (
-        <Box sx={styles.loadingOverlay}>
-          <CircularProgress />
-          <Typography variant="h6" sx={{ marginTop: '1rem' }}>
+        <Box sx={{ ...styles.loadingOverlay, padding: isSmallScreen ? '1rem' : '2rem' }}>
+          <CircularProgress size={isSmallScreen ? 40 : 60} />
+          <Typography variant={isSmallScreen ? 'body1' : 'h6'} sx={{ marginTop: '1rem' }}>
             Processing...
           </Typography>
         </Box>

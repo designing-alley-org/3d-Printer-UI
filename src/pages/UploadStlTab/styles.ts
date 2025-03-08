@@ -21,6 +21,7 @@ export const infoText: SxProps = {
 
 export const unitContainer: SxProps = {
   display: 'flex',
+  alignItems: 'center',
   justifyContent: 'space-between',
   margin: '1rem 0rem',
 };
@@ -32,26 +33,31 @@ export const unitSection: SxProps = {
 
 export const unitText: SxProps = {
   color: '#0047FF',
+  
   fontFamily: 'Michroma',
   fontSize: '1rem',
+  marginRight: '1rem',
   '@media (max-width: 768px)': {
-    fontSize: '0.8rem',
+    fontSize: '0.7rem',
   }
 };
 
 export const unitButton: SxProps = {
-  height: '1.5rem',
-  fontSize: '0.8rem',
+  height: '1.7rem',
+  fontSize: '0.7rem',
   color: 'black',
   borderRadius: '50px',
-  marginLeft: '.6rem',
+  marginRight: '0.7rem',
   backgroundColor: '#EAEEFF',
   fontFamily: 'Montserrat',
   border: 'none',
   transition: 'background-color 0.3s ease',
   '@media (max-width: 768px)': {
-    fontSize: '0.7rem',
-  }
+    fontSize: '0.5rem',
+    marginRight: '0.5rem',
+      height: '1rem'
+  },
+
 };
 
 
@@ -71,7 +77,7 @@ export const fileText: SxProps = {
   fontWeight: 400,
   color: '#0047FF',
   '@media (max-width: 768px)': {
-    fontSize: '0.9rem',
+    fontSize: '0.7rem',
   }
 };
 
@@ -97,6 +103,7 @@ export const filesBox: SxProps = {
   '@media (max-width: 768px)': {
     width: '1.5rem',
     height: '1.5rem',
+    marginLeft: '.5rem',
   }
 };
 
@@ -130,8 +137,8 @@ export const uploadBox: SxProps = {
   },
 
   '@media (max-width: 768px)': {
-    width: '3rem',
-    height: '3rem',
+    width: '2.5rem',
+    height: '2.5rem',
     margin: '.4rem 0',
   }
 };
@@ -144,8 +151,8 @@ export const hiddenInput: SxProps = {
 };
 
 export const uploadIcon: SxProps = {
-  width: '1.8rem',
-  height: '1.8rem',
+  width: '1.5rem',
+  height: '1.5rem',
   fontSize: '2.5rem',
   position: 'absolute',
   top:0,
@@ -153,6 +160,7 @@ export const uploadIcon: SxProps = {
   left:0,
   right:0,
   margin: 'auto',
+  
 };
 
 export const uploadText: SxProps = {
@@ -162,7 +170,7 @@ export const uploadText: SxProps = {
   textAlign: 'center',
   color: '#1E6FFF',
   '@media (max-width: 768px)': {
-    fontSize: '1rem',
+    fontSize: '.8rem',
   }
 };
 
@@ -178,6 +186,7 @@ export const fileCardContainer: SxProps = {
   flexDirection: 'column',
   '@media (max-width: 768px)': {
     height: '15rem',
+    padding: '.3rem .5rem',
   }
 };
 

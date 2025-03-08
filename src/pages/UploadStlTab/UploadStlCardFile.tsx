@@ -298,7 +298,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 textAlign: 'center',
                 padding: '0.5rem',
                 fontSize: isSmallScreen ? '.7rem' : '1rem',
-                height: isSmallScreen ? '1.2rem' : '1.4rem',
+                height: isSmallScreen ? '1rem' : '1.4rem',
                 width: isSmallScreen ? '3rem' : '4rem',
                 '&:focus': {
                   outline: 'none',
@@ -308,8 +308,8 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               />
 
               <ButtonIcon
-              width={isSmallScreen ? '1rem' : '1.8rem'}
-              height={isSmallScreen ? '1rem' : '1.8rem'}
+              width={isSmallScreen ? '.5rem' : '1.8rem'}
+              height={isSmallScreen ? '.5rem' : '1.8rem'}
               border="1px solid #66A3FF"
               bgColor="#DDE9FC"
               style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
