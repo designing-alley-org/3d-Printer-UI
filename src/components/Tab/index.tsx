@@ -6,6 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { notificationIcon } from '../../constants';
 import { useState, useEffect, useRef } from 'react';
 import Notifications from '../NotificationDropdown/index.tsx';
+import { io } from 'socket.io-client';
+import api from '../../axiosConfig.ts';
+
 
 interface ITabContainerProps {
   tabs: Tab[];
@@ -14,19 +17,18 @@ interface ITabContainerProps {
   insideTab?: boolean;
 }
 
+const socket = io(import.meta.env.VITE_AWS_URL as string);
+
 const TabComponent = (props: ITabContainerProps) => {
   const { tabs, numberId, activeTabs } = props;
   const navigate = useNavigate();
   const [notification, setNotification] = useState<
-    { id: number; message: string; count: number }[]
-  >([
-    { id: 1, message: 'Quote', count: 1 },
-    { id: 2, message: 'General', count: 2 },
-    { id: 3, message: 'Order Updates', count: 1 },
-  ]);
+  { orderId: string; dispute_type: string; reason: string; status: string }[]
+  >([]);
   const [showNotification, setShowNotification] = useState(false);
   const { orderId } = useParams();
   const notificationRef = useRef<HTMLDivElement>(null);
+  
 
   const handleTabClick = (index: number, tab: any, active: number) => {
     if (index < active) {
@@ -52,6 +54,41 @@ const TabComponent = (props: ITabContainerProps) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showNotification]);
+
+  useEffect(() => {
+    async function fetchNotications() {
+      try {
+        const response = await api.get('/api/v1/get-all-notify');
+        setNotification(response.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchNotications();
+  }, []);
+
+  useEffect(() => {
+    // Notify the server that the admin has connected
+    socket.emit('userConnected');
+
+    // Listen for new disputes and update the list
+    socket.on('QuoteNegotiateuserNotification', (data) => {
+      // console.log('New dispute received:', data);
+      setNotification((prevDisputes) => [...prevDisputes, data]);
+    });
+    socket.on('quoteNotification', (data) => {
+      // console.log('New order received:', data);
+      setNotification((prevOrders) => [...prevOrders, data]);
+    });
+
+
+    return () => {
+      socket.off('newDispute');
+      socket.off('newOrder');
+
+    };
+  }, []);
+
 
   return (
     <TabWrapper>

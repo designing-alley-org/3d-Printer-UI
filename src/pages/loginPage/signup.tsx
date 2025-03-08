@@ -94,7 +94,7 @@ const RegisterForm: React.FC = () => {
             ))}
             <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary' }}>Or Continue With</Typography>
             <Box sx={{ display: 'flex', gap: 2, mb: 3, justifyContent: 'center' }}>
-              <SocialButton onClick={() => window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self')} startIcon={<GoogleIcon />}>
+              <SocialButton onClick={() => window.open(`${import.meta.env.VITE_AWS_URL}/auth/google`, '_self')} startIcon={<GoogleIcon />}>
                 Google
               </SocialButton>
               <SocialButton startIcon={<FacebookIcon />}>Facebook</SocialButton>

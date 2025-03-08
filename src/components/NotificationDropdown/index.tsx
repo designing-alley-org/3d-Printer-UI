@@ -1,54 +1,65 @@
-import CurverCard from '../MainCurveCard'
-import Button from '../../stories/button/Button'
-import './style.css'
-import { useNavigate } from 'react-router-dom'
+import CurverCard from '../MainCurveCard';
+import Button from '../../stories/button/Button';
+import './style.css';
+import { useNavigate } from 'react-router-dom';
 
 interface INotification {
-  notification: { id: number; message: string; count: number }[]
-  setShowNotification: (value: boolean) => void
+  notification: {
+    orderId: string;
+    dispute_type: string;
+    reason: string;
+    status: string;
+    message: string;
+  }[];
+  setShowNotification: (value: boolean) => void;
 }
 
-const Notifications = ({ notification, setShowNotification }: INotification) => {
-
-
+const Notifications = ({
+  notification,
+  setShowNotification,
+}: INotification) => {
   const navigate = useNavigate();
 
   const navigateToNotification = () => {
-    navigate('/notification')
-    setShowNotification(false)
+    navigate('/notification');
+    setShowNotification(false);
   };
 
   return (
-    <CurverCard className='notificationCard'>
-      <div className='notificationWarper'>
-        <span className='notificationNumber'>{notification.length}</span>
+    <CurverCard className="notificationCard">
+      <div className="notificationWarper">
+        <span className="notificationNumber">{notification.length}</span>
         <p>New Notifications</p>
-        <div className='notificationList'>
+        <div className="notificationList">
           {notification.map((item, index) => (
             <div key={index} className="notificationItem">
-              <div className='notificationContent'>
+              <div className="notificationContent">
                 <p> {item.message}</p>
-                <span> {item.count}</span>
+                {/* <span> {item.dispute_type}</span> */}
               </div>
             </div>
           ))}
         </div>
       </div>
-      <div className='button'>
+      <div className="button">
         <Button
-          label="ignore"
-          onClick={() => { setShowNotification(false) }}
-          color=' #0066FF'
+          label="Ignore"
+          onClick={() => {
+            setShowNotification(false);
+          }}
+          color=" #0066FF"
           className="ignore-btn"
         />
         <Button
-          label={'show'}
-          onClick={() => { navigateToNotification() }}
+          label={'Show'}
+          onClick={() => {
+            navigateToNotification();
+          }}
           className="show-btn"
         />
       </div>
     </CurverCard>
-  )
-}
+  );
+};
 
-export default Notifications
+export default Notifications;
