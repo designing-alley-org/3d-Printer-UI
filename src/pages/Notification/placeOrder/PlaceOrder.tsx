@@ -36,7 +36,7 @@ const PlaceOrder = () => {
       <h3>PLACED ORDER</h3>
       {isLoading ? (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-          <Loader size="40" color="#0066ff" />
+          <Loader size="30" color="#0066ff" />
         </div>
       ) : allPlacedOrder && allPlacedOrder.length > 0 ? (
         allPlacedOrder.map((item: any) => (

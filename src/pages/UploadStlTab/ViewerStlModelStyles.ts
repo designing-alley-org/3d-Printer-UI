@@ -23,8 +23,8 @@ export const modalContent = {
   padding: '2rem',
   borderRadius: '1.9rem',
   position: 'relative',
-  width: '66.2rem',
-  height: '40.7rem',
+  width: '60.2rem',
+  height: '35.7rem',
   border: '1px solid #FFFFFF',
   boxShadow: '0px 4px 4px 0px #0047FF',
 
@@ -89,6 +89,6 @@ export const navigationContainer = {
 
 export const fileName = {
   fontFamily: 'Michroma',
-  fontSize: '2rem',
+  fontSize: '1.4rem',
   color: '#0066FF',
 };

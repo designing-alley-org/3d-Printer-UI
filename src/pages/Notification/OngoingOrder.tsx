@@ -12,11 +12,9 @@ import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
 import { filterByDayMonthYear } from '../../utils/OptionDropDowns';
 
 interface Order {
-  orders: {
-    _id: string;
-    order_status: string;
-    updatedAt: string;
-  }[]
+  _id: string;
+  order_status: string;
+  updatedAt: string;
 }
 
 interface Option {
@@ -90,7 +88,7 @@ const OngoingOrder = () => {
       {!orders?.orders || orders?.orders.length === 0 ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
           {orders === null ? (
-            <Loader size="50" color="#0066ff" />
+            <Loader size="30" color="#0066ff" />
           ) : (
             <p>No ongoing orders found</p>
           )}
