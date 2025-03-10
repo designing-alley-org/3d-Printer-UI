@@ -83,8 +83,8 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
   return (
     <div className="relative" style={style}>
       {loading && (
-        <div className="loading-overlay">
-         <Loader color='#1e6fff'  size={isSmallScreen ? 30 : 50} />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.8)', zIndex: 9999 }}>
+          <Loader color='#1e6fff' size={isSmallScreen ? 30 : 50} />
         </div>
       )}
       {fileBlobUrl && (

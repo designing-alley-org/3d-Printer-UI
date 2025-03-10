@@ -30,6 +30,23 @@
       color: #525e86;
     }
   }
+
+  @media screen and (max-width: 768px) {
+    .title {
+      img {
+        width: .9rem;
+        height: .9rem;
+      }
+      h2 {
+        font-size: 0.8rem;
+      }
+    }
+    .sub-title {
+      h2 {
+        font-size: 0.8rem;
+      }
+    }
+  }
 }
 .accordion-content {
   display: flex;
@@ -41,6 +58,12 @@
   border-radius: 20px;
   position: relative;
   padding: 16px;
+
+  .scale-input{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .dropdown-wrapper {
     width: unset;
     margin-right: 8px;
@@ -52,7 +75,6 @@
   .infill {
     .dropdown-wrapper {
       .dropdown-list {
-
         position: fixed;
         max-height: unset;
         width: 8%;
@@ -60,7 +82,7 @@
       }
       .dropdown-item {
         background-color: #dde9fc;
-        padding: .4rem 0 ;
+        padding: 0.4rem 0;
         display: flex;
         justify-content: center;
       }
@@ -71,13 +93,13 @@
     flex-direction: column;
     width: 100%;
     .dropdown-wrapper {
-      .dropdown-header{
-        font-size: .8rem; 
+      .dropdown-header {
+        font-size: 0.8rem;
         height: 2.8rem;
-        .dropdown-header-title{
-          .arrow{
-            width: .3rem;
-            height: .3rem;
+        .dropdown-header-title {
+          .arrow {
+            width: 0.3rem;
+            height: 0.3rem;
           }
         }
       }
@@ -85,32 +107,26 @@
     .scaling {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      
     }
   }
-
   .scale p {
     font-size: 0.8rem;
     color: #235ab0;
   }
-
-  
-
   .revert {
     display: flex;
     align-items: end;
     flex-direction: column;
     justify-content: end;
     margin-top: 1rem;
-    button{
-      font-size: .8rem;
+    button {
+      font-size: 0.8rem;
       height: 1rem;
     }
   }
-
   .revert p {
     font-size: 0.5rem;
-    margin-right: .8rem;
+    margin-right: 0.8rem;
     color: #235ab0;
   }
   .btn {
@@ -125,7 +141,7 @@
     color: #2359b0;
     background-color: #ffffff;
     font-family: 'Montserrat';
-    font-size: .8rem;
+    font-size: 0.8rem;
     border: 1px solid #dde9fc;
     transition: background-color 0.3s ease;
   }
@@ -162,14 +178,12 @@
     background-color: #0047ff;
     color: #fff;
   }
-
   .no-data {
     display: flex;
     font-size: small;
     margin-left: 1rem;
     color: #235ab0;
   }
-
   .btn-color {
     width: 1rem;
     height: 1rem;
@@ -185,13 +199,11 @@
     input {
       height: 1.3rem;
       color: #235ab0;
-      /* Hide spinner buttons for Chrome, Safari, Edge, Opera */
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
-      /* Hide spinner buttons for Firefox */
       &[type='number'] {
         -moz-appearance: textfield;
       }
@@ -202,4 +214,101 @@
       box-shadow: 0px 0px 4px 0px #0047ff inset;
     }
   }
+  @media screen and (max-width: 768px) {
+    padding: 15px;
+
+    .scale-input{
+      .dropdown-wrapper {
+        .dropdown-header{
+          height: 2rem;
+          width: 4rem;
+          font-size: .6rem;
+        }
+        .dropdown-list {
+          border-radius: 15px;
+          top: 2.3rem;
+        }
+        .dropdown-item {
+          font-size: 0.5rem;
+        }
+      }
+    }
+    .scale p {
+      font-size: 0.6rem;
+      color: #235ab0;
+    }
+    .fields {
+      > div {
+        width: 4rem;
+        display: flex;
+      }
+      input {
+        height: 1.3rem;
+        color: #235ab0;
+      }
+    }
+    .revert .btn {
+      padding:0.7rem 0.1rem;
+      width: 6.5rem;
+      font-size: 0.5rem;
+    }
+    .revert p {
+      font-size: 0.43rem;
+      margin-right: 0.4rem;
+    }
+    .btn {
+      margin: 2px;
+      padding:0.7rem 0.6rem;
+      height: 0.9rem;
+      font-size: 0.6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .active {
+      margin: 2px;
+      padding:0.7rem 0.1rem;
+      height: 0.9rem;
+      font-size: 0.6rem;
+      width: fit-content;
+    }
+    .btn-color {
+      width: 0.8rem;
+      height: 0.8rem;
+    }
+
+    .check-box {
+      width: 1.2rem;
+      height: 2.2rem;
+      img{
+        width: 0.7rem;
+        height: 0.7rem;
+      }
+    }
+
+
+    .infill {
+      .dropdown-wrapper {
+        button{
+          font-size: 0.6rem;
+        }
+        .dropdown-list {
+          position: fixed;
+          max-height: unset;
+          width: 15%;
+          z-index: 3;
+          border-radius: 15px;
+        }
+        .dropdown-item {
+          background-color: #dde9fc;
+          padding: 0.4rem 0;
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+    
+  }
 }
+

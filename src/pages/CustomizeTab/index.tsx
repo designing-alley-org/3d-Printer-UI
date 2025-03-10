@@ -271,6 +271,7 @@ const CustomizeTab: React.FC = () => {
             <span className="file">Files</span>
             <span className="count">{files.length}</span>
           </span>
+          <div className="file-list">
           <UploadedFile>
             {fileDetails.map((file : any ) => (
               <span
@@ -330,13 +331,14 @@ const CustomizeTab: React.FC = () => {
               </span>
             ))}
           </UploadedFile>
+          </div>
         </Files>
         <Customize>
           <div className="customize-container">
             {
               activeFileId===null ? 
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-              <h3>Please select a file to customize</h3>
+              <div className='no-file'>
+              <h3 className='no-file-title'>Please select a file to customize</h3>
               </div> : null 
             }
             {activeFileId && customize.map((item) => (

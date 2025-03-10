@@ -37,6 +37,7 @@ export const Filescomponent = styled.section`
   height: 100%;
   @media (max-width: 768px) {
     flex-direction: column;
+    width: 100%;
   }
 `;
 export const LoadingWrapper = styled.section`
@@ -88,14 +89,14 @@ export const Files = styled.article`
 
   @media (max-width: 768px) {
     width: 100%;
-    overflow: hidden;
     border-radius: 11px;
     margin-right: 0;
     height: 10rem;
+    overflow-y: hidden;
     .header {
-    padding: 0  0.5rem;
+      padding: 0 0.5rem;
       .file {
-        margin: 0 .2rem;
+        margin: 0 0.2rem;
         font-size: 1rem;
       }
       .count {
@@ -105,6 +106,27 @@ export const Files = styled.article`
         font-size: 0.8rem;
       }
     }
+      .file-list{
+      width: 100%;
+      display: flex;
+      overflow-y: scroll;
+      &::-webkit-scrollbar {
+        width: 100%;
+        height: 0.5rem;
+        background: rgb(218, 222, 228);
+        border-radius: 0.25rem;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: rgb(0, 115, 255);
+        border-radius: 0.25rem;
+      }
+      .upload-file {
+      width: 14.5rem;
+      display: flex;
+      height: 5rem;
+      margin: 3px 5px;
+    }
+      }
   }
 `;
 
@@ -126,15 +148,8 @@ export const UploadedFile = styled.section`
   }
   @media (max-width: 768px) {
     flex-direction: row;
-    overflow: hidden; 
-    width: 32rem;
-    gap: 1rem;
     padding: 0.5rem;
-    .upload-file {
-      width: 100%;
-      height: 5rem;
-      margin: 3px 1px;
-    }
+    
   }
 `;
 export const Model = styled.section`
@@ -178,8 +193,8 @@ export const Model = styled.section`
   @media (max-width: 768px) {
     width: 4rem;
     height: 4.5rem;
-     margin: 3px 5px;
-     border-radius: 8px;
+    margin: 3px 5px;
+    border-radius: 10px;
     .model-preview {
       width: 5rem;
       height: 4rem;
@@ -191,7 +206,8 @@ export const Model = styled.section`
         width: 1.1rem;
         height: 1.1rem;
       }
-    }}
+    }
+  }
 `;
 
 export const ModelName = styled.section`
@@ -212,12 +228,13 @@ export const ModelName = styled.section`
   @media (max-width: 768px) {
     margin-top: 0.4rem;
     margin-left: 0.2rem;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     &::after {
       font-size: 0.5rem;
       bottom: 0.4rem;
       left: 5rem;
-}}
+    }
+  }
 `;
 
 export const CustomizeBox = styled.section`
@@ -237,7 +254,7 @@ export const CustomizeBox = styled.section`
     width: 1rem;
     height: 1rem;
   }
-    @media (max-width: 768px) {
+  @media (max-width: 768px) {
     bottom: 0.3rem;
     right: 0.2rem;
     height: 1.5rem;
@@ -246,13 +263,21 @@ export const CustomizeBox = styled.section`
       margin: 0 1px;
       width: 0.8rem;
       height: 0.8rem;
-}}
+    }
+  }
 `;
 
 export const Customize = styled.article`
   display: flex;
   flex-direction: column;
   width: 60%;
+
+  .no-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .customize-container {
     overflow-y: auto;
     height: 30rem;
@@ -292,15 +317,48 @@ export const Customize = styled.article`
     border-radius: 40px;
     font-size: 1.1rem;
     margin-bottom: -3rem;
-    &:hover {
-      transform: scale(1.01);
-    }
 
     .loader {
       position: absolute;
       right: -30px;
       top: 50%;
       transform: translateY(-50%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    position: relative;
+
+    .no-file {
+      h3 {
+        margin-top: 5rem;
+        font-size: 0.7rem;
+      }
+    }
+    .customize-container {
+      height: 20rem;
+    }
+    .weight-section {
+      font-size: 0.8rem;
+    }
+    .apply-button {
+      z-index: 1;
+      position: absolute;
+      bottom: -0.5rem;
+      left: -0.2rem;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.46rem;
+      margin-bottom: -2rem;
+      &:hover {
+        transform: scale(1.01);
+      }
+      .loader {
+        position: absolute;
+        right: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
   }
 `;
