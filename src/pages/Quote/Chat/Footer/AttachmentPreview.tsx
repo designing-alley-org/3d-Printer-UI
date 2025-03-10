@@ -2,6 +2,7 @@
 import "./footer.css";
 import { cross } from '../../../../constants';
 import ButtonIcon from '../../../../stories/BottonIcon/ButtonIcon';
+import { useMediaQuery } from "@mui/material";
 
 interface AttachmentPreviewProps {
   attachments: {
@@ -18,6 +19,8 @@ export default function AttachmentPreview({
   onRemove,
   title,
 }: AttachmentPreviewProps) {
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+
   return (
     <div className="file-container">
       {attachments.map((attachment, index) => (
@@ -25,8 +28,8 @@ export default function AttachmentPreview({
           <p>{`${title}: ${attachment.name}`}</p>
           <ButtonIcon
             svgPath={cross}
-            height="2rem"
-            width="2rem"
+            height= {isSmallScreen ? '1.5rem' : '2rem'}
+            width= {isSmallScreen ? '1.5rem' : '2rem'}
             onClick={() => onRemove(index)}
           />
         </div>

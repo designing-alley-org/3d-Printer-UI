@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Divider, Typography, TextField } from '@mui/material';
+import { Box, Divider, Typography, TextField, useMediaQuery } from '@mui/material';
 import { TemplateWrapper } from './styles';
 import Button from '../../../stories/button/Button';
 import './style.css';
@@ -48,6 +48,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
   const { orderId } = useParams<{ orderId: string }>();
   const [showNegotiate, setShowNegotiate] = useState<boolean>(false);
   const [updatedQuote, setUpdatedQuote] = useState<QuoteData | null>(null);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   const handlePriceChange = (index: number, newPrice: string): void => {
     if (quote) {
@@ -120,18 +121,18 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           pr: '1rem',
         }}
       >
-        <Typography variant="body1" sx={{ color: '#2359B0', pt: '1rem' }}>
+        <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '1rem', color: '#2359B0', pt: isSmallScreen ? '0rem' : '1rem' }}>
           Quote Chat
         </Typography>
         <Box
           sx={{
             display: 'flex',
             gap: 2,
-            maxWidth: '36%',
+            maxWidth: isSmallScreen ? '52%' : '36%',
             overflowX: 'auto',
             height: '100%',
             '&::-webkit-scrollbar': {
-              height: '0.7rem',
+              height: isSmallScreen ? '0.3rem' : '0.7rem',
               cursor: 'pointer',
             },
           }}
@@ -149,7 +150,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
             >
               <Box
                 sx={{
-                  width: '9rem',
+                  width: isSmallScreen ? '5rem' : '9rem',
                   borderBottom: `10px solid ${item._id === quote?._id ? '#1E6FFF' : '#F1F6FE'}`,
                   backgroundColor:
                     item._id === quote?._id ? '#66A3FF' : 'white',
@@ -159,7 +160,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 }}
               ></Box>
               <Typography
-                sx={{ textAlign: 'center', width: '10rem', my: '1rem', fontSize: '0.8rem' }}
+                sx={{ textAlign: 'center', width: isSmallScreen ? '5rem' : '10rem', my: '1rem', fontSize: isSmallScreen ? '0.6rem' : '0.8rem' }}
               >
                 Quote {index + 1}
               </Typography>
@@ -167,7 +168,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           ))}
         </Box>
       </Box>
-      <Typography variant="h1" sx={{ color: '#2359B0', mb: 1 }}>
+      <Typography variant={isSmallScreen ? 'body2' : 'h1'} sx={{ color: '#2359B0', mb: 1 }}>
         Quote
       </Typography>
 
@@ -181,9 +182,9 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               gridTemplateColumns: showNegotiate
                 ? 'repeat(4, 1fr)'
                 : 'repeat(3, 1fr)',
-              gap: 4,
+              gap: { xs: 2, md: 4 },
               position: 'relative',
-              padding: '1rem',
+              padding: isSmallScreen ? '1rem 0.5rem' : '1rem',
               maxHeight: '15rem',
               overflowY: 'auto',
               mr: '1rem',
@@ -192,23 +193,23 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
             <Box
               sx={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: isSmallScreen ? '' : 'space-between',
               }}
             >
-              <Typography variant="body2" fontWeight="bold">
+              <Typography sx={{ fontSize: isSmallScreen ? '0.6rem' : '.9rem', mr: isSmallScreen ? 2 : '' }} fontWeight="bold">
                 Files
               </Typography>
               <Box
                 sx={{
-                  height: 27,
-                  width: 27,
+                  height: { xs: 15, md: 27 },
+                  width: { xs: 15, md: 27 },
+                  fontSize: isSmallScreen ? '0.6rem' : '0.8rem',
                   backgroundColor: '#66A3FF',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'white',
-                  fontSize: '0.8rem',
                 }}
               >
                 {quote.files.length}
@@ -217,7 +218,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
             <Divider
               sx={{
                 position: 'absolute',
-                left: showNegotiate ? '25%' : '33%',
+                left: { xs: '40%', md: showNegotiate ? '25%' : '33%' },
                 background: '#66A3FF',
               }}
               orientation="vertical"
@@ -228,20 +229,20 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 justifyContent: 'space-between',
               }}
             >
-              <Typography variant="body2" fontWeight="bold">
+            <Typography sx={{ fontSize: isSmallScreen ? '0.6rem' : '.9rem' }} fontWeight="bold">
                 Quantity
               </Typography>
               <Box
                 sx={{
-                  height: 27,
-                  width: 27,
+                  height: { xs: 15, md: 27 },
+                  width: { xs: 15, md: 27 },
+                  fontSize: isSmallScreen ? '0.6rem' : '0.8rem',
                   backgroundColor: '#66A3FF',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'white',
-                  fontSize: '0.8rem',
                 }}
               >
                 {quote.files.length}
@@ -256,7 +257,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               orientation="vertical"
             />
             <Typography
-              variant="body2"
+            sx={{ fontSize: isSmallScreen ? '0.6rem' : '.9rem' }}
               fontWeight="bold"
               textAlign={showNegotiate ? 'right' : 'right'}
             >
@@ -288,20 +289,20 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 <Box sx={{ display: 'flex', gap: 4 }}>
                   <Box
                     sx={{
-                      height: 27,
-                      width: 27,
+                      height: { xs: 15, md: 27 },
+                      width: { xs: 15, md: 27 },
+                      fontSize: isSmallScreen ? '0.6rem' : '0.8rem',
                       backgroundColor: '#66A3FF',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       color: 'white',
-                      fontSize: '0.8rem',
                     }}
                   >
                     {index + 1}
                   </Box>
-                  <Typography variant="body2">{item.fileName?.split('-')[0]}</Typography>
+                  <Typography sx={{ fontSize: isSmallScreen ? '0.6rem' : '.9rem'}}>{item.fileName?.split('-')[0]}</Typography>
                 </Box>
                 <Typography variant="body2" textAlign="center">
                   {item.quantity}
@@ -327,7 +328,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
             ))}
           </Box>
 
-          <Divider sx={{ mb: 2, background: '#66A3FF' }} />
+          <Divider sx={{ mb: { xs: 0, md: 2 }, background: '#66A3FF' }} />
 
           {/* Summary Rows */}
           <Box
@@ -337,16 +338,25 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 ? 'repeat(4, 1fr)'
                 : 'repeat(3, 1fr)',
               gap: 4,
-              mb: 2,
+              mb: { xs: 0, md: 2 },
               p: '1rem',
               mr: '1rem',
             }}
           >
             {summaryRows.map(({ label, value, updatedValue }) => (
               <React.Fragment key={label}>
-                <Typography variant="body2">{label}</Typography>
                 <Typography
                   variant="body2"
+                  sx={{
+                    fontSize: { xs: '0.7rem', md: '1rem' },
+                  }}
+                >
+                  {label}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: { xs: '0.7rem', md: '1rem' },
+                  }}
                   gridColumn="2 / span 2"
                   textAlign="right"
                 >
@@ -361,7 +371,12 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
             ))}
           </Box>
 
-          <Divider sx={{ mb: 2, background: '#66A3FF' }} />
+          <Divider
+            sx={{
+              mb: { xs: 1, md: 2 },
+              background: '#66A3FF',
+            }}
+          />
 
           {/* Total Row */}
           <Box
@@ -371,16 +386,19 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 ? 'repeat(4, 1fr)'
                 : 'repeat(3, 1fr)',
               gap: 2,
-              mb: 4,
-              p: '1rem',
-              mr: '1rem',
+              mb: { xs: 2, md: 4 },
+              p: { xs: '0.5rem', md: '1rem' },
+              mr: { xs: '0.5rem', md: '1rem' },
             }}
           >
-            <Typography variant="body1" fontWeight="bold">
+            <Typography
+              variant={isSmallScreen ? 'body2' : 'body1'}
+              fontWeight="bold"
+            >
               Total
             </Typography>
             <Typography
-              variant="body1"
+              variant={isSmallScreen ? 'body2' : 'body1'}
               gridColumn="2 / span 2"
               textAlign="right"
               sx={{ fontWeight: '800' }}
@@ -392,7 +410,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               ).toFixed(2)}
             </Typography>
             {showNegotiate && (
-              <Typography variant="body1" fontWeight="bold" textAlign="right">
+              <Typography variant={isSmallScreen ? 'body2' : 'body1'} fontWeight="bold" textAlign="right">
                 $
                 {(
                   (updatedQuote?.totalPrice ?? 0) +
@@ -422,7 +440,10 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                   alignItems: 'center',
                 }}
               >
-                <Typography variant="body2" fontWeight="bold">
+                <Typography
+                  fontWeight="bold"
+                  sx={{ fontSize: isSmallScreen ? '0.8rem' : '1rem' }}
+                >
                   Don’t Like our pricing? Click on negotiate ; to negotiate
                   pricing Details Live
                 </Typography>
@@ -434,14 +455,20 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 </span>
               </Box>
             ) : (
-              <h3>Sent to Admin for Approval!</h3>
+              <Typography variant={isSmallScreen ? 'body1' : 'h1'} sx={{ color: '#2359B0' }}>
+                Sent to Admin for Approval!
+              </Typography>
             )}
 
             {quote.approvedBy?.role === 'user' || quote?.isClosed ? (
               quote?.approvedBy?.role === 'user' ? (
-                <h3>Quote Approved</h3>
+                <Typography variant={isSmallScreen ? 'body1' : 'h1'} sx={{ color: '#2359B0' }}>
+                  Quote Approved
+                </Typography>
               ) : (
-                <h3>Quote Negotiated </h3>
+                <Typography variant={isSmallScreen ? 'body1' : 'h1'} sx={{ color: '#2359B0',mb:2 }}>
+                  Quote Negotiated
+                </Typography>
               )
             ) : quote.approvedBy ? (
               <span className="approve">

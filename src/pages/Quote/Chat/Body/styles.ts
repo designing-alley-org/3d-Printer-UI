@@ -32,7 +32,15 @@ export const Message = styled.div<MessageProps>`
   border:${({ $sender }) => ($sender === 'admin' ? '1px solid #1E6FFF' : 'none')};
   padding: 0.5rem;
   font-size: 0.8rem;
+  word-break: break-word;
 
+  @media (max-width: 768px) {
+    font-size: 0.5rem;
+    margin: 0.2rem;
+    max-width: 100%;
+    border-radius: 0.5rem;
+     padding: 0.3rem;
+  }
 `;
 interface MessageIconProps {
   $bgColor: string;
@@ -48,4 +56,9 @@ export const MessageIcon = styled.div<MessageIconProps>`
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
+  @media (max-width: 768px) {
+    font-size: 0.6rem;
+    width: 1.3rem;
+    height: 1.3rem;
+  }
 `;
