@@ -18,72 +18,15 @@
   width: -webkit-fill-available;
   font-size: 1rem;
   cursor: pointer;
-  @media screen and (max-width: 1000px){
+}
+@media screen and (max-width: 590px) {
+  .tabrow li,
+  .insideTab li {
     font-size: 0.8rem;
+    flex: 1; /* Make them fill available space */
   }
 }
-.tabrow li:first-child {
-  background-color: unset;
-  border-top: unset;
-  color: white;
-  .tabContent {
-    padding: 10px;
-    &::after {
-      content: '';
-      position: absolute;
-      margin-top: 0.5rem;
-      margin-left: 23.1%;
-      width: 3.05rem;
-      height: 4rem;
-      rotate: 180deg;
-      border-bottom-left-radius: 9rem;
-      box-shadow: -1px 2rem 0px 0px #ffffff;
-    }
-  }
-}
-.tabrow li:nth-child(2) {
-  border-bottom-left-radius: 3rem;
-}
-.tabrow li:nth-child(4) {
-  width: 4rem;
-}
-.tabrow li:first-child,
-li:nth-child(4) {
-  .top-border {
-    display: none;
-  }
-}
-.insideTab li:nth-child(3) {
-  p {
-    padding: unset !important;
-  }
-}
-.tabrow li:nth-child(2),
-li:nth-child(3),
-li:nth-child(5) {
-  p {
-    padding: 1rem;
-  }
-}
-.tabrow li.selected:last-of-type::after {
-  right: 10px;
-  border-top-right-radius: 6px;
-  border-width: 1px 1px 0px 0px;
-  box-shadow: 2px 0px 0 #ffffff;
-}
-.tabrow li:first-child::before {
-  display: none;
-}
-.tabrow li:last-child::after {
-  display: none;
-}
-.tabrow li:first-child {
-  border-top-left-radius: 24px;
-}
-.tabrow li span p {
-  margin: unset;
-  /* transform: skew(-40deg); */
-}
+
 
 .tabContent {
   display: flex;

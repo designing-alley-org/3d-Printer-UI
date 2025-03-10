@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './styles.css';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
 import { sizeOption, info, group } from '../../../constants';
@@ -31,7 +31,7 @@ interface AccordionProps {
   setSelectUnit: (unit: string) => void;
   selectedInfill: number;
   setSelectInfill: (infill: number) => void;
-  actualUnit: string; 
+  actualUnit: string;
 }
 
 interface PrinterData {
@@ -140,7 +140,7 @@ const Accordion: React.FC<AccordionProps> = ({
         selectedMat,
         selectedTech,
         setPrinterData,
-        setPrinterMessage
+        setPrinterMessage,
       });
     }
   }, [selectedMat, selectedTech]);
@@ -267,19 +267,17 @@ const Accordion: React.FC<AccordionProps> = ({
   }));
   console.log(selectedInfill);
 
-if (!selectedFile) {
-  return (
-    <div className="accordion">
-      <div className="accordion-header">
-        <span className="title">
-          <h2>Please select a file then proceed</h2>
-        </span>
+  if (!selectedFile) {
+    return (
+      <div className="accordion">
+        <div className="accordion-header">
+          <span className="title">
+            <h2>Please select a file then proceed</h2>
+          </span>
+        </div>
       </div>
-    </div>
-  );
-}
-
-
+    );
+  }
 
   return (
     <div className="accordion">
@@ -305,58 +303,31 @@ if (!selectedFile) {
                 options={sizeOption}
                 onSelect={handleUnitChange}
                 defaultValue={selectedFile ? selectedFile.unit : 'mm'}
+                className="dropdown_unit"
               />
-              <TextField
-                type="number"
-                // label="Height"
-                variant="outlined"
-                className="fields"
-                value={dimensions.height}
-                onChange={handleChange('height')}
-                inputProps={{
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
-                  style: {
-                    // Optional: add any additional input styles here
-                    textAlign: 'left',
-                    paddingRight: '8px',
-                  },
-                }}
-              />
-              <TextField
-                type="number"
-                // label="Width"
-                variant="outlined"
-                className="fields"
-                value={dimensions.width}
-                onChange={handleChange('width')}
-                inputProps={{
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
-                  style: {
-                    // Optional: add any additional input styles here
-                    textAlign: 'left',
-                    paddingRight: '8px',
-                  },
-                }}
-              />
-              <TextField
-                type="number"
-                // label="Length"
-                variant="outlined"
-                className="fields"
-                value={dimensions.length}
-                onChange={handleChange('length')}
-                inputProps={{
-                  inputMode: 'numeric',
-                  pattern: '[0-9]*',
-                  style: {
-                    // Optional: add any additional input styles here
-                    textAlign: 'left',
-                    paddingRight: '8px',
-                  },
-                }}
-              />
+              {['height', 'width', 'length'].map((field) => (
+                <TextField
+                  key={field}
+                  type="number"
+                  // label={field}
+                  variant="outlined"
+                  className="fields"
+                  value={dimensions[field]}
+                  onChange={handleChange(
+                    field as 'height' | 'width' | 'length'
+                  )}
+                  inputProps={{
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                    style: {
+                      textAlign: 'left',
+                      paddingRight: '8px',
+                      height: '.7rem',
+                      fontSize: '.8rem',
+                    },
+                  }}
+                />
+              ))}
             </div>
             <div className="revert">
               <Button className="btn" onClick={handleRevert}>
@@ -446,7 +417,9 @@ if (!selectedFile) {
               <p className="no-data">Please select Material and Technology</p>
             )}
             {printerData.length <= 0 && selectedMat && selectedTech && (
-              <p className="no-data">{printerMessage ? printerMessage : 'Loading...'}</p>
+              <p className="no-data">
+                {printerMessage ? printerMessage : 'Loading...'}
+              </p>
             )}
             {printerData.length > 0 &&
               printerData?.map((item: any, idx: number) => (
@@ -473,7 +446,11 @@ if (!selectedFile) {
                     : (option.value as number)
                 )
               }
-              defaultValue={selectedFile?.infill !== undefined ? String(selectedFile?.infill) : undefined}
+              defaultValue={
+                selectedFile?.infill !== undefined
+                  ? String(selectedFile?.infill)
+                  : undefined
+              }
             />
           </div>
         )}

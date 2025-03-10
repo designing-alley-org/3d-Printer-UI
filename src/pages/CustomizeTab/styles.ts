@@ -1,23 +1,43 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.section`
-  margin: 0px 32px;
-  h3 {
-    margin: unset;
-    color: #001047;
-    font-size: 32px;
-    font-weight: 400;
+  margin: 0rem 1.2rem;
+  @media (max-width: 768px) {
+    margin: 0;
   }
 `;
 export const Heading = styled.section`
   display: flex;
   justify-content: space-between;
-  padding-right: 23rem;
+  align-items: center;
+  padding-right: 20rem;
+  h3{
+  color: #001047;
+  font-size: 1.4rem;
+  }
+  @media (max-width: 768px) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: 0;
+  h3{
+    font-size: 1rem;
+    margin:0;
+    }
+  }
+    h4{
+    font-size: .6rem;
+    }
+}
+
 `;
 export const Filescomponent = styled.section`
   display: flex;
   margin-top: 12px;
   height: 100%;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 export const LoadingWrapper = styled.section`
   position: fixed;
@@ -30,19 +50,18 @@ export const LoadingWrapper = styled.section`
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 9999;
-
-  p{
-  margin-left: 1rem;  
+  p {
+    margin-left: 1rem;
   }
-  `;
+`;
 
 export const Files = styled.article`
-  width: 37%;
+  width: 35%;
   border: 1px solid #66a3ff;
   border-radius: 8px;
-  padding: 8px;
+  padding: 4px;
   margin-right: 20px;
-  height: 34rem;
+  height: 30rem;
   overflow-y: auto;
   .header {
     display: flex;
@@ -50,14 +69,14 @@ export const Files = styled.article`
     justify-content: space-between;
 
     .file {
-      font-size: 20px;
+      font-size: 1.1rem;
       color: #0047ff;
       margin: 0 1rem;
     }
 
     .count {
-      width: 2.6rem;
-      height: 2.5rem;
+      width: 2rem;
+      height: 2rem;
       background: #0066ff;
       border-radius: 50px;
       display: flex;
@@ -66,13 +85,34 @@ export const Files = styled.article`
       color: #ffffff;
     }
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 11px;
+    margin-right: 0;
+    height: 10rem;
+    .header {
+    padding: 0  0.5rem;
+      .file {
+        margin: 0 .2rem;
+        font-size: 1rem;
+      }
+      .count {
+        width: 1rem;
+        height: 1rem;
+        padding: 0.7rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
 `;
 
 export const UploadedFile = styled.section`
   display: flex;
   flex-direction: column;
   .upload-file {
-    height: 7rem;
+    height: 6rem;
     display: flex;
     cursor: pointer;
     position: relative;
@@ -84,32 +124,48 @@ export const UploadedFile = styled.section`
       box-shadow: 0px 0px 4.8px 0px #66a3ff;
     }
   }
+  @media (max-width: 768px) {
+    flex-direction: row;
+    overflow: hidden; 
+    width: 32rem;
+    gap: 1rem;
+    padding: 0.5rem;
+    .upload-file {
+      width: 100%;
+      height: 5rem;
+      margin: 3px 1px;
+    }
+  }
 `;
 export const Model = styled.section`
-  margin: 7px 12px;
+  margin: 7px 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   border-radius: 20px;
   background: #ffffff;
-  width: 7rem;
-  height: 6rem;
+  width: 6rem;
+  height: 5rem;
   .model-preview {
-    width: 6rem;
-    height: 5rem;
+    width: 5rem;
+    height: 4rem;
   }
   .view-model {
     position: absolute;
     bottom: 4px;
     right: 4px;
-    width: 2rem;
-    height: 2rem;
+    width: 1.8rem;
+    height: 1.8rem;
     border-radius: 20px;
     background: #dde9fc;
     display: flex;
     justify-content: center;
     align-items: center;
+    img {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
     transition:
       background 0.2s ease,
       transform 0.2s ease;
@@ -118,22 +174,50 @@ export const Model = styled.section`
       box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
     }
   }
+
+  @media (max-width: 768px) {
+    width: 4rem;
+    height: 4.5rem;
+     margin: 3px 5px;
+     border-radius: 8px;
+    .model-preview {
+      width: 5rem;
+      height: 4rem;
+    }
+    .view-model {
+      width: 1.5rem;
+      height: 1.5rem;
+      img {
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+    }}
 `;
 
 export const ModelName = styled.section`
   display: flex;
   justify-content: center;
   margin-top: 0.8rem;
-  margin-left: .8rem;
+  margin-left: 0.4rem;
   color: #0a2248;
-  font-size: 1.2rem;
+  font-size: 1rem;
   &::after {
     content: 'Customization';
-    font-size: 1rem;
+    font-size: 0.8rem;
     position: absolute;
-    bottom: .7rem;
-    left:9rem;
+    bottom: 0.7rem;
+    left: 7.4rem;
   }
+
+  @media (max-width: 768px) {
+    margin-top: 0.4rem;
+    margin-left: 0.2rem;
+    font-size: 0.7rem;
+    &::after {
+      font-size: 0.5rem;
+      bottom: 0.4rem;
+      left: 5rem;
+}}
 `;
 
 export const CustomizeBox = styled.section`
@@ -146,13 +230,23 @@ export const CustomizeBox = styled.section`
   background: #ffffff;
   bottom: 0.6rem;
   right: 0.4rem;
-  height: 2.4rem;
-  width: 7rem;
+  height: 2rem;
+  width: 6rem;
   img {
-    margin: 1px;
-    width: 1.3rem;
-    height: 1.5rem;
+    margin: 3px;
+    width: 1rem;
+    height: 1rem;
   }
+    @media (max-width: 768px) {
+    bottom: 0.3rem;
+    right: 0.2rem;
+    height: 1.5rem;
+    width: 4rem;
+    img {
+      margin: 0 1px;
+      width: 0.8rem;
+      height: 0.8rem;
+}}
 `;
 
 export const Customize = styled.article`
@@ -183,30 +277,30 @@ export const Customize = styled.article`
     display: flex;
     justify-content: space-between;
     color: #1e6fff;
-    font-size: 20px;
+    font-size: 1rem;
     border-top: 1px solid #1e6fff;
-    margin-top: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   .apply-button {
     position: relative;
     width: fit-content;
     margin-top: 1rem;
-    padding: 0.6rem 3rem;
+    padding: 0.3rem 2rem;
     background: #0066ff;
     color: #ffffff;
     border-radius: 40px;
-    font-size: 20px;
+    font-size: 1.1rem;
     margin-bottom: -3rem;
     &:hover {
       transform: scale(1.01);
     }
 
     .loader {
-    position: absolute;
-    right: -30px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 `;
