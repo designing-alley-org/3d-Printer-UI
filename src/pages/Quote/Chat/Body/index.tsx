@@ -79,14 +79,14 @@ export default function ChatBody({ messages }: ChatBodyProps) {
         }}
         onClick={() => window.open(previewUrl, '_blank')}
       >
-        <Typography variant="body2" color="#1E6FFF">
+        <Typography  color="#1E6FFF" sx={{ fontSize: '0.8rem' }}> 
         {file.fileName? file.fileName : file.name}
         </Typography>
         <Box
           component="img"
           src={downloadIcon}
           alt="Download"
-          sx={{ width: '1rem' }}
+          sx={{ width: '0.8rem' }}
         />
       </Box>
     );
@@ -125,8 +125,8 @@ export default function ChatBody({ messages }: ChatBodyProps) {
           src={previewUrl}
           alt={firstFile.fileName || 'Image'}
           sx={{
-            height: '15rem',
-            width: '25rem',
+            height: '12rem',
+            width: '17rem',
             borderRadius: '1rem',
             objectFit: 'contain',
           }}
@@ -135,7 +135,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
           <Typography
             variant="body2"
             color="#1E6FFF"
-            sx={{ cursor: 'pointer', py: '0.5rem', fontSize: '1rem' }}
+            sx={{ cursor: 'pointer', py: '0.5rem', fontSize: '0.8rem' }}
             onClick={() => handleShowMore(message.files)}
           >
             Show +{message.files.length - 1} more files

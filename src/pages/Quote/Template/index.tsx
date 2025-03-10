@@ -142,14 +142,14 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               sx={{
                 cursor: 'pointer',
                 color: item._id === quote?._id ? '#1E6FFF' : 'black',
-                width: '10rem',
+                width: '9rem',
                 height: '100%',
               }}
               onClick={() => handleQuoteClick(item, index)}
             >
               <Box
                 sx={{
-                  width: '10rem',
+                  width: '9rem',
                   borderBottom: `10px solid ${item._id === quote?._id ? '#1E6FFF' : '#F1F6FE'}`,
                   backgroundColor:
                     item._id === quote?._id ? '#66A3FF' : 'white',
@@ -159,8 +159,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 }}
               ></Box>
               <Typography
-                sx={{ textAlign: 'center', width: '10rem', my: '1rem' }}
-                variant="body1"
+                sx={{ textAlign: 'center', width: '10rem', my: '1rem', fontSize: '0.8rem' }}
               >
                 Quote {index + 1}
               </Typography>
@@ -168,7 +167,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           ))}
         </Box>
       </Box>
-      <Typography variant="h2" sx={{ color: '#2359B0', mb: 2 }}>
+      <Typography variant="h1" sx={{ color: '#2359B0', mb: 1 }}>
         Quote
       </Typography>
 
@@ -185,7 +184,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               gap: 4,
               position: 'relative',
               padding: '1rem',
-              maxHeight: '18rem',
+              maxHeight: '15rem',
               overflowY: 'auto',
               mr: '1rem',
             }}
@@ -196,19 +195,20 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 justifyContent: 'space-between',
               }}
             >
-              <Typography variant="body1" fontWeight="bold">
+              <Typography variant="body2" fontWeight="bold">
                 Files
               </Typography>
               <Box
                 sx={{
-                  height: 32,
-                  width: 32,
+                  height: 27,
+                  width: 27,
                   backgroundColor: '#66A3FF',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'white',
+                  fontSize: '0.8rem',
                 }}
               >
                 {quote.files.length}
@@ -228,19 +228,20 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 justifyContent: 'space-between',
               }}
             >
-              <Typography variant="body1" fontWeight="bold">
+              <Typography variant="body2" fontWeight="bold">
                 Quantity
               </Typography>
               <Box
                 sx={{
-                  height: 32,
-                  width: 32,
+                  height: 27,
+                  width: 27,
                   backgroundColor: '#66A3FF',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'white',
+                  fontSize: '0.8rem',
                 }}
               >
                 {quote.files.length}
@@ -255,7 +256,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               orientation="vertical"
             />
             <Typography
-              variant="body1"
+              variant="body2"
               fontWeight="bold"
               textAlign={showNegotiate ? 'right' : 'right'}
             >
@@ -287,19 +288,20 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 <Box sx={{ display: 'flex', gap: 4 }}>
                   <Box
                     sx={{
-                      height: 32,
-                      width: 42,
+                      height: 27,
+                      width: 27,
                       backgroundColor: '#66A3FF',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       color: 'white',
+                      fontSize: '0.8rem',
                     }}
                   >
                     {index + 1}
                   </Box>
-                  <Typography variant="body2">{item.fileName}</Typography>
+                  <Typography variant="body2">{item.fileName?.split('-')[0]}</Typography>
                 </Box>
                 <Typography variant="body2" textAlign="center">
                   {item.quantity}
@@ -420,7 +422,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                   alignItems: 'center',
                 }}
               >
-                <Typography variant="body1" fontWeight="bold">
+                <Typography variant="body2" fontWeight="bold">
                   Don’t Like our pricing? Click on negotiate ; to negotiate
                   pricing Details Live
                 </Typography>
@@ -432,14 +434,14 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 </span>
               </Box>
             ) : (
-              <h2>Sent to Admin for Approval!</h2>
+              <h3>Sent to Admin for Approval!</h3>
             )}
 
             {quote.approvedBy?.role === 'user' || quote?.isClosed ? (
               quote?.approvedBy?.role === 'user' ? (
-                <h2>Quote Approved</h2>
+                <h3>Quote Approved</h3>
               ) : (
-                <h2>Quote Negotiated </h2>
+                <h3>Quote Negotiated </h3>
               )
             ) : quote.approvedBy ? (
               <span className="approve">
@@ -453,7 +455,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           </Box>
         </>
       ) : (
-        <Typography variant="h2" sx={{ color: '#2359B0', mb: 2 }}>
+        <Typography variant="h1" sx={{ color: '#2359B0', mb: 2 }}>
           No Quote Found
         </Typography>
       )}

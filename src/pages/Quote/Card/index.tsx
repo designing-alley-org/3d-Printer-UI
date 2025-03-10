@@ -48,11 +48,11 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
     <QuoteBox>
       <Typography
         sx={{ color: '#0C2850', position: 'absolute', top: '-1%' }}
-        variant="h2"
+        variant="h1"
       >
         Connecting For {selectOrderIdProps ? 'Dispute' : 'Quote'}
       </Typography>
-      <Box sx={{ position: 'absolute', right: '0rem', top: '0' }}>
+      <Box sx={{ position: 'absolute', right: '-3rem', top: '0' }}>
         {' '}
         <span className="quoteBtn">
           <ButtonWithIcon
@@ -61,24 +61,19 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
               setShowQuote(!showQuote);
               getQuotes();
             }}
+            sx={{ height: '2.7rem', fontSize: '0.8rem' }}
             iconPosition="end"
             Icon={
-              showQuote ? (
-                <img
-                  src={arrow}
-                  style={{
-                    rotate: '180deg',
-                    filter: 'brightness(0) invert(1)',
-                  }}
-                />
-              ) : (
-                <img
-                  src={arrow}
-                  style={{
-                    filter: 'brightness(0) invert(1)',
-                  }}
-                />
-              )
+              <img
+                src={arrow}
+                style={{
+                  filter: 'brightness(0) invert(1)',
+                  transform: showQuote ? 'rotate(180deg)' : undefined,
+                  transition: 'all 0.3s ease-in-out',
+                  height: '1.5rem',
+                  width: '1.5rem',
+                }}
+              />
             }
           />
         </span>
@@ -107,7 +102,7 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
           />
         }
       </Box>
-      <Box sx={{ height: '90%', width: '100%', mt: '1rem' }}>
+      <Box sx={{ height: '100%', width: '100%', mt: '1rem' }}>
         <Chat />
       </Box>
     </QuoteBox>

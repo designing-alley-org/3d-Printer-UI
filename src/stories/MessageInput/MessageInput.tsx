@@ -28,7 +28,7 @@ const StyledInput = styled('input')(() => ({
   border: 'none',
   background: 'transparent',
   boxSizing: 'border-box',
-  fontSize: '1.25rem',
+  fontSize: '1rem',
   paddingLeft: '0.5rem',
   borderRadius: 'inherit',
   color: '#0080FF',
@@ -126,7 +126,7 @@ export default function MessageInput({
     <Box
       sx={{
         width: '100%',
-        height: '4rem',
+        height: '3rem',
         border: '3px solid',
         borderColor: 'white',
         borderRadius: '3rem',
@@ -164,8 +164,8 @@ export default function MessageInput({
       <Box
         onClick={() => imgRef.current?.click()}
         sx={{
-          width: '3rem',
-          height: '3rem',
+          width: '2rem',
+          height: '2rem',
           borderRadius: '50%',
           backgroundColor: '#BAD6FF',
           display: 'flex',
@@ -175,14 +175,14 @@ export default function MessageInput({
           color: '#336DFF',
         }}
       >
-        <img src={ImgUpload} alt="attachment" style={{ width: '1.5rem' }} />
+        <img src={ImgUpload} alt="attachment" style={{ width: '1rem' }} />
       </Box>
       
       <Box
         onClick={() => inputRef.current?.click()}
         sx={{
-          width: '3rem',
-          height: '3rem',
+          width: '2rem',
+          height: '2rem',
           borderRadius: '50%',
           backgroundColor: '#BAD6FF',
           display: 'flex',
@@ -196,14 +196,14 @@ export default function MessageInput({
         <img
           src={AttachmentIcon}
           alt="attachment"
-          style={{ width: '1.5rem' }}
+          style={{ width: '1rem' }}
         />
       </Box>
       
       <Box
         sx={{
-          width: '3rem',
-          height: '3rem',
+          width: '2rem',
+          height: '2rem',
           borderRadius: '50%',
           bgcolor: '#0080FF',
           display: 'flex',
@@ -216,7 +216,7 @@ export default function MessageInput({
         onClick={handleSend}
       >
         <img
-          style={{ height: '2rem', width: '2rem' }}
+          style={{ height: '1rem', width: '1rem' }}
           src={SendIcon}
           alt="send"
         />

@@ -25,8 +25,8 @@ export default function AttachmentPreview({
           <p>{`${title}: ${attachment.name}`}</p>
           <ButtonIcon
             svgPath={cross}
-            height="2.3rem"
-            width="2.3rem"
+            height="2rem"
+            width="2rem"
             onClick={() => onRemove(index)}
           />
         </div>
