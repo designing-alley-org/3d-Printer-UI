@@ -9,4 +9,9 @@ export const TemplateWrapper = styled.div`
   padding: 0 0rem 0 1rem;
   color: #2359b0;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 0 0rem;
+    gap: 0.2rem;
+  }
 `;
