@@ -11,7 +11,7 @@ export const TemplateWrapper = styled.div`
   position: relative;
 
   @media (max-width: 768px) {
-    padding: 0 0.3rem;
-    gap: 0.25rem;
+    padding: 0 0rem;
+    gap: 0.2rem;
   }
 `;
