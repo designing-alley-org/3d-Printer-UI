@@ -112,7 +112,8 @@
           width: 100%;
         }
         .delivery {
-          padding: 0.7rem 2.8rem;
+          padding: 0.7rem 1rem;
+          font-size: small;
         }
         .proceed {
           padding: 0.7rem 2.8rem;

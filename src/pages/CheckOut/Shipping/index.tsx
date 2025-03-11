@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import Input from '../../../stories/StandardInput/Input';
 import { InputWrapper, SubHeader, Wrapper } from './style';
 import {  cross, inputFields } from '../../../constants';
@@ -25,20 +25,22 @@ const ShippingDetails = () => {
   
   const { orderId } = useParams();
   const dispatch = useDispatch();
-  
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const { addressData, addressId, isCreateAddress,deleteAddressRedux } = useSelector((state: any) => state.address);
 
   useEffect(() => {
     const fetchAddress = async () => {
       if (!isCreateAddress) {
         try {
-          const response = await getAddress();
+          const response = await getAddress(); 
+         
           if (response?.data?.data) {
             dispatch(addAddress(response.data.data));
           }
-        } catch (error) {
-          toast.error('Failed to fetch address');
-          console.error('Failed to fetch address:', error);
+        } catch (error:any) {
+          // if (error?.response?.data?.message) {
+          //   toast.info(error?.response?.data?.message);
+          // }
         }
       }
     };
@@ -79,7 +81,7 @@ const ShippingDetails = () => {
   return (
     <Wrapper>
       <div className='header'>
-        <Typography variant="h2">Shipping Details</Typography>
+        <Typography variant={isSmallScreen ? 'body1' : 'h1'}>Shipping Details</Typography>
         <span>
           <Button
             label={!isCreateAddress ? "Create New" : "Save "}
@@ -106,7 +108,7 @@ const ShippingDetails = () => {
       {!isCreateAddress && (
         <div className="address-list">
           {addressData.length === 0 && 
-            <Typography>No addresses found. Please create a new address.</Typography>
+            <Typography variant={isSmallScreen ? 'caption' : 'body2'}>No addresses found. Please create a new address.</Typography>
           }
           {addressData.map((address: any, index: number) => (
             <div 
@@ -124,14 +126,14 @@ const ShippingDetails = () => {
                 />
               </div>
               <span className='address'>
-                <Trash onClick={() => {handelDeleteAddress(address._id)}} className='delete-icon' />
-                <Typography variant="h5">{address.personName}</Typography>
-                <Typography>{address.phoneNumber}</Typography>
-                <Typography>
+                <Trash size={isSmallScreen ? 13 : 20} onClick={() => {handelDeleteAddress(address._id)}} className='delete-icon' />
+                <Typography variant={isSmallScreen ? 'body1' : 'h6'}>{address.personName}</Typography>
+                <Typography variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.phoneNumber}</Typography>
+                <Typography  variant='body2'sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>
                   {address.city}, {address.countryCode}, {address.postalCode}
                 </Typography>
-                <Typography>{address.state}</Typography>
-                <Typography>{address.streetLines}</Typography>
+                <Typography  variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.state}</Typography>
+                <Typography  variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.streetLines}</Typography>
               </span>
             </div>
           ))}

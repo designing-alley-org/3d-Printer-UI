@@ -4,16 +4,23 @@ export const InputWrapper = styled.div`
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 600px) {
+  gap: 1.5rem;
+  }
 `;
+
 export const SubHeader = styled.div`
   padding: 1rem 0rem;
   border-bottom: 1px solid #66a3ff;
   margin-bottom: 2rem;
+  @media (max-width: 600px) {
+    padding: 0.5rem 0rem;
+    font-size: 0.7rem;
+  }
 `;
 
 export const Wrapper = styled.section`
   padding: 0rem 2rem;
-
   .header {
     display: flex;
     justify-content: space-between;
@@ -23,11 +30,14 @@ export const Wrapper = styled.section`
     .create-new-add{
     position:absolute;
     right:2rem;
+    width: content;
+    height: 2.5rem;
+    font-size: 0.9rem;
     }
-
+ 
     .cross-btn{
     position:absolute;
-    top:0.3rem;
+    top:-0.3rem;
     right:-3rem;
     }
 
@@ -67,7 +77,8 @@ export const Wrapper = styled.section`
       .delete-icon{
         cursor: pointer;
         position: absolute;
-        right: 1.5rem;
+        top: 0.7rem;
+        right: 1.8rem;
       }
       .radio-btn {
        margin-right: 1rem;
@@ -77,9 +88,9 @@ export const Wrapper = styled.section`
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
-                width: 1.5rem;
-                height: 1.5rem;
-                border: 3px solid #1e6fff; 
+                width: 1rem;
+                height: 1rem;
+                border: 2px solid #1e6fff; 
                 border-radius: 50%;
                 outline: none;
                 background-color: #fff;
@@ -111,6 +122,27 @@ export const Wrapper = styled.section`
       background: #1e6fff;
       font-size: 1.2rem;
       cursor: pointer;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 0rem 0.3rem;
+    .header {
+      .create-new-add{
+        right:1rem;
+        height: 1.7rem; 
+        font-size: 0.6rem;
+        top:0rem;
+        }
+
+      .cross-btn{
+        top:-1.7rem;
+        right:-2.5rem;
+      }
+    }
+    .address-list {
+      grid-template-columns: 1fr;
+      max-height: 20rem;
     }
   }
 `;

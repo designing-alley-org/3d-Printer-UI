@@ -156,22 +156,10 @@ export const inputFields = [
     placeholder: 'Enter your first name',
   },
   {
-    label: 'Company',
-    name: 'companyName',
-    type: 'text',
-    placeholder: 'Enter your first name',
-  },
-  {
     label: 'Street Address',
     name: 'streetLines',
     type: 'text',
     placeholder: 'Enter your address',
-  },
-  {
-    label: 'State or Province Code',
-    name: 'stateOrProvinceCode',
-    type: 'text',
-    placeholder: 'Enter your state code',
   },
   {
     label: 'City',
@@ -183,7 +171,7 @@ export const inputFields = [
     label: 'Country',
     name: 'countryCode',
     type: 'text',
-    placeholder: 'Enter your country',
+    placeholder: 'Enter your country (GB)',
   },
   {
     label: 'Postal Code',
