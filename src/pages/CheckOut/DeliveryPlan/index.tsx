@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress } from '@mui/material';
+import { Box, Typography, CircularProgress, useMediaQuery } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -80,7 +80,7 @@ const DeliveryPlan: React.FC = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   // Hooks
   const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
@@ -132,7 +132,8 @@ const DeliveryPlan: React.FC = () => {
       const DELIVERY_PAYLOAD = {
         addressId,
         units: 'KG',
-        value: totalWeight,
+        // value: totalWeight,
+        value:2
       };
 
       try {
@@ -221,12 +222,16 @@ const DeliveryPlan: React.FC = () => {
   // Render main content
   return (
     <Box sx={{ padding: '0 1rem' }}>
-      <Typography variant="h2" sx={{ color: '#001047', marginBottom: '2rem' }}>
+      <Typography variant={isSmallScreen ? 'body1':'h2'} sx={{ color: '#001047', marginBottom: '2rem' }}>
         Select Delivery Plan
       </Typography>
        <CardBox>
         <div className="cards">
-        <Carousel responsive={responsive} infinite={false} autoPlay={false}>
+        <Carousel 
+          responsive={responsive} 
+          infinite={false} 
+          autoPlay={false} 
+        >
         {deliveryData?.rates?.map((plan, index) => (
           <Card
             key={`delivery-plan-${index}`}

@@ -1,6 +1,7 @@
 import { Body, Header, MainCard, Specs } from './styles';
 import Button from '../../../stories/button/Button';
 import icon from '../../../assets/icons/avg_pace.svg';
+import { useMediaQuery } from '@mui/material';
 
 interface CardProps {
   deliveryName: string;
@@ -32,13 +33,13 @@ export default function Card({
     setActive(idx);
     setName(name);
   };
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   return (
     <MainCard $isSelected={active === index}>
       <Header>
         <img src={icon} />
         <span className="name">{deliveryName}</span>
-        <span>{deliveryTime}</span>
+        <span className='sub_name'>{deliveryTime}</span>
       </Header>
       <Body>
         <Specs>

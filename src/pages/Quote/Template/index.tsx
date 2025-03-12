@@ -132,7 +132,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
             overflowX: 'auto',
             height: '100%',
             '&::-webkit-scrollbar': {
-              height: isSmallScreen ? '0.3rem' : '0.7rem',
+              height: isSmallScreen ? '0.3rem' : '0.4rem',
               width: isSmallScreen ? '0.3rem' : '',
               cursor: 'pointer',
             },
@@ -152,8 +152,8 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               <Box
                 sx={{
                   width: isSmallScreen ? '5rem' : '9rem',
-                  height: isSmallScreen ? '0.1rem' : '1rem',
-                  borderBottom: `10px solid ${item._id === quote?._id ? '#1E6FFF' : '#F1F6FE'}`,
+                  height: isSmallScreen ? '0.1rem' : '0.7rem',
+                  borderBottom: `11px solid ${item._id === quote?._id ? '#1E6FFF' : '#F1F6FE'}`,
                   backgroundColor:
                     item._id === quote?._id ? '#66A3FF' : 'white',
                   position: 'sticky',
