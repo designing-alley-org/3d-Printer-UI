@@ -25,55 +25,6 @@
 }
 
 
-.noti_Mobile_IconContainer {
-    background: #e3eeff;
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    margin-right: -6rem;
-    color: #0066ff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s ease;
-
-    
-  }
-
-  .noti_Mobile_IconContainer img{
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-
-  
-  .noti_Mobile_IconContainer:active {
-    transform: scale(0.95);
-  }
-  
-  .noti_mobile_count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #0066ff;
-    color: white;
-    font-size: 0.6rem;
-    font-weight: bold;
-    border-radius: 50%;
-    width: .9rem;
-    height: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .notificationContainer {
-    position: relative;
-    right: 2rem;
-    top: 6rem;
-  }
 
   .tab-container{
     position: absolute;
@@ -112,5 +63,9 @@
 
 
 
-
+.mob-notification .notification-container .notificationContainer{
+  position: absolute;
+  top: 3.5rem;
+  right: 0rem;
+}
 /*  ========================= Responsive ==================================  */
