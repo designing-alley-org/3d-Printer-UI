@@ -45,38 +45,13 @@
 .header-nav .tab{
     cursor: pointer;
 }
-.header-nav .tab .notificationIconConrtainer{
+
+.tab-with-notification{
     position: relative;
-    display: flex;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    align-items: center;
-    margin-right: 0rem;
-    img{
-      width: 1.1rem;
-      height: 1.1rem;
-    }
-    @media (max-width: 1236px) and (min-width: 1024px) {
-      width: 1.6rem;
-      height: 1.6rem;
-      img{
-        width: 1rem;
-        height: 1rem;
-      }
-    }
+}
 
-  }
-
-.notificationIconConrtainer .notificationBadge{
-    font-size: .6rem;
-    width: 1rem;
-    height: 1rem;
-
-    @media (max-width: 1236px) and (min-width: 1024px) {
-      font-size: .5rem;
-      width: 0.8rem;
-      height: 0.8rem;
-      
-    }
+.tab-with-notification .notification-container .notificationContainer{
+    position: absolute;
+    top: 3rem;
+    right: -11rem;
 }

@@ -1,11 +1,11 @@
-import CurverCard from '../MainCurveCard'
+import CurverCard from '../NotificationCurveCard'
 import Button from '../../stories/button/Button'
 import './style.css'
 import { useNavigate } from 'react-router-dom'
 
 interface INotification {
-  notification: { id: number; message: string; count: number }[]
   setShowNotification: (value: boolean) => void
+  notification: { id: number; message: string; count: number }[]
 }
 
 const Notifications = ({ notification, setShowNotification }: INotification) => {
@@ -36,13 +36,13 @@ const Notifications = ({ notification, setShowNotification }: INotification) => 
       </div>
       <div className='button'>
         <Button
-          label="ignore"
+          label="Ignore"
           onClick={() => { setShowNotification(false) }}
           color=' #0066FF'
           className="ignore-btn"
         />
         <Button
-          label={'show'}
+          label={'Show'}
           onClick={() => { navigateToNotification() }}
           className="show-btn"
         />

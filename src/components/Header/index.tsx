@@ -1,5 +1,5 @@
-import MobileHeader from '../Responsive/Header';
-import MianHeader from '../Responsive/MainHeader';
+import DesktopNav from '../NavBar/DesktopNav';
+import MobileHeader from '../NavBar/MobileNav';
 import TabComponent from '../Tab/index';
 import { Wrapper } from './styles';
 
@@ -14,7 +14,7 @@ const Header = (props: IHeader) => {
     <Wrapper>
       <section>
         <span className='desktop-navBar-container'>
-        <MianHeader/>
+        <DesktopNav/>
         </span>
         <span className='mobile-navBar-container'>
         <MobileHeader/>
