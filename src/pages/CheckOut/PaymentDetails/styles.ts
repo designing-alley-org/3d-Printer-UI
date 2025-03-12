@@ -26,10 +26,10 @@ export const Wrapper = styled.main`
   h1 {
     margin-top: unset;
     margin-bottom: 0.5rem;
-    font-size: 32px;
+    font-size:1.5rem;
   }
   .desc {
-    font-size: 16px;
+    font-size: 0.9rem;
     color: #666;
     margin: 0.25rem 0;
     padding-bottom: 2rem;
@@ -51,30 +51,27 @@ export const Body = styled.section`
     padding-right: 1rem;
     display: flex;
     flex-direction: column;
-    min-height: 04rem;
+    min-height: 03rem;
     height: 100%;
 
     h2 {
       flex: 0 0 auto;
       margin-bottom: 0.5rem;
+      font-size: 1rem;
     }
   }
   .addDetails {
-    // display: flex;
     flex: 1;
-    min-height: 4rem;
+    min-height: 2rem;
     flex-direction: column;
-    // max-height: 12rem;
     overflow: hidden;
     overflow-y: auto;
-    margin: 0.25rem 0;
+    margin: 0rem 0;
 
     .details {
-      height: 30%;
       display: flex;
       flex-direction: column;
       color: #2359b0;
-      // padding: 0.75rem 0rem;
     }
 
     label {
@@ -143,12 +140,13 @@ export const Body = styled.section`
     flex-shrink: 0;
     display: flex;
     flex: 0 0 auto;
-    margin: 0.25rem 0;
+    margin: 0.2rem 0;
     align-items: center;
     color: #2359b0;
 
     span {
       padding: 0.25rem 0.5rem;
+      font-size: 0.9rem;
       border-radius: 40px;
       transition: background 0.3s;
       &:hover {
@@ -165,6 +163,7 @@ export const Body = styled.section`
       display: flex;
       align-items: center;
       margin: 0.5rem;
+      font-size: 0.9rem;
       color: #2359b0;
     }
     .dot {
@@ -181,6 +180,19 @@ export const Body = styled.section`
     margin-bottom: 0.5rem;
     font-size: 20px;
     color: #001331;
+  }
+
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    .address,
+    .files {
+      border-right: none;
+      border-bottom: 1px solid #66a3ff;
+      margin-bottom: 1rem;
+      margin-right: 0;
+      padding-right: 0;
+    }
   }
 `;
 
@@ -203,17 +215,17 @@ export const Price = styled.div`
   .priceDetail {
     color: #2359b0;
     fontweight: 500;
-    font-size: 20px;
+    font-size: 1rem;
     display: flex;
     margin: 0.5rem 0;
     justify-content: space-between;
     .total {
       color: #2359b0;
-      font-size: 24px;
+      font-size: 1rem;
       fontweight: 400;
     }
     .price {
-      font-size: 20px;
+      font-size: 0.9rem;
       color: black;
     }
     button {
@@ -229,11 +241,12 @@ export const DeliveryDetails = styled.div`
   padding-bottom: 0.5rem;
 
   .delivery-info {
+  font-size: 0.9rem;
     color: #2359b0;
   }
 
   h2 {
-    font-size: 20px;
+    font-size: 1rem;
     color: #001331;
     margin-bottom: 1rem;
   }

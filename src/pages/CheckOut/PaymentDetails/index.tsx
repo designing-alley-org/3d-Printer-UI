@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { Box, Modal, CircularProgress } from '@mui/material';
+import { Box, Modal, CircularProgress, useMediaQuery } from '@mui/material';
 import Button from '../../../stories/button/Button';
 import Input from '../../../stories/StandardInput/Input';
 import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
-import { inputFields } from '../../../constants';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
-import { createAddress } from '../../../store/actions/createAddress';
-import { setAddressId } from '../../../store/Address/address.reducer';
 import { toast } from 'react-toastify';
 import { HouseIcon } from 'lucide-react';
 
@@ -57,7 +53,7 @@ const PaymentDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   // Hooks
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
@@ -151,12 +147,12 @@ const PaymentDetails: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '1rem'
+            marginBottom: isSmallScreen ? '0.5rem' : '1rem',
           }}>
             <h2>Files</h2>
             <Box sx={{
-              height: 32,
-              width: 32,
+              height: isSmallScreen ? 24 : 30,
+              width: isSmallScreen ? 24 : 30,
               backgroundColor: '#66A3FF',
               borderRadius: '50%',
               display: 'flex',
@@ -204,7 +200,7 @@ const PaymentDetails: React.FC = () => {
 
           {/* Add Another Address */}
           <div className="Another">
-            <HouseIcon style={{ marginRight: '1rem', borderRadius: '50%' }} />
+            <HouseIcon style={{ marginRight: '1rem', borderRadius: '50%' }} size={20}/>
             <span onClick={() => navigate(`/get-quotes/${orderId}/checkout`)}>Change  Address</span>
           </div>
 
@@ -224,7 +220,7 @@ const PaymentDetails: React.FC = () => {
 
         {/* Billing Details */}
         <div className="details">
-  <h2>Billing Details</h2>
+  <h4>Billing Details</h4>
   <Price>
     <div>
       <span className="priceDetail">
