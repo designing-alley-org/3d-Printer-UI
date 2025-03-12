@@ -132,8 +132,7 @@ const DeliveryPlan: React.FC = () => {
       const DELIVERY_PAYLOAD = {
         addressId,
         units: 'KG',
-        // value: totalWeight,
-        value:2
+        value: totalWeight,
       };
 
       try {
