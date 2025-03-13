@@ -21,4 +21,5 @@ export const ROUTES = {
   CART: 'cart',
   SUCCESS: 'order-successful',
   GOOGLE_AUTH: 'google-auth',
+  VERIFY_EMAIL: 'verify-email',
 };
