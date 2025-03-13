@@ -29,7 +29,7 @@ export const ProtectedRoute: React.FC<Props> = ({ component }) => {
 
   // Display loading state while checking session
   if (isCheckingSession) {
-    return <div>Loading...</div>;
+    return <div>...</div>;
   }
 
   // Render the component if authentication passes

@@ -27,6 +27,7 @@ export const Wrapper = styled.section`
     margin-bottom: 4rem;
     a {
       color: #101a36;
+      font-size: 0.9rem;
     }
   }
 
@@ -37,7 +38,6 @@ export const Wrapper = styled.section`
     bottom: 2rem;
     left: 3rem;
     color: #1E6FFF;
-
     }
   }
 
@@ -48,19 +48,32 @@ export const Wrapper = styled.section`
     width: 100%;
   }
   h1{
-    font-size: 20px;
+    font-size: 1rem;
     }
    .footer-data {
     grid-template-columns: repeat(2, 12rem);
-    grid-row-gap: 2rem;
-    font-size: 20px;
-    margin-bottom: 10rem;
+    grid-row-gap: 1rem;
+    margin-bottom: 2rem;
+    a {
+      font-size: 0.6rem;
+    }
   }
     .checkout {
     width: 90% ;
     margin: 0rem 1rem;
     font-size: 18px;
     padding-left: .5rem;
+  }
+
+  .footerImg{
+  position: relative;
+  .footerTitle{
+    position: absolute;
+    bottom: 0.9rem;
+    font-size: 0.4rem;
+    left: 0.5rem;
+    color: #1E6FFF;
+    }
   }
   }
 `;

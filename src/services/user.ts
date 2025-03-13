@@ -11,6 +11,15 @@ export const updateUserService = async (userData: User): Promise<any> => {
     }
   }
 
+export const getCurrentUserService = async (): Promise<any> => {
+    try {
+      const response = await api.get(`user`);
+      return response;
+    } catch (error) {
+      throw error;    
+    }
+  }
+
 
 export const updatePasswordService = async (old_password:string, new_password:string): Promise<any> => {
     try {
