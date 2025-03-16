@@ -22,4 +22,5 @@ export const ROUTES = {
   SUCCESS: 'order-successful',
   GOOGLE_AUTH: 'google-auth',
   VERIFY_EMAIL: 'verify-email',
+  FORGET_PASSWORD: 'forgot-password',
 };

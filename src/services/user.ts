@@ -29,3 +29,23 @@ export const updatePasswordService = async (old_password:string, new_password:st
       throw error;
     }
   }
+
+
+export const sendPasswordResetService = async (email: string): Promise<any> => {
+    try {
+      const response = await api.post(`/request-password-reset`, { email });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+export const resetPasswordService = async (newPassword: string, token: string): Promise<any> => {
+    try {
+      const response = await api.post(`/reset-password`, { newPassword, token });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
