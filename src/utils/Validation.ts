@@ -8,7 +8,7 @@
      * @returns {boolean} Whether the password is valid or not.
      */
 const validatePassword = (password: string, setErr: React.Dispatch<React.SetStateAction<string>>): boolean => {
-        const minLength = 6;
+        const minLength = 8;
         const hasNumber = /\d/.test(password);
         const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
         

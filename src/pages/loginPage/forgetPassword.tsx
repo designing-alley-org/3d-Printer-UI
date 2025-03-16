@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Box, Button, Container, TextField, Typography, Paper, styled, useMediaQuery } from '@mui/material';
 import { toast } from 'react-toastify';
 import { ROUTES } from '../../routes/routes-constants';
+import { sendResetLink } from '../../store/actions/sendResetLink';
 
 const StyledTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -21,10 +22,9 @@ const ForgetPassword: React.FC = () => {
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
 
-  const handleForgotSubmit = (e: React.FormEvent) => {
+  const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your API call for resetting the password here.
-    toast.success('Reset link has been sent to your email.');
+     await sendResetLink(email);
     navigate(ROUTES.LOGIN);
   };
 
