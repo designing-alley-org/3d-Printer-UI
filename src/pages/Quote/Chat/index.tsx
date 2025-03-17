@@ -16,7 +16,7 @@ interface Message {
   id?: string; // Add an id field to track unique messages
 }
 
-const  API_URL =  import.meta.env.VITE_AWS_URL as string;
+const  API_URL =  import.meta.env.VITE_API_URL as string;
 export default function Chat() {
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
@@ -110,7 +110,7 @@ export default function Chat() {
   };
 
   return (
-    <Box sx={{ width: '100%', height: '110%', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ width: '100%', height: '98%', display: 'flex', flexDirection: 'column' }}>
       <ChatBody messages={messages} />
       <ChatFooter
         socket={socket}

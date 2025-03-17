@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import Pagin from "../../components/Paging/Pagin";
-import { NotificationCard } from "./NotificationCard";
-import { useNavigate } from "react-router-dom";
+import Pagin from '../../components/Paging/Pagin';
+import { NotificationCard } from './NotificationCard';
+import { useNavigate } from 'react-router-dom';
 import { getOngoingOrder } from '../../store/actions/getOngoingOrder';
 import { toast } from 'react-toastify';
 import { Loader } from 'lucide-react';
 import Dropdown from '../../stories/Dropdown/Dropdown';
 import { OngoingOrderWrapper } from './styles';
-import { set } from 'react-hook-form';
+import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
+import { filterByDayMonthYear } from '../../utils/OptionDropDowns';
+import { useSelector } from 'react-redux';
+import api from '../../axiosConfig';
+import { deleteNotification } from '../../store/notification/notification';
+import { useDispatch } from 'react-redux';
 
 interface Order {
-  orders: {
-    _id: string;
-    order_status: string;
-    updatedAt: string;
-  }[]
+  _id: string;
+  order_status: string;
+  updatedAt: string;
+}
+
+interface Notification {
+  _id: string; // Notification ID
+  order_id: string;
+  readStatus: boolean;
 }
 
 interface Option {
@@ -25,10 +34,27 @@ interface Option {
 
 const OngoingOrder = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [pagination, setPagination] = useState(1);
-  const [orders, setOrders] = useState<{ order: Order[]; totalPages: number } | null>(null);
+  const [orders, setOrders] = useState<{
+    orders: Order[];
+    totalPages: number;
+  } | null>(null);
   const ITEMS_PER_PAGE = 5;
-  const [filter, setFilter] = useState('week');
+  const [filter, setFilter] = useState('all');
+
+  // Get notifications from Redux store
+  const notifications = useSelector(
+    (state: any) => state.notification.notification
+  );
+
+  // Create a map of order IDs with their notification ID and readStatus
+  const notificationMap: Map<string, { readStatus: boolean; notificationId: string }> = new Map(
+    notifications.map((n: Notification) => [
+      n.order_id,
+      { readStatus: n.readStatus, notificationId: n._id }, // Store both readStatus and notificationId
+    ])
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,103 +62,123 @@ const OngoingOrder = () => {
         await getOngoingOrder(setOrders, filter);
       } catch (error) {
         toast.error('Failed to fetch ongoing orders');
-        console.log(error);
-      } 
+        console.error(error);
+      }
     };
 
     fetchData();
-  }, [pagination,filter]);
+  }, [pagination, filter]);
 
-  // Map of order statuses to their corresponding routes
+  // Sorting logic: Prioritize unread orders and sort by updatedAt
+  useEffect(() => {
+    if (orders) {
+      setOrders((prevOrders) => {
+        if (!prevOrders) return null;
+
+        return {
+          ...prevOrders,
+          orders: prevOrders.orders.slice().sort((a, b) => {
+            const aRead = notificationMap.get(a._id)?.readStatus ?? true; // Default to true (read)
+            const bRead = notificationMap.get(b._id)?.readStatus ?? true;
+
+            if (!aRead && bRead) return -1; // Unread comes first
+            if (aRead && !bRead) return 1;
+
+            return (
+              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            );
+          }),
+          totalPages: prevOrders.totalPages,
+        };
+      });
+    }
+  }, [notifications, orders]);
+
   const ORDER_STATUS_ROUTES = {
     order_created: 'upload-stl',
     files_uploaded: 'customize',
     order_customization: 'quote',
     order_quote_created: 'quote',
-    order_quote_negotiated: 'checkout'
+    order_quote_negotiated: 'checkout',
   } as const;
 
-  const formatOrderStatus = (status: string): string => {
-    return status.replace(/_/g, ' ')
-            .replace(/(?:^|\s)\S/g, letter => letter.toUpperCase());
-  };
-
-  const formatDateTime = (dateString: string): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(dateString));
-  };
-
-  const handleNavigate = (orderStatus: string, orderId: string) => {
-    const route = ORDER_STATUS_ROUTES[orderStatus as keyof typeof ORDER_STATUS_ROUTES];
+  const handleNavigate = async (orderStatus: string, orderId: string) => {
+    const route =
+      ORDER_STATUS_ROUTES[orderStatus as keyof typeof ORDER_STATUS_ROUTES];
     if (route) {
       navigate(`/get-quotes/${orderId}/${route}`);
+  
+      const notificationId = notificationMap.get(orderId)?.notificationId;
+      if (notificationId) {
+        try {
+          await api.put(`/api/v1/notifications/${notificationId}/read`);
+          // Optionally, update Redux store here if notifications are stored in state
+        } catch (error) {
+          console.error("Failed to mark notification as read:", error);
+        }
+      }
+      dispatch(deleteNotification(notificationId));
     }
   };
+  
 
-  // Calculate paginated orders
   const paginatedOrders = orders?.orders
-    ? orders.orders.slice().reverse().slice((pagination - 1) * ITEMS_PER_PAGE, pagination * ITEMS_PER_PAGE)
+    ? orders.orders.slice(0, pagination * ITEMS_PER_PAGE)
     : [];
 
-  // Calculate total pages
-  const totalPages = orders?.orders 
+  const totalPages = orders?.orders
     ? Math.ceil(orders.orders.length / ITEMS_PER_PAGE)
     : 0;
 
   return (
     <OngoingOrderWrapper>
-      <div className="header">     
-     <h2>ONGOING ORDER</h2>
-      <Dropdown 
-      className='dropdown'
-      options={[
-        {id: 1, value: 'month', label: 'Month'},
-        {id: 2, value: '3months', label: '3 Months'},
-        {id: 3, value: '6months', label: '6 Months'},
-        {id: 4, value: '1year', label: '1 Year'},
-        {id: 5, value: 'all', label: 'All'},
-        {id: 6, value: 'week', label: 'Week'}
-      ]}
-      onSelect={(selected: Option) => {setFilter(selected.value)}}
-      defaultValue={filter}
-      />
+      <div className="header">
+        <h3>ONGOING ORDER</h3>
+        <Dropdown
+          className="dropdown"
+          options={filterByDayMonthYear}
+          onSelect={(selected: Option) => {
+            setFilter(selected.value);
+          }}
+          defaultValue={filter}
+        />
       </div>
 
-      
-      
-      {!orders?.orders || orders?.orders.length === 0 ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+      {!orders?.orders || orders.orders.length === 0 ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '200px',
+          }}
+        >
           {orders === null ? (
-            <Loader size="50" color="#0066ff" />
+            <Loader size="30" color="#0066ff" />
           ) : (
             <p>No ongoing orders found</p>
           )}
         </div>
       ) : null}
 
-
-      {paginatedOrders.map((order: any) => (
-        <NotificationCard
-          key={order._id}
-          title={formatOrderStatus(order.order_status)}
-          orderNumber={order._id}
-          dateTime={formatDateTime(order.updatedAt)}
-          buttonLabel="Open"
-          onButtonClick={() => handleNavigate(order.order_status, order._id)}
-        />
-      ))}
+      {paginatedOrders.map((order) => {
+        const notification = notificationMap.get(order._id);
+        return (
+          <NotificationCard
+            key={order._id}
+            title={formatOrderStatus(order.order_status)}
+            orderNumber={order._id}
+            dateTime={formatDateTime(order.updatedAt)}
+            buttonLabel="Open"
+            onButtonClick={() => handleNavigate(order.order_status, order._id)}
+            isUnread={notification ? !notification.readStatus : false} // Check presence before getting value
+          />
+        );
+      })}
 
       {totalPages > 1 && (
         <div className="pagination">
-          <Pagin 
-            totalPages={totalPages} 
-            setPagination={setPagination} 
-          />
+          <Pagin totalPages={totalPages} setPagination={setPagination} />
         </div>
       )}
     </OngoingOrderWrapper>

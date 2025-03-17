@@ -8,6 +8,7 @@ import  fileDetailsReducer  from './customizeFilesDetails/reducer';
 import  specificationReducer  from './customizeFilesDetails/SpecificationReducer';
 import addressReducer from './Address/address.reducer.ts';
 import DeliveryReducer from './Address/deliveryDetails.ts';
+import { NotificationSlice } from './notification/notification.ts';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     specification: specificationReducer,
     address: addressReducer,
     delivery: DeliveryReducer,
+    notification:NotificationSlice.reducer
   },
 });
 

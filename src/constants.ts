@@ -31,6 +31,9 @@ import aboutUs1 from './assets/images/aboutUs1.svg';
 import aboutUs2 from './assets/images/aboutUs2.svg';
 import notificationIcon from './assets/icons/notifications.svg';
 import arrowRight from './assets/icons/right-arrow.svg';
+import navtabSmallScreen from './assets/icons/navtabSmallScreen.svg';
+import HowISWork from './assets/images/HowISWork.svg'
+import footerImg from './assets/images/Footer.svg';
 // export svg
 export {
   uploadIcon,
@@ -45,7 +48,10 @@ export {
   group,
   arrow_dropdown_blue,
   notificationIcon,
-  arrowRight
+  arrowRight,
+  navtabSmallScreen,
+  HowISWork,
+  footerImg
 };
 
 // Data for Tab
@@ -59,8 +65,18 @@ export const tabData = [
   { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
   { id: 4, label: ''}, // This is created for notification... 
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
-  
-  
+];
+
+export const DesktoptabData = [
+  { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
+  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
+];
+
+export const MobiltabData = [
+  { id: 0, label: '3D PRINT YOUR FUTURE', path: 'dashboard',},
+  { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
+  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
+  { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
 ];
 
 // Data for QuoteText
@@ -79,9 +95,8 @@ export const accTab = [
  export const notificationTab = [
   { id: 1, label: 'ONGOING ORDER' },
   { id: 2, label: 'PLACED ORDER' },
-  { id: 3, label: 'GENERAL' },
+  { id: 3, label: 'MY DISPUTES' },
   { id: 4, label: 'SETTINGS' },
-  { id: 5, label: 'MY DISPUTES' },
  ];
 // Data for Card
 export const cardItems = [
@@ -140,22 +155,10 @@ export const inputFields = [
     placeholder: 'Enter your first name',
   },
   {
-    label: 'Company',
-    name: 'companyName',
-    type: 'text',
-    placeholder: 'Enter your first name',
-  },
-  {
     label: 'Street Address',
     name: 'streetLines',
     type: 'text',
     placeholder: 'Enter your address',
-  },
-  {
-    label: 'State or Province Code',
-    name: 'stateOrProvinceCode',
-    type: 'text',
-    placeholder: 'Enter your state code',
   },
   {
     label: 'City',
@@ -167,7 +170,7 @@ export const inputFields = [
     label: 'Country',
     name: 'countryCode',
     type: 'text',
-    placeholder: 'Enter your country',
+    placeholder: 'Enter your country (GB)',
   },
   {
     label: 'Postal Code',
@@ -355,7 +358,7 @@ export const footerData = [
     url: '',
   },
   {
-    name: 'HOW IT WORKS',
+    name: 'WORKS',
     url: '',
   },
   {
@@ -372,14 +375,6 @@ export const footerData = [
   },
   {
     name: 'CONTACT US',
-    url: '',
-  },
-  {
-    name: 'YOUTUBE',
-    url: '',
-  },
-  {
-    name: 'NEWSLETTER',
     url: '',
   },
   {

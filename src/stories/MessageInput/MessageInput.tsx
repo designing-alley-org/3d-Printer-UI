@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { Box, styled, useMediaQuery } from '@mui/material';
 import AttachmentIcon from '../../assets/images/attachement.png';
 import ImgUpload from '../../assets/images/imgUpload.png';
 import SendIcon from '../../assets/images/send.svg';
@@ -22,19 +22,26 @@ interface InputFieldProps {
   handleSendAttachment: () => void;
 }
 
-const StyledInput = styled('input')(() => ({
-  width: '86%',
+const StyledInput = styled('input')(({ theme }) => ({
+  width: '100%',
   height: 'inherit',
   border: 'none',
   background: 'transparent',
   boxSizing: 'border-box',
-  fontSize: '1.25rem',
+  fontSize: '1rem',
   paddingLeft: '0.5rem',
   borderRadius: 'inherit',
   color: '#0080FF',
   outline: 'none',
   '::placeholder': {
     color: '#0080FF',
+  },
+  [theme.breakpoints.down('md')]: {
+    width: '82%',
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '78%',
+    fontSize: '0.8rem',
   },
 }));
 
@@ -62,7 +69,6 @@ export default function MessageInput({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
-
     const files = Array.from(e.target.files);
     const validAttachments: Attachment[] = files
       .filter(file => ALLOWED_FILE_TYPES.documents.includes(file.type))
@@ -83,6 +89,9 @@ export default function MessageInput({
       e.target.value = '';
     }
   };
+
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
@@ -126,8 +135,9 @@ export default function MessageInput({
     <Box
       sx={{
         width: '100%',
-        height: '4rem',
+        height: { xs: '2.5rem', sm: '3rem' },
         border: '3px solid',
+        padding: '0.2rem',
         borderColor: 'white',
         borderRadius: '3rem',
         display: 'flex',
@@ -164,59 +174,63 @@ export default function MessageInput({
       <Box
         onClick={() => imgRef.current?.click()}
         sx={{
-          width: '3rem',
-          height: '3rem',
+          width: { xs: '1.3rem', sm: '2rem' },
+          height: { xs: '1.3rem', sm: '2rem' },
           borderRadius: '50%',
           backgroundColor: '#BAD6FF',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          padding: '0.4rem',
           cursor: 'pointer',
           color: '#336DFF',
         }}
       >
-        <img src={ImgUpload} alt="attachment" style={{ width: '1.5rem' }} />
+        <img src={ImgUpload} alt="attachment" style={{ width:isSmallScreen ? '0.7rem' : '1rem' }} />
       </Box>
       
       <Box
         onClick={() => inputRef.current?.click()}
         sx={{
-          width: '3rem',
-          height: '3rem',
+          width: { xs: '1.3rem', sm: '2rem' },
+          height: { xs: '1.3rem', sm: '2rem' },
           borderRadius: '50%',
           backgroundColor: '#BAD6FF',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           cursor: 'pointer',
+          padding: '0.4rem',
           color: '#336DFF',
-          ml: '0.5rem',
+          ml:isSmallScreen ? '0.1rem' : '0.5rem',
         }}
       >
         <img
           src={AttachmentIcon}
           alt="attachment"
-          style={{ width: '1.5rem' }}
+          style={{ width: isSmallScreen ? '0.7rem' : '1rem' }}
         />
       </Box>
       
       <Box
         sx={{
-          width: '3rem',
-          height: '3rem',
+          width: { xs: '1.3rem', sm: '2rem' },
+          height: { xs: '1.3rem', sm: '2rem' },
           borderRadius: '50%',
           bgcolor: '#0080FF',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           cursor: 'pointer',
+          marginRight: isSmallScreen ? '0.2rem' : '0.5rem',
+          padding: '0.4rem',
           color: '#336DFF',
-          ml: '0.5rem',
+          ml:isSmallScreen ? '0.1rem' : '0.5rem',
         }}
         onClick={handleSend}
       >
         <img
-          style={{ height: '2rem', width: '2rem' }}
+         style={{ width: isSmallScreen ? '0.7rem' : '1rem' }}
           src={SendIcon}
           alt="send"
         />

@@ -28,8 +28,8 @@ export const MainCard = styled.div<MainCardProps>`
   flex: 0 0 33.33%;
   justify-content: space-between;
   width: 100%;
-  min-height: 32rem;
-  gap: 1.5rem;
+  min-height: 24rem;
+  gap: 1rem;
   border: 1px solid #deeeff;
   transition: all 0.3s ease-in-out;
   ${(props) =>
@@ -47,6 +47,11 @@ export const MainCard = styled.div<MainCardProps>`
         border-color: #e8eff9;
         box-shadow: none;
       `}
+
+  @media (max-width: 600px) {
+    min-height: 20rem;
+    gap:1rem
+  }
 `;
 
 export const Header = styled.div`
@@ -54,52 +59,119 @@ export const Header = styled.div`
   flex-direction: column;
   color: #1e6fff;
   .name {
-    font-size: 20px;
+    font-size: 16px;
   }
-  padding: 4rem 2rem 0rem 2rem;
+  padding: 3rem 1.5rem 0rem 1.5rem;
   img {
-    width: 3rem;
-    margin-bottom: 2rem;
+    width: 2rem;
+    margin-bottom: 1.5rem;
   }
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+
+
+  @media (max-width: 600px) {
+    padding: 2rem 1rem 0rem 1rem;
+    .name {
+      font-size: 0.9rem;
+    }
+      .sub_name {
+      font-size: 0.7rem;
+      }
+      padding: 1rem 1rem 0rem 1rem;
+    img {
+      width: 1.7rem;
+      margin-bottom: 1rem;
+    }
+      margin-bottom: 1rem;
+  }
 `;
 
 export const Body = styled.div`
   display: flex;
-  height: 48.5%;
+  height: 40.5%;
   flex-direction: column;
   justify-content: space-between;
+
   button {
     border-radius: 2rem;
     background: #1e6fff;
   }
   .btm {
-    display: flex;
     position: absolute;
     bottom: 0;
-    right: 0;
+    width: 100%;
+    display: flex;
+    hight: 100%;
     justify-content: space-between;
     .cost {
       color: #235ab0;
-      padding: 1rem 2rem;
-      font-size: 20px;
+      padding: 0.5rem 2rem;
+      font-size: 16px;
     }
     .btn {
-      padding: 1rem 3rem;
+      padding: .5rem 1.5rem;
       background: white;
-      border-top-left-radius: 3rem;
+      border-top-left-radius: 2rem;
       border-bottom-right-radius: 1rem;
-      
+      button{
+       width: 100%;
+       display: flex;
+        justify-content: center;
+        align-items: center;
+       height:2rem;
+       font-size: 0.8rem;
+       }
     }
+  }
+
+  @media (max-width: 600px) {
+  .btm {
+    position: absolute;
+    width: 100%;
+    hight: 100%;
+    .cost {
+      color: #235ab0;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      }
+    .btn {
+      padding: .5rem 1rem;
+      background: white;
+      button{
+       height:1.5rem;
+       font-size: 0.6rem;
+       }
+    }
+  }
   }
 `;
 export const Specs = styled.div`
   display: flex;
   flex-direction: column;
   color: #2359b0;
-  padding: 0rem 2rem;
+  font-size: 14px;
+  padding: 0rem 1.5rem;
+  @media (max-width: 600px) {
+    padding: 0rem 1rem;
+    font-size: 0.7rem;
+  }
 `;
 export const ButtonWrap = styled.div`
   display: flex;
-  justify-content: center;
-  margin-top: 2rem;`;
+  justify-content: end;
+  margin-top: 2rem;
+  .btn {
+    button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+      width: 10rem;
+      height: 2.5rem;
+      font-size: 1rem;
+      }
+
+  }
+  @media (max-width: 600px) {
+    margin-top: 1rem;
+    }
+`;

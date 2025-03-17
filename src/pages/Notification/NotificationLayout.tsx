@@ -33,7 +33,7 @@ const NotificationLayout = () => {
                 backgroundColor:
                   item.id === activeTab ? 'white' : 'transparent',
                 position: 'absolute',
-                left: '3.4%',
+                left: '4.8%',
                 zIndex: 9,
                 borderRadius: '3rem 0rem 0rem 3rem',
               }}
@@ -44,9 +44,8 @@ const NotificationLayout = () => {
       <MainComp>
         {activeTab === 1 && <OngoingOrder />}
         {activeTab === 2 && <PlaceOrder/>}
-        {activeTab === 3 && <General />}
+        {activeTab === 3 && <MyDisputes/>}
         {activeTab === 4 && <Settinges/>}
-        {activeTab === 5 && <MyDisputes/>}
       </MainComp>
     </NotWrapper>
   );

@@ -43,8 +43,8 @@ interface IPrinterDetails {
 
 const PrinterLibrary = () => {
   const [printerDetails, setPrinterDetails] = useState<IPrinterDetails[]>([]); // State to hold the fetched data
-  const [loading, setLoading] = useState<boolean>(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,9 +53,9 @@ const PrinterLibrary = () => {
       try {
         // Fetch the data from the API endpoint
         const response = await api.get('/printers');
-        setPrinterDetails(response.data.data); 
+        setPrinterDetails(response.data.data);
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch printers'); 
+        setError(err.message || 'Failed to fetch printers');
       } finally {
         setLoading(false); // Stop loading
       }
@@ -70,9 +70,9 @@ const PrinterLibrary = () => {
       <h3>Check Our Comprehensive Printer Library For All Your Needs</h3>
 
       {/* Show loading or error message */}
-      {loading && 
+      {loading &&
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Loader size={32} style={{color: '#1e6fff'}} />
+          <Loader size={32} style={{ color: '#1e6fff' }} />
         </div>}
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
@@ -102,19 +102,20 @@ const Wrapper = styled.section`
   margin: 2rem 6rem;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     color: #001331;
     margin-bottom: 0.5rem;
     font-weight: bold;
   }
 
   h3 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #525e86;
     margin-bottom: 2rem;
   }
 
   .cards {
+  width: 100%;
     .react-multi-carousel-list {
       padding: 1rem 0;
     }
@@ -132,6 +133,15 @@ const Wrapper = styled.section`
   p {
     color: #333;
     font-size: 1rem;
+  }
+    @media (max-width: 768px) {
+    margin: 2rem 1rem;
+    h1 {
+      font-size: 2rem;
+    }
+    h3 {
+      font-size: 1rem;
+    }
   }
 `;
 

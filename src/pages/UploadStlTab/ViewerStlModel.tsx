@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import { arrow_left, arrow_right, cross } from '../../constants';
@@ -58,7 +58,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
   }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentFileUrl, setCurrentFileUrl] = useState<string | null>(null);
-
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
     const isFileData = (file: FileData | LocalFileData): file is FileData => {
       return '_id' in file && 'fileUrl' in file;
     };
@@ -134,7 +134,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
         <Box sx={styles.modalContainer}>
           <Box sx={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <Box sx={styles.closeButton}>
-              <ButtonIcon svgPath={cross} onClick={handleClose} />
+              <ButtonIcon svgPath={cross} onClick={handleClose} imagePadding={isSmallScreen ? '2px' : '0px'}/>
             </Box>
             <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
             <Box sx={styles.viewerContent}>

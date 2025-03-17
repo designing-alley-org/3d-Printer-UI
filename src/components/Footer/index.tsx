@@ -1,17 +1,19 @@
 import React from 'react';
 import { FooterData, Numbers, Wrapper } from './styles';
-import { footerData } from '../../constants';
+import { footerData, footerImg, HowISWork } from '../../constants';
 import PrinterLibrary from '../PrinterLibrary';
 import WhyUs from '../whyUs';
 import Contact from '../contactInfo';
-// import PrinterLibrary from '../PrinterLibrary';
 import numbers from '../../assets/images/numbersIcon.jpeg';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import AboutUs from '../../pages/Services/AboutUs';
+import { useMediaQuery } from '@mui/material';
+import Image from '../../stories/Image/Image';
 
 const Footer: React.FC = () => {
   const { pathname } = useLocation();
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   return (
     <Wrapper>
       {pathname.includes(ROUTES.DASHBOARD) && (
@@ -20,11 +22,13 @@ const Footer: React.FC = () => {
             Checkout our special editions curated collections and merchant
             specials and more in our 3d assets library
           </h2>
-          <Numbers>
+         {!isSmallScreen ? <Numbers>
             <img src={numbers} />
             <section>
               <span className="sect">
-                <h1>SELECT 3D MODEL/UPLOAD YOURS </h1>
+                <h1>SELECT 
+                   <span className='upload'> 3D MODEL/UPLOAD YOURS </span>
+                </h1>
                 <h3>CUSTOMIZE PRINTING OPTIONS</h3>
               </span>
               <span className="sect">
@@ -36,7 +40,8 @@ const Footer: React.FC = () => {
                 <h3>FUTURE PRINTED</h3>
               </span>
             </section>
-          </Numbers>
+          </Numbers> : <Numbers><img src={HowISWork} /></Numbers>
+            }
         </>
       )}
       {pathname.includes(ROUTES.DASHBOARD) && <PrinterLibrary />}
@@ -55,6 +60,10 @@ const Footer: React.FC = () => {
               ))}
             </div>
           </FooterData>
+          <div className='footerImg'>
+            <h3 className='footerTitle'>3D PRINT YOUR FUTURE</h3>
+          <Image src={footerImg} alt={'footer'} />
+          </div>
         </>
       )}
     </Wrapper>

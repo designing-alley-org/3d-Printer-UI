@@ -21,6 +21,7 @@ a:hover {
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
   width: -webkit-fill-available;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

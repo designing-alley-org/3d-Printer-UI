@@ -4,6 +4,8 @@ export interface User {
     email?: string;
     name?: string;
     phone_no?: string;
+    phone_ext?: string;
+
 }
 export const updateUser = async (userData: User) => {
     

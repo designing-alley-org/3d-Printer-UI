@@ -14,8 +14,8 @@ const Contact = () => {
         out
       </h2>
       <ContactBtn>
-        <span>.</span>
-        <div>
+        <span></span>
+        <div className='btn-container'>
           <Button label="Contact Us" onClick={Function} />
         </div>
       </ContactBtn>

@@ -5,6 +5,7 @@ import { getUserOrder } from "../../store/actions/getUserOrder";
 import Pagin from "../../components/Paging/Pagin";
 import { OrderWrapper } from "./styles";
 import { Loader } from "lucide-react";
+import { formatDateTime, formatOrderStatus } from "../../utils/Validation";
 
 // Define interfaces for type safety
 interface Order {
@@ -46,27 +47,6 @@ const MyOrders = () => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
   };
 
-  const formatOrderStatus = (status: string): string => {
-    return status
-      .replace(/_/g, " ")
-      .replace(/^./, (match) => match.toUpperCase());
-  };
-
-  const formatDateTime = (dateString: string): string => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(dateString));
-  };
-
-  if (isLoading) {
-    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-      <Loader size="50" color="#0066ff" />
-    </div>;
-  }
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -75,10 +55,16 @@ const MyOrders = () => {
   return (
     <OrderWrapper>
       <div className="orders-container">
-        <h2 className="orders-title">TOTAL ORDERS</h2>
+        <h3 className="orders-title">TOTAL ORDERS</h3>
 
-        {!orders?.order?.length ? (
-          <p className="no-orders">No orders found.</p>
+        {isLoading ? (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
+            <Loader size="35" color="#0066ff" />
+          </div>
+        ) : !orders?.order?.length ? (
+          <div className="no-orders-container">
+            <p className="no-orders">No orders found.</p>
+          </div>
         ) : (
           <div className="orders-list">
             {orders.order.map((item: Order) => (
@@ -99,15 +85,14 @@ const MyOrders = () => {
                 )}
               </div>
             ))}
-
-            <div className="pagination">
-              <Pagin
-                setPagination={setPagination}
-                totalPages={orders.totalPages}
-              />
-            </div>
           </div>
         )}
+        <div className="pagination">
+          <Pagin
+            setPagination={setPagination}
+            totalPages={orders?.totalPages ?? 1}
+          />
+        </div>
       </div>
     </OrderWrapper>
   );

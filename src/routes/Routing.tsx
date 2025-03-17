@@ -21,6 +21,7 @@ import Services from '../pages/Services/index.tsx';
 import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import Notifications from '../pages/Notification/index.tsx';
+import ForgetPassword from '../pages/loginPage/forgetPassword';
 
 const Routing: React.FC = () => {
   return (
@@ -28,18 +29,10 @@ const Routing: React.FC = () => {
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
       <Route path={ROUTES.GOOGLE_AUTH} element={<GoogleAuthHandler />} />
+      <Route path="/forgot-password" element={<ForgetPassword />} />
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} />} />
         <Route path={ROUTES.DASHBOARD} element={<DashboardLayout />}>
-          {/* <Route index element={<QuoteCard />} />
-          <Route path={ROUTES.UPLOAD_STL} element={<UploadStlCard />} />
-          <Route path={ROUTES.CUSTOMIZE} element={<Customize />} />
-          <Route path={ROUTES.QUOTE} element={<Quote />} />
-          <Route path={ROUTES.CHECKOUT} element={<CheckOut />}>
-            <Route index element={<ShippingDetails />} />
-            <Route path={ROUTES.DELIVERY_PLAN} element={<DeliveryPlan />} />
-            <Route path={ROUTES.PAYMENT} element={<PaymentDetails />} />
-          </Route> */}
         </Route>
         <Route
           path={ROUTES.GET_QUOTES}
@@ -51,7 +44,7 @@ const Routing: React.FC = () => {
               path={ROUTES.UPLOAD_STL}
               element={
                 <ProtectedRoute
-                  component={<UploadStlCard files={[]} setFiles={() => {}} />}
+                  component={<UploadStlCard files={[]} setFiles={() => { }} />}
                 />
               }
             />
@@ -84,7 +77,7 @@ const Routing: React.FC = () => {
         </Route>
         <Route path={ROUTES.SERVICES} element={<Services />} />
         <Route path={ROUTES.ACCOUNT} element={<Account />} />
-        <Route path={ROUTES.Notification} element={<Notifications/>} />
+        <Route path={ROUTES.Notification} element={<Notifications />} />
         <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
       </Route>
 

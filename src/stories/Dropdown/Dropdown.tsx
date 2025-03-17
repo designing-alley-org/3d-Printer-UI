@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ Dropdown.css';
 import { arrow_dropdown_blue } from '../../constants';
-type Option = {
+export type Option = {
   id: number;
   value: string;
   label: string;
@@ -84,7 +84,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         aria-expanded={isOpen}
       >
         <span className="dropdown-header-title">{headerTitle}</span>
-        {isOpen ? <img src={arrow_dropdown_blue} alt="dropdown arrow" style={{ transform: 'rotate(180deg)' }} /> : <img src={arrow_dropdown_blue} alt="dropdown arrow" />}
+        {isOpen ? <img src={arrow_dropdown_blue} alt="dropdown arrow" style={{ transform: 'rotate(180deg)', transition: 'transform 0.3s ease',width:'1.2rem' }} /> : <img src={arrow_dropdown_blue} alt="dropdown arrow" style={{  transition: 'transform 0.3s ease',width:'1.2rem' }}/>}
       </button>
       {isOpen && (
         <div className="dropdown-list" role="listbox">

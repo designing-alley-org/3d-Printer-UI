@@ -4,6 +4,7 @@ import { InputField } from '../../stories/Input/InputField';
 import Button from '../../stories/button/Button';
 import { toast } from 'react-toastify';
 import { updatePassword } from '../../store/actions/updatePassword';
+import { validatePassword } from '../../utils/Validation';
 
 interface FormState {
     old_password: string;
@@ -28,25 +29,7 @@ const Password = () => {
         setErr(''); // Clear errors when user makes changes
     };
     
-    const validatePassword = (password: string): boolean => {
-        const minLength = 6;
-        const hasNumber = /\d/.test(password);
-        const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        
-        if (password.length < minLength) {
-            setErr(`Password must be at least ${minLength} characters long`);
-            return false;
-        }
-        if (!hasNumber) {
-            setErr('Password must contain at least one number');
-            return false;
-        }
-        if (!hasSpecial) {
-            setErr('Password must contain at least one special character');
-            return false;
-        }
-        return true;
-    };
+    
     
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,7 +42,7 @@ const Password = () => {
         }
         
         // Validate new password
-        if (!validatePassword(form.new_password)) {
+        if (!validatePassword(form.new_password, setErr)) {
             return;
         }
         

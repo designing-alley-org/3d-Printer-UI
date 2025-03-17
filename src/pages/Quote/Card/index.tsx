@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { QuoteBox } from './styles';
 import Chat from '../Chat';
 import { useEffect, useState } from 'react';
@@ -33,6 +33,8 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
   const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+
   async function getQuotes() {
     getQuoteByOrderId({
       orderId: (orderId as string) || selectOrderIdProps || '',
@@ -47,12 +49,12 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
   return (
     <QuoteBox>
       <Typography
-        sx={{ color: '#0C2850', position: 'absolute', top: '-1%' }}
-        variant="h2"
+        sx={{ color: '#0C2850', position: 'absolute', top: '-1%',width:isSmallScreen?'45%':'100%',}}
+        variant={isSmallScreen ? 'body2' : 'h1'}
       >
         Connecting For {selectOrderIdProps ? 'Dispute' : 'Quote'}
       </Typography>
-      <Box sx={{ position: 'absolute', right: '0rem', top: '0' }}>
+      <Box sx={{ position: 'absolute', right: isSmallScreen ? '-3.5rem' :  '-3rem', top: '0' }}>
         {' '}
         <span className="quoteBtn">
           <ButtonWithIcon
@@ -61,24 +63,25 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
               setShowQuote(!showQuote);
               getQuotes();
             }}
+            sx={{
+              height: isSmallScreen ? '1.5rem' : '2.7rem',
+              fontSize: isSmallScreen ? '0.6rem !important' : '0.8rem',
+              width: isSmallScreen ? '7rem !important' : '', 
+              padding: isSmallScreen ? '0rem !important' : '',
+            }}
             iconPosition="end"
             Icon={
-              showQuote ? (
-                <img
-                  src={arrow}
-                  style={{
-                    rotate: '180deg',
-                    filter: 'brightness(0) invert(1)',
-                  }}
-                />
-              ) : (
-                <img
-                  src={arrow}
-                  style={{
-                    filter: 'brightness(0) invert(1)',
-                  }}
-                />
-              )
+              <img
+                src={arrow}
+                style={{
+                  filter: 'brightness(0) invert(1)',
+                  transform: showQuote ? 'rotate(180deg)' : undefined,
+                  transition: 'all 0.3s ease-in-out',
+                  height: isSmallScreen ? '0.9rem' : '1.5rem',
+                  width: isSmallScreen ? '0.9rem' : '1.5rem',
+                }}
+                alt="Arrow"
+              />
             }
           />
         </span>
@@ -107,7 +110,7 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
           />
         }
       </Box>
-      <Box sx={{ height: '90%', width: '100%', mt: '1rem' }}>
+      <Box sx={{ height: '100%', width: '100%', mt: '1rem' }}>
         <Chat />
       </Box>
     </QuoteBox>

@@ -271,6 +271,7 @@ const CustomizeTab: React.FC = () => {
             <span className="file">Files</span>
             <span className="count">{files.length}</span>
           </span>
+          <div className="file-list">
           <UploadedFile>
             {fileDetails.map((file : any ) => (
               <span
@@ -307,58 +308,37 @@ const CustomizeTab: React.FC = () => {
                   {file?.fileName.split('_')[1] || file?.fileName.split('/').pop()}
                 </ModelName>
                 <CustomizeBox>
-                  <img
-                    src={materialIcon}
-                    alt={'material'}
-                    style={{
-                      filter:
-                        fileDetails.some(f => f._id === file._id && f.material)
-                          ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                          : 'none',
-                    }}
-                  />
-                  <img
-                    src={colorIcon}
-                    alt={'color'}
-                    style={{
-                      filter:
-                        fileDetails.some(f => f._id === file._id && f.color)
-                          ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                          : 'none',
-                    }}
-                  />
-                  <img
-                    src={printerIcon}
-                    alt={'printer'}
-                    style={{
-                      filter:
-                        fileDetails.some(f => f._id === file._id && f.printer)
-                          ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                          : 'none',
-                    }}
-                  />
-                   <img
-                    src={infil}
-                    alt={'infill'}
-                    style={{
-                      filter:
-                        fileDetails.some(f => f._id === file._id && f.infill)
-                          ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                          : 'none',
-                          width: '2rem',
-                    }}
-                  />
+                  {[
+                    { icon: materialIcon, key: 'material' },
+                    { icon: colorIcon, key: 'color' },
+                    { icon: printerIcon, key: 'printer' },
+                    { icon: infil, key: 'infill', additionalStyle: { width: '1rem' } },
+                  ].map(({ icon, key, additionalStyle }) => (
+                    <img
+                      src={icon}
+                      alt={key}
+                      style={{
+                        filter:
+                          fileDetails.some((f:any) => f._id === file._id && f[key])
+                            ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
+                            : 'none',
+                        ...additionalStyle,
+                      }}
+                      key={key}
+                    />
+                  ))}
                 </CustomizeBox>
               </span>
             ))}
           </UploadedFile>
+          </div>
         </Files>
         <Customize>
           <div className="customize-container">
             {
               activeFileId===null ? 
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-              <h2>Please select a file to customize</h2>
+              <div className='no-file'>
+              <h3 className='no-file-title'>Please select a file to customize</h3>
               </div> : null 
             }
             {activeFileId && customize.map((item) => (

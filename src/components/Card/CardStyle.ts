@@ -1,78 +1,87 @@
+
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 
 export const BoxWrapper = styled(Box)({
-  height: '22.4rem',
+  padding: '1rem 0',
   backgroundColor: '#DDE9FC',
   boxShadow: '0px 0px 2.1px 0px #0066FFB2',
   borderRadius: '1.3rem',
+  width: '100%',
+  maxWidth: '20rem',
+  minHeight: '17rem',
+  position: 'relative',
+
+  '@media (max-width: 768px)': {
+    maxWidth: '18rem',
+    minHeight: '15rem',
+    padding: '1rem 0 0 0',
+
+  },
 });
 
-export const BlackBox = styled(Box)({
-  height: '12.6rem',
-  backgroundColor: '#DDE9FC',
-  borderTopLeftRadius: '1.3rem',
-  borderTopRightRadius: '1.3rem',
-  position: 'relative',
-  overflow: 'hidden',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    width: '2.98125rem',
-    height: '1.75rem',
-    backgroundColor: '#DDE9FC',
-    bottom: '-0.2%',
-    right: 0,
-    borderRadius: '2.3125rem 0px 0px 0px',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    bottom: 0.3,
-    right: '2.6rem',
-    backgroundColor: 'transparent',
-    width: '5.25rem',
-    height: '1.5rem',
-    borderBottomRightRadius: '8.25rem',
-    boxShadow: '0.313rem .74rem 0 0 #DDE9FC',
-  },
-});
 
 export const IdText = styled(Typography)({
   fontFamily: 'Michroma, sans-serif',
   fontWeight: 400,
-  fontSize: '1.8rem',
-  position: 'absolute',
-  left: '1.3rem',
-  top: '1.3rem',
+  fontSize: '1.3rem',
   color: '#1E6FFF',
+  position: 'absolute',
+  top:'1rem',
+  left:'2rem',
+
+  '@media (max-width: 768px)': {
+    fontSize: '1rem',
+    top:'.7rem',
+    left:'1.2rem',
+  },
 });
 
+
+
 export const IconBox = styled(Box)({
-  height: '6.6rem',
-  width: '6.6rem',
-  borderRadius: '50%',
-  backgroundColor: '#0066FF',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  height: "5rem",
+  width: "5rem",
+  borderRadius: "50%",
+  backgroundColor: "#0066FF",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  marginTop: "2rem",
+
+  "@media (max-width: 768px)": {
+    height: "4rem",
+    width: "4rem",
+    padding: "1.2rem",
+    marginTop: "1.5rem",
+  },
 });
+
 
 export const UpperText = styled(Typography)({
   fontFamily: 'Michroma, sans-serif',
   fontWeight: 400,
-  fontSize: '1.2rem',
-  position: 'absolute',
-  bottom: '0.7rem',
-  left: '1rem',
+  fontSize: '1rem',
   color: '#001331',
-  width: '90%',
   textAlign: 'center',
+  marginTop: '1.5rem',
+
+  '@media (max-width: 768px)': {
+    fontSize: '0.7rem',
+    marginTop: '1rem',
+  },
 });
 
 export const BottomText = styled(Typography)({
   fontFamily: 'Montserrat, sans-serif',
   fontWeight: 400,
-  fontSize: '1rem',
+  fontSize: '0.9rem',
   color: '#001331',
+  textAlign: 'center',
+  marginTop: '1.5rem',
+
+  '@media (max-width: 768px)': {
+    fontSize: '0.7rem',
+    padding: '0 .7rem',
+  },
 });

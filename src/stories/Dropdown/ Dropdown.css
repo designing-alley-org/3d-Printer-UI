@@ -30,9 +30,9 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 4rem;
+  top: 3rem;
   width: 100%;
-  max-height: 10rem;
+  max-height: 9rem;
   overflow-y: auto;
   border: 1px solid #66A3FF;
   z-index: 1;
@@ -46,7 +46,7 @@
   background-color: white;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 13px;
   color: #759bff;
   display: flex;
   align-items: center;

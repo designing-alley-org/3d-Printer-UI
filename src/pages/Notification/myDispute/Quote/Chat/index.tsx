@@ -36,7 +36,7 @@ export default function Chat({ disputeId }: IChatProps) {
   
 
   useEffect(() => {
-    const newSocket: Socket = io(import.meta.env.VITE_AWS_URL as string, {
+    const newSocket: Socket = io(import.meta.env.VITE_API_URL as string, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
     });

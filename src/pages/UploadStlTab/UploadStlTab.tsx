@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/system';
 import UploadStlCardFile from './UploadStlCardFile';
 import * as styles from './styles';
@@ -9,6 +9,8 @@ import { saveFile } from '../../utils/indexedDB';
 import { useParams } from 'react-router-dom';
 import { deleteStlFileByFileId } from '../../store/actions/deleteStlFileByFileId';
 import { getFilesByOrderIdForUploadstl } from '../../store/actions/getFilesByOrderId';
+import { Loader } from 'lucide-react';
+import Button from '../../stories/button/Button';
 
 interface ModelDimensions {
   height: number;
@@ -123,7 +125,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         setFiles((prevFiles) => {
           const fileToRemove = prevFiles.find((file) => file._id === fileId);
           if (fileToRemove?.fileUrl) {
-            URL.revokeObjectURL(fileToRemove.fileUrl); 
+            URL.revokeObjectURL(fileToRemove.fileUrl);
           }
           return prevFiles.filter((file) => file._id !== fileId);
         });
@@ -207,7 +209,9 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
   );
 
   if (isPageLoading) {
-    return <Typography>Loading...</Typography>;
+    return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
+      <Loader color='#0066FF'/>
+    </Box>;
   }
 
   return (
@@ -221,20 +225,17 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
       <Box sx={styles.unitContainer}>
         <Box sx={styles.unitSection}>
           <Typography sx={styles.unitText}>Unit of Measurement</Typography>
-          {uploadDimBtnData.map((item) => (
+            {uploadDimBtnData.map((item) => (
             <Button
               onClick={() => handleUnitClick(item.name)}
               key={item.id}
-              sx={
-                {
-                  ...styles.unitButton,
-                  ...(selectedUnit === item.name && styles.activeButton),
-                } as SxProps<Theme>
-              }
-            >
-              {item.name}
-            </Button>
-          ))}
+              style={{
+              ...styles.unitButton,
+              ...(selectedUnit === item.name && styles.activeButton),
+              }}
+              label={item.name}
+            />
+            ))}
         </Box>
         <Box sx={styles.fileCountSection}>
           <Typography sx={styles.fileText}>Files</Typography>

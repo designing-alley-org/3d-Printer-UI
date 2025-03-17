@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   BoxWrapper,
-  BlackBox,
   IdText,
   IconBox,
   UpperText,
@@ -19,29 +18,26 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ sx, id, icon, upperText, bottomText }) => {
   return (
-    // Outer box
     <BoxWrapper sx={sx}>
-      {/* Black Box */}
-      <BlackBox>
         <Box
           sx={{
-            height: '90%',
+            height: '100%',
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
           <IdText>{id}</IdText>
           <IconBox>
-            {/* Display the image passed via props */}
-            {icon && <img src={icon} alt={`${id} Icon`} />}
+            {icon && <img src={icon} alt={`${id} Icon`}  style={{ maxWidth: '100%', maxHeight: '100%' }}  />}
           </IconBox>
-        </Box>
-        <UpperText>{upperText}</UpperText>
-      </BlackBox>
-      <Box sx={{ padding: '1.2rem 1.5rem' }}>
+          <UpperText>{upperText}</UpperText>
+        
+     
         <BottomText>{bottomText}</BottomText>
-      </Box>
+        </Box>
+    
     </BoxWrapper>
   );
 };

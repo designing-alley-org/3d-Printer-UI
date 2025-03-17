@@ -3,8 +3,12 @@ import { NotificationCard } from '../NotificationCard';
 import { MyDisputesWrapper } from './styles';
 import { getAllDispute } from '../../../store/actions/getAllDispute';
 import Pagin from '../../../components/Paging/Pagin';
-import { ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeftIcon, Loader } from 'lucide-react';
 import Quote from './Quote/Card';
+import { formatDateTime } from '../../../utils/Validation';
+import { useSelector, useDispatch } from 'react-redux';
+import api from '../../../axiosConfig';
+import { deleteNotification } from '../../../store/notification/notification';
 
 interface Dispute {
   _id: string;
@@ -19,30 +23,46 @@ interface DisputeResponse {
   totalPages: number;
 }
 
+interface Notification {
+  _id: string; // Notification ID
+  dispute_id: string;
+  readStatus: boolean;
+}
+
 const MyDisputes: React.FC = () => {
+  const dispatch = useDispatch();
   const [disputeData, setDisputeData] = useState<DisputeResponse>({
     disputes: [],
     totalPages: 0
   });
   const [pagination, setPagination] = useState<number>(1);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Get notifications from Redux store
+  const notifications = useSelector((state: any) => state.notification.notification);
+  
+  // Create a map of dispute IDs with their notification ID and readStatus
+  const notificationMap: Map<string, { readStatus: boolean; notificationId: string }> = new Map(
+    notifications.map((n: any) => [
+      n.dispute_id,
+      { readStatus: n.readStatus, notificationId: n._id }
+    ])
+  );
+
   useEffect(() => {
     const fetchDisputes = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        setIsLoading(true);
-        setError(null);
         const response = await getAllDispute(pagination);
-        
         if (!response) {
           throw new Error('Failed to fetch disputes');
         }
-
         setDisputeData({
-          disputes: response.disputes || [],
+          disputes: response.disputes,
           totalPages: response.totalPages || 0
         });
       } catch (err) {
@@ -52,27 +72,47 @@ const MyDisputes: React.FC = () => {
         setIsLoading(false);
       }
     };
-
-    void fetchDisputes();
+    fetchDisputes();
   }, [pagination]);
 
-  const formatDate = (dateString: string): string => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(dateString));
-  };
+  // Sorting logic: Prioritize unread disputes and sort by createdAt (recent first)
+  useEffect(() => {
+    if (disputeData.disputes.length > 0) {
+      setDisputeData((prevData) => {
+        return {
+          ...prevData,
+          disputes: prevData.disputes.slice().sort((a, b) => {
+            const aRead = notificationMap.get(a._id)?.readStatus ?? true; // Default to true (read)
+            const bRead = notificationMap.get(b._id)?.readStatus ?? true;
 
-  const capitalizeFirstLetter = (str: string): string => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
+            if (!aRead && bRead) return -1; // Unread comes first
+            if (aRead && !bRead) return 1;
 
-  const handleChatOpen = (dispute: Dispute) => () => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Recent first
+          })
+        };
+      });
+    }
+  }, [notifications, disputeData.disputes]);
+
+  const capitalizeFirstLetter = (str: string): string =>
+    str.charAt(0).toUpperCase() + str.slice(1);
+
+  const handleChatOpen = (dispute: Dispute) => async () => {
     setSelectedDispute(dispute);
     setIsChatOpen(true);
+
+    // Mark notification as read when opening the chat
+    const notificationInfo = notificationMap.get(dispute._id);
+    if (notificationInfo && !notificationInfo.readStatus) {
+      try {
+        await api.put(`/api/v1/notifications/${notificationInfo.notificationId}/read`);
+        // Update Redux store
+        dispatch(deleteNotification(notificationInfo.notificationId));
+      } catch (error) {
+        console.error("Failed to mark notification as read:", error);
+      }
+    }
   };
 
   const handleBack = () => {
@@ -84,7 +124,9 @@ const MyDisputes: React.FC = () => {
     return (
       <MyDisputesWrapper>
         <h2>MY DISPUTES</h2>
-        <div className="loading">Loading...</div>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
+          <Loader size="50" color="#0066ff" />
+        </div>
       </MyDisputesWrapper>
     );
   }
@@ -109,14 +151,13 @@ const MyDisputes: React.FC = () => {
               style={{ cursor: 'pointer' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-            <p> Order No. - {selectedDispute?.orderId}</p>
-            <p> Dispute Type. - {selectedDispute?.dispute_type}</p>
+              <p> Order No. - {selectedDispute?.orderId}</p>
+              <p> Dispute Type. - {selectedDispute?.dispute_type}</p>
             </div>
-
           </div>
-            <div>
-              <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId} />
-            </div>
+          <div>
+            <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId} />
+          </div>
         </>
       ) : (
         <>
@@ -127,18 +168,21 @@ const MyDisputes: React.FC = () => {
             </div>
           ) : (
             <>
-              {disputeData.disputes.map((dispute) => (
-                <NotificationCard
-                  key={dispute._id}
-                  title={`Type: ${capitalizeFirstLetter(dispute.dispute_type)}`}
-                  orderNumber={dispute.orderId}
-                  dateTime={formatDate(dispute.createdAt)}
-                  buttonLabel="Chat"
-                  status={dispute.status}
-                  onButtonClick={handleChatOpen(dispute)}
-                />
-              ))}
-              
+              {disputeData.disputes.map((dispute) => {
+                const notification = notificationMap.get(dispute._id);
+                return (
+                  <NotificationCard
+                    key={dispute._id}
+                    title={`Type: ${capitalizeFirstLetter(dispute.dispute_type)}`}
+                    orderNumber={dispute.orderId}
+                    dateTime={formatDateTime(dispute.createdAt)}
+                    buttonLabel="Chat"
+                    status={dispute.status}
+                    onButtonClick={handleChatOpen(dispute)}
+                    isUnread={notification ? !notification.readStatus : false}
+                  />
+                );
+              })}
               {disputeData.totalPages > 1 && (
                 <div className="pagination">
                   <Pagin 

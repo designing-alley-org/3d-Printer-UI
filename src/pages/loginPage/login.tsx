@@ -9,6 +9,7 @@ import {
   Typography,
   Paper,
   styled,
+  useMediaQuery,
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -18,10 +19,13 @@ import { RootState } from '../../store/types';
 import "./styles.css";
 import { toast } from 'react-toastify';
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '25px',
+    height: '2.2rem',
+    fontSize: '0.9rem',
+    marginTop: '0.5rem',
     '& fieldset': {
       borderColor: 'transparent',
     },
@@ -32,7 +36,15 @@ const StyledTextField = styled(TextField)({
       borderColor: '#0066ff',
     },
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    '& .MuiOutlinedInput-input, & .MuiInputLabel-outlined': {
+      fontSize: '0.65rem',
+    },
+    '& .MuiInputLabel-shrink': {
+      transform: 'translate(14px, -6px) scale(0.75)',
+    },
+  },
+}));
 
 const SocialButton = styled(Button)({
   borderRadius: '25px',
@@ -58,82 +70,50 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const { loading, error } = useSelector((state: RootState) => state.auth);
   const handleGoogleLogin = () => {
-    window.open(`${import.meta.env.VITE_AWS_URL}/auth/google`, '_self');
+    window.open(`${import.meta.env.VITE_API_URL}/auth/google`, '_self');
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-      await dispatch(login(email, password, navigate));
+    await dispatch(login(email, password, navigate));
   };
 
-useEffect(()=>{
-  if(error) toast.error(error)
-},[error])
+  useEffect(() => {
+    if (error) toast.error(error)
+  }, [error])
 
 
   return (
-    <div className='AuthBG'>
-      <Container maxWidth="sm">
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            borderRadius: '20px',
-            background: 'white',
-            mt: 4,
-          }}
-        >
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ textAlign: 'left' }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                mb: 1,
-                fontWeight: 500,
-                letterSpacing: '0.5px',
-              }}
-            >
+    <div className='AuthBG' >
+      <Container maxWidth={'xs'}>
+        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white' }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
+            <Typography sx={{ fontWeight: 500, fontSize:  '1rem' }}>
               WELCOME TO
             </Typography>
-            <Typography
-              variant="h4"
-              sx={{
-                mb: 4,
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-              }}
-            >
+            <Typography sx={{ mb: 1, fontWeight: 700, fontSize: isSmallScreen ? '1.2rem' : '1.3rem' }}>
               3D PRINT YOUR FUTURE
             </Typography>
 
-            <Typography
-              variant="h6"
-              sx={{
-                mb: 2,
-                color: '#0066ff',
-                fontWeight: 500,
-              }}
-            >
+            <Typography sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize:'1rem' }}>
               Login
             </Typography>
 
-            <Box sx={{ mb: 3 }}>
-              <Typography sx={{ mb: 1 }}>Email</Typography>
+            <Box sx={{ mb: 2 }}>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>Email</Typography>
               <StyledTextField
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Kamrul@Gmail.Com"
+                placeholder="someone@example.com"
                 variant="outlined"
               />
             </Box>
 
-            <Box sx={{ mb: 3 }}>
-              <Typography sx={{ mb: 1 }}>Password</Typography>
+            <Box sx={{ mb: 2 }}>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>Password</Typography>
               <StyledTextField
                 fullWidth
                 type="password"
@@ -143,58 +123,34 @@ useEffect(()=>{
                 variant="outlined"
               />
             </Box>
-            <Typography
-              sx={{
-                mb: 2,
-                textAlign: 'center',
-                color: 'text.secondary',
-              }}
-            >
+
+            <Box sx={{ textAlign: 'right', mb: 1 }}>
+              <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize :'.6rem' }}>
+                Forgot Password?
+              </Link>
+            </Box>
+
+            <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary', fontSize: isSmallScreen ? '0.8rem' : '.7rem' }}>
               Or Continue With
             </Typography>
 
-            <Box
-              sx={{
-                display: 'flex',
-                gap: 2,
-                mb: 3,
-                justifyContent: 'center',
-              }}
-            >
-              <SocialButton
-                onClick={handleGoogleLogin}
-                startIcon={
-                  <GoogleIcon sx={{ animation: 'none', transform: 'none' }} />
-                }
-              >
+            <Box sx={{
+              display: 'flex', gap: 1, mb: 2, justifyContent: 'center', '& .MuiButton-root': {
+                fontSize:'.6rem',
+              },
+            }}>
+              <SocialButton onClick={handleGoogleLogin} startIcon={<GoogleIcon />}>
                 Google
               </SocialButton>
-              <SocialButton
-                startIcon={
-                  <FacebookIcon sx={{ animation: 'none', transform: 'none' }} />
-                }
-              >
+              <SocialButton startIcon={<FacebookIcon />}>
                 Facebook
               </SocialButton>
             </Box>
 
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography sx={{ color: 'text.secondary' }}>
-                New Here?{' '}
-                <Link
-                  to="/signup"
-                  style={{
-                    textTransform: 'none',
-                    fontWeight: 'bold',
-                    color: '#0066ff',
-                  }}
-                >
+            <Box sx={{ display: 'flex', gap: .6, justifyContent: 'space-between', mb: 2 }}>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem', textAlign: 'start' }}>
+                New Here?{' '} <br />
+                <Link to="/signup" style={{ fontWeight: 'bold', color: '#0066ff', fontSize: isSmallScreen ? '0.6rem' : '.9rem' }}>
                   Register Now
                 </Link>
               </Typography>
@@ -205,18 +161,18 @@ useEffect(()=>{
                 fullWidth
                 disabled={loading}
                 sx={{
+                  width: '11rem',
+                  height: '2.3rem',
                   bgcolor: '#0066ff',
                   borderRadius: '25px',
-                  py: 1.5,
-                  mb: 2,
-                  '&:hover': {
-                    bgcolor: '#0052cc',
-                  },
+                  fontSize: isSmallScreen ? '0.85rem' : '.7rem',
+                  '&:hover': { bgcolor: '#0052cc' },
                 }}
               >
                 {loading ? 'Logging in...' : 'Login'}
               </Button>
             </Box>
+
           </Box>
         </Paper>
       </Container>

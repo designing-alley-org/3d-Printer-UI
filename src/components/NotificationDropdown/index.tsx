@@ -1,4 +1,4 @@
-import CurverCard from '../MainCurveCard';
+import CurverCard from '../NotificationCurveCard';
 import Button from '../../stories/button/Button';
 import './style.css';
 import { useNavigate } from 'react-router-dom';
@@ -44,17 +44,13 @@ const Notifications = ({
       <div className="button">
         <Button
           label="Ignore"
-          onClick={() => {
-            setShowNotification(false);
-          }}
-          color=" #0066FF"
+          onClick={() => { setShowNotification(false) }}
+          color=' #0066FF'
           className="ignore-btn"
         />
         <Button
           label={'Show'}
-          onClick={() => {
-            navigateToNotification();
-          }}
+          onClick={() => { navigateToNotification() }}
           className="show-btn"
         />
       </div>

@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { StlViewer } from 'react-stl-viewer';
 import { getFile } from '../../utils/indexedDB';
+import { Loader } from 'lucide-react';
+import { useMediaQuery } from '@mui/material';
 
 interface ModelDimensions {
   height: number;
@@ -26,7 +28,7 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
   const [loading, setLoading] = useState(true);
   const [fileBlobUrl, setFileBlobUrl] = useState<string | null>(null);
   const viewerRef = useRef(null);
-
+  const isSmallScreen = useMediaQuery('(max-width:762px)');
   useEffect(() => {
     const loadFile = async () => {
       if (localBlobUrl) {
@@ -81,8 +83,8 @@ const ViewModelStl: React.FC<ViewModelStlProps> = ({
   return (
     <div className="relative" style={style}>
       {loading && (
-        <div className="loading-overlay">
-          Loading...
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.8)', zIndex: 9999 }}>
+          <Loader color='#1e6fff' size={isSmallScreen ? 30 : 50} />
         </div>
       )}
       {fileBlobUrl && (

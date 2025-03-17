@@ -4,11 +4,16 @@
   background-position: center;
   border-radius: 40px;
   background-image: url(/src/assets/images/backgroundimg.png);
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+    min-height: 100%;
+  } 
 }
-/* .rootLayout {
-  padding: 20px;
-} */
+
 .mainContent {
   padding: 1rem;
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }  
 }
 
