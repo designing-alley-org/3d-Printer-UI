@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.main`
-  border: 0.1px solid #66a3ff;
+ box-shadow: 0px 0px 2.24px 1px #0066FFB2;
   background-color: #e8f1ff;
   border-radius: 2rem;
   cursor: pointer;
@@ -11,6 +11,9 @@ export const Wrapper = styled.main`
     img {
       rotate: 180deg;
     }
+  }
+    @media only screen and (max-width: 600px) {
+    width: 17rem;
   }
 `;
 export const Header = styled.header`
@@ -24,26 +27,41 @@ export const Header = styled.header`
   }
   img {
     border-radius: 2rem 2rem 0rem 0rem;
+    box-shadow: 0px 1px 3px 0px #0066FF;
+    width: 100%;
+    height: 17rem;
   }
   .title {
-    font-size: 18px;
+    font-size: 1.1rem;
   }
   .subTitle {
-    font-size: 14px;
+    font-size: 0.8rem;
   }
   .desc {
-    font-size: 14px;
+    font-size: 0.8rem;
     color: #525e86;
   }
+    @media only screen and (max-width: 600px) {
+    img {
+      height: 12rem;
+    }
 `;
 export const Body = styled.section`
-  padding: 1rem;
-  section {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-row-gap: 1rem;
-    margin-bottom: 1rem;
-  }
+  padding: 1rem 1.5rem;
+    .header{
+      display: flex;
+      flex-direction: column;
+      color: #001331;
+      .heading{
+        font-size: 1rem;
+        padding: 0rem;
+        margin: 0rem;
+        }
+        .modelName{
+          font-size: 0.8rem;
+          color: #525e86;
+          }
+      }
   .data {
     display: flex;
     flex-direction: column;
@@ -51,9 +69,14 @@ export const Body = styled.section`
     .head {
       display: flex;
       align-items: center;
+      img{
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+        }
     }
     .name {
-      margin-left: 4px;
+      margin-left:0.5rem;
       font-size: 14px;
       font-weight: bold;
       font-family: Montserrat;
@@ -68,11 +91,35 @@ export const Body = styled.section`
     }
     .desc {
       display: flex;
-      margin-left: 1rem;
+      margin-left: 1.5rem;
+      font-size: 0.7rem;
+
       p {
-        margin: 0rem 0.7rem;
+        margin-top: 0.1rem;
+        margin-left: 0.5rem;
+        font-size: 0.8rem;
+        font-family: Montserrat;
+        font-weight: 400;
       }
-      font-size: 12px;
     }
   }
+    @media only screen and (max-width: 600px) {
+      padding: 0.7rem 1.2rem;
+    .header{
+      .heading{
+        font-size: 0.9rem;
+        }
+        .modelName{
+          font-size: 0.7rem;
+          }
+      }
+  .data {
+    margin: 2px 6px 0px 0px;
+    .desc {
+      p {
+        font-size: 0.7rem;
+      }
+    }
+  }
+    }
 `;

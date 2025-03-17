@@ -32,7 +32,7 @@ const Routing: React.FC = () => {
       <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
       <Route path={ROUTES.GOOGLE_AUTH} element={<GoogleAuthHandler />} />
       <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgetPassword />} />
-      <Route path='/reset-password/:token' element={<ChangePassword />} />
+      <Route path='/reset-password' element={<ChangePassword/>}/>
       <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} />} />
