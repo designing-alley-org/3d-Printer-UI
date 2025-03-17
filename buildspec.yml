@@ -21,9 +21,8 @@ phases:
 
 artifacts:
   files:
-    - build.zip # Uploading build artifact to S3 or CodeDeploy
-  discard-paths: yes
-  base-directory: . # Ensure the correct directory is deployed
+    - '**/*'' # Uploading build artifact to S3 or CodeDeploy
+  base-directory: dist # Ensure the correct directory is deployed
 
 cache:
   paths:
