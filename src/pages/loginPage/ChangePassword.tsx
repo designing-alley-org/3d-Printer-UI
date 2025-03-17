@@ -32,8 +32,8 @@ const ChangePassword: React.FC = () => {
     newPassword: '',
     confirmPassword: ''
   });
-  const token = useParams().token || '';
 
+  const token = new URLSearchParams(window.location.search).get('token');
 
   const handleChange = (key: keyof FormState) => (value: string) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -50,8 +50,8 @@ const ChangePassword: React.FC = () => {
     }
     try {
         setLoading(true);
-        await changePassword(newPassword, token);
-        setForm({ newPassword: '', confirmPassword: '' });
+        await changePassword(newPassword, token || '');
+        navigate(ROUTES.LOGIN);
     } catch (error: any) {
         setErr(error.message);
     } finally {

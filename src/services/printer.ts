@@ -27,3 +27,13 @@ export const getPrinterByIdService = async (printerId: string) => {
         throw error;
     }
 }
+
+export const getAllPrintersService = async () => {
+    try {
+        const response = await api.get('/printers');
+        return response;
+    } catch (error) {
+        console.error('Error fetching all printers:', error);
+        throw error;
+    }
+}
