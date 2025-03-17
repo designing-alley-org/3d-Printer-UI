@@ -23,7 +23,7 @@ artifacts:
   files:
     - build.zip # Uploading build artifact to S3 or CodeDeploy
   discard-paths: yes
-  base-directory: dist # Ensure the correct directory is deployed
+  base-directory: . # Ensure the correct directory is deployed
 
 cache:
   paths:
