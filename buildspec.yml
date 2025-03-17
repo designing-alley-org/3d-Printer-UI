@@ -21,7 +21,7 @@ phases:
 
 artifacts:
   files:
-    - '**/*'' # Uploading build artifact to S3 or CodeDeploy
+    - '**/*' # Uploading build artifact to S3 or CodeDeploy
   base-directory: dist # Ensure the correct directory is deployed
 
 cache:
