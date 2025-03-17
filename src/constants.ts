@@ -205,6 +205,7 @@ export const scaleFields = [
     type: 'text',
     placeholder: 'Enter Width',
   },
+  
   {
     label: 'Length',
     name: 'length',
