@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18 # Use an appropriate Node.js version
+    commands:
+      - echo "Installing dependencies..."
+      - npm ci # Ensures a clean install of dependencies
+
+  build:
+    commands:
+      - echo "Building the Vite project..."
+      - npm run build # Runs the Vite build process
+
+  post_build:
+    commands:
+      - echo "Zipping the build artifacts..."
+      - zip -r build.zip dist/ # Compress the build output for deployment
+      - echo "Build completed successfully!"
+
+artifacts:
+  files:
+    - '**/*' # Uploading build artifact to S3 or CodeDeploy
+  base-directory: dist # Ensure the correct directory is deployed
+
+cache:
+  paths:
+    - node_modules/** # Speeds up subsequent builds by caching dependencies

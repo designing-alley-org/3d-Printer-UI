@@ -6,6 +6,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import api from '../../axiosConfig';
 import { Loader } from 'lucide-react';
+import { getAllPrinters } from '../../store/actions/getAllPrinters';
 
 // Define the responsive breakpoints for the carousel
 const responsive = {
@@ -51,9 +52,7 @@ const PrinterLibrary = () => {
       setLoading(true);
       setError(null);
       try {
-        // Fetch the data from the API endpoint
-        const response = await api.get('/printers');
-        setPrinterDetails(response.data.data);
+        await getAllPrinters(setPrinterDetails);
       } catch (err: any) {
         setError(err.message || 'Failed to fetch printers');
       } finally {
@@ -77,9 +76,9 @@ const PrinterLibrary = () => {
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
       <div className="cards">
-        <Carousel responsive={responsive} infinite={true} autoPlay={false}>
-          {printerDetails.length > 0 ? (
-            printerDetails.map((item: IPrinterDetails, idx: number) => (
+        <Carousel responsive={responsive} infinite={false} autoPlay={false}>
+          {printerDetails?.length > 0 ? (
+            printerDetails?.map((item: IPrinterDetails, idx: number) => (
               <PrinterLibraryCard
                 key={item.id || idx}
                 title={item.Name}
@@ -135,13 +134,24 @@ const Wrapper = styled.section`
     font-size: 1rem;
   }
     @media (max-width: 768px) {
-    margin: 2rem 1rem;
+    margin:0.2rem;
     h1 {
       font-size: 2rem;
     }
     h3 {
       font-size: 1rem;
     }
+      .cards {
+    .react-multi-carousel-list {
+      padding: 0rem ;
+    }
+
+    .react-multi-carousel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
   }
 `;
 

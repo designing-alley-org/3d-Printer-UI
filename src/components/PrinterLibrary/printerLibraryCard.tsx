@@ -19,15 +19,19 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
   const printerDataF = (item: any) => {
     return (
       <>
+      <div className='header'>
+        <h1 className="heading">{item.name.toUpperCase()}</h1>
+        <p className="modelName">{item.model.charAt(0).toUpperCase() + item.model.slice(1)}</p>
+      </div>
         <span className="data">
           <span className="head">
             <img src={straigthen} />
             <span className="name">Build Volume</span>
           </span>
           <span className="desc">
-            <p>x: {item.buildVolume.x}</p>
-            <p>y: {item.buildVolume.y}</p>
-            <p>z: {item.buildVolume.z}</p>
+            <p>X: {item.buildVolume.x} mm, </p>
+            <p>Y: {item.buildVolume.y} mm, </p>
+            <p>Z: {item.buildVolume.z} mm, </p>
           </span>
         </span>
         <span className="data">
@@ -36,8 +40,8 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <span className="name">Layer Resolution</span>
           </span>
           <span className="desc">
-            <p>min: {item.layerResolution.min}</p>
-            <p>max: {item.layerResolution.max}</p>
+            <p>Min: {item.layerResolution.min} microns</p>,
+            <p>Max: {item.layerResolution.max} microns</p>
           </span>
         </span>
         <span className="data">
@@ -45,14 +49,18 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <img src={stylus} />
             <span className="name">Nozzle Size</span>
           </span>
-          <span className="desc">{item.nozzleSize}</span>
+          <span className="desc">
+            <p>{item.nozzleSize} mm</p>
+          </span>
         </span>
         <span className="data">
           <span className="head">
             <img src={print} />
             <span className="name">Print Speed</span>
           </span>
-          <span className="desc">{item.printSpeed}</span>
+          <span className="desc">
+            <p>Max: {item.printSpeed} mm/s</p>
+            </span>
         </span>
         <span className="data">
           <span className="head">
@@ -60,11 +68,13 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <span className="name">Material Compatibility</span>
           </span>
           <div style={{ display: 'flex' }}>
+          <span  className="desc">
             {item.materialCompatibility.map((mat: any, idx: number) => (
-              <span key={idx} className="desc">
-                {mat.material_name}
-              </span>
+                <p>{mat.material_name}
+                {idx < item.materialCompatibility.length - 1 && ', '}
+                </p>
             ))}
+          </span>
           </div>
         </span>
         <span className="data">
@@ -72,7 +82,9 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
             <img src={tech} />
             <span className="name">Technology Type</span>
           </span>
-          <span className="desc">{item?.technologyType}</span>
+          <span className="desc">
+            <p>{item?.technologyType}</p>
+            </span>
         </span>
       </>
     );
@@ -81,7 +93,7 @@ const PrinterLibraryCard = (props: IPrinterCard) => {
   return (
     <Wrapper>
       <Header>
-        <img src={printerImg} />
+        <img src={ props.data?.imageURL?.url ||printerImg} />
         <section>
           <span className="title">{props.title}</span>
           <span className="subTitle">{props.subTitle}</span>

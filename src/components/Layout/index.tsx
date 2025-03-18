@@ -8,10 +8,9 @@ import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
-import api from '../../axiosConfig';
 import { useDispatch } from 'react-redux';
-import { addUserDetails } from '../../store/user/reducer';
 import { useSelector } from 'react-redux';
+import { getCurrentUser } from '../../store/actions/getCurrentUser';
 
 const API_URL = import.meta.env.VITE_AWS_URL as string;
 const Index: React.FC = () => {
@@ -72,12 +71,10 @@ const Index: React.FC = () => {
   }, [userId]);
 
   useEffect(() => {
-    async function getUserDetails() {
-      // Fetch user details
-      const res = await api.get('user');
-      dispatch(addUserDetails(res.data.data));
-    }
-    getUserDetails();
+    const fetchData = async () => {
+      await getCurrentUser(dispatch);
+    };
+    fetchData();
   }, [dispatch]);
 
   return (

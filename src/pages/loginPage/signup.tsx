@@ -73,24 +73,21 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <Box className='AuthBG' >
+    <Box className='AuthBG'>
       <Container maxWidth={'xs'}>
         <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white' }}>
-                  <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
-                    <Typography sx={{ fontWeight: 500, fontSize:  '1rem' }}>
-              WELCOME TO
-            </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ textAlign: 'left' }}>
+            <Typography sx={{ fontWeight: 500, fontSize: '1rem' }}>WELCOME TO</Typography>
             <Typography sx={{ mb: 1, fontWeight: 700, fontSize: isSmallScreen ? '1.2rem' : '1.3rem' }}>
               3D PRINT YOUR FUTURE
             </Typography>
-
-            <Typography  sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize: '1rem' }}>
-              Sign Up
-            </Typography>
+            <Typography sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize: '1rem' }}>Sign Up</Typography>
 
             {['name', 'email', 'password'].map(field => (
               <Box key={field} sx={{ mb: 3 }}>
-                <Typography sx={{  fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>{field.charAt(0).toUpperCase() + field.slice(1)}</Typography>
+                <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </Typography>
                 <StyledTextField
                   fullWidth
                   name={field}
@@ -109,47 +106,41 @@ const RegisterForm: React.FC = () => {
               Or Continue With
             </Typography>
 
-            <Box sx={{ display: 'flex', gap: 1, mb: 2, justifyContent: 'center','& .MuiButton-root': {
-                  fontSize:'.6rem',
-                }, }}>
-              <SocialButton startIcon={<GoogleIcon />}>
-                Google
-              </SocialButton>
-              <SocialButton startIcon={<FacebookIcon />}>
-                Facebook
-              </SocialButton>
+            <Box sx={{ display: 'flex', gap: 1, mb: 2, justifyContent: 'center', '& .MuiButton-root': { fontSize: '.6rem' } }}>
+              <SocialButton startIcon={<GoogleIcon />}>Google</SocialButton>
+              <SocialButton startIcon={<FacebookIcon />}>Facebook</SocialButton>
             </Box>
-            
-            <Box sx={{ display: 'flex', gap:.6, justifyContent: 'space-between', mb: 2 }}>
-            <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem', textAlign: 'start' }}>
-              Have an account?{' '} <br />
-              <Link to="/login" style={{ color: '#0066ff', textDecoration: 'none', fontWeight: 'bold' }}>
-                Login
-              </Link>
-            </Typography>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              disabled={loading}
-              sx={{
-                width: '9rem',
-                height: '2.3rem',
-                bgcolor: '#0066ff',
-                borderRadius: '25px',
-                fontSize: isSmallScreen ? '0.85rem' : '.7rem',
-                '&:hover': { bgcolor: '#0052cc' },
-              }}
-            >
-              {loading ? 'Registering...' : 'Register'}
-            </Button>
+
+            <Box sx={{ display: 'flex', gap: .6, justifyContent: 'space-between', mb: 2 }}>
+              <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem', textAlign: 'start' }}>
+                Have an account? <br />
+                <Link to="/login" style={{ color: '#0066ff', textDecoration: 'none', fontWeight: 'bold' }}>
+                  Login
+                </Link>
+              </Typography>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={loading}
+                sx={{
+                  width: '9rem',
+                  height: '2.3rem',
+                  bgcolor: '#0066ff',
+                  borderRadius: '25px',
+                  fontSize: isSmallScreen ? '0.85rem' : '.7rem',
+                  '&:hover': { bgcolor: '#0052cc' },
+                }}
+              >
+                {loading ? 'Registering...' : 'Register'}
+              </Button>
             </Box>
-          
           </Box>
         </Paper>
       </Container>
     </Box>
   );
 };
+
 
 export default RegisterForm;

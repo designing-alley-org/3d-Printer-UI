@@ -9,15 +9,12 @@ import { toast } from 'react-toastify';
 const Settinges = () => {
   
   const [notificationPreferences,setNotificationPreferences] = useState<any>([]);
-  const [isEmailNotificationEnabled, setIsEmailNotificationEnabled] = useState<boolean>(true);
+  const [isEmailNotificationEnabled, setIsEmailNotificationEnabled] = useState<boolean>(false);
 
   const notificationCategories = [
     { key: 'orderNotifications', label: 'Order Notifications', default: notificationPreferences?.orderNotifications?.email?.frequency },
-    { key: 'personalMessages', label: 'Personal Messages' ,default: notificationPreferences?.personalMessages?.email?.frequency},
     { key: 'serviceNotifications', label: 'Service Notifications',default: notificationPreferences?.serviceNotifications?.email?.frequency },
     { key: 'newsAndPromotions', label: 'News & Promotions',default: notificationPreferences?.newsAndPromotions?.email?.frequency },
-    { key: 'rulesAndPolicy', label: 'Rules & Policy', default: notificationPreferences?.rulesAndPolicy?.email?.frequency },
-    
   ];
   const handleDropdownSelect = async (category: string, selectedFrequency: string) => {
     try {
@@ -28,22 +25,22 @@ const Settinges = () => {
       });
     } catch (error) {
       toast.error(`Failed to update notification for ${category}`);
-      console.error(`Failed to update notification settings for ${category}:`, error);
     }
   };
 
   const handelEmailToggle = async () => {
     try {
-      setIsEmailNotificationEnabled((prev) => !prev);
-      // await Promise.all(
-      //   notificationCategories.map(async (category) => {
-      //     await updateNotificationServicer(category.key, isEmailNotificationEnabled, category.default);
-      //   })
-      // );
-      toast.warning('Not implemented yet');
+      const newEmailNotificationState = !isEmailNotificationEnabled;
+      setIsEmailNotificationEnabled(newEmailNotificationState);
+      await Promise.all(
+        notificationCategories.map(async (category) => {
+          await updateNotificationServicer(category.key, newEmailNotificationState, category.default);
+        })
+      );
+      toast.success('Email notifications updated');
     } catch (error) {
       toast.error('Failed to update email notifications');
-      console.error('Failed to update email notifications:', error);
+      console.error('Error updating email notifications:', error);
     }
   };
 

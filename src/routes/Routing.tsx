@@ -22,6 +22,8 @@ import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import Notifications from '../pages/Notification/index.tsx';
 import ForgetPassword from '../pages/loginPage/forgetPassword';
+import VerifyEmail from '../pages/loginPage/VerifyEmail.tsx';
+import ChangePassword from '../pages/loginPage/ChangePassword.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -29,7 +31,9 @@ const Routing: React.FC = () => {
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
       <Route path={ROUTES.GOOGLE_AUTH} element={<GoogleAuthHandler />} />
-      <Route path="/forgot-password" element={<ForgetPassword />} />
+      <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgetPassword />} />
+      <Route path='/reset-password' element={<ChangePassword/>}/>
+      <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} />} />
         <Route path={ROUTES.DASHBOARD} element={<DashboardLayout />}>

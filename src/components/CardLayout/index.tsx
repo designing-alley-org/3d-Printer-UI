@@ -208,11 +208,6 @@ const CardLayout = () => {
             <LinearProgress variant="determinate" value={getProgressValue()} />
           </TabLine>
         )}
-        {/* <Header
-          tabData={quoteTexts}
-          insideTab={true}
-          activeTabs={activeTabs.length}
-        /> */}
         <TabComponent tabs={quoteTexts} numberId={false} activeTabs={activeTabs.length} insideTab={true}/>
       </div>
       
