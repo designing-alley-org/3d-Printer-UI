@@ -86,13 +86,17 @@ export const quoteTexts = [
   { id: 3, label: '3. QUOTE', path: ROUTES.QUOTE },
   { id: 4, label: '4. CHECKOUT', path: ROUTES.CHECKOUT },
 ];
+
 export const accTab = [
-  { id: 1, label: 'MY PROFILE' },
-  { id: 2, label: 'MY ORDERS' },
-  { id: 3, label: 'PASSWORD' },
-  { id: 4, label: 'SETTINGS' },
+  { id: 1, label: 'MY PROFILE', path: ROUTES.MY_PROFILE },
+  { id: 2, label: 'MY ORDERS', path: ROUTES.MY_ORDERS },
+  { id: 3, label: 'MY DISPUTE', path: ROUTES.MY_DISPUTE },
+  { id: 4, label: 'PLACE ORDER', path: ROUTES.PLACE_ORDER },
+  { id: 5, label: 'PASSWORD', path: ROUTES.PASSWORD },
+  { id: 6, label: 'SETTINGS', path: ROUTES.ACCOUNT_SETTINGS },
 ];
- export const notificationTab = [
+
+export const notificationTab = [
   { id: 1, label: 'ONGOING ORDER' },
   { id: 2, label: 'PLACED ORDER' },
   // { id: 3, label: 'GENERAL' },

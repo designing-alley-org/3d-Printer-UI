@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 export const MyDisputesWrapper = styled.main`
+  padding: 2rem;
+  min-height: 40rem;
+  position: relative;
 .no-Dispute{
     display: flex;
     justify-content: center;

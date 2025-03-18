@@ -1,10 +1,10 @@
 import React, { useState, FormEvent } from 'react';
-import { CreateDisputeWrapper } from '../styles';
 import { InputField } from '../../../stories/Input/InputField';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
 import Button from '../../../stories/button/Button';
 import { createDispute } from '../../../store/actions/CreateDispute';
 import { toast } from 'react-toastify';
+import { CreateDisputeWrapper } from '../../Notification/styles';
 
 interface DisputeForm {
   dispute_type: string;
