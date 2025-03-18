@@ -1,19 +1,16 @@
-import { notificationTab } from '../../constants';
-import { useEffect, useState } from 'react';
+import { navtabSmallScreen, notificationTab } from '../../constants';
+import {  useState } from 'react';
 import { NotWrapper, MainComp, SideTab } from './styles';
-import { getUserOrder } from '../../store/actions/getUserOrder';
 import OngoingOrder from './OngoingOrder';
-import PlaceOrder from './placeOrder/PlaceOrder';
-import General from './General';
-import { Box } from '@mui/material';
-import Settinges from './Settinges';
+import PlaceOrder from './PlaceOrder';
+import { Box, useMediaQuery } from '@mui/material';
 import MyDisputes from './myDispute';
+import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 
 
 const NotificationLayout = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
-
-
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
 
   return (
     <NotWrapper>
@@ -41,12 +38,20 @@ const NotificationLayout = () => {
           </span>
         ))}
       </SideTab>
+      {isSmallScreen &&
+      <SmallScreenTab
+      onTabChange={setActiveTab}
+      activeTab={activeTab}
+      navtabSmallScreen={navtabSmallScreen}
+      data={['Ongoing Order', 'Place Order', 'My Disputes']}
+      />
+       }
       <MainComp>
         {activeTab === 1 && <OngoingOrder />}
-        {activeTab === 2 && <PlaceOrder/>}
+        {activeTab === 2 && <PlaceOrder />}
         {/* {activeTab === 3 && <General />} */}
         {/* {activeTab === 4 && <Settinges/>} */}
-        {activeTab === 5 && <MyDisputes/>}
+        {activeTab === 5 && <MyDisputes />}
       </MainComp>
     </NotWrapper>
   );

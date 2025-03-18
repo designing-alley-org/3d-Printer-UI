@@ -7,9 +7,9 @@ import { toast } from 'react-toastify';
 import { Loader } from 'lucide-react';
 import Dropdown from '../../stories/Dropdown/Dropdown';
 import { OngoingOrderWrapper } from './styles';
-import { set } from 'react-hook-form';
 import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
 import { filterByDayMonthYear } from '../../utils/OptionDropDowns';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 
 interface Order {
   _id: string;
@@ -29,7 +29,7 @@ const OngoingOrder = () => {
   const [orders, setOrders] = useState<{ order: Order[]; totalPages: number } | null>(null);
   const ITEMS_PER_PAGE = 5;
   const [filter, setFilter] = useState('all');
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,8 +73,18 @@ const OngoingOrder = () => {
 
   return (
     <OngoingOrderWrapper>
-      <div className="header">     
-     <h3>ONGOING ORDER</h3>
+    <div className="header">     
+     <Typography
+      variant='h6'
+      sx={{
+        fontSize: {
+          xs: '01rem',
+          md: '1.5rem',
+        },
+      }}
+    >
+      Ongoing Orders
+    </Typography>
       <Dropdown 
       className='dropdown'
       options={filterByDayMonthYear}
@@ -83,8 +93,6 @@ const OngoingOrder = () => {
       />
       </div>
 
-      
-      
       {!orders?.orders || orders?.orders.length === 0 ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
           {orders === null ? (
@@ -95,7 +103,9 @@ const OngoingOrder = () => {
         </div>
       ) : null}
 
-
+     <Box sx={{
+        marginTop:{ xs: '1rem', md: ''},
+     }}>
       {paginatedOrders.map((order: any) => (
         <NotificationCard
           key={order._id}
@@ -115,6 +125,8 @@ const OngoingOrder = () => {
           />
         </div>
       )}
+      </Box>
+
     </OngoingOrderWrapper>
   );
 };

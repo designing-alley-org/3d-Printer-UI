@@ -1,10 +1,11 @@
-import { NotificationCard } from "../NotificationCard";
 import { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
 import { getPlacedOrder } from "../../../store/actions/getPlacedOrder";
 import Pagin from "../../../components/Paging/Pagin";
 import { formatDateTime, formatOrderStatus } from "../../../utils/Validation";
 import { Loader } from "lucide-react";
+import { Box, Typography } from "@mui/material";
+import { NotificationCard } from "../../Notification/NotificationCard";
 
 const PlaceOrder = () => {
   const [allPlacedOrder, setAllPlacedOrder] = useState<any>([]);
@@ -32,8 +33,22 @@ const PlaceOrder = () => {
   };
 
   return (
-    <>
-      <h3>PLACED ORDER</h3>
+    <Box sx={{
+      padding: '2rem',
+      minHeight: '40rem',
+      position: 'relative',
+    }}>
+      <Typography  variant='h6'
+      sx={{
+        fontSize: {
+          xs: '01rem',
+          md: '1.5rem',
+        },
+        borderBottom: '1px solid #1e6fff',
+        paddingBottom: '0.9rem',
+      }}>
+        Placed Orders
+      </Typography>
       {isLoading ? (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
           <Loader size="30" color="#0066ff" />
@@ -45,7 +60,7 @@ const PlaceOrder = () => {
               title={formatOrderStatus(item.order_status)}
               orderNumber={item._id}
               dateTime={formatDateTime(item.updatedAt)}
-              buttonLabel={selectedOrderId === item._id ? "Hide Details" : "View Details"}
+              buttonLabel={selectedOrderId === item._id ? "Hide " : "View "}
               onButtonClick={() => handleViewDetails(item._id)}
             />
             {selectedOrderId === item._id && (
@@ -61,7 +76,7 @@ const PlaceOrder = () => {
       <div className='pagination'>
         <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
       </div>
-    </>
+    </Box>
   );
 };
 

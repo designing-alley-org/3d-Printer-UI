@@ -1,9 +1,9 @@
-import { ViewDetailsWrapper } from '../styles'
 import Button from '../../../stories/button/Button'
 import CreateDispute from './CreateDispute'
 import { Modal } from '@mui/material'
 import { useState } from 'react'
 import { OrderFilesList } from '../../../components/OrderDetails/OrderFileList'
+import { ViewDetailsWrapper } from '../../Notification/styles'
 
 interface ViewDetailsProps {
   orderId: string;

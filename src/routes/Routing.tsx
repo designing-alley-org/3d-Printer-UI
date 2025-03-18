@@ -24,6 +24,12 @@ import Notifications from '../pages/Notification/index.tsx';
 import ForgetPassword from '../pages/loginPage/forgetPassword';
 import VerifyEmail from '../pages/loginPage/VerifyEmail.tsx';
 import ChangePassword from '../pages/loginPage/ChangePassword.tsx';
+import MyProfile from '../pages/YourAccount/MyProfile.tsx';
+import MyDisputes from '../pages/YourAccount/myDispute/index.tsx';
+import PlaceOrder from '../pages/YourAccount/placeOrder/PlaceOrder.tsx';
+import Password from '../pages/YourAccount/Password.tsx';
+import Settings from '../pages/YourAccount/Settings.tsx';
+import MyOrders from '../pages/YourAccount/MyOrders.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -80,7 +86,15 @@ const Routing: React.FC = () => {
           </Route>
         </Route>
         <Route path={ROUTES.SERVICES} element={<Services />} />
-        <Route path={ROUTES.ACCOUNT} element={<Account />} />
+        <Route path={ROUTES.ACCOUNT} element={<Account />}>
+          <Route index element={<Navigate to={ROUTES.MY_PROFILE} />} />
+          <Route path={ROUTES.MY_PROFILE} element={<MyProfile />} />
+          <Route path={ROUTES.MY_ORDERS} element={<MyOrders />} />
+          <Route path={ROUTES.MY_DISPUTE} element={<MyDisputes />} />
+          <Route path={ROUTES.PLACE_ORDER} element={<PlaceOrder />} />
+          <Route path={ROUTES.PASSWORD} element={<Password />} />
+          <Route path={ROUTES.ACCOUNT_SETTINGS} element={<Settings />} />
+        </Route>
         <Route path={ROUTES.Notification} element={<Notifications />} />
         <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
       </Route>

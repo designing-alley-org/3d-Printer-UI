@@ -55,8 +55,9 @@ const validatePassword = (password: string, setErr: React.Dispatch<React.SetStat
      */
       const formatOrderStatus = (status: string): string => {
         return status
-          .replace(/_/g, " ")
-          .replace(/^./, (match) => match.toUpperCase());
+          .replace(/order_/, "")
+          .replace(/^./, (match) => match.toUpperCase())
+          .replace(/_/g, " ");
       };
     
 
