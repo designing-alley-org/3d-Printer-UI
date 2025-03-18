@@ -13,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { addUserDetails } from '../../store/user/reducer';
 import { useSelector } from 'react-redux';
 
-const API_URL = import.meta.env.VITE_API_URL as string;
+const API_URL = import.meta.env.VITE_AWS_URL as string;
 const Index: React.FC = () => {
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,

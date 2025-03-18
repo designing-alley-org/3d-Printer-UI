@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { addNotification, setNotification } from '../../store/notification/notification';
 
-const socket = io(import.meta.env.VITE_API_URL as string);
+const socket = io(import.meta.env.VITE_AWS_URL as string);
 
 const NotificationBox = () => {
   const notification=useSelector((state:any)=>state.notification.notification);  
