@@ -51,14 +51,13 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
 }) => {
   // Input Styling
   const inputStyles = {
-    height: 40,
+    height: { xs: 32, sm: 40 },
     outline: "none",
     borderRadius: 9,
     backgroundColor: disabled ? "transparent" : "#e6f0ff",
-    colors: "black",
     "& .MuiOutlinedInput-root": {
-      height: 40,
-      fontSize: 14,
+      height: { xs: 32, sm: 40 },
+      fontSize: { xs: 12, sm: 14 },
       borderRadius: 9,
       boxShadow: "0px 0px 4px 0px #66a3ff inset",
       border: "1px solid #0066ff47",
@@ -91,13 +90,19 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   };
 
   return (
-    <Box display="flex" gap={1} alignItems="center">
+    <Box
+      display="flex"
+      gap={{ xs: 0.5, sm: 1 }}
+      flexWrap={{ xs: "wrap", sm: "nowrap" }}
+      justifyContent={{ sm: "flex-start" }}
+    >
+      <Box display="flex" gap={1} >
       <TextField
         select
         value={selectedExtension}
         onChange={handleExtensionChange}
         disabled={!isEditing || disabled}
-        sx={{ ...inputStyles, width: 112 }}
+        sx={{ ...inputStyles, width: { xs: 90, sm: 100 } }}
       >
         {countryExtensions.map((option) => (
           <MenuItem key={option.code} value={option.code} sx={{ bgcolor: "#C9E4CA" }}>
@@ -111,16 +116,18 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
         placeholder="Enter Phone Number"
         onChange={handlePhoneChange}
         disabled={!isEditing || disabled}
-        sx={{ ...inputStyles, width: 447 }}
+        sx={{ ...inputStyles, width: { xs: 170, sm: 460 } }}
       />
+      </Box>
 
       <Button
         onClick={toggleEdit}
         disabled={isLoading}
         sx={{
           bgcolor: isEditing ? "#1E6FFF" : "#1E6FFF",
-          borderRadius: 6,
-          fontSize: 12,
+          width: { xs: 120, sm: 190 },
+          borderRadius: { xs: 4, sm: 6 },
+          fontSize: { xs: 8, sm: 12 },
           color: "white",
           "&:hover": {
             bgcolor: "rgb(119, 157, 223)",

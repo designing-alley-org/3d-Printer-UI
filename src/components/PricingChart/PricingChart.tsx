@@ -1,7 +1,6 @@
 import './pricingChart.css';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
-import { Summary } from './Summary';
 import type { PricingDetailType } from '../../types';
 
 interface PricingChartProps {
@@ -11,7 +10,7 @@ interface PricingChartProps {
   total: number;
 }
 
-export function PricingChart({ details, quantity, taxes, total }: PricingChartProps) {
+export function PricingChart({ details }: PricingChartProps) {
   return (
     <div className="pricing-chart">
       <TableHeader />
@@ -20,7 +19,7 @@ export function PricingChart({ details, quantity, taxes, total }: PricingChartPr
         <TableRow key={index} detail={detail} />
       ))}
       
-      <Summary quantity={quantity} taxes={taxes} total={total} />
+      {/* <Summary quantity={quantity} taxes={taxes} total={total} /> */}
     </div>
   );
 }

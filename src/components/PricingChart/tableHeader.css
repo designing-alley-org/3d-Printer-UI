@@ -1,15 +1,21 @@
 .table-header {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  font-size: 1.2rem;
+  grid-template-columns: repeat(2, 1fr);
+  font-size: 1rem;
   font-weight: 400; 
   color: #336DFF;
   text-align: left;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 }
 
 .table-header-item {
-  padding: 2rem 1rem;
+  padding:  1rem;
   border-right: 0.97px solid #66A3FF;
+  @media screen and (max-width: 768px) {
+    padding: 0.5rem;
+  }
 }
 
 .table-header-item:last-child {

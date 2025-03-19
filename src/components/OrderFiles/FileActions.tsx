@@ -52,7 +52,7 @@ export function FileActions({
 
   return (
     <div className="file-actions">
-      <div className="file-actions__quantity">
+      {/* <div className="file-actions__quantity">
         <span className="file-actions__label">Quantity</span>
         <span className={isSelected ? 'file-actions__value_selected' : 'file-actions__value'}>{quantity}</span>
       </div>
@@ -60,8 +60,8 @@ export function FileActions({
       <div className="file-actions__pricing">
         <span className="file-actions__label">Pricing</span>
         <span className={isSelected ? 'file-actions__value_selected' : 'file-actions__value'}>${pricing}</span>
-      </div>
-
+      </div> */}
+      
       <button className="file-actions__button" onClick={() => downloadFromS3(file)}>
         <FileDown className="file-actions__icon" />
         {isDownloading ? 'Downloading...' : 'Download'}
@@ -71,7 +71,7 @@ export function FileActions({
         onClick={onViewDetails}
         className="file-actions__button file-actions__button--details"
       >
-        <span>View Details</span>
+        <span>View </span>
         <div
           className={`file-actions__chevron-container ${
             isSelected ? 'file-actions__chevron-container--rotated' : ''

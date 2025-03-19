@@ -55,11 +55,11 @@ const MyOrders = () => {
   return (
     <OrderWrapper>
       <div className="orders-container">
-        <h3 className="orders-title">TOTAL ORDERS</h3>
+        <h1 className="orders-title">TOTAL ORDERS</h1>
 
         {isLoading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-            <Loader size="35" color="#0066ff" />
+            <Loader size="30" color="#0066ff" />
           </div>
         ) : !orders?.order?.length ? (
           <div className="no-orders-container">
