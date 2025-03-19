@@ -1,7 +1,7 @@
 .order-files-list {
   min-height: 10rem;
   background-color: #ffffff;
-  padding: 2rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 1.5rem;
 }
 
@@ -30,4 +30,16 @@
   text-align: center;
   color: #f85074;
   margin-bottom: 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .order-files-list {
+    padding: 0.3rem 0.5rem;
+  }
+  .order-files-title {
+    font-size: 0.8rem;
+  }
+  .no-files{
+    font-size: 0.8rem;
+  }
 }

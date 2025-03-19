@@ -230,7 +230,7 @@ export const ViewDetailsWrapper = styled.main`
     justify-content: center;
     color: #0066ff;
     border-radius: 44px;
-    height: 2rem;
+    height: 1.7rem;
     font-size: 0.8rem;
     width: content;
     padding: 1rem;
@@ -243,82 +243,17 @@ export const ViewDetailsWrapper = styled.main`
       background-color: #85b3ff;
     }
   }
+    @media (max-width: 768px) {
+    .createDispute-btn {
+      height: 1.2rem;
+      font-size: 0.5rem;
+      padding: 0.5rem;
+      bottom: 0.5rem;
+      right: 0.5rem;
+    }
 `;
 
-export const CreateDisputeWrapper = styled.div`
-  padding: 2rem;
-  background: #ffffff;
-  max-width: 800px;
-  margin: 1rem auto;
-  border-radius: 1.3rem;
-  border: 1px solid #336dff;
 
-  .header {
-    margin-bottom: 2rem;
-
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      color: #666;
-    }
-  }
-
-  .dispute-form {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    .form-group {
-      margin-bottom: 1.5rem;
-
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-      }
-      input[type='text'] {
-        background: #e6f0ff;
-        width: 100%;
-        color: #2359b0;
-      }
-
-      textarea {
-        width: 100%;
-        padding: 0.75rem;
-        background: #e6f0ff;
-        width: 100%;
-        color: #2359b0;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        resize: vertical;
-        font-family: inherit;
-
-        &.error {
-          border-color: #dc3545;
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #0066cc;
-        }
-      }
-
-      .btn-dispute {
-        background: #0066ff;
-      }
-
-      .error-message {
-        color: #dc3545;
-        font-size: 0.875rem;
-      }
-    }
-  }
-`;
 
 export const OngoingOrderWrapper = styled.div`
 

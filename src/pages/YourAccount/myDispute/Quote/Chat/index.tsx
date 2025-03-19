@@ -21,7 +21,6 @@ interface IChatProps {
 }
 
 export default function Chat({ disputeId }: IChatProps) {
-  console.log(disputeId);
   const user = useSelector((state: RootState) => state.user);
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
@@ -30,9 +29,6 @@ export default function Chat({ disputeId }: IChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const defaultUserId = user?.user?._id;
   const defaultMerchantId = user?.user?._id;
-
-  console.log(disputeId);
-  
   
 
   useEffect(() => {

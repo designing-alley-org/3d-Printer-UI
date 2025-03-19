@@ -4,7 +4,7 @@ import Dropdown from '../../../stories/Dropdown/Dropdown';
 import Button from '../../../stories/button/Button';
 import { createDispute } from '../../../store/actions/CreateDispute';
 import { toast } from 'react-toastify';
-import { CreateDisputeWrapper } from '../../Notification/styles';
+import { CreateDisputeWrapper } from './style';
 
 interface DisputeForm {
   dispute_type: string;

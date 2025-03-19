@@ -31,6 +31,7 @@ export const QuoteBox = styled(Box)({
 
   '@media (max-width: 768px)': {
     padding: '2.5rem 0.5rem 1rem 0.5rem',
+    height: '30rem',
     '&::after': {
       width: '40%',
       height: '1rem',

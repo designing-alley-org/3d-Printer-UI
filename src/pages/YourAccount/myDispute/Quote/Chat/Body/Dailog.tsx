@@ -16,7 +16,7 @@ interface DialogProps {
 export const FilePreviewDialog = ({ images, open, onClose }: DialogProps) => {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
+      <DialogTitle >
         More Files
         <IconButton
           aria-label="close"

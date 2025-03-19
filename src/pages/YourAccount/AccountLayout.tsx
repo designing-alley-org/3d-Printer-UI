@@ -1,15 +1,17 @@
-import { accTab } from '../../constants';
+import { accTab, navtabSmallScreen } from '../../constants';
 import { AccWrapper, MainComp, SideTab } from './styles';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import Button from '../../stories/button/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
 import api from '../../axiosConfig';
 import { toast } from 'react-toastify';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
 
   // Extract activeTab from the current pathname
   const activeTab = accTab.find((tab) => location.pathname.includes(tab.path))?.id || 1;
@@ -64,7 +66,14 @@ const AccountLayout = () => {
           <LogoutIcon sx={{ color: 'white', transform: 'rotate(180deg)', marginLeft: '.6rem' }} />
         </Button>
       </SideTab>
-
+      {isSmallScreen &&
+      <SmallScreenTab
+      activeTab={activeTab}
+      navtabSmallScreen={navtabSmallScreen}
+      data={accTab}
+      forAccount={true}
+      />
+       }
       <MainComp>
         <Outlet />
       </MainComp>

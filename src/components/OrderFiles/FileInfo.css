@@ -6,13 +6,18 @@
 
 .icon-container {
   padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
   background-color: white;
   border-radius: 25rem;
 }
 
 .icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   color: #3b82f6;
 }
 
@@ -20,4 +25,26 @@
   color: #1f2937; 
   font-weight: 500;
   font-size: 0.8rem;
+}
+
+
+@media screen and (max-width: 768px) {
+  .file-info-container {
+    gap: 0.5rem;
+  }
+
+  .icon-container {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .icon {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .file-name {
+    font-size: 0.5rem;
+  }
+  
 }

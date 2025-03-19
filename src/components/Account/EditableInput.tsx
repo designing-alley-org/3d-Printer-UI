@@ -27,13 +27,13 @@ const EditableInput: React.FC<InputProps> = ({
 }) => {
   // Input Styling
   const inputStyles = {
-    height: 40,
+    height: { xs: 32, sm: 40 },
     outline: "none",
     borderRadius: 9,
     backgroundColor: disabled ? "transparent" : "#e6f0ff",
     "& .MuiOutlinedInput-root": {
-      height: 40,
-      fontSize: 14,
+      height: { xs: 32, sm: 40 },
+      fontSize: { xs: 12, sm: 14 },
       borderRadius: 9,
       boxShadow: "0px 0px 4px 0px #66a3ff inset",
       border: "1px solid #0066ff47",
@@ -52,13 +52,17 @@ const EditableInput: React.FC<InputProps> = ({
   };
 
   return (
-    <Box display="flex"  gap={2}>
+    <Box
+      display="flex"
+      gap={{ xs: 1, sm: 2 }}
+      flexDirection={{ xs: "column", sm: "row" }}
+    >
       <TextField
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         disabled={!isEditing || disabled}
-        sx={{ ...inputStyles, width: 570 }}
+        sx={{ ...inputStyles, width: { xs: 260, sm: 570 } }}
       />
 
       <Button
@@ -66,8 +70,9 @@ const EditableInput: React.FC<InputProps> = ({
         disabled={isLoading}
         sx={{
           bgcolor: "#1E6FFF",
-          borderRadius: 6,
-          fontSize: 12,
+          width: { xs: 120, sm: 150 },
+          borderRadius: { xs: 4, sm: 6 },
+          fontSize: { xs: 8, sm: 12 },
           color: "white",
           "&:hover": {
             bgcolor: "rgb(119, 157, 223)",

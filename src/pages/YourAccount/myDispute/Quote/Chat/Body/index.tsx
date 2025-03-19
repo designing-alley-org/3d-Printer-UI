@@ -1,9 +1,11 @@
-import { Box, Typography } from '@mui/material';
+import { Box,Typography, useMediaQuery,} from '@mui/material';
 import { Message, MessageIcon, Wrapper } from './styles';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import downloadIcon from '../../../../../../assets/images/download.svg';
 import { FilePreviewDialog } from './Dailog';
+
+
 
 interface FileType {
   fileName?: string;
@@ -25,18 +27,18 @@ interface ChatBodyProps {
   }[];
 }
 
+
+
 export default function ChatBody({ messages }: ChatBodyProps) {
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const user = useSelector((state: any) => state.user);
   const [showDialog, setShowDialog] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<
-    { fileUrl: string; fileName?: string }[]
-  >([]);
+  const [selectedFiles, setSelectedFiles] = useState<{ fileUrl: string; fileName?: string }[]>([]);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
@@ -61,7 +63,7 @@ export default function ChatBody({ messages }: ChatBodyProps) {
 
   const renderPDFFile = (file: FileType) => {
     const previewUrl = getFileUrl(file);
-
+    
     if (!previewUrl) return null;
 
     return (
@@ -72,21 +74,21 @@ export default function ChatBody({ messages }: ChatBodyProps) {
           alignItems: 'center',
           gap: '0.5rem',
           backgroundColor: 'white',
-          borderRadius: '1rem',
+          borderRadius: isSmallScreen ? '0.5rem' : '1rem',
           border: '1px solid #1E6FFF',
-          padding: '1rem',
+          padding: isSmallScreen ? '0.5rem' : '1rem',
           cursor: 'pointer',
         }}
         onClick={() => window.open(previewUrl, '_blank')}
       >
-        <Typography variant="body2" color="#1E6FFF">
-          {file.fileName ? file.fileName : file.name}
+        <Typography  color="#1E6FFF" sx={{ fontSize: isSmallScreen ? '0.5rem' : '0.8rem' }}> 
+        {file.fileName? file.fileName : file.name}
         </Typography>
         <Box
           component="img"
           src={downloadIcon}
           alt="Download"
-          sx={{ width: '1rem' }}
+          sx={{ width: isSmallScreen ? '0.6rem' : '0.8rem', }}
         />
       </Box>
     );
@@ -125,17 +127,16 @@ export default function ChatBody({ messages }: ChatBodyProps) {
           src={previewUrl}
           alt={firstFile.fileName || 'Image'}
           sx={{
-            height: '15rem',
-            width: '25rem',
+            height: isSmallScreen ? '7rem' : '10rem',
+            width: isSmallScreen ? '10rem' : '17rem',
             borderRadius: '1rem',
-            objectFit: 'contain',
+            objectFit: 'cover',
           }}
         />
         {message.files.length > 1 && (
           <Typography
-            variant="body2"
             color="#1E6FFF"
-            sx={{ cursor: 'pointer', py: '0.5rem', fontSize: '1rem' }}
+            sx={{ cursor: 'pointer', py: '0.5rem', fontSize:isSmallScreen?'0.6rem': '0.8rem'}}
             onClick={() => handleShowMore(message.files)}
           >
             Show +{message.files.length - 1} more files
@@ -154,20 +155,20 @@ export default function ChatBody({ messages }: ChatBodyProps) {
               display: 'flex',
               flexDirection: 'column-reverse',
               gap: '1rem',
-              alignItems:
-                message.sendBy === 'admin' ? 'flex-start' : 'flex-end',
+              alignItems: message.sendBy === 'admin' ? 'flex-start' : 'flex-end',
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {message.sendBy === 'admin' && (
-                <MessageIcon $color="white" $bgColor="#0080FF">
-                  {message.receiver?.name?.[0] || 'U'}
+             
+              {message.sendBy !== 'user' && (
+                <MessageIcon $color="#0080FF" $bgColor="white">
+                  {user.user.name?.[0] || '3D'}
                 </MessageIcon>
               )}
               <Message $sender={message.sendBy}>{message.content}</Message>
-              {message.sendBy !== 'admin' && (
-                <MessageIcon $color="#0080FF" $bgColor="white">
-                  {user.user.name?.[0] || '3D'}
+              {message.sendBy === 'user' && (
+                <MessageIcon $color="white" $bgColor="#0080FF">
+                  {message.receiver?.name?.[0] || 'U'}
                 </MessageIcon>
               )}
             </Box>

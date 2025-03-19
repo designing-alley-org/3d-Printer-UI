@@ -5,7 +5,7 @@ import Pagin from '../../../components/Paging/Pagin';
 import { ArrowLeftIcon, Loader } from 'lucide-react';
 import Quote from './Quote/Card';
 import { formatDateTime } from '../../../utils/Validation';
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import { NotificationCard } from '../../Notification/NotificationCard';
 
 interface Dispute {
@@ -31,6 +31,8 @@ const MyDisputes: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+
 
   useEffect(() => {
     const fetchDisputes = async () => {
@@ -83,7 +85,7 @@ const MyDisputes: React.FC = () => {
           My Disputes
         </Typography>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-          <Loader size="50" color="#0066ff" />
+          <Loader size="30" color="#0066ff" />
         </div>
       </MyDisputesWrapper>
     );
@@ -117,8 +119,9 @@ const MyDisputes: React.FC = () => {
               className="back-button"
               onClick={handleBack}
               style={{ cursor: 'pointer' }}
+              size={isSmallScreen ? 15 : 24}
             />
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <div className='chat-header-text'>
               <p> Order No. - {selectedDispute?.orderId}</p>
               <p> Dispute Type. - {selectedDispute?.dispute_type}</p>
             </div>
@@ -133,7 +136,7 @@ const MyDisputes: React.FC = () => {
           sx={{
             fontSize: {
               xs: '01rem',
-              md: '1.5rem',
+              md: '1.4rem',
             },
             borderBottom: '1px solid #1e6fff',
             paddingBottom: '0.9rem',
