@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Pagin from "../../components/Paging/Pagin";
-import { NotificationCard } from "./NotificationCard";
-import { useNavigate } from "react-router-dom";
+import Pagin from '../../components/Paging/Pagin';
+import { NotificationCard } from './NotificationCard';
+import { useNavigate } from 'react-router-dom';
 import { getOngoingOrder } from '../../store/actions/getOngoingOrder';
 import { toast } from 'react-toastify';
 import { Loader } from 'lucide-react';
@@ -9,12 +9,22 @@ import Dropdown from '../../stories/Dropdown/Dropdown';
 import { OngoingOrderWrapper } from './styles';
 import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
 import { filterByDayMonthYear } from '../../utils/OptionDropDowns';
+import { useSelector } from 'react-redux';
+import api from '../../axiosConfig';
+import { deleteNotification } from '../../store/notification/notification';
+import { useDispatch } from 'react-redux';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 
 interface Order {
   _id: string;
   order_status: string;
   updatedAt: string;
+}
+
+interface Notification {
+  _id: string; // Notification ID
+  order_id: string;
+  readStatus: boolean;
 }
 
 interface Option {
@@ -25,10 +35,28 @@ interface Option {
 
 const OngoingOrder = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [pagination, setPagination] = useState(1);
-  const [orders, setOrders] = useState<{ order: Order[]; totalPages: number } | null>(null);
+  const [orders, setOrders] = useState<{
+    orders: Order[];
+    totalPages: number;
+  } | null>(null);
   const ITEMS_PER_PAGE = 5;
   const [filter, setFilter] = useState('all');
+
+  // Get notifications from Redux store
+  const notifications = useSelector(
+    (state: any) => state.notification.notification
+  );
+
+  // Create a map of order IDs with their notification ID and readStatus
+  const notificationMap: Map<string, { readStatus: boolean; notificationId: string }> = new Map(
+    notifications.map((n: Notification) => [
+      n.order_id,
+      { readStatus: n.readStatus, notificationId: n._id }, // Store both readStatus and notificationId
+    ])
+  );
+
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   useEffect(() => {
     const fetchData = async () => {
@@ -36,39 +64,72 @@ const OngoingOrder = () => {
         await getOngoingOrder(setOrders, filter);
       } catch (error) {
         toast.error('Failed to fetch ongoing orders');
-        console.log(error);
-      } 
+        console.error(error);
+      }
     };
 
     fetchData();
-  }, [pagination,filter]);
+  }, [pagination, filter]);
 
-  // Map of order statuses to their corresponding routes
+  // Sorting logic: Prioritize unread orders and sort by updatedAt
+  useEffect(() => {
+    if (orders) {
+      setOrders((prevOrders) => {
+        if (!prevOrders) return null;
+
+        return {
+          ...prevOrders,
+          orders: prevOrders.orders.slice().sort((a, b) => {
+            const aRead = notificationMap.get(a._id)?.readStatus ?? true; // Default to true (read)
+            const bRead = notificationMap.get(b._id)?.readStatus ?? true;
+
+            if (!aRead && bRead) return -1; // Unread comes first
+            if (aRead && !bRead) return 1;
+
+            return (
+              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            );
+          }),
+          totalPages: prevOrders.totalPages,
+        };
+      });
+    }
+  }, [notifications, orders]);
+
   const ORDER_STATUS_ROUTES = {
     order_created: 'upload-stl',
     files_uploaded: 'customize',
     order_customization: 'quote',
     order_quote_created: 'quote',
-    order_quote_negotiated: 'checkout'
+    order_quote_negotiated: 'checkout',
   } as const;
 
- 
-
-  const handleNavigate = (orderStatus: string, orderId: string) => {
-    const route = ORDER_STATUS_ROUTES[orderStatus as keyof typeof ORDER_STATUS_ROUTES];
+  const handleNavigate = async (orderStatus: string, orderId: string) => {
+    const route =
+      ORDER_STATUS_ROUTES[orderStatus as keyof typeof ORDER_STATUS_ROUTES];
     if (route) {
       navigate(`/get-quotes/${orderId}/${route}`);
+  
+      const notificationId = notificationMap.get(orderId)?.notificationId;
+      if (notificationId) {
+        try {
+          await api.put(`/api/v1/notifications/${notificationId}/read`);
+          // Optionally, update Redux store here if notifications are stored in state
+        } catch (error) {
+          console.error("Failed to mark notification as read:", error);
+        }
+      }
+      dispatch(deleteNotification(notificationId));
     }
   };
+  
 
-  // Calculate paginated orders
   const paginatedOrders = orders?.orders
-    ? orders?.orders.slice().reverse().slice((pagination - 1) * ITEMS_PER_PAGE, pagination * ITEMS_PER_PAGE)
+    ? orders.orders.slice(0, pagination * ITEMS_PER_PAGE)
     : [];
 
-  // Calculate total pages
-  const totalPages = orders?.orders 
-    ? Math.ceil(orders?.orders.length / ITEMS_PER_PAGE)
+  const totalPages = orders?.orders
+    ? Math.ceil(orders.orders.length / ITEMS_PER_PAGE)
     : 0;
 
   return (
@@ -114,15 +175,13 @@ const OngoingOrder = () => {
           dateTime={formatDateTime(order.updatedAt)}
           buttonLabel="Open"
           onButtonClick={() => handleNavigate(order.order_status, order._id)}
+          isUnread={notification ? !notification.readStatus : false} // Check presence before getting value
         />
       ))}
 
       {totalPages > 1 && (
         <div className="pagination">
-          <Pagin 
-            totalPages={totalPages} 
-            setPagination={setPagination} 
-          />
+          <Pagin totalPages={totalPages} setPagination={setPagination} />
         </div>
       )}
       </Box>

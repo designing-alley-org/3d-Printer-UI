@@ -3,7 +3,8 @@ import './styles.css';
 import styled from 'styled-components';
 import { Tab } from '../../types/home.types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import api from '../../axiosConfig.ts';
 
 interface ITabContainerProps {
   tabs: Tab[];
@@ -12,12 +13,12 @@ interface ITabContainerProps {
   insideTab?: boolean;
 }
 
+
 const TabComponent = (props: ITabContainerProps) => {
   const { tabs, numberId, activeTabs } = props;
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [visibleRange, setVisibleRange] = useState<[number, number]>([0, 1]);
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,22 +47,27 @@ const TabComponent = (props: ITabContainerProps) => {
     }
   };
 
+  
   return (
     <TabWrapper>
-    <ul className={props.insideTab ? 'insideTab' : 'tabrow'}>
-      {tabs.slice(visibleRange[0], visibleRange[1] + 1).map((tab, index) => (
-        <li key={tab.id} onClick={() => handleTabClick(index + visibleRange[0], tab, activeTabs)}>
-          <span className="tabContent">
-            <p className="label">{tab.label}</p>
-          </span>
-        </li>
-      ))}
-    </ul>
-  </TabWrapper>
+      <ul className={props.insideTab ? 'insideTab' : 'tabrow'}>
+        {tabs.slice(visibleRange[0], visibleRange[1] + 1).map((tab, index) => (
+          <li
+            key={tab.id}
+            onClick={() =>
+              handleTabClick(index + visibleRange[0], tab, activeTabs)
+            }
+          >
+            <span className="tabContent">
+              <p className="label">{tab.label}</p>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </TabWrapper>
   );
 };
 
 const TabWrapper = styled.section``;
 
 export default TabComponent;
-
