@@ -22,7 +22,7 @@ export function OrderFilesList({ selectedOrder }: IselectedOrder) {
           {orderFiles.length === 0 && <p className='no-files'>No files found</p>}
           {orderFiles.map((file,index) => (
             <OrderFile
-              key={file.index}
+              key={file?.index}
               fileName={file.fileName.split('-')[0]}
               quantity={file.quantity}
               pricing={file.pricing}

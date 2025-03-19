@@ -33,6 +33,10 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     background-color: #ffffff;
 
+    .tab{
+      position: relative;
+    }
+
   @media (max-width: 1236px) and (min-width: 1090px) {
       font-size: .5rem;
   }

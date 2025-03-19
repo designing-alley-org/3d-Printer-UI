@@ -1,11 +1,11 @@
 import { NotificationCard } from "../Notification/NotificationCard";
 import { useEffect, useState } from "react";
-import ViewDetails from "../Notification/placeOrder/ViewDetails";
 import { getUserOrder } from "../../store/actions/getUserOrder";
 import Pagin from "../../components/Paging/Pagin";
 import { OrderWrapper } from "./styles";
 import { Loader } from "lucide-react";
 import { formatDateTime, formatOrderStatus } from "../../utils/Validation";
+import ViewDetails from "./placeOrder/ViewDetails";
 
 // Define interfaces for type safety
 interface Order {

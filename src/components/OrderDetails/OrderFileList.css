@@ -6,7 +6,7 @@
 }
 
 .order-files-title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   text-align: start;
   color: black;
@@ -25,7 +25,7 @@
 }
 
 .no-files{
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   text-align: center;
   color: #f85074;

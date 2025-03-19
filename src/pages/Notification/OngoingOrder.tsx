@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import api from '../../axiosConfig';
 import { deleteNotification } from '../../store/notification/notification';
 import { useDispatch } from 'react-redux';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 
 interface Order {
   _id: string;
@@ -56,6 +57,7 @@ const OngoingOrder = () => {
     ])
   );
 
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -132,27 +134,28 @@ const OngoingOrder = () => {
 
   return (
     <OngoingOrderWrapper>
-      <div className="header">
-        <h3>ONGOING ORDER</h3>
-        <Dropdown
-          className="dropdown"
-          options={filterByDayMonthYear}
-          onSelect={(selected: Option) => {
-            setFilter(selected.value);
-          }}
-          defaultValue={filter}
-        />
+    <div className="header">     
+     <Typography
+      variant='h6'
+      sx={{
+        fontSize: {
+          xs: '01rem',
+          md: '1.5rem',
+        },
+      }}
+    >
+      Ongoing Orders
+    </Typography>
+      <Dropdown 
+      className='dropdown'
+      options={filterByDayMonthYear}
+      onSelect={(selected: Option) => {setFilter(selected.value)}}
+      defaultValue={filter}
+      />
       </div>
 
-      {!orders?.orders || orders.orders.length === 0 ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '200px',
-          }}
-        >
+      {!orders?.orders || orders?.orders.length === 0 ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
           {orders === null ? (
             <Loader size="30" color="#0066ff" />
           ) : (
@@ -161,26 +164,28 @@ const OngoingOrder = () => {
         </div>
       ) : null}
 
-      {paginatedOrders.map((order) => {
-        const notification = notificationMap.get(order._id);
-        return (
-          <NotificationCard
-            key={order._id}
-            title={formatOrderStatus(order.order_status)}
-            orderNumber={order._id}
-            dateTime={formatDateTime(order.updatedAt)}
-            buttonLabel="Open"
-            onButtonClick={() => handleNavigate(order.order_status, order._id)}
-            isUnread={notification ? !notification.readStatus : false} // Check presence before getting value
-          />
-        );
-      })}
+     <Box sx={{
+        marginTop:{ xs: '1rem', md: ''},
+     }}>
+      {paginatedOrders.map((order: any) => (
+        <NotificationCard
+          key={order._id}
+          title={formatOrderStatus(order.order_status)}
+          orderNumber={order._id}
+          dateTime={formatDateTime(order.updatedAt)}
+          buttonLabel="Open"
+          onButtonClick={() => handleNavigate(order.order_status, order._id)}
+          isUnread={notification ? !notification.readStatus : false} // Check presence before getting value
+        />
+      ))}
 
       {totalPages > 1 && (
         <div className="pagination">
           <Pagin totalPages={totalPages} setPagination={setPagination} />
         </div>
       )}
+      </Box>
+
     </OngoingOrderWrapper>
   );
 };

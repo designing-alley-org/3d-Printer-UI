@@ -1,43 +1,48 @@
-import React from 'react'
-import { DesktoptabData, notificationIcon } from '../../constants'
-import { useState, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { ROUTES } from '../../routes/routes-constants'
+import { DesktoptabData } from '../../constants'
+import { useNavigate } from 'react-router-dom'
 import './DesktopNav.css'
 import NotificationBox from './NotificationBox'
-const DesktopNav = () => {
-  const navigate = useNavigate();
-    
-    const [activeTabs, setActiveTabs] = useState<number>(0);
-    console.log('activeTabs', activeTabs);
+import { Box } from '@mui/material'
 
-    const activeTabsHandler = (pathname: string) => {
-      if (pathname.includes(ROUTES.DASHBOARD)) {
-        setActiveTabs(0);
-      } else if (pathname.includes(ROUTES.GET_QUOTES)) {
-        setActiveTabs(1);
-      } else if (pathname.includes(ROUTES.SERVICES)) {
-        setActiveTabs(2);
-      } else if (pathname.includes(ROUTES.ACCOUNT)) {
-        setActiveTabs(3);
-      } else {
-        setActiveTabs(4);
-      }
-    };
+interface ITab {
+  activeTabs: number;
+}
+
+const TabUnderline = ({ active }: { active: boolean }) => {
+  return (
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '-0.1rem',
+        width: '100%',
+        height: '0.45rem',
+        borderBottomRightRadius: '0.5rem',
+        borderBottomLeftRadius: '0.5rem',
+        backgroundColor: active ? '#0066ff' : 'transparent',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    ></Box>
+  );
+};
+const DesktopNav = ({ activeTabs }: ITab) => {
+  const navigate = useNavigate();
 
   return (
     <nav className='mainHeader'>
-      <h1 onClick={() =>{activeTabsHandler('dashboard'); navigate('/')}}>3D PRINT YOUR FUTURE</h1>
+      <h1 onClick={() =>{ navigate('/')}}>3D PRINT YOUR FUTURE</h1>
       <div className='header-nav'>
         {DesktoptabData.map((item) => (
-          <div className='tab' key={item.id} onClick={() => {activeTabsHandler(item.path); navigate(item.path)}}>
+          <div className='tab' key={item.id} onClick={() => {navigate(item.path)}}>
+            <TabUnderline active={activeTabs === item.id} />
             <h2 className='label'>{item.label}</h2>
           </div>
         ))}
         <div className='tab-with-notification'>
-         <NotificationBox />
+        <NotificationBox />
         </div>
-        <div className='tab' onClick={() =>{activeTabsHandler('/account'); navigate('/account')}}>
+        <div className='tab' onClick={() =>{navigate('/account')}}>
+          <TabUnderline active={activeTabs === 3} />
           <h2 className='label'>Account</h2>
         </div>
       </div>

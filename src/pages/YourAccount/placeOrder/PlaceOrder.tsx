@@ -1,4 +1,3 @@
-import { NotificationCard } from "../NotificationCard";
 import { useEffect, useState } from "react";
 import ViewDetails from "./ViewDetails";
 import { getPlacedOrder } from "../../../store/actions/getPlacedOrder";
@@ -8,6 +7,8 @@ import { Loader } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import api from "../../../axiosConfig";
 import { deleteNotification } from "../../../store/notification/notification";
+import { Box, Typography } from "@mui/material";
+import { NotificationCard } from "../../Notification/NotificationCard";
 
 interface Order {
   _id: string;
@@ -20,6 +21,7 @@ interface Notification {
   order_id: string;
   readStatus: boolean;
 }
+
 
 const PlaceOrder = () => {
   const dispatch = useDispatch();
@@ -80,8 +82,22 @@ const PlaceOrder = () => {
   };
 
   return (
-    <>
-      <h3>PLACED ORDER</h3>
+    <Box sx={{
+      padding: '2rem',
+      minHeight: '40rem',
+      position: 'relative',
+    }}>
+      <Typography  variant='h6'
+      sx={{
+        fontSize: {
+          xs: '01rem',
+          md: '1.5rem',
+        },
+        borderBottom: '1px solid #1e6fff',
+        paddingBottom: '0.9rem',
+      }}>
+        Placed Orders
+      </Typography>
       {isLoading ? (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
           <Loader size="30" color="#0066ff" />
@@ -93,7 +109,7 @@ const PlaceOrder = () => {
               title={formatOrderStatus(item.order_status)}
               orderNumber={item._id}
               dateTime={formatDateTime(item.updatedAt)}
-              buttonLabel={selectedOrderId === item._id ? "Hide Details" : "View Details"}
+              buttonLabel={selectedOrderId === item._id ? "Hide " : "View "}
               onButtonClick={() => handleViewDetails(item._id)}
               isUnread={notificationMap.get(item._id) ? !notificationMap.get(item._id)?.readStatus : false}
             />
@@ -111,7 +127,7 @@ const PlaceOrder = () => {
       <div className="pagination">
         <Pagin setPagination={setPagination} totalPages={Math.ceil(allPlacedOrder.length / 5)} />
       </div>
-    </>
+    </Box>
   );
 };
 

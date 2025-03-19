@@ -6,18 +6,14 @@ import { addUserDetails } from '../../store/user/reducer';
 import { useDispatch } from 'react-redux';
 import PhoneInput from '../../components/Account/PhoneNumber';
 import EditableInput from '../../components/Account/EditableInput';
+import { useSelector } from 'react-redux';
 
-
-
-interface IProfile {
-  profileData: User;
-}
-
-const MyProfile = ({ profileData }: IProfile) => {
+const MyProfile = () => {
+  const user = useSelector((state: any) => state.user);
+  const profileData = user?.user;
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(profileData);
   const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
-
   const dispatch = useDispatch();
 
   const handleInputChange = (field: keyof User, value: string) => {

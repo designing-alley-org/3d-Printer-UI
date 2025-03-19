@@ -23,4 +23,10 @@ export const ROUTES = {
   GOOGLE_AUTH: 'google-auth',
   VERIFY_EMAIL: 'verify-email',
   FORGET_PASSWORD: 'forgot-password',
+  MY_PROFILE: 'my-profile',
+  MY_ORDERS: 'my-orders',
+  MY_DISPUTE: 'my-dispute',
+  PLACE_ORDER: 'place-order',
+  PASSWORD: 'password',
+  ACCOUNT_SETTINGS: 'settings',
 };

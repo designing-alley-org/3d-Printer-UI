@@ -505,7 +505,6 @@ export const OrderWrapper = styled.main`
 
 export const PasswordWrapper = styled.main`
   padding: 2rem;
-  padding: 2rem;
   min-height: 40rem;
   position: relative;
   h1 {
