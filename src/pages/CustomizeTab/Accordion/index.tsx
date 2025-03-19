@@ -121,7 +121,7 @@ const Accordion: React.FC<AccordionProps> = ({
   // Update useEffect to set dimensions from selectedFile
   useEffect(() => {
     if (selectedFile?.dimensions) {
-      setSelectSize(selectedFile.unit);
+      setSelectSize(selectedFile.unit || 'mm');
       const initialDimensions = {
         height: Number(selectedFile.dimensions.height.toFixed(2)) || 0,
         width: Number(selectedFile.dimensions.width.toFixed(2)) || 0,
@@ -247,10 +247,10 @@ const Accordion: React.FC<AccordionProps> = ({
   const handleChange =
     (field: 'height' | 'width' | 'length') =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = Number(event.target.value);
+      const value = event.target.value;
       setDimensions((prev) => ({
         ...prev,
-        [field]: value,
+        [field]: value === '' ? null : parseFloat(value),
       }));
     };
 
@@ -304,26 +304,26 @@ const Accordion: React.FC<AccordionProps> = ({
                 defaultValue={selectedFile ? selectedFile.unit : 'mm'}
                 className="dropdown_unit"
               />
-              {['height', 'width', 'length'].map((field) => (
-                <TextField
-                  key={field}
-                  type="number"
-                  // label={field}
-                  variant="outlined"
-                  className="fields"
-                  value={dimensions[field]}
+              
+                    {['height', 'width', 'length'].map((field) => (
+                      <TextField
+                        key={field}
+                        type="number"
+                        variant="outlined"
+                        className="fields"
+                        value={dimensions[field]}
                   onChange={handleChange(
                     field as 'height' | 'width' | 'length'
                   )}
-                  inputProps={{
-                    inputMode: 'numeric',
-                    pattern: '[0-9]*',
-                    style: {
-                      textAlign: 'left',
-                      paddingRight: '8px',
-                      height: isSmallScreen ? '.1rem' : '.7rem',
-                      fontSize: isSmallScreen ? '.6rem' : '.8rem',
-                    },
+                        inputProps={{
+                          inputMode: 'numeric',
+                          pattern: '[0-9]*',
+                          style: {
+                            textAlign: 'left',
+                            paddingRight: '8px',
+                            height: isSmallScreen ? '.1rem' : '.7rem',
+                            fontSize: isSmallScreen ? '.6rem' : '.8rem',
+                          },
                   }}
                 />
               ))}

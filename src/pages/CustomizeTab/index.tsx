@@ -260,10 +260,10 @@ const CustomizeTab: React.FC = () => {
 
   return (
     <Wrapper>
-      <Heading>
+      {/* <Heading>
         <h3>Customize your Files</h3>
         <h4>Edit your files as much as you want</h4>
-      </Heading>
+      </Heading> */}
 
       <Filescomponent>
         <Files>
