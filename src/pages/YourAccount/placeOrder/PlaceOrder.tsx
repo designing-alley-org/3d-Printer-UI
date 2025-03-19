@@ -83,7 +83,6 @@ const PlaceOrder = () => {
 
   return (
     <Box sx={{
-      padding: '2rem',
       minHeight: '40rem',
       position: 'relative',
     }}>
@@ -91,7 +90,7 @@ const PlaceOrder = () => {
       sx={{
         fontSize: {
           xs: '01rem',
-          md: '1.5rem',
+          md: '1.4rem',
         },
         borderBottom: '1px solid #1e6fff',
         paddingBottom: '0.9rem',
@@ -123,10 +122,9 @@ const PlaceOrder = () => {
       ) : (
         <p>No orders found.</p>
       )}
-
-      <div className="pagination">
-        <Pagin setPagination={setPagination} totalPages={Math.ceil(allPlacedOrder.length / 5)} />
-      </div>
+     {allPlacedOrder?.totalPages > 1 && <div className='pagination'>
+        <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
+      </div>}
     </Box>
   );
 };

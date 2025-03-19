@@ -1,24 +1,61 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Wrapper } from './style.ts';
+import { useNavigate } from 'react-router-dom';
 
 interface SmallScreenTabProps {
-  onTabChange: (index: number) => void;
+  onTabChange?: (index: number) => void;
   navtabSmallScreen: string;
-  data: string[];
+  data: any;
   activeTab?: number;
+  forAccount?: boolean;
 }
 
-const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmallScreen, data,activeTab }) => {
+const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmallScreen, data, activeTab, forAccount=false }) => {
   const [isSmallScreenTab, setIsSmallScreenTab] = useState<boolean>(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  console.log(data);
+
+  // Handle clicking outside the wrapper
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsSmallScreenTab(false);
+      }
+    };
+
+    // Add event listener when the dropdown is open
+    if (isSmallScreenTab) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Clean up event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSmallScreenTab]);
 
   const handleTabClick = (index: number) => {
-    onTabChange(index);
-    setIsSmallScreenTab(pre => !pre);
+    if (onTabChange) {
+      onTabChange(index);
+    }
+    // Close the dropdown after selection
+    setIsSmallScreenTab(false);
+  };
+
+  const handleTabClickPath = (path: string) => {
+    // Close the dropdown after selection
+    navigate(path);
+    setIsSmallScreenTab(false);
+  };
+
+  const toggleDropdown = () => {
+    setIsSmallScreenTab(prev => !prev);
   };
 
   return (
-    <Wrapper onClick={() => setIsSmallScreenTab((pre) => !pre)} style={{ position: 'relative' }}>
+    <Wrapper ref={wrapperRef} onClick={toggleDropdown} style={{ position: 'relative' }}>
       <img src={navtabSmallScreen} alt="tab" />
       {isSmallScreenTab && (
         <Box
@@ -35,11 +72,11 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
             padding: '0.5rem',
           }}
         >
-          {data.map((item, index) => (
+          {data.map((item: any, index: number) => (
             <Typography
               key={index}
               sx={{
-                padding: '0.2rem 0.4rem',
+                padding: '0.4rem 0.4rem',
                 fontSize: '0.6rem',
                 cursor: 'pointer',
                 backgroundColor: activeTab === index + 1 ? '#E0E0E0' : 'white',
@@ -52,9 +89,12 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
                   transform: 'scale(0.9)',
                 },
               }}
-              onClick={() => {handleTabClick(index + 1)}}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent the wrapper's onClick from firing
+                forAccount ? handleTabClickPath(item.path) : handleTabClick(index + 1);
+              }}
             >
-              {item}
+              {forAccount ? item?.label : item}
             </Typography>
           ))}
         </Box>
@@ -64,4 +104,3 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
 };
 
 export default SmallScreenTab;
-

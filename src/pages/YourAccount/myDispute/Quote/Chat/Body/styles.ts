@@ -27,15 +27,20 @@ export const Message = styled.div<MessageProps>`
   max-width: 70%;
   background-color: ${({ $sender }) =>
     $sender === 'admin' ? 'transparent' : 'white'};
-
   border-radius: 1rem;
-  
   color: ${({ $sender }) => ($sender === 'admin' ? '#1E6FFF' : '#1E6FFF')};
-
   border:${({ $sender }) => ($sender === 'admin' ? '1px solid #1E6FFF' : 'none')};
-
   padding: 0.5rem;
+  font-size: 0.8rem;
+  word-break: break-word;
 
+  @media (max-width: 768px) {
+    font-size: 0.5rem;
+    margin: 0.2rem;
+    max-width: 100%;
+    border-radius: 0.5rem;
+     padding: 0.3rem;
+  }
 `;
 interface MessageIconProps {
   $bgColor: string;
@@ -45,10 +50,15 @@ export const MessageIcon = styled.div<MessageIconProps>`
   background-color: ${({ $bgColor }) => $bgColor};
   color: ${({ $color }) => $color};
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.8rem;
+  @media (max-width: 768px) {
+    font-size: 0.6rem;
+    width: 1.3rem;
+    height: 1.3rem;
+  }
 `;

@@ -19,12 +19,13 @@ import { getPrinterById } from '../../store/actions/getPrinterById';
 
 
     const pricingDetails: PricingDetailType[] = [
-      { label: 'Scale', value: `${file.dimensions.length} x ${file.dimensions.width} x ${file.dimensions.height} ${file.unit}`, pricePerUnit: 20, total: 12, icon: 'ruler' },
+      { label: 'Scale', value: `${file.dimensions.length.toFixed(3)} x ${file.dimensions.width.toFixed(3)} x ${file.dimensions.height.toFixed(3)} ${file.unit}`, pricePerUnit: 20, total: 12, icon: 'ruler' },
       { label: 'Technology', value: file.technology, pricePerUnit: 20, total: 12, icon: 'cpu' },
       { label: 'Material', value: file.material, pricePerUnit: 20, total: 12, icon: 'box' },
       { label: 'Colors', value: file.color, pricePerUnit: 20, total: 12, icon: 'palette' },
       { label: 'Printers', value: printerName, pricePerUnit: 20, total: 12, icon: 'printer' },
-      { label: 'Infill Percentage', value: `${file.infill}%`, pricePerUnit: 20, total: 12, icon: 'percent' }
+      { label: 'Infill Percentage', value: `${file.infill}%`, pricePerUnit: 20, total: 12, icon: 'percent' },
+      { label: 'Quantity', value: `${file.quantity}`, pricePerUnit: 20, total: 12, icon: 'StretchHorizontal' }
     ];
 
     const handleViewDetails = () => {

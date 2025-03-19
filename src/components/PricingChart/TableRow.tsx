@@ -1,7 +1,6 @@
-import { Ruler, Cpu, Box, Palette, Printer, Percent } from 'lucide-react';
+import { Ruler, Cpu, Box, Palette, Printer, Percent, StretchHorizontal } from 'lucide-react';
 import type { PricingDetailType } from '../../types';
 import styles from './TableRow.module.css';
-
 
 const IconMap = {
   ruler: Ruler,
@@ -10,6 +9,7 @@ const IconMap = {
   palette: Palette,
   printer: Printer,
   percent: Percent,
+  StretchHorizontal: StretchHorizontal,
 };
 
 interface TableRowProps {
@@ -25,9 +25,7 @@ export function TableRow({ detail }: TableRowProps) {
         <Icon className={styles.icon} />
         <span>{detail.label}</span>
       </div>
-      <div className={styles.cell}>{detail.value}</div>
-      <div className={`${styles.cell} ${styles.price}`}>${detail.pricePerUnit}/m³</div>
-      <div className={`${styles.cell} ${styles.price}`}>${detail.total}</div>
+      <div className={styles.cell}>{detail.value || 'N/A'}</div>
     </div>
   );
 }
