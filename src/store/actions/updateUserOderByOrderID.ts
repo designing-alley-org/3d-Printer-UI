@@ -1,12 +1,9 @@
 import { updateUserOrderByOrderIdService } from "../../services/order";
 
 
-export const updateUserOrderByOrderId = async ( orderId: string, navigate: any, name: string, addressId: string) => {
+export const updateUserOrderByOrderId = async ( orderId: string, navigate: any, data: any) => {
     try {
-        const data = {
-            service_type: name,
-            address:addressId
-        };
+        
         const response = await updateUserOrderByOrderIdService(orderId, data);
         if (response.status === 200) {
             console.log('Files uploaded successfully!');

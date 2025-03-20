@@ -41,6 +41,7 @@ const OngoingOrder = () => {
     orders: Order[];
     totalPages: number;
   } | null>(null);
+  console.log(orders);
   const ITEMS_PER_PAGE = 5;
   const [filter, setFilter] = useState('all');
 
