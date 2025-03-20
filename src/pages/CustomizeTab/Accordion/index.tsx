@@ -320,9 +320,10 @@ const Accordion: React.FC<AccordionProps> = ({
                           pattern: '[0-9]*',
                           style: {
                             textAlign: 'left',
+                            width: '100%',
                             paddingRight: '8px',
-                            height: isSmallScreen ? '.1rem' : '.7rem',
-                            fontSize: isSmallScreen ? '.6rem' : '.8rem',
+                            height: isSmallScreen ? '.5rem' : '.7rem',
+                            fontSize: isSmallScreen ? '.5rem' : '.8rem',
                           },
                   }}
                 />
