@@ -11,12 +11,13 @@ import ViewDetails from "./placeOrder/ViewDetails";
 interface Order {
   _id: string;
   order_status: string;
+  files: string[];
   updatedAt: string;
   // Add other order properties as needed
 }
 
 interface OrderResponse {
-  order: Order[];
+  orders: Order[];
   totalPages: number;
 }
 
@@ -61,13 +62,13 @@ const MyOrders = () => {
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
             <Loader size="30" color="#0066ff" />
           </div>
-        ) : !orders?.order?.length ? (
+        ) : !orders?.orders?.length ? (
           <div className="no-orders-container">
             <p className="no-orders">No orders found.</p>
           </div>
         ) : (
           <div className="orders-list">
-            {orders.order.map((item: Order) => (
+            {orders.orders.map((item: Order) => (
               <div key={item._id} className="order-item">
                 <NotificationCard
                   title={formatOrderStatus(item.order_status)}
@@ -80,19 +81,19 @@ const MyOrders = () => {
 
                 {selectedOrderId === item._id && (
                   <div className="view-details-container">
-                    <ViewDetails orderId={item._id} myOrders="yes" />
+                    <ViewDetails orderId={item._id} myOrders="yes" files={item?.files} />
                   </div>
                 )}
               </div>
             ))}
           </div>
         )}
-        <div className="pagination">
+       {orders?.totalPages > 1 && <div className="pagination">
           <Pagin
             setPagination={setPagination}
             totalPages={orders?.totalPages ?? 1}
           />
-        </div>
+        </div>}
       </div>
     </OrderWrapper>
   );

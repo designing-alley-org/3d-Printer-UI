@@ -8,15 +8,21 @@ import { ViewDetailsWrapper } from '../../Notification/styles'
 interface ViewDetailsProps {
   orderId: string;
   myOrders?: 'yes' | 'no'; // Made optional and union type for better type safety
+  files:{
+    fileName: string;
+    quantity: number;
+    pricing: number;
+  }[]
 }
 
-const ViewDetails = ({ orderId, myOrders = 'no' }: ViewDetailsProps) => {
+
+const ViewDetails = ({ orderId, myOrders = 'no', files }: ViewDetailsProps) => {
   const [isCreateDispute, setIsCreateDispute] = useState(false);
   const showDispute = myOrders !== 'yes'; 
 
   return (
     <ViewDetailsWrapper>
-      <OrderFilesList selectedOrder={orderId} />
+      <OrderFilesList  files={files} />
       {showDispute && (
         <Button 
           className='createDispute-btn' 

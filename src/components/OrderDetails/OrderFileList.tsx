@@ -1,28 +1,25 @@
-import { getOrderById } from '../../store/actions/getOrderById';
-import { OrderFileType } from '../../types';
 import { OrderFile } from '../OrderFiles/OrderFile';
 import './OrderFileList.css'; // Import the CSS file
-import { useEffect, useState } from 'react';
 
 interface IselectedOrder {
-  selectedOrder: string;
-}
+  files:{
+    fileName: string;
+    quantity: number;
+    pricing: number;
+  }[]
+  };
 
-export function OrderFilesList({ selectedOrder }: IselectedOrder) {
-  const [orderFiles, setOrderFiles] = useState<OrderFileType[]>([]);
 
-  useEffect(() => {
-    getOrderById(selectedOrder, setOrderFiles);
-  }, []);
-
+export function OrderFilesList({  files }: IselectedOrder) {
+ 
   return (
     <div className="order-files-list">
         <h3 className="order-files-title">Order Files</h3>
         <div className="order-files-space">
-          {orderFiles.length === 0 && <p className='no-files'>No files found</p>}
-          {orderFiles.map((file,index) => (
+          {files?.length === 0 && <p className='no-files'>No files found</p>}
+          {files?.map((file,index:number) => (
             <OrderFile
-              key={file?.index}
+              key={index}
               fileName={file.fileName.split('-')[0]}
               quantity={file.quantity}
               pricing={file.pricing}
