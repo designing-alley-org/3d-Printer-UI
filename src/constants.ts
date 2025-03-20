@@ -100,7 +100,7 @@ export const notificationTab = [
   { id: 1, label: 'ONGOING ORDER' },
   { id: 2, label: 'PLACED ORDER' },
   { id: 3, label: 'MY DISPUTES' },
-  { id: 4, label: 'SETTINGS' },
+  // { id: 4, label: 'SETTINGS' },
  ];
 // Data for Card
 export const cardItems = [

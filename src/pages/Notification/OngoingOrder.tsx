@@ -176,7 +176,7 @@ const OngoingOrder = () => {
           dateTime={formatDateTime(order.updatedAt)}
           buttonLabel="Open"
           onButtonClick={() => handleNavigate(order.order_status, order._id)}
-          isUnread={notification ? !notification.readStatus : false} // Check presence before getting value
+          isUnread={notifications ? !notifications.readStatus : false} // Check presence before getting value
         />
       ))}
 

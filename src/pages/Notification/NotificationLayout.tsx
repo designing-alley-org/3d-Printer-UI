@@ -50,7 +50,7 @@ const NotificationLayout = () => {
         {activeTab === 1 && <OngoingOrder />}
         {activeTab === 2 && <PlaceOrder/>}
         {activeTab === 3 && <MyDisputes/>}
-        {activeTab === 4 && <Settinges/>}
+        {/* {activeTab === 4 && <Settinges/>} */}
       </MainComp>
     </NotWrapper>
   );
