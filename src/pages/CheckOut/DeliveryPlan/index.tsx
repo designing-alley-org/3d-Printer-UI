@@ -97,6 +97,9 @@ const DeliveryPlan: React.FC = () => {
     }, 0);
   }, []);
 
+  const totalWeight = order ? calculateTotalWeight(order) : 0;
+
+
   // Fetch order data
   useEffect(() => {
     const fetchOrder = async () => {
@@ -127,8 +130,7 @@ const DeliveryPlan: React.FC = () => {
 
       if (!order) return;
 
-      const totalWeight = calculateTotalWeight(order);
-
+      
       const DELIVERY_PAYLOAD = {
         addressId,
         units: 'KG',
@@ -172,11 +174,21 @@ const DeliveryPlan: React.FC = () => {
     try {
       setIsLoading(true);
       dispatch(selectDeliveryPlan(selectedPlanName));
+      const data = {
+          delivery_service: {
+          service_type: selectedPlanName,
+          service_price: deliveryData?.rates?.[selectedPlanIndex]?.ratedShipmentDetails[0]?.totalNetCharge || 0,
+          total_weight: {
+            weight: totalWeight || 0,
+            unit: 'KG',
+      },
+        },
+        address: addressId,
+      };
       await updateUserOrderByOrderId(
         orderId as string,
         navigate,
-        selectedPlanName,
-        addressId
+        data
       );
     } catch (err) {
       const error = err as ApiError;
@@ -221,7 +233,7 @@ const DeliveryPlan: React.FC = () => {
   // Render main content
   return (
     <Box sx={{ padding: '0 1rem' }}>
-      <Typography variant={isSmallScreen ? 'body1':'h2'} sx={{ color: '#001047', marginBottom: '2rem' }}>
+      <Typography variant={isSmallScreen ? 'body1':'h1'} sx={{ color: '#001047', marginBottom: '2rem' }}>
         Select Delivery Plan
       </Typography>
        <CardBox>
