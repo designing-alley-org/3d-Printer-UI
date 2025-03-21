@@ -1,37 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './styles.css';
-import Dropdown from '../../../stories/Dropdown/Dropdown';
+import Dropdown, { Option } from '../../../stories/Dropdown/Dropdown';
 import { sizeOption, info, group } from '../../../constants';
 import { Button, TextField, useMediaQuery } from '@mui/material';
 import PrinterCard from '../../../components/PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  updateColor,
-  updateInfill,
-  updateMaterial,
-  updatePrinter,
-  updateTechnology,
-} from '../../../store/customizeFilesDetails/reducer';
-import { getPrintersByTechnologyAndMaterial } from '../../../store/actions/getPrintersByTechnologyAndMaterial';
+import { Dimensions, FileDetail, UpdateValueById } from '../../../store/customizeFilesDetails/reducer';
 
 interface AccordionProps {
   icon: string;
   id: string;
   title: string;
-  selectedId: string | null;
-  setUpdateHeight: (height: number) => void;
-  setUpdateLength: (length: number) => void;
-  setUpdateWidth: (width: number) => void;
-  selectedMat: string;
-  selectedColor: string;
-  selectedPrinter: string;
-  setSelectedMat: (selectedMat: string) => void;
-  setSelectedColor: (selectedColor: string) => void;
-  setSelectedPrinter: (selectedPrinter: string) => void;
-  setSelectUnit: (unit: string) => void;
-  selectedInfill: number;
-  setSelectInfill: (infill: number) => void;
-  actualUnit: string;
+  printerData: PrinterData[];
+  printerMessage: string;
+  fileData: FileDetail;
+  oldDimensions: { unit: string | null; dimensions: Dimensions; } | null
 }
 
 interface PrinterData {
@@ -59,166 +42,30 @@ const Accordion: React.FC<AccordionProps> = ({
   icon,
   id,
   title,
-  selectedId,
-  setUpdateHeight,
-  setUpdateLength,
-  setUpdateWidth,
-  selectedMat,
-  selectedColor,
-  selectedPrinter,
-  selectedInfill,
-  setSelectedMat,
-  setSelectedColor,
-  setSelectedPrinter,
-  setSelectUnit,
-  setSelectInfill,
-  actualUnit,
+  printerData,
+  printerMessage,
+  fileData,
+  oldDimensions,
 }) => {
-  const [selectedTech, setSelectedTech] = useState<string>('');
-  const [printerData, setPrinterData] = useState([]);
-  const [printerMessage, setPrinterMessage] = useState('');
-  const [colorBtnData, setColorBtnData] = useState<string[]>([]);
-  const [technologyData, setTechnologyData] = useState<string[]>([]);
-  const [materialData, setMaterialData] = useState<MaterialWithMass[]>([]);
-  const [selectSize, setSelectSize] = useState<string>('');
-  const [unit, setUnit] = useState<'mm' | 'inch'>('mm');
-  const isSmallScreen = useMediaQuery('(max-width:768px)');
-  const handleColorClick = (color: string) => setSelectedColor(color);
-  const handleTechClick = (technology: string) => setSelectedTech(technology);
-  const handleMatClick = (material: string) => setSelectedMat(material);
-  const handleInfill = (infill: number) => setSelectInfill(infill);
-  const fileDetails = useSelector((state: any) => state.fileDetails.files);
-  const selectedFile = fileDetails.find((file: any) => file._id === selectedId);
-  const dataspec = useSelector((state: any) => state.specification);
-  const dimansions = selectedFile?.dimensions;
-  const [dimensions, setDimensions] = useState({
-    height: dimansions?.height || 0,
-    width: dimansions?.width || 0,
-    length: dimansions?.length || 0,
-  });
-  const [originalDimensions, setOriginalDimensions] = useState({
-    height: 0,
-    width: 0,
-    length: 0,
-  });
-
-  useEffect(() => {
-    setDimensions({
-      height: dimansions?.height || 0,
-      width: dimansions?.width || 0,
-      length: dimansions?.length || 0,
-    });
-  }, [dimansions]);
-
-  useEffect(() => {
-    if (dataspec) {
-      setColorBtnData(dataspec.color || []);
-      setTechnologyData(dataspec.technologyType || []);
-      setMaterialData(dataspec.material_with_mass || []);
-    }
-  }, [dataspec]);
-
-  // Update useEffect to set dimensions from selectedFile
-  useEffect(() => {
-    if (selectedFile?.dimensions) {
-      setSelectSize(selectedFile.unit || 'mm');
-      const initialDimensions = {
-        height: Number(selectedFile.dimensions.height.toFixed(2)) || 0,
-        width: Number(selectedFile.dimensions.width.toFixed(2)) || 0,
-        length: Number(selectedFile.dimensions.length.toFixed(2)) || 0,
-      };
-      setDimensions(initialDimensions);
-      setOriginalDimensions(initialDimensions);
-    }
-  }, [selectedFile?.dimensions]);
 
   const dispatch = useDispatch();
 
-  // Fetch printer data based on selected material and technology
-  const fetchPrinterData = useCallback(async () => {
-    if (selectedMat && selectedTech) {
-      await getPrintersByTechnologyAndMaterial({
-        selectedMat,
-        selectedTech,
-        setPrinterData,
-        setPrinterMessage,
-      });
-    }
-  }, [selectedMat, selectedTech]);
+  const [selectedTech, setSelectedTech] = useState<string>('');
+  const [formData, setFormData] = useState<FileDetail>();
+
+  const dataspec = useSelector((state: any) => state.specification);
+
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
-    fetchPrinterData();
-  }, [fetchPrinterData]);
-
-  // Take selected technology and material from selected file
-  useEffect(() => {
-    if (selectedFile) {
-      setSelectedTech(selectedFile.technology);
-      setSelectedMat(selectedFile.material);
-      setSelectedColor(selectedFile.color);
-      setSelectedPrinter(selectedFile.printer);
-      setSelectUnit(selectedFile?.unit);
-      setSelectInfill(selectedFile?.infill);
-    }
-  }, [selectedFile]);
-
-  // Clear printer data when selectedId changes
-  useEffect(() => {
-    if (selectedId) {
-      setPrinterData([]);
-    }
-  }, [selectedId]);
-
-  // Send color corresponding to selectedId to store
-  useEffect(() => {
-    if (selectedColor && selectedId) {
-      dispatch(updateColor({ id: selectedId, color: selectedColor }));
-    }
-  }, [selectedColor]);
-
-  // send printer corresponding to selectedId to store
-  useEffect(() => {
-    if (selectedPrinter && selectedId) {
-      dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
-    }
-  }, [selectedPrinter]);
-
-  // Send technology corresponding to selectedId to store
-  useEffect(() => {
-    if (selectedTech && selectedId) {
-      dispatch(updateTechnology({ id: selectedId, technology: selectedTech }));
-    }
-  }, [selectedTech]);
-
-  // Send material corresponding to selectedId to store
-  useEffect(() => {
-    if (selectedMat && selectedId) {
-      dispatch(updateMaterial({ id: selectedId, material: selectedMat }));
-    }
-  }, [selectedMat]);
-
-  // Send printer corresponding to selectedId to store
-  useEffect(() => {
-    if (selectedPrinter && selectedId) {
-      dispatch(updatePrinter({ id: selectedId, printer: selectedPrinter }));
-    }
-  }, [selectedPrinter]);
-  useEffect(() => {
-    if (selectedInfill && selectedId) {
-      dispatch(updateInfill({ id: selectedId, infill: selectedInfill }));
-    }
-  }, [selectedInfill]);
-
-  useEffect(() => {
-    setUpdateHeight(dimensions.height);
-    setUpdateWidth(dimensions.width);
-    setUpdateLength(dimensions.length);
-  }, [dimensions, setUpdateHeight, setUpdateWidth, setUpdateLength]);
+    setFormData(fileData);
+  }, [fileData]);
+  
 
   const convertDimensions = (
     value: number,
-    fromUnit: 'mm' | 'inch',
-    toUnit: 'mm' | 'inch'
+    fromUnit: string,
+    toUnit: string
   ) => {
     if (fromUnit === toUnit) return value;
     return fromUnit === 'mm'
@@ -226,49 +73,82 @@ const Accordion: React.FC<AccordionProps> = ({
       : Math.abs(value * INCH_TO_MM);
   };
 
+  const handelChangeValue = (filed:string, value:string) => {
+    setFormData(prev => ({ ...prev, [filed]: value }));
+  }
+
   const handleUnitChange = (option: Option) => {
     const newUnit = option.value as 'mm' | 'inch';
+    if( newUnit === formData?.unit) return
 
-    // Ensure conversion happens only when units actually change
-    if (newUnit !== unit) {
+    const unit = formData?.unit || 'mm';
+
       // Convert current dimensions when unit changes
-      const convertedDimensions = {
-        height: convertDimensions(dimensions.height.toFixed(3), unit, newUnit),
-        width: convertDimensions(dimensions.width.toFixed(2), unit, newUnit),
-        length: convertDimensions(dimensions.length.toFixed(2), unit, newUnit),
-      };
-      setDimensions(convertedDimensions);
-      setUnit(newUnit);
-      setSelectUnit(newUnit);
-    }
+      const convertedHeight = convertDimensions(formData?.dimensions?.height, unit, newUnit);
+      const convertedWidth = convertDimensions(formData?.dimensions?.width, unit, newUnit);
+      const convertedLength = convertDimensions(formData?.dimensions?.length, unit, newUnit);
+
+
+      handelChangeValue('unit', newUnit);
+      handelChangeValue('dimensions', {
+        height: convertedHeight,
+        width: convertedWidth,
+        length: convertedLength,
+      });
+
   };
 
   // Handle input changes
   const handleChange =
     (field: 'height' | 'width' | 'length') =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setDimensions((prev) => ({
-        ...prev,
-        [field]: value === '' ? null : parseFloat(value),
-      }));
+      const value = Number(event.target.value.replace(/[^\d.]/g, ''));
+
+      if (value) {
+        setFormData({
+          ...formData,
+          dimensions: {
+            ...formData?.dimensions,
+            [field]: value,
+          },
+        });
+      }
     };
+
+  useEffect(() => {
+    if (formData) {
+      dispatch(UpdateValueById({ id: fileData._id, data: formData }));
+    }
+  }, [formData]);
 
   // Revert to original dimensions
   const handleRevert = () => {
-    setDimensions(originalDimensions);
+    setFormData({
+      ...formData,
+      unit: oldDimensions?.unit || 'mm',
+      dimensions: {
+        ...formData?.dimensions,
+        height: oldDimensions?.dimensions?.height || 0,
+        width: oldDimensions?.dimensions?.width || 0,
+        length: oldDimensions?.dimensions?.length || 0,
+      },
+    });
   };
-  const handlePrinterSelect = (title: string) =>
-    setSelectedPrinter(selectedPrinter === title ? '' : title);
 
-  const options = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    value: `${(i + 1) * 5}`,
-    label: `${(i + 1) * 5}`,
-  }));
-  console.log(selectedInfill);
 
-  if (!selectedFile) {
+
+
+  const options = useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        value: `${(i + 1) * 5}`,
+        label: `${(i + 1) * 5}`,
+      })),
+    []
+  );
+
+  if (!fileData) {
     return (
       <div className="accordion">
         <div className="accordion-header">
@@ -301,7 +181,7 @@ const Accordion: React.FC<AccordionProps> = ({
               <Dropdown
                 options={sizeOption}
                 onSelect={handleUnitChange}
-                defaultValue={selectedFile ? selectedFile.unit : 'mm'}
+                defaultValue={formData?.unit ? formData?.unit : 'mm'}
                 className="dropdown_unit"
               />
               
@@ -311,10 +191,10 @@ const Accordion: React.FC<AccordionProps> = ({
                         type="number"
                         variant="outlined"
                         className="fields"
-                        value={dimensions[field]}
-                  onChange={handleChange(
-                    field as 'height' | 'width' | 'length'
-                  )}
+                        value={formData?.dimensions[field as 'height' | 'width' | 'length']}
+                        onChange={handleChange(
+                          field as 'height' | 'width' | 'length'
+                        )}
                         inputProps={{
                           inputMode: 'numeric',
                           pattern: '[0-9]*',
@@ -333,11 +213,11 @@ const Accordion: React.FC<AccordionProps> = ({
               <Button className="btn" onClick={handleRevert}>
                 Revert to original
               </Button>
-              {dimansions && (
+              {oldDimensions && (
                 <p>
-                  {originalDimensions.height} {actualUnit} x{' '}
-                  {originalDimensions.width} {actualUnit}x{' '}
-                  {originalDimensions.length} {actualUnit}
+                  {oldDimensions?.dimensions?.height.toFixed(2)} {oldDimensions?.unit}  x{' '}
+                  {oldDimensions?.dimensions?.width.toFixed(2)} {oldDimensions?.unit}x{' '}
+                  {oldDimensions?.dimensions?.length.toFixed(2)} {oldDimensions?.unit}
                 </p>
               )}
             </div>
@@ -345,18 +225,18 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '2' && (
           <>
-            {technologyData &&
-              technologyData.map((item) => (
+            {dataspec &&
+              dataspec?.technologyType.map((item : string) => (
                 <Button
                   key={item}
-                  className={selectedTech === item ? 'active' : 'btn'}
-                  onClick={() => handleTechClick(item)}
+                  className={formData?.technology === item ? 'active' : 'btn'}
+                  onClick={() => handelChangeValue('technology', item)}
                 >
                   {item}
                 </Button>
               ))}
             <div className="check-box">
-              {selectedTech ? (
+              {formData?.technology ? (
                 <img src={group} alt="group" />
               ) : (
                 <img src={info} alt="info" />
@@ -366,20 +246,20 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '3' && (
           <>
-            {materialData &&
-              materialData.map((item) => (
+            {dataspec &&
+              dataspec?.material_with_mass?.map((item:{material_name: string, material_mass: number},index: number) => (
                 <Button
-                  key={item.material_name}
+                  key={index}
                   className={
-                    selectedMat === item.material_name ? 'active' : 'btn'
+                    formData?.material === item?.material_name ? 'active' : 'btn'
                   }
-                  onClick={() => handleMatClick(item.material_name)}
+                  onClick={() => handelChangeValue('material', item?.material_name)}
                 >
                   {item.material_name}
                 </Button>
               ))}
             <div className="check-box">
-              {selectedMat ? (
+              {formData?.material ? (
                 <img src={group} alt="group" />
               ) : (
                 <img src={info} alt="info" />
@@ -389,11 +269,11 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '4' && (
           <>
-            {colorBtnData.map((item) => (
+            {dataspec?.color.map((item:string) => (
               <Button
                 key={item}
-                className={selectedColor === item ? 'active' : 'btn'}
-                onClick={() => handleColorClick(item)}
+                className={ formData?.color === item ? 'active' : 'btn'}
+                onClick={() => handelChangeValue('color', item)}
               >
                 <span
                   className="btn-color"
@@ -403,7 +283,7 @@ const Accordion: React.FC<AccordionProps> = ({
               </Button>
             ))}
             <div className="check-box">
-              {selectedColor ? (
+              {formData?.color ? (
                 <img src={group} alt="group" />
               ) : (
                 <img src={info} alt="info" />
@@ -413,10 +293,10 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '5' && (
           <>
-            {(selectedTech === '' || selectedMat === '') && (
+            {(formData?.technology === '' || formData?.material === '') && (
               <p className="no-data">Please select Material and Technology</p>
             )}
-            {printerData.length <= 0 && selectedMat && selectedTech && (
+            {printerData.length <= 0 && formData?.material && formData?.technology && (
               <p className="no-data">
                 {printerMessage ? printerMessage : 'Loading...'}
               </p>
@@ -429,8 +309,8 @@ const Accordion: React.FC<AccordionProps> = ({
                   subTitle={item.model}
                   desc={item.printerName}
                   data={item}
-                  isSelected={selectedPrinter === item._id}
-                  onSelect={handlePrinterSelect}
+                  isSelected={formData?.printer === item._id}
+                  onSelect={() => handelChangeValue('printer', item._id)}
                 />
               ))}
           </>
@@ -439,17 +319,11 @@ const Accordion: React.FC<AccordionProps> = ({
           <div className="infill">
             <Dropdown
               options={options}
-              onSelect={(option: Option) =>
-                handleInfill(
-                  typeof option.value === 'string'
-                    ? Number(option.value)
-                    : (option.value as number)
-                )
-              }
+              onSelect={(option) => handelChangeValue('infill', option?.value as string)}
               defaultValue={
-                selectedFile?.infill !== undefined
-                  ? String(selectedFile?.infill)
-                  : undefined
+                formData?.infill == null
+                  ? 5
+                  : String(formData?.infill)
               }
             />
           </div>
@@ -459,4 +333,4 @@ const Accordion: React.FC<AccordionProps> = ({
   );
 };
 
-export default Accordion;
+export const AccordionMemo = React.memo(Accordion);
