@@ -25,7 +25,8 @@ import { getPrinterById } from '../../store/actions/getPrinterById';
       { label: 'Colors', value: file.color, pricePerUnit: 20, total: 12, icon: 'palette' },
       { label: 'Printers', value: printerName, pricePerUnit: 20, total: 12, icon: 'printer' },
       { label: 'Infill Percentage', value: `${file.infill}%`, pricePerUnit: 20, total: 12, icon: 'percent' },
-      { label: 'Quantity', value: `${file.quantity}`, pricePerUnit: 20, total: 12, icon: 'StretchHorizontal' }
+      { label: 'Quantity', value: `${file.quantity}`, pricePerUnit: 20, total: 12, icon: 'StretchHorizontal' },
+      { label: 'Weight', value: `${file?.dimensions?.weight || 0} gm` , pricePerUnit: 20, total: 12, icon: 'weight' },
     ];
 
     const handleViewDetails = () => {
