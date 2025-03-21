@@ -1,20 +1,20 @@
 import { getPrintersByTechnologyAndMaterialService } from "../../services/printer";
 
 interface IGetPrintersByTechnologyAndMaterial {
-    selectedMat: string;
-    selectedTech: string;
+    material: string;
+    technology: string;
     setPrinterData: React.Dispatch<any>; 
     setPrinterMessage: React.Dispatch<string>;
 }
 
 export const getPrintersByTechnologyAndMaterial = async ({
-    selectedMat,
-    selectedTech,
+    material,
+    technology,
     setPrinterData,
     setPrinterMessage,
 }: IGetPrintersByTechnologyAndMaterial): Promise<void> => {
     try {
-        const res = await getPrintersByTechnologyAndMaterialService(selectedTech, selectedMat);
+        const res = await getPrintersByTechnologyAndMaterialService(technology, material);
         if (res.length === 0) {
             setPrinterMessage("No printers found with the selected technology and material");
         } else {

@@ -12,18 +12,17 @@ import {
   Model,
   ModelName,
   CustomizeBox,
-  Heading,
   LoadingWrapper,
 } from './styles';
 import { customize, vector_black } from '../../constants';
-import Accordion from './Accordion';
+import { AccordionMemo } from './Accordion';
 import materialIcon from '../../assets/icons/materialIcon.svg';
 import colorIcon from '../../assets/icons/colorIcon.svg';
 import printerIcon from '../../assets/icons/printerIcon.svg';
 import infil from '../../assets/icons/infillIcon.svg';
 import {
-  updateUnit,
-  updateInfill,
+  FileDetail,
+  setActiveFile,
 } from '../../store/customizeFilesDetails/reducer';
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 import { saveFile } from '../../utils/indexedDB';
@@ -34,6 +33,7 @@ import { getWeightByFileId } from '../../store/actions/getWeightByFileId';
 import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
+import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -55,29 +55,46 @@ interface FileData {
 
 const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
-  const [activeFileId, setActiveFileId] = useState<string | null>(null);
-  const [weight, setWeight] = useState<number | null>(null);
-  const [updateWidth, setUpdateWidth] = useState<number>(0);
-  const [updateHeight, setUpdateHeight] = useState<number>(0);
-  const [updateLength, setUpdateLength] = useState<number>(0);
-  const [selectedMate, setSelectedMate] = useState<string>('');
-  const [selectedColor, setSelectedColor] = useState<string>('');
-  const [selectedPrinter, setSelectedPrinter] = useState<string>('');
-  const [selectUnit, setSelectUnit] = useState<string>('');
-  const [actualUnit, setActualUnit] = useState<string>('');
-  const [selectInfill, setSelectInfill] = useState<number>(0);
   const [isViewerOpen, setViewerOpen] = useState(false);
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [printerData, setPrinterData] = useState([]);
+  const [printerMessage, setPrinterMessage] = useState('');
 
-  const fileDetails = useSelector((state: any) => state.fileDetails.files);
+
+  const { updateFiles: fileDetails, activeFileId, files: orderFiles } = useSelector((state: any) => state.fileDetails);
+
+
+  // Extract the active file from the files
   const activeFile = useMemo(() => {
-    return fileDetails.find((file: any) => file._id === activeFileId) || null;
+    if (!fileDetails) return null;
+    return fileDetails.find((file: FileDetail) => file._id === activeFileId) || null;
   }, [fileDetails, activeFileId]);
 
-  
+
+
+
+  // For Contain old dimensions of the active file
+  const activeFileIndexDimensions = useMemo(() => {
+    if (!orderFiles || !activeFileId) return null;
+    const activeFileObj = orderFiles.find((file: FileDetail) => file._id === activeFileId);
+    return activeFileObj ? { unit: activeFileObj.unit || '', dimensions: activeFileObj.dimensions } : null;
+  }, [activeFileId, orderFiles]);
+
+
+  const { color, material, technology, printer, infill, dimensions, unit } = activeFile || {};
+
+
+  const materialCompatibility = useSelector(
+    (state: any) => state.specification.material_with_mass
+  );
+  const materialMass = materialCompatibility?.find(
+    (mat: any) => mat.material_name === material
+  )?.material_mass;
+
+
 
   // Fetch files from the server
   useEffect(() => {
@@ -91,32 +108,7 @@ const CustomizeTab: React.FC = () => {
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
 
-  // select actual unit from the file
-  useEffect(() => {
-    if (activeFileId && activeFile) {
-      const orginalUnit = files.find(
-        (file: any) => file._id === activeFileId
-      )?.unit;
-      setActualUnit(orginalUnit || '');
-    }
-  }, [activeFileId]);
 
-  useEffect(() => {
-    if (activeFile) {
-      dispatch(updateUnit({ id: activeFileId, unit: selectUnit }));
-    }
-  }, [selectUnit]);
-
-  // send infill corresponding to selectedId to store
-  useEffect(() => {
-    if (selectInfill && activeFileId) {
-      dispatch(updateInfill({ id: activeFileId, infill: selectInfill }));
-    }
-  }, [selectInfill]);
-
-  useEffect(() => {
-    setWeight(null);
-  }, [activeFileId]);
 
   // Store files in IndexedDB
   useEffect(() => {
@@ -125,7 +117,6 @@ const CustomizeTab: React.FC = () => {
         const response = await fetch(file.fileUrl);
         const blob = await response.blob();
         await saveFile(file.fileUrl, blob);
-        console.log(`File ${file.fileName} saved to IndexedDB`);
       } catch (error) {
         console.error(
           `Error saving file ${file.fileName} to IndexedDB:`,
@@ -155,18 +146,8 @@ const CustomizeTab: React.FC = () => {
     fetchSpec();
   }, [fetchSpec]);
 
-  const selectedMat = useSelector(
-    (state: any) =>
-      state.fileDetails.files.find(
-        (file: FileData) => file._id === activeFileId
-      )?.material
-  );
-  const selectedMatMass = useSelector(
-    (state: any) => state.specification.material_with_mass
-  );
-  const materialMass = selectedMatMass?.find(
-    (mat: any) => mat.material_name === selectedMat
-  )?.material_mass;
+
+
 
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
@@ -178,13 +159,12 @@ const CustomizeTab: React.FC = () => {
 
   // For Viewer
   const handleSetActiveFile = useCallback((fileId: string) => {
-    setActiveFileId(fileId);
+    dispatch(setActiveFile(fileId));
   }, []);
 
   const handleOpenViewer = useCallback(
     (fileId: string) => {
       setViewerOpen(true);
-      handleSetActiveFile(fileId);
     },
     [handleSetActiveFile]
   );
@@ -193,12 +173,29 @@ const CustomizeTab: React.FC = () => {
     setViewerOpen(false);
   }, []);
 
-  const getFileColor = useCallback(
-    (file: FileData) => {
-      return activeFileId === file._id ? selectedColor : '';
-    },
-    [activeFileId, selectedColor]
-  );
+
+  // Clear printer data when selectedId changes
+  useEffect(() => {
+    if (activeFileId) {
+      setPrinterData([]);
+    }
+  }, [activeFileId]);
+
+  const fetchPrinterData = useCallback(async () => {
+    if (material && technology) {
+      await getPrintersByTechnologyAndMaterial({
+        material,
+        technology,
+        setPrinterData,
+        setPrinterMessage,
+      });
+    }
+  }, [material, technology]);
+
+  useEffect(() => {
+    fetchPrinterData();
+  }, [fetchPrinterData]);
+
   const handleApplySelection = async () => {
     if (!activeFile) {
       console.warn('No active file selected.');
@@ -210,31 +207,31 @@ const CustomizeTab: React.FC = () => {
 
       // Check if scaling is required
       if (
-        updateWidth !== activeFile?.width ||
-        updateHeight !== activeFile?.height ||
-        updateLength !== activeFile?.length
+        activeFileIndexDimensions?.dimensions?.width !== dimensions?.width ||
+        activeFileIndexDimensions?.dimensions?.height !== dimensions?.height ||
+        activeFileIndexDimensions?.dimensions?.length !== dimensions?.length ||
+        activeFileIndexDimensions?.unit !== unit
       ) {
         await scaleTheFileByNewDimensions({
           orderId: orderId as string,
           activeFileId: activeFileId as string,
-          updateLength,
-          updateWidth,
-          updateHeight,
-          selectUnit,
+          updateLength: dimensions?.length,
+          updateWidth: dimensions?.width,
+          updateHeight: dimensions?.height,
+          selectUnit: unit,
         });
       }
 
-     // Get weight of the file
+      // Get weight of the file
       await getWeightByFileId({
         orderId: orderId as string,
-        setWeight,
         activeFileId: activeFileId as string,
-        selectedMat,
-        materialMass,
+        selectedMat: material as string,
+        materialMass: materialMass as number,
         dispatch,
       });
 
-      // Update file data
+      //   // Update file data
       await updateFileDataByFileId({
         orderId: orderId as string,
         activeFile,
@@ -272,103 +269,94 @@ const CustomizeTab: React.FC = () => {
             <span className="count">{files.length}</span>
           </span>
           <div className="file-list">
-          <UploadedFile>
-            {fileDetails.map((file : any ) => (
-              <span
-                key={file._id}
-                className="upload-file"
-                onClick={() => handleSetActiveFile(file._id)}
-                style={{
-                  boxShadow:
-                    activeFileId === file._id
-                      ? '0px 0px 4.8px 0px #66A3FF'
-                      : 'none',
-                  border:
-                    activeFileId === file._id ? '1px solid #66A3FF' : 'none',
-                }}
-              >
-                <Model>
-                  <span className="model-preview">
-                    <ViewModelStl
-                      fileUrl={file.fileUrl}
-                      modelColor={file.color ? file.color : getFileColor(file)}
-                    />
-                  </span>
-                  <span
-                    className="view-model"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenViewer(file._id);
-                    }}
-                  >
-                    <img src={vector_black} alt="View model" />
-                  </span>
-                </Model>
-                <ModelName>
-                  {file?.fileName.split('_')[1] || file?.fileName.split('/').pop()}
-                </ModelName>
-                <CustomizeBox>
-                  {[
-                    { icon: materialIcon, key: 'material' },
-                    { icon: colorIcon, key: 'color' },
-                    { icon: printerIcon, key: 'printer' },
-                    { icon: infil, key: 'infill', additionalStyle: { width: '1rem' } },
-                  ].map(({ icon, key, additionalStyle }) => (
-                    <img
-                      src={icon}
-                      alt={key}
-                      style={{
-                        filter:
-                          fileDetails.some((f:any) => f._id === file._id && f[key])
-                            ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                            : 'none',
-                        ...additionalStyle,
+            <UploadedFile>
+              {fileDetails.map((file: any) => (
+                <span
+                  key={file._id}
+                  className="upload-file"
+                  onClick={() => handleSetActiveFile(file._id)}
+                  style={{
+                    boxShadow:
+                      activeFileId === file._id
+                        ? '0px 0px 4.8px 0px #66A3FF'
+                        : 'none',
+                    border:
+                      activeFileId === file._id ? '1px solid #66A3FF' : 'none',
+                  }}
+                >
+                  <Model>
+                    <span className="model-preview">
+                      <ViewModelStl
+                        fileUrl={file.fileUrl}
+                        modelColor={file.color}
+                      />
+                    </span>
+                    <span
+                      className="view-model"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenViewer(file._id);
                       }}
-                      key={key}
-                    />
-                  ))}
-                </CustomizeBox>
-              </span>
-            ))}
-          </UploadedFile>
+                    >
+                      <img src={vector_black} alt="View model" />
+                    </span>
+                  </Model>
+                  <ModelName>
+                    {file?.fileName.split('_')[1] || file?.fileName.split('/').pop()}
+                  </ModelName>
+                  <CustomizeBox>
+                    {[
+                      { icon: materialIcon, key: 'material' },
+                      { icon: colorIcon, key: 'color' },
+                      { icon: printerIcon, key: 'printer' },
+                      { icon: infil, key: 'infill', additionalStyle: { width: '1rem' } },
+                    ].map(({ icon, key, additionalStyle }) => (
+                      <img
+                        src={icon}
+                        alt={key}
+                        style={{
+                          filter:
+                            fileDetails.some((f: any) => f._id === file._id && f[key])
+                              ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
+                              : 'none',
+                          ...additionalStyle,
+                        }}
+                        key={key}
+                      />
+                    ))}
+                  </CustomizeBox>
+                </span>
+              ))}
+            </UploadedFile>
           </div>
         </Files>
         <Customize>
           <div className="customize-container">
             {
-              activeFileId===null ? 
-              <div className='no-file'>
-              <h3 className='no-file-title'>Please select a file to customize</h3>
-              </div> : null 
+              activeFileId === null ?
+                <div className='no-file'>
+                  <h3 className='no-file-title'>Please select a file to customize</h3>
+                </div> : null
             }
             {activeFileId && customize.map((item) => (
-              <Accordion
-                selectedMat={selectedMate}
-                selectedColor={selectedColor}
-                selectedPrinter={selectedPrinter}
-                setSelectedMat={setSelectedMate}
-                setSelectedColor={setSelectedColor}
-                setSelectedPrinter={setSelectedPrinter}
-                setUpdateHeight={setUpdateHeight}
-                setUpdateWidth={setUpdateWidth}
-                setUpdateLength={setUpdateLength}
-                setSelectUnit={setSelectUnit}
-                selectedInfill={selectInfill}
-                setSelectInfill={setSelectInfill}
-                actualUnit={actualUnit}
-                selectedId={activeFileId as string | null}
+              <AccordionMemo
                 key={item.id}
                 icon={item.icon}
                 id={item.id}
                 title={item.name}
+                printerData={printerData}
+                printerMessage={printerMessage}
+                fileData={activeFile}
+                oldDimensions={activeFileIndexDimensions}
+
               />
             ))}
           </div>
           <div className="weight-section">
-            {weight !== null && weight > 0 && (
+            {dimensions?.weight !== null && dimensions?.weight > 0 && (
               <>
                 <p>Current Weight:</p>
-                <p>{`${weight.toFixed(2)}gm`}</p>
+                <p>{`${dimensions?.weight.toFixed(2)}gm`}</p>
               </>
             )}
           </div>
@@ -391,9 +379,9 @@ const CustomizeTab: React.FC = () => {
         isOpen={isViewerOpen}
         onClose={handleViewerClose}
         activeFileId={activeFileId}
-        files={files as ViewerStlModelProps['files']}
+        files={files as any}
         onSetActiveFile={handleSetActiveFile}
-        color={selectedColor}
+        color={activeFile?.color}
       />
     </Wrapper>
   );

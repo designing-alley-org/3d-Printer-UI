@@ -3,7 +3,6 @@ import { updateWeight } from "../customizeFilesDetails/reducer";
 
 interface IGetWeightByFileId {
     orderId: string;
-    setWeight: React.Dispatch<React.SetStateAction<number | null>>;
     dispatch: React.Dispatch<any>; 
     activeFileId: string;
     selectedMat: string;
@@ -12,7 +11,6 @@ interface IGetWeightByFileId {
 
 export const getWeightByFileId = async ({
     orderId,
-    setWeight,
     activeFileId,
     selectedMat,
     materialMass,
@@ -29,7 +27,6 @@ export const getWeightByFileId = async ({
             console.warn("Weight data is missing");
             return;
         }
-        setWeight(weight);
         dispatch(updateWeight({ id: activeFileId, weight: weight }));
     } catch (err) {
         console.error("Error in getWeightByFileId:", err);

@@ -1,6 +1,6 @@
 import { dimensionLabel } from "../../pages/UploadStlTab/UploadStlCardFileStyle"
 import { getFilesByOrderIdService, getFileByOrderIdUploadstlService } from "../../services/order"
-import { addAllFiles } from "../customizeFilesDetails/reducer"
+import { addAllFiles, FileDetail } from "../customizeFilesDetails/reducer"
 
 interface IGetFilesByOrderId {
     orderId: string,
@@ -16,7 +16,7 @@ export const getFilesByOrderId = ({ orderId, setFetchFiles, dispatch }: IGetFile
             }
             setFetchFiles(res)
             console.log('Files fetched Starting successfully:', res);
-            dispatch(addAllFiles(res));
+            dispatch(addAllFiles(res as FileDetail[]));
         })
         .catch((err) => {
             console.error('Error fetching files:', err);

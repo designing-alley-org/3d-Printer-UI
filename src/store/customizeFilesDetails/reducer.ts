@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Dimensions {
+export interface Dimensions {
   height: number;
   length: number;
   width: number;
-  weight: number;
+  weight?: number;
 }
 
-interface FileDetail {
+export interface FileDetail {
   _id: string;
   fileName: string;
   fileUrl: string;
@@ -17,115 +17,60 @@ interface FileDetail {
   technology: string;
   printer: string;
   unit: string;
-  dimensions: Dimensions;
+  dimensions: any;
   infill: number;
 }
 
-interface FileDetailsState {
+export interface FileDetailsState {
   files: FileDetail[];
+  updateFiles: FileDetail[] ;
+  activeFileId: string | null;
 }
 
 const initialState: FileDetailsState = {
   files: [],
+  updateFiles: [],
+  activeFileId: null,
 };
 
 export const fileDetailsSlice = createSlice({
   name: 'fileDetails',
   initialState,
   reducers: {
-    addFileDetails: (state, action: PayloadAction<FileDetail>) => {
-      state.files = [...state.files, action.payload];
+
+    setActiveFile: (state, action: PayloadAction<string>) => {
+      state.activeFileId = action.payload || null;
     },
 
     addAllFiles: (state, action: PayloadAction<FileDetail[]>) => {
       state.files = action.payload;
+      state.updateFiles = action.payload;
     },
 
-    updateColor: (
-      state,
-      action: PayloadAction<{ id: string; color: string }>
-    ) => {
-      const { id, color } = action.payload;
-      const file = state.files.find((file) => file._id === id);
-      if (file) {
-        file.color = color;
-      }
-    },
-
-    updateTechnology: (
-      state,
-      action: PayloadAction<{ id: string; technology: string }>
-    ) => {
-      const { id, technology } = action.payload;
-      const file = state.files.find((file) => file._id === id);
-      if (file) {
-        file.technology = technology;
+    UpdateValueById: (state, action: PayloadAction<{ id: string; data:FileDetail }>) => {
+      if (state.updateFiles) {
+        const file = state.updateFiles.find((file) => file._id === action.payload.id);
+        if (file) {
+          Object.assign(file, action.payload.data);
+        }
       }
     },
 
-    updateMaterial: (
-      state,
-      action: PayloadAction<{ id: string; material: string }>
-    ) => {
-      const { id, material } = action.payload;
-      const file = state.files.find((file) => file._id === id);
+    updateWeight: (state, action: PayloadAction<{ id: string; weight: number }>) => {
+      const file = state.updateFiles.find((file) => file._id === action.payload.id);
       if (file) {
-        file.material = material;
-      }
-    },
-    updateWeight: (
-      state,
-      action: PayloadAction<{ id: string; weight: number }>
-    ) => {
-      const { id, weight } = action.payload;
-      const file = state.files.find((file) => file._id === id);
-      if (file) {
-        file.dimensions.weight = weight;
-      }
-    },
-    updateUnit: (
-      state,
-      action: PayloadAction<{ id: string; unit: string }>
-    ) => {
-      const { id, unit } = action.payload;
-      const file = state.files.find((file) => file._id === id);
-      if (file) {
-        file.unit = unit;
-      }
-    },
-    updatePrinter: (
-      state,
-      action: PayloadAction<{ id: string; printer: string }>
-    ) => {
-      const { id, printer } = action.payload;
-      const file = state.files.find((file) => file._id === id);
-      if (file) {
-        file.printer = printer;
-      }
-    },
-    updateInfill: (
-      state,
-      action: PayloadAction<{ id: string; infill: number }>
-    ) => {
-      const { id, infill } = action.payload;
-      const file = state.files.find((file) => file._id === id);
-      if (file) {
-        file.infill = infill;
+        file.dimensions.weight = action.payload.weight;
       }
     },
   },
 });
 
 export const {
-  addFileDetails,
-  updateColor,
-  updateWeight,
-  updateTechnology,
-  updateMaterial,
-  updatePrinter,
+  setActiveFile,
   addAllFiles,
-  updateUnit,
-  updateInfill,
+  UpdateValueById,
+  updateWeight
+
 } = fileDetailsSlice.actions;
 
 export default fileDetailsSlice.reducer;
