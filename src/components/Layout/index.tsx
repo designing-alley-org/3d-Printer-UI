@@ -75,7 +75,7 @@ const Index: React.FC = () => {
       await getCurrentUser(dispatch);
     };
     fetchData();
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="rootLayout">
