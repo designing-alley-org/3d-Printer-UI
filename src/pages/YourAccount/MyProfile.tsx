@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { updateUser, User } from '../../store/actions/updateUser';
 import { MainWrap, ProfileWrapper } from './styles';
 import { toast } from 'react-toastify';
@@ -9,10 +9,9 @@ import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
 
 const MyProfile = () => {
-  const user = useSelector((state: any) => state.user);
-  const profileData = user?.user;
+  const user = useSelector((state: any) => state.user);  
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState(profileData);
+  const [formData, setFormData] = useState(user.user);  
   const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
   const dispatch = useDispatch();
 
@@ -50,6 +49,10 @@ const MyProfile = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    setFormData(user.user);
+  }, [user.user]);
 
   return (
     <ProfileWrapper>
