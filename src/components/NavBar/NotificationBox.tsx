@@ -7,20 +7,23 @@ import { useParams } from 'react-router-dom';
 import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { addNotification, setNotification } from '../../store/notification/notification';
+import {
+  addNotification,
+  setNotification,
+} from '../../store/notification/notification';
 
 const socket = io(import.meta.env.VITE_AWS_URL as string);
 
 const NotificationBox = () => {
-  const notification=useSelector((state:any)=>state.notification.notification);  
+  const notification = useSelector(
+    (state: any) => state.notification.notification
+  );
   const dispatch = useDispatch();
-  const { orderId } = useParams();
-
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
-//   console.log(notification);
-  
+  //   console.log(notification);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -52,26 +55,30 @@ const NotificationBox = () => {
   }, []);
 
   useEffect(() => {
-    // Notify the server that the admin has connected  
-      
-    socket.emit("userConnected");
+    // Notify the server that the admin has connected
+
+    socket.emit('userConnected');
 
     // Listen for new disputes and update the list
     socket.on('QuoteNegotiateuserNotification', (data) => {
       // console.log('New dispute received:', data);
-      
+
       dispatch(addNotification(data));
     });
     socket.on('quoteNotification', (data) => {
       // console.log('New order received:', data);
-        dispatch(addNotification(data));
-      });
+      dispatch(addNotification(data));
+    });
+
+    socket.on('QuoteApproveRejectuserNotification', (data) => {
+      // console.log('New order received:', data);
+      dispatch(addNotification(data));
+    });
 
     return () => {
       socket.off('disconnect');
     };
   }, []);
-
 
   return (
     <span className="notification-container">
@@ -90,7 +97,7 @@ const NotificationBox = () => {
       {showNotification && (
         <div className="notificationContainer" ref={notificationRef}>
           <Notifications
-          notification={notification}
+            notification={notification}
             setShowNotification={setShowNotification}
           />
         </div>
