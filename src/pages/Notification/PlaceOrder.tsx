@@ -64,9 +64,11 @@ const PlaceOrder = () => {
       ) : (
         <p>No orders found.</p>
       )}
+      {allPlacedOrder?.totalPages > 1 &&
       <div className='pagination'>
         <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
       </div>
+      }
     </>
   );
 };

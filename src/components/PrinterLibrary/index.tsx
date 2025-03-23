@@ -134,12 +134,12 @@ const Wrapper = styled.section`
     font-size: 1rem;
   }
     @media (max-width: 768px) {
-    margin:0.2rem;
+    margin:0.2rem 0.9rem;
     h1 {
-      font-size: 2rem;
+      font-size: 1.4rem;
     }
     h3 {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
       .cards {
     .react-multi-carousel-list {
