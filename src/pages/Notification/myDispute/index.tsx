@@ -136,7 +136,7 @@ const MyDisputes: React.FC = () => {
           My Disputes
         </Typography>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-          <Loader size="50" color="#0066ff" />
+          <Loader size="30" color="#0066ff" />
         </div>
       </MyDisputesWrapper>
     );
