@@ -131,15 +131,15 @@ export default function ChatBody({ messages }: ChatBodyProps) {
             objectFit: 'contain',
           }}
         />
-        {message.files.length > 1 && (
+        {message.files.length > 0 && (
           <Typography
             variant="body2"
             color="#1E6FFF"
             sx={{ cursor: 'pointer', py: '0.5rem', fontSize: '1rem' }}
             onClick={() => handleShowMore(message.files)}
           >
-            Show +{message.files.length - 1} more files
-          </Typography>
+            {message.files.length>1? `Show +${message.files.length - 1} more files`:"Show file"}
+            </Typography>
         )}
       </Box>
     );
