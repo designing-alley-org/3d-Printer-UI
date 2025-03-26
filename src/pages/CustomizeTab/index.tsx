@@ -263,13 +263,13 @@ const CustomizeTab: React.FC = () => {
       </Heading> */}
 
       <Filescomponent>
-        <Files>
+        <Files isLoading={isLoading}>
           <span className="header">
             <span className="file">Files</span>
             <span className="count">{files.length}</span>
           </span>
           <div className="file-list">
-            <UploadedFile>
+            <UploadedFile >
               {fileDetails.map((file: any) => (
                 <span
                   key={file._id}

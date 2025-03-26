@@ -7,6 +7,7 @@ import api from '../../axiosConfig';
 import { toast } from 'react-toastify';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
+import { useCallback } from 'react';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const AccountLayout = () => {
   // Extract activeTab from the current pathname
   const activeTab = accTab.find((tab) => location.pathname.includes(tab.path))?.id || 1;
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await toast.promise(api.get('/logout'), {
         pending: 'Logging out...',
@@ -27,7 +28,7 @@ const AccountLayout = () => {
       toast.error('Logout failed');
       console.error('Logout failed', error);
     }
-  };
+  }, [api, toast]);
 
   
 
@@ -75,7 +76,7 @@ const AccountLayout = () => {
       />
        }
       <MainComp>
-        <Outlet />
+        <Outlet context={{ handleLogout }}/>
       </MainComp>
     </AccWrapper>
   );

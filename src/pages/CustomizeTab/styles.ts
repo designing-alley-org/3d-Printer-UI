@@ -56,7 +56,9 @@ export const LoadingWrapper = styled.section`
   }
 `;
 
-export const Files = styled.article`
+export const Files = styled.article<{ isLoading: boolean }>`
+  pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
+  opacity: ${props => (props.isLoading ? 0.6 : 1)};
   width: 35%;
   border: 1px solid #66a3ff;
   border-radius: 8px;
