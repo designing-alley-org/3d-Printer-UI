@@ -100,7 +100,7 @@ const OngoingOrder = () => {
   const ORDER_STATUS_ROUTES = {
     order_created: "upload-stl",
     files_uploaded: "customize",
-    order_customization: "quote",
+    order_customization: "customize",
     order_quote_created: "quote",
     order_quote_negotiated: "checkout",
   } as const;
@@ -145,14 +145,14 @@ const OngoingOrder = () => {
         >
           Ongoing Orders
         </Typography>
-        <Dropdown
+        {/* <Dropdown
           className="dropdown"
           options={filterByDayMonthYear}
           onSelect={(selected: Option) => {
             setFilter(selected.value);
           }}
           defaultValue={filter}
-        />
+        /> */}
       </div>
 
       {!orders?.orders || orders?.orders.length === 0 ? (

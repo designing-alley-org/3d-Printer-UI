@@ -2,7 +2,7 @@
 import React, { ReactNode } from 'react';
 
 interface ButtonProps {
-  label: string;
+  label?: string;
   onClick?: (e?: any) => void;
   width?: string; 
   height?: string;

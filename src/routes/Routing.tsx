@@ -86,17 +86,47 @@ const Routing: React.FC = () => {
           </Route>
         </Route>
         <Route path={ROUTES.SERVICES} element={<Services />} />
-        <Route path={ROUTES.ACCOUNT} element={<Account />}>
-          <Route index element={<Navigate to={ROUTES.MY_PROFILE} />} />
-          <Route path={ROUTES.MY_PROFILE} element={<MyProfile />} />
-          <Route path={ROUTES.MY_ORDERS} element={<MyOrders />} />
-          <Route path={ROUTES.MY_DISPUTE} element={<MyDisputes />} />
-          <Route path={ROUTES.PLACE_ORDER} element={<PlaceOrder />} />
-          <Route path={ROUTES.PASSWORD} element={<Password />} />
-          <Route path={ROUTES.ACCOUNT_SETTINGS} element={<Settings />} />
+        <Route
+          path={ROUTES.ACCOUNT}
+          element={<ProtectedRoute component={<Account />} />}
+        >
+          <Route
+            index
+            element={<ProtectedRoute component={<Navigate to={ROUTES.MY_PROFILE} />} />}
+          />
+          <Route
+            path={ROUTES.MY_PROFILE}
+            element={<ProtectedRoute component={<MyProfile />} />}
+          />
+          <Route
+            path={ROUTES.MY_ORDERS}
+            element={<ProtectedRoute component={<MyOrders />} />}
+          />
+          <Route
+            path={ROUTES.MY_DISPUTE}
+            element={<ProtectedRoute component={<MyDisputes />} />}
+          />
+          <Route
+            path={ROUTES.PLACE_ORDER}
+            element={<ProtectedRoute component={<PlaceOrder />} />}
+          />
+          <Route
+            path={ROUTES.PASSWORD}
+            element={<ProtectedRoute component={<Password />} />}
+          />
+          <Route
+            path={ROUTES.ACCOUNT_SETTINGS}
+            element={<ProtectedRoute component={<Settings />} />}
+          />
         </Route>
-        <Route path={ROUTES.Notification} element={<Notifications />} />
-        <Route path={ROUTES.ORDER_SUCCESSFUL} element={<OrderSuccessful />} />
+        <Route
+          path={ROUTES.Notification}
+          element={<ProtectedRoute component={<Notifications />} />}
+        />
+        <Route
+          path={ROUTES.ORDER_SUCCESSFUL}
+          element={<ProtectedRoute component={<OrderSuccessful />} />}
+        />
       </Route>
 
       <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} />} />

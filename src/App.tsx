@@ -6,7 +6,7 @@ function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <ToastContainer />
+      <ToastContainer autoClose={1000} hideProgressBar/>
       <Routing />
     </BrowserRouter>
   );

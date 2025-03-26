@@ -23,7 +23,7 @@ export const ProfileWrapper = styled.main`
   }
 
   @media (max-width: 768px) {
-     min-height: 30rem;
+    min-height: 30rem;
     h1 {
       padding-bottom: 0.5rem;
       font-size: 1rem;
@@ -36,6 +36,17 @@ export const MainWrap = styled.section`
     color: #2359b0;
     margin-top: 2rem;
   }
+  .logout_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    height: 1.9rem;
+    background: #0066ff;
+    border-radius: 2rem;
+  }
+
   .input {
     background: #e6f0ff;
     border: 1px solid #0066ff47;
@@ -72,10 +83,10 @@ export const MainWrap = styled.section`
     height: 35px;
     transition: all 0.2s ease;
   }
-    @media (max-width: 768px) {
-    p{
+  @media (max-width: 768px) {
+    p {
       font-size: 0.8rem;
-      }
+    }
     .input {
       margin-top: 0.4rem;
       width: 100%;
@@ -83,7 +94,7 @@ export const MainWrap = styled.section`
     }
     .btn {
       button {
-        width:content;
+        width: content;
         padding: 0.5rem 0.7rem;
         margin-top: 1rem;
         font-size: 0.7rem;
@@ -114,7 +125,7 @@ export const SideTab = styled.section`
   justify-content: space-between;
   width: 20%;
   span {
-    padding: 1.3rem ;
+    padding: 1.3rem;
     font-size: 1rem;
     cursor: pointer;
   }
@@ -214,19 +225,19 @@ export const MainWrapper = styled.main`
   }
 
   @media (max-width: 768px) {
-    margintop:3rem;
+    margintop: 3rem;
     margin: 5rem 0.2rem;
     position: relative;
 
-    .heading{
+    .heading {
       font-size: 1rem;
     }
 
     .bottom {
-    margin: 0rem;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
+      margin: 0rem;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
     }
 
     .text {
@@ -241,49 +252,46 @@ export const MainWrapper = styled.main`
     }
 
     .contactBtn {
-    width: 55%;
-    display: flex;
-    justify-content: end;
-    background: white;
-    position: absolute;
-    right: -1rem;
-    bottom: -1rem;
-    padding: 0.3rem 1rem 1rem 1rem;
-    border-top-left-radius: 2rem;
-    &::before {
-      content: '';
+      width: 55%;
+      background: white;
       position: absolute;
-      top: 0.3rem;
-      left: -1.5rem;
-      background-color: transparent;
-      width: 2rem;
-      height: 2rem;
-      rotate: 80deg;
-      border-bottom-left-radius: 0rem;
-      border-top-right-radius: 2rem;
-      box-shadow: 0.9rem -0.2rem 0rem 0rem rgb(255, 255, 255);
-      
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      margin-right: 0.8rem;
-      margin-top: -2.7rem;
-      background-color: transparent;
-      width: 1rem;
-      height: 4rem;
-      rotate: 270deg;
-      border-bottom-left-radius: 9rem;
-      box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
-    }
-      
-    button {
-      font-size: 0.7rem;
-      border-radius: 2rem;
-      padding: 0.3rem;
-      width: ;
-      margin: 0rem;
-    }
+      right: -1rem;
+      margin-top: 3.2rem;
+      padding: 0.3rem 1rem 1rem 1rem;
+      border-top-left-radius: 2rem;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0.3rem;
+        left: -1.5rem;
+        background-color: transparent;
+        width: 2rem;
+        height: 2rem;
+        rotate: 80deg;
+        border-bottom-left-radius: 0rem;
+        border-top-right-radius: 2rem;
+        box-shadow: 0.9rem -0.2rem 0rem 0rem rgb(255, 255, 255);
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        margin-right: 0.8rem;
+        margin-top: -2.7rem;
+        background-color: transparent;
+        width: 1rem;
+        height: 4rem;
+        rotate: 270deg;
+        border-bottom-left-radius: 9rem;
+        box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
+      }
+
+      button {
+        font-size: 0.7rem;
+        border-radius: 2rem;
+        padding: 0.3rem;
+        width:;
+        margin: 0rem;
+      }
     }
   }
 `;
@@ -599,16 +607,16 @@ export const NotifyWrap = styled.section`
   }
 `;
 export const OrderWrapper = styled.main`
-   width: 100%;
-   min-height: 40rem;
-   padding: 0rem;
-h1 {
+  width: 100%;
+  min-height: 40rem;
+  padding: 0rem;
+  h1 {
     color: black !important;
     margin: unset;
     padding-bottom: 1rem;
     font-size: 1.4rem;
   }
-   .orders-title{
+  .orders-title {
     border-bottom: 1px solid #1e6fff;
   }
 
@@ -620,7 +628,7 @@ h1 {
       color: #2359b0;
     }
   }
- 
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -628,7 +636,7 @@ h1 {
   }
 
   @media (max-width: 768px) {
-     min-height: 10rem !important;
+    min-height: 10rem !important;
     h1 {
       font-size: 1rem;
     }

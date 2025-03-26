@@ -7,13 +7,20 @@ import { useDispatch } from 'react-redux';
 import PhoneInput from '../../components/Account/PhoneNumber';
 import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
+import { Box, useMediaQuery } from '@mui/material';
+import Button from '../../stories/button/Button';
+import { LogOut } from 'lucide-react';
 
 const MyProfile = () => {
+  const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
   const user = useSelector((state: any) => state.user);  
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(user.user);  
   const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
   const dispatch = useDispatch();
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
+  
 
   const handleInputChange = (field: keyof User, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -87,6 +94,13 @@ const MyProfile = () => {
             setEditing={(state) => setEditState(prev => ({ ...prev, phone_no: state }))}
             isEditing={!!editState.phone_no}
           />
+          {isSmallScreen && (
+            <Box sx={{ display: 'flex', justifyContent: 'right', marginTop: '3rem' }}>
+             <Button onClick={handleLogout} className='logout_btn'>
+              <LogOut size={'17'} style={{ transform: 'rotate(180deg)' }}/>
+            </Button>
+            </Box>
+          )}
         </MainWrap>
       </form>
     </ProfileWrapper>
