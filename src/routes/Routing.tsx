@@ -109,7 +109,13 @@ const Routing: React.FC = () => {
           <Route
             path={ROUTES.PLACE_ORDER}
             element={<ProtectedRoute component={<PlaceOrder />} />}
-          />
+          >
+            <Route
+              path=":orderId/"
+              element={<ProtectedRoute component={<PlaceOrder />} />}
+            >
+            </Route>
+            </Route>
           <Route
             path={ROUTES.PASSWORD}
             element={<ProtectedRoute component={<Password />} />}

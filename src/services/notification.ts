@@ -20,13 +20,18 @@ export const getNotificationServicerByCategory = async (): Promise<any> => {
     }
 }
 
-export const getPlacedOrderService = async (pagination: number): Promise<any> => {
+export const getPlacedOrderService = async (pagination: number, orderId?: string): Promise<any> => {
     try {
-        const response = await api.get(`/api/v1/get-placed-orders`,{
-            params:{
-                page: pagination
-            }
-        });
+        let response;
+        if (orderId) {
+            response = await api.get(`/api/v1/get-placed-orders/${orderId}`);
+        } else {
+            response = await api.get(`/api/v1/get-placed-orders`, {
+                params: {
+                    page: pagination
+                }
+            });
+        }
         return response;
     } catch (error) {
         console.error("Error fetching order:", error);
