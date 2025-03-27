@@ -105,7 +105,12 @@ const Routing: React.FC = () => {
           <Route
             path={ROUTES.MY_DISPUTE}
             element={<ProtectedRoute component={<MyDisputes />} />}
-          />
+          >
+            <Route
+              path=":_id/:orderId/:dispute_type/"
+              element={<ProtectedRoute component={<MyDisputes />} />}
+            />
+            </Route>
           <Route
             path={ROUTES.PLACE_ORDER}
             element={<ProtectedRoute component={<PlaceOrder />} />}

@@ -5,15 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { getOngoingOrder } from "../../store/actions/getOngoingOrder";
 import { toast } from "react-toastify";
 import { Loader } from "lucide-react";
-import Dropdown from "../../stories/Dropdown/Dropdown";
 import { OngoingOrderWrapper } from "./styles";
 import { formatDateTime, formatOrderStatus } from "../../utils/Validation";
-import { filterByDayMonthYear } from "../../utils/OptionDropDowns";
 import { useSelector } from "react-redux";
 import api from "../../axiosConfig";
 import { deleteNotification } from "../../store/notification/notification";
 import { useDispatch } from "react-redux";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 interface Order {
   _id: string;
@@ -22,27 +20,25 @@ interface Order {
 }
 
 interface Notification {
-  _id: string; // Notification ID
+  _id: string;
   order_id: string;
   readStatus: boolean;
-}
-
-interface Option {
-  id: number;
-  value: string;
-  label: string;
 }
 
 const OngoingOrder = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [pagination, setPagination] = useState(1);
-  const [orders, setOrders] = useState<{
+  
+  // Improved pagination state management
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+  const [filter, setFilter] = useState("all");
+
+  // Orders state with more explicit typing
+  const [ordersData, setOrdersData] = useState<{
     orders: Order[];
     totalPages: number;
   } | null>(null);
-  const ITEMS_PER_PAGE = 5;
-  const [filter, setFilter] = useState("all");
 
   // Get notifications from Redux store
   const notifications = useSelector(
@@ -57,12 +53,10 @@ const OngoingOrder = () => {
     ])
   );
 
-  const isSmallScreen = useMediaQuery("(max-width:600px)");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getOngoingOrder(setOrders, filter);
+        await getOngoingOrder(setOrdersData, filter);
       } catch (error) {
         toast.error("Failed to fetch ongoing orders");
         console.error(error);
@@ -70,17 +64,17 @@ const OngoingOrder = () => {
     };
 
     fetchData();
-  }, [pagination, filter]);
+  }, [filter]);
 
   // Sorting logic: Prioritize unread orders and sort by updatedAt
   useEffect(() => {
-    if (orders) {
-      setOrders((prevOrders) => {
-        if (!prevOrders) return null;
+    if (ordersData) {
+      setOrdersData((prevOrdersData) => {
+        if (!prevOrdersData) return null;
 
         return {
-          ...prevOrders,
-          orders: prevOrders.orders.slice().sort((a, b) => {
+          ...prevOrdersData,
+          orders: prevOrdersData.orders.slice().sort((a, b) => {
             const aRead = notificationMap.get(a._id)?.readStatus ?? true;
             const bRead = notificationMap.get(b._id)?.readStatus ?? true;
 
@@ -91,11 +85,10 @@ const OngoingOrder = () => {
               new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
             );
           }),
-          totalPages: prevOrders.totalPages,
         };
       });
     }
-  }, [notifications, orders]);
+  }, [notifications, ordersData]);
 
   const ORDER_STATUS_ROUTES = {
     order_created: "upload-stl",
@@ -123,13 +116,15 @@ const OngoingOrder = () => {
     }
   };
 
-  const paginatedOrders = orders?.orders
-    ? orders.orders.slice(0, pagination * ITEMS_PER_PAGE)
-    : [];
+  // Improved pagination calculation
+  const totalOrders = ordersData?.orders.length || 0;
+  const totalPages = Math.ceil(totalOrders / ITEMS_PER_PAGE);
 
-  const totalPages = orders?.orders
-    ? Math.ceil(orders.orders.length / ITEMS_PER_PAGE)
-    : 0;
+  // Slice orders based on current page
+  const paginatedOrders = ordersData?.orders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE, 
+    currentPage * ITEMS_PER_PAGE
+  ) || [];
 
   return (
     <OngoingOrderWrapper>
@@ -138,24 +133,16 @@ const OngoingOrder = () => {
           variant="h6"
           sx={{
             fontSize: {
-              xs: "01rem",
+              xs: "1rem",
               md: "1.5rem",
             },
           }}
         >
           Ongoing Orders
         </Typography>
-        {/* <Dropdown
-          className="dropdown"
-          options={filterByDayMonthYear}
-          onSelect={(selected: Option) => {
-            setFilter(selected.value);
-          }}
-          defaultValue={filter}
-        /> */}
       </div>
 
-      {!orders?.orders || orders?.orders.length === 0 ? (
+      {!ordersData?.orders || ordersData?.orders.length === 0 ? (
         <div
           style={{
             display: "flex",
@@ -164,7 +151,7 @@ const OngoingOrder = () => {
             height: "200px",
           }}
         >
-          {orders === null ? (
+          {ordersData === null ? (
             <Loader size="30" color="#0066ff" />
           ) : (
             <p>No ongoing orders found</p>
@@ -195,7 +182,10 @@ const OngoingOrder = () => {
 
         {totalPages > 1 && (
           <div className="pagination">
-            <Pagin totalPages={totalPages} setPagination={setPagination} />
+            <Pagin 
+              totalPages={totalPages} 
+              setPagination={setCurrentPage} 
+            />
           </div>
         )}
       </Box>

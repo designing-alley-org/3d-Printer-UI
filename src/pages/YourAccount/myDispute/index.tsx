@@ -7,13 +7,14 @@ import Quote from './Quote/Card';
 import { formatDateTime } from '../../../utils/Validation';
 import { Typography, useMediaQuery } from '@mui/material';
 import { NotificationCard } from '../../Notification/NotificationCard';
+import { useParams } from 'react-router-dom';
 
 interface Dispute {
   _id: string;
   dispute_type: string;
   orderId: string;
-  createdAt: string;
-  status: string;
+  createdAt?: string;
+  status?: string;
 }
 
 interface DisputeResponse {
@@ -32,6 +33,20 @@ const MyDisputes: React.FC = () => {
   const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
   const [error, setError] = useState<string | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const {orderId, _id, dispute_type } = useParams<{orderId: string, _id: string, dispute_type: string}>();
+
+
+  useEffect(() => {
+    if (orderId && _id && dispute_type) {
+      const data = {
+        _id,
+        dispute_type,
+        orderId
+      }
+      setSelectedDispute(data);
+      setIsChatOpen(true);
+    }
+  }, [orderId, _id, dispute_type]);
 
 
   useEffect(() => {
@@ -61,6 +76,7 @@ const MyDisputes: React.FC = () => {
     str.charAt(0).toUpperCase() + str.slice(1);
 
   const handleChatOpen = (dispute: Dispute) => () => {
+    console.log("dispute",dispute)
     setSelectedDispute(dispute);
     setIsChatOpen(true);
   };
