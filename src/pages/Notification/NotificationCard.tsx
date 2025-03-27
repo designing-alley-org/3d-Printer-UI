@@ -9,6 +9,7 @@ interface NotificationCardProps {
   dateTime: string;
   buttonLabel: string;
   status?: string;
+  placeOrderStatus?: string;
   onButtonClick?: () => void;
   myOrders?: string;
   isUnread?: boolean; // New prop for unread status
@@ -22,6 +23,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
   onButtonClick,
   status,
   myOrders,
+  placeOrderStatus,
   isUnread, // Receiving isUnread prop
 }) => {
   return (
@@ -67,6 +69,16 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
         >
           <img src={arrowRight} alt="" />
         </Button>
+        {placeOrderStatus && (
+           <Button
+           label={` ${placeOrderStatus === 'Success' ? 'Successful' : 'Failed'}`}
+           style={{
+             backgroundColor:
+             placeOrderStatus === 'Success' ? 'rgb(93, 214, 93)': 'rgb(244, 68, 68)',
+           }}
+           className="btn-status"
+         />
+        )}
         {status && (
           <Button
             label={status === 'Resolved' ? 'Closed' : 'InProgress'}
@@ -74,7 +86,6 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
               backgroundColor:
                 status === 'Resolved' ? 'rgb(244, 68, 68)' : 'rgb(93, 214, 93)',
             }}
-            onClick={() => onButtonClick && onButtonClick()}
             className="btn-status"
           />
         )}
