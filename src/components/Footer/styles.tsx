@@ -59,9 +59,9 @@ export const Wrapper = styled.section`
     }
   }
     .checkout {
-    width: 90% ;
-    margin: 0rem 1rem;
-    font-size: 18px;
+    width: 100% ;
+    margin: 0rem;
+    font-size: 0.9rem;
     padding-left: .5rem;
   }
 

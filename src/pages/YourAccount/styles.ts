@@ -180,49 +180,11 @@ export const MainWrapper = styled.main`
     margin-top: 2rem;
   }
   .text {
-    width: 55%;
+    width: 90%;
     color: white;
     padding-bottom: 1.5rem;
   }
-  .contactBtn {
-    width: 25%;
-    display: flex;
-    justify-content: end;
-    background: white;
-    position: absolute;
-    right: -0.2rem;
-    padding: 1rem 1rem 1rem 2rem;
-    border-top-left-radius: 4rem;
-    &::before {
-      content: '';
-      position: absolute;
-      margin-right: 21.4rem;
-      background-color: transparent;
-      width: 2rem;
-      height: 5rem;
-      rotate: 270deg;
-      border-bottom-left-radius: 9rem;
-      box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      margin-right: 1.7rem;
-      margin-top: -4.4rem;
-      background-color: transparent;
-      width: 2rem;
-      height: 5rem;
-      rotate: 270deg;
-      border-bottom-left-radius: 9rem;
-      box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
-    }
-    button {
-      background: #0066ff;
-      border-radius: 2rem;
-      width: 20rem;
-      margin-right: 5rem;
-    }
-  }
+  
 
   @media (max-width: 768px) {
     margintop: 3rem;
@@ -251,48 +213,7 @@ export const MainWrapper = styled.main`
       font-size: 1rem;
     }
 
-    .contactBtn {
-      width: 55%;
-      background: white;
-      position: absolute;
-      right: -1rem;
-      margin-top: 3.2rem;
-      padding: 0.3rem 1rem 1rem 1rem;
-      border-top-left-radius: 2rem;
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0.3rem;
-        left: -1.5rem;
-        background-color: transparent;
-        width: 2rem;
-        height: 2rem;
-        rotate: 80deg;
-        border-bottom-left-radius: 0rem;
-        border-top-right-radius: 2rem;
-        box-shadow: 0.9rem -0.2rem 0rem 0rem rgb(255, 255, 255);
-      }
-      &::after {
-        content: '';
-        position: absolute;
-        margin-right: 0.8rem;
-        margin-top: -2.7rem;
-        background-color: transparent;
-        width: 1rem;
-        height: 4rem;
-        rotate: 270deg;
-        border-bottom-left-radius: 9rem;
-        box-shadow: 0rem 1.8rem 0rem 0rem #ffffff;
-      }
-
-      button {
-        font-size: 0.7rem;
-        border-radius: 2rem;
-        padding: 0.3rem;
-        width:;
-        margin: 0rem;
-      }
-    }
+   
   }
 `;
 export const OrderWrap = styled.section`

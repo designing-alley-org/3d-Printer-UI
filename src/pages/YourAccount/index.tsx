@@ -12,9 +12,6 @@ const Account = () => {
           we are dedicated to transforming your ideas into tangible realities
           through the power of 3D printing. Our platform connects you
         </span>
-        <span className="contactBtn">
-          <Button label="Contact Us" onClick={Function} />
-        </span>
       </section>
     </MainWrapper>
   );
