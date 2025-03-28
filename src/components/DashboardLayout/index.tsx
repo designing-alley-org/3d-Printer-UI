@@ -11,7 +11,9 @@ const DashboardLayout = () => {
     <Wrapper>
       <header>3D Print It All</header>
       <Bottom>
-        <div className={isSmallScreen ? 'textMobile' : 'curve'}>HOW IT WORKS</div>
+        <div className={isSmallScreen ? 'howitwork' : 'curve'}>
+          {isSmallScreen ? <p>How it works</p> : 'How it works'}
+        </div>
         <div></div>
         <div className={isSmallScreen ? 'btnMobile' : 'btn'}>
           <Button

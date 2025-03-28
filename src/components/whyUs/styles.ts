@@ -27,11 +27,25 @@ export const Wrapper = styled.main`
   background-image: url(/src/assets/images/whyUSImg.svg);
   @media (max-width: 768px) {
     .why {
-      padding: 1rem 2rem;
+    width: 17rem;
+    padding: 1rem 2rem;
+    border-bottom-right-radius: 2rem;
+    &::after {
+      content: '';
+      position: absolute;
+      margin-top: -1.1rem;
+      margin-left: 8.6rem;
+      background-color: transparent;
+      width: 3rem;
+      height: 3rem;
+      rotate: 97deg;
+      border-bottom-left-radius: 9rem;
+      box-shadow: -0.8rem 0.5rem 0rem 0rem rgb(255, 255, 255);
+    }
     }
         h3 {
     width: 95%;
-    margin: 4rem 1rem;
+    margin: 2rem 1rem;
     font-size: 13px;
   }
   }
@@ -83,19 +97,19 @@ export const Display = styled.section`
       position: absolute;
       right: 0rem;
       height: 2rem;
-      bottom: 0;
-      width: 40%;
+      bottom: -0.1rem;
+      width: 8rem;
       border-radius: 3rem 2rem 0rem 0rem;
       &::before {
         content: '';
-        width: 2.05rem;
-        height: 2.5rem;
-        top: -1rem;
-        right: 8.38rem;
+        width: 2rem;
+        height: 2rem;
+        top: -0.9rem;
+        right: 7.4rem;
         position: absolute;
-        rotate: 274deg;
+        rotate: 270deg;
+        box-shadow: -1rem 0.1rem 0 0 #dde9fc;
         background-color: transparent;
-       box-shadow: -1rem 1rem 0 0 #dde9fc;
       }
     }
   }
@@ -125,12 +139,12 @@ export const DisplayInfo = styled.section`
     flex-direction: column;
   }
   @media (max-width: 768px) {
-    width: 100%;
+  width: 100%;
     display: grid;
-    padding: 1rem 1rem;
+    padding: 2rem 1rem;
     grid-template-columns: repeat(2, 1rem);
     grid-row-gap: 1rem;
-    grid-column-gap: 9rem;
+    grid-column-gap: 11rem;
     .info {
      width: 10rem;
      padding: 0.5rem;
@@ -142,6 +156,10 @@ export const DisplayInfo = styled.section`
         font-size: 8px;
       }
     }
+
+    @media (max-width: 390px) {
+     grid-column-gap: 10rem;
+     }
   }
 `;
 export const KnowMore = styled.span`
@@ -169,10 +187,10 @@ export const KnowMore = styled.span`
     box-shadow: 0rem 2rem 0 0 #dde9fc;
   }
   @media (max-width: 768px) {
-    width: 12rem;
+    width: 10rem;
     font-size: 16px;
-    padding: 1rem 1rem 0.5rem 1.1rem;
-    border-top-right-radius: 4rem;
+    padding: 1rem 1rem 0rem 1rem;
+    border-top-right-radius: 2rem;
     button {
     width: 100%;
     height: 2rem;
@@ -182,13 +200,14 @@ export const KnowMore = styled.span`
     &::after {
       content: '';
       position: absolute;
-      margin-top: -1.48rem;
-      margin-left: 10rem;
+      margin-top: 0rem;
+      margin-left:8.9rem;
       background-color: transparent;
-      width: 3.05rem;
-      height: 4rem;
+      width: 2rem;
+      height: 2rem;
+      rotate: 0deg;
       border-bottom-left-radius: 7.25rem;
-      box-shadow: 0rem 2rem 0 0rgb(56, 109, 195);
+      box-shadow: -.5rem 0.7rem 0 0 #dde9fc;
     }
   }
 `;

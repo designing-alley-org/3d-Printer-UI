@@ -9,21 +9,20 @@ export const Wrapper = styled.section`
     font-size: 48px;
     color: white;
   }
-  @media (max-width: 971px) and (min-width: 400px) {
+  @media (max-width: 620px) {
+  height: 43rem;
     header {
       position: absolute;
-      left: 3rem;
-      bottom: 35rem;
-      font-size: 38px;
+      display: flex;
+      top: 24rem;
+      align-items: center;
+      font-size: 2rem;
       color: white;
     }
-  }
-  @media (max-width: 399px) {
-    header {
-      font-size: 38px;
-      left: 2rem;
-      padding: 0rem;
-      color: white;
+    @media (max-width: 400px) {
+      header {
+        font-size: 1.8rem;
+      }
     }
   }
 `;
@@ -42,6 +41,15 @@ export const Bottom = styled.section`
       font-size: 1.1rem;
     }
   }
+    .howitwork{
+    position: relative;
+    font-size: 1.2rem;
+    p{
+    position: absolute;
+    top: 2rem;
+    width: 12rem;
+    }
+    }
   .curve {
     font-size: 26px;
     padding: 2rem 10rem 0px 1.5rem;
@@ -78,31 +86,8 @@ export const Bottom = styled.section`
       border-radius: 40px;
     }
   }
-  @media (max-width: 600px) and (min-width: 400px) {
-    .btnMobile {
-      position: absolute;
-      bottom: 1rem;
-      right: 1.3rem;
-    }
-  }
-  @media (max-width: 399px) and (min-width: 380px) {
-    .textMobile {
-      font-size: 20px;
-    }
-    .btnMobile {
-      position: absolute;
-      bottom: -3rem;
-      right: 1.3rem;
-    }
-  }
-  @media (max-width: 379px) {
-    .textMobile {
-      font-size: 20px;
-    }
-    .btnMobile {
-      position: absolute;
-      bottom: -14rem;
-      right: 1.3rem;
-    }
-  }
+@media (max-width: 620px) {
+   height: 42.3rem;
+  
+}
 `;

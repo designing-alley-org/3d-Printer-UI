@@ -1,6 +1,5 @@
 import DesktopNav from '../NavBar/DesktopNav';
 import MobileHeader from '../NavBar/MobileNav';
-import TabComponent from '../Tab/index';
 import { Wrapper } from './styles';
 
 interface IHeader {

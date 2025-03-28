@@ -75,7 +75,7 @@ export const DesktoptabData = [
 export const MobiltabData = [
   { id: 0, label: '3D PRINT YOUR FUTURE', path: 'dashboard',},
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
-  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
+  // { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
 ];
 
