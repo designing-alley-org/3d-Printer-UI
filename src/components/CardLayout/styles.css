@@ -40,6 +40,13 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .headerCard,
+  .mainCardContent {
+    background-color: white !important; /* Use !important if necessary to override other styles */
+  }
+}
 .cardLayout {
   margin-top: 4rem;
   padding-bottom: 2rem;
