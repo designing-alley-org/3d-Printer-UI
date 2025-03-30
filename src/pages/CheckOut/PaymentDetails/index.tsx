@@ -233,7 +233,7 @@ const PaymentDetails: React.FC = () => {
       </span>
       <span className="priceDetail">
         <span>Taxes</span>
-        <span className="price">${quoteData?.tax.toFixed(2)}</span>
+        <span className="price">${(quoteData?.tax.toFixed(2)*quoteData.totalPrice.toFixed(2))/100}</span>
       </span>
     </div>
     <div>
@@ -243,7 +243,7 @@ const PaymentDetails: React.FC = () => {
           ${(
             Number(quoteData.totalPrice) + 
             Number(showDeliveryData?.[0]?.totalNetCharge || 0) + 
-            Number(quoteData?.tax)
+            Number(quoteData?.tax)*quoteData.totalPrice/100
           ).toFixed(2)}
         </span>
       </span>
