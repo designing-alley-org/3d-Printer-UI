@@ -9,6 +9,7 @@ import {
   Typography,
   CircularProgress,
   useMediaQuery,
+  IconButton,
 } from '@mui/material';
 import { quoteTexts } from '../../constants';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -21,7 +22,8 @@ import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
 import {  toast } from 'react-toastify';
 import TabComponent from '../Tab';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 interface ModelDimensions {
   height: number;
   width: number;
@@ -51,6 +53,32 @@ const styles = {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     zIndex: 9999,
   }
+};
+
+const MobileTabComponent = ({ tabs, currentIndex, onLeft, onRight, canProceed }: {
+  tabs: string[];
+  currentIndex: number;
+  onLeft: () => void;
+  onRight: () => void;
+  canProceed: boolean;
+}) => {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem' }}>
+      {currentIndex > 0 && (
+        <IconButton onClick={onLeft}>
+          <ArrowBackIcon />
+        </IconButton>
+      )}
+      <Typography variant="h6" style={{ flexGrow: 1, textAlign: 'center' }}>
+        {tabs[currentIndex]}
+      </Typography>
+      {currentIndex < tabs.length - 1 && (
+        <IconButton onClick={onRight} disabled={!canProceed}>
+          <ArrowForwardIcon />
+        </IconButton>
+      )}
+    </div>
+  );
 };
 
 const CardLayout = () => {
@@ -174,6 +202,53 @@ const CardLayout = () => {
     }
   }, [files, navigate, orderId, pathname, allFilesCustomized, addressId]);
 
+  // Calculate current tab index
+  const currentTabIndex = activeTabs.length > 0 ? activeTabs.length - 1 : 0;
+
+  // Determine if proceeding to the next tab is allowed
+  const canProceed = (() => {
+    if (pathname.includes(ROUTES.UPLOAD_STL)) {
+      return files.length > 0;
+    } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
+      return allFilesCustomized;
+    } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
+      return true; // Assume can proceed from quote to checkout
+    } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+      return addressId !== '';
+    }
+    return false;
+  })();
+
+  // Handle navigation to previous tab
+  const handleLeftArrow = () => {
+    if (currentTabIndex > 0) {
+      const previousIndex = currentTabIndex - 1;
+      if (previousIndex === 0) {
+        navigate(ROUTES.UPLOAD_STL);
+      } else if (previousIndex === 1) {
+        navigate(ROUTES.CUSTOMIZE);
+      } else if (previousIndex === 2) {
+        navigate(`/get-quotes/${orderId}/quote`);
+      }
+      // Note: No previous route for index 3 as it's the last step
+    }
+  };
+
+  // Handle navigation to next tab
+  const handleRightArrow = () => {
+    if (canProceed) {
+      onProceed();
+    } else {
+      if (pathname.includes(ROUTES.UPLOAD_STL)) {
+        toast.warning('Please upload at least one file!');
+      } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
+        toast.warning('Apply specifications to all files before proceeding.');
+      } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+        toast.warning('Please select a delivery address!');
+      }
+    }
+  };
+
   const renderButton = () => {
     const isCheckoutRoute = pathname === `/get-quotes/${orderId}/checkout`;
     const isDeliveryRoute = pathname.includes(`/get-quotes/${orderId}/checkout/select-delivery`);
@@ -200,6 +275,10 @@ const CardLayout = () => {
     );
   };
 
+
+
+
+
   return (
     <div className="cardLayout">
       <div className="headerCard">
@@ -208,7 +287,17 @@ const CardLayout = () => {
             <LinearProgress variant="determinate" value={getProgressValue()} />
           </TabLine>
         )}
-        <TabComponent tabs={quoteTexts} numberId={false} activeTabs={activeTabs.length} insideTab={true}/>
+        {isSmallScreen ? (
+          <MobileTabComponent
+            tabs={quoteTexts.map(tab => tab.label)}
+            currentIndex={currentTabIndex}
+            onLeft={handleLeftArrow}
+            onRight={handleRightArrow}
+            canProceed={canProceed}
+          />
+        ) : (
+          <TabComponent tabs={quoteTexts} numberId={false} activeTabs={activeTabs.length} insideTab={true} />
+        )}
       </div>
       
       <div className="mainCardContent">
