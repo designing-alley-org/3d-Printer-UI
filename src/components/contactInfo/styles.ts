@@ -17,12 +17,12 @@ export const Wrapper = styled.main`
     padding: 1rem 0rem 0rem 2rem;
     h1 {
       padding: 1rem 0rem;
-      font-size: 30px;
+      font-size: 1.5rem;
     }
     h2 {
       width: 90% !important;
       line-height: 1rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1rem;
       font-size: 13px;
     }
   }
@@ -60,26 +60,27 @@ export const ContactBtn = styled.section`
   }
 
   @media (max-width: 768px) {
-    div {
-      width: 100%;
-    }
 
-    .btn-container{
-    position: relative;
-    width: 100%;
+  div {
+    width: 60%;
+    background: white;
+    padding: 1rem 1.2rem;
     button {
-    width: 12rem;
-    height: 2rem;
-    padding: 0rem 1rem;
-    font-size: 15px;
-     &::before {
+      padding: 0.5rem .7rem;
+      font-size: 1rem;
+      width: 10rem;
+      &::before {
         content: '';
-         rotate: 290deg;
         position: absolute;
-        margin-top: -1rem;
-        margin-left: -10.1rem;
+        margin-top: -0.5rem;
+        margin-left: -6rem;
+        background-color: transparent;
+        width: 2.05rem;
+        height: 5rem;
+        rotate: 278deg;
+        border-bottom-left-radius: 9rem;
+        box-shadow: 0rem 1.2rem 0rem 0rem rgb(255, 255, 255);
       }
-      }
-      }
+    }
   }
 `;
