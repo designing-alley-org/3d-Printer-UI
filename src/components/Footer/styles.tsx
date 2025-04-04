@@ -55,7 +55,7 @@ export const Wrapper = styled.section`
     grid-row-gap: 1rem;
     margin-bottom: 2rem;
     a {
-      font-size: 0.6rem;
+      font-size: 0.7rem;
     }
   }
     .checkout {
@@ -70,7 +70,7 @@ export const Wrapper = styled.section`
   .footerTitle{
     position: absolute;
     bottom: 0.9rem;
-    font-size: 0.4rem;
+    font-size: 0.5rem;
     left: 0.5rem;
     color: #1E6FFF;
     }
