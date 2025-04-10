@@ -20,7 +20,6 @@ interface ViewDetailsProps {
 const ViewDetails = ({ orderId, myOrders = 'no', files, payment }: ViewDetailsProps) => {
   const [isCreateDispute, setIsCreateDispute] = useState(false);
   const showDispute = myOrders !== 'yes'; 
-
   return (
     <ViewDetailsWrapper>
       <OrderFilesList  files={files} payment={payment}/>

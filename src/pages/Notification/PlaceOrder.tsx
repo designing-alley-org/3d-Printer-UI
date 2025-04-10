@@ -26,6 +26,7 @@ interface Notification {
 const PlaceOrder = () => {
   const dispatch = useDispatch();
   const [allPlacedOrder, setAllPlacedOrder] = useState<Order[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [pagination, setPagination] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
@@ -47,6 +48,7 @@ const PlaceOrder = () => {
         const response = await getPlacedOrder(pagination);
         
         if (response.orders) {
+          setTotalPages(response.totalPages);
           const sortedOrders = response.orders.slice().sort((a: Order, b: Order) => {
             const isAUnread = notificationMap.get(a._id) ? !notificationMap.get(a._id)?.readStatus : false;
             const isBUnread = notificationMap.get(b._id) ? !notificationMap.get(b._id)?.readStatus : false;
@@ -120,8 +122,8 @@ const PlaceOrder = () => {
       ) : (
         <Typography sx={{ color: "#525E86" ,display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem"}}>No Place Order found.</Typography>
       )}
-     {allPlacedOrder?.totalPages > 1 && <div className='pagination'>
-        <Pagin setPagination={setPagination} totalPages={allPlacedOrder?.totalPages} />
+     {totalPages > 1 && <div className='pagination'>
+        <Pagin setPagination={setPagination} totalPages={totalPages} />
       </div>}
     </Box>
   );
