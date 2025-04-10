@@ -20,7 +20,7 @@ export function OrderFilesList({  files,payment }: IselectedOrder) {
         <h3 className="order-files-title">Order Files</h3>
         {
         payment && 
-          <h3 className="order-files-title">Payment: {payment}$</h3>
+          <h3 className="order-files-title">Payment: ${parseFloat(payment).toFixed(2)}</h3>
         }
         </span>
 
