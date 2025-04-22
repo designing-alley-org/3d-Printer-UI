@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Tab } from '../../types/home.types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import api from '../../axiosConfig.ts';
 
 interface ITabContainerProps {
   tabs: Tab[];
@@ -13,61 +12,76 @@ interface ITabContainerProps {
   insideTab?: boolean;
 }
 
-
 const TabComponent = (props: ITabContainerProps) => {
-  const { tabs, numberId, activeTabs } = props;
+  const { tabs, activeTabs = 0 } = props;
+  console.log('activeTabs', activeTabs);
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [visibleRange, setVisibleRange] = useState<[number, number]>([0, 1]);
+  const activeTabsRef = useRef(activeTabs);
+
+  useEffect(() => {
+    activeTabsRef.current = activeTabs;
+  }, [activeTabs]);
+
+  const getTabRange = (activeTab: number): [number, number] => {
+    if (activeTab <= 1) {
+      return [0, 1];
+    } else if (activeTab >= tabs.length - 1) {
+      return [tabs.length - 2, tabs.length - 1];
+    } else {
+      return [activeTab - 1, activeTab];
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 590) {
-        setVisibleRange([0, 1]);
+        const [start, end] = getTabRange(activeTabsRef.current);
+        setVisibleRange([start, end]);
       } else {
         setVisibleRange([0, tabs.length - 1]);
       }
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // Initialize range on mount
+    handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
   }, [tabs.length]);
 
-  const handleTabClick = (index: number, tab: any, active: number) => {
-    if (index < active) {
+  useEffect(() => {
+    if (window.innerWidth <= 590) {
+      const [start, end] = getTabRange(activeTabs);
+      setVisibleRange([start, end]);
+    }
+  }, [activeTabs, tabs.length]);
+
+  const handleTabClick = (index: number, tab: any) => {
+    if (index < activeTabs) {
       navigate(`${orderId}/${tab.path}`);
-    } else if (window.innerWidth <= 590) {
-      if (index === visibleRange[1]) {
-        setVisibleRange([index, Math.min(index + 1, tabs.length - 1)]);
-      } else if (index === visibleRange[0] && index > 0) {
-        setVisibleRange([index - 1, index]);
-      }
     }
   };
 
-  
   return (
-    <TabWrapper>
-      <ul className={props.insideTab ? 'insideTab' : 'tabrow'}>
-        {tabs.slice(visibleRange[0], visibleRange[1] + 1).map((tab, index) => (
+    <ul className={props.insideTab ? 'insideTab' : 'tabrow'}>
+      {tabs.slice(visibleRange[0], visibleRange[1] + 1).map((tab, index) => {
+        const tabIndex = visibleRange[0] + index;
+        const isActive = tabIndex === activeTabs;
+        return (
           <li
             key={tab.id}
-            onClick={() =>
-              handleTabClick(index + visibleRange[0], tab, activeTabs)
-            }
+            className={isActive ? 'active' : ''}
+            onClick={() => handleTabClick(tabIndex, tab)}
           >
             <span className="tabContent">
               <p className="label">{tab.label}</p>
             </span>
           </li>
-        ))}
-      </ul>
-    </TabWrapper>
+        );
+      })}
+    </ul>
   );
 };
-
-const TabWrapper = styled.section``;
 
 export default TabComponent;

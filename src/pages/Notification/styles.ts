@@ -236,9 +236,6 @@ export const ViewDetailsWrapper = styled.main`
     padding: 1rem;
     border: 1px solid #0066ff;
     transition: all 0.2s ease;
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
     &:hover {
       background-color: #85b3ff;
     }
