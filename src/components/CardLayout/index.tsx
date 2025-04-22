@@ -56,6 +56,7 @@ const styles = {
 const CardLayout = () => {
   const { pathname } = useLocation();
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
+
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
@@ -63,7 +64,7 @@ const CardLayout = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const {  addressId } = useSelector((state: any) => state.address);
-  const fileDetails = useSelector((state: any) => state.fileDetails.files);
+  const fileDetails = useSelector((state: any) => state.fileDetails.updateFiles);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   // Check if all files have been customized
   useEffect(() => {
