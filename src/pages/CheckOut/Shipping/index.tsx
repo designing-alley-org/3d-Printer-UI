@@ -49,14 +49,45 @@ const ShippingDetails = () => {
 
   const handleAddress = async (data: any) => {
     try {
+      const { phoneNumber, countryCode, postalCode } = data;
+      if (phoneNumber) {
+        const cleanedNumber = phoneNumber.replace(/\D/g, '');
+        if (cleanedNumber.length === 10) {
+          data.phoneNumber = cleanedNumber;
+        } else {
+          toast.error('Phone number must be exactly 10 digits');
+          return;
+        }
+      }
+     
+
+      if (postalCode) {
+        const ukPostcodeRegex = /^(GIR 0AA|[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2})$/i;
+        const cleanedCode = postalCode.trim().toUpperCase();
+      
+        if (ukPostcodeRegex.test(cleanedCode)) {
+          data.postalCode = cleanedCode;
+          console.log('Postal code is valid:', cleanedCode);
+        } else {
+          toast.error('Enter a valid UK postal code');
+          return;
+        }
+      }
+
+      if(countryCode) {
+        const cleanedCode = countryCode.trim().toUpperCase();
+        const countryCodeRegex = /^[A-Z]{2}$/;
+        if (countryCodeRegex.test(cleanedCode)) {
+          data.countryCode = cleanedCode;
+        } else {
+          toast.error('Enter a valid country code');
+          return;
+        }
+      }
+      
       const response = await createAddress(data);
       dispatch(toggleCreateAddress());
       toast.success('Address created successfully');
-      // Refresh the address list after creating new address
-      // const updatedAddresses = await getAddress();
-      // if (updatedAddresses?.data?.data) {
-      //   dispatch(addAddress(updatedAddresses.data.data));
-      // }
       reset();
     } catch (error) {
       toast.error('Failed to create address');
