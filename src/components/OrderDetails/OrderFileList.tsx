@@ -10,43 +10,17 @@ interface IselectedOrder {
     pricing: number;
   }[];
   payment?: string;
+  trackingDetails?: any
+  order_status?: string;
   };
 
-  const deliveryStages = [
-    {
-      label: 'Left',
-      location: 'Delhi, Bhiwandi',
-      dateTime: 'Thu 17 Apr, 09:00 am',
-      completed: true,
-    },
-    {
-      label: 'Reached',
-      location: 'Jaipur, Warehouse',
-      dateTime: 'Thu 17 Apr, 11:00 pm',
-      completed: true,
-    },
-    {
-      label: 'Arrived',
-      location: 'Ahmedabad, Bhiwandi',
-      dateTime: 'Fri 18 Apr, 10:30 am',
-      completed: true,
-    },
-    {
-      label: 'Sorting',
-      location: 'Surat Facility',
-      dateTime: 'Pending',
-      completed: false,
-    },
-    {
-      label: 'Delivered',
-      location: 'Customer Address',
-      dateTime: 'Pending',
-      completed: false,
-    },
-  ];
 
-export function OrderFilesList({  files,payment }: IselectedOrder) {
- 
+export function OrderFilesList({  files,payment, trackingDetails , order_status }: IselectedOrder) {
+
+  const trackingId = trackingDetails?.trackingNumber || '';
+  const trackingDetailsData = trackingDetails?.scanEvents?.reverse()
+  || [];
+  const latestStatus = trackingDetails?.latestStatus || '';
   return (
     <div className="order-files-list">
       <span style={{display:'flex',justifyContent:'space-between'}}>
@@ -58,14 +32,14 @@ export function OrderFilesList({  files,payment }: IselectedOrder) {
         </span>
        { payment &&   
        <Box sx={{ marginTop: '20px', width: '100%' }}>
-       <DeliveryTimeline
-            trackingId="7345892347534"
-            stages={deliveryStages}
-            deliveryStatus="In Transit"
-            returnStatus="Pickup Schedule"
+       {order_status !== "order_placed" && <DeliveryTimeline
+            trackingId={trackingId}
+            stages={trackingDetailsData}
+            deliveryStatus={latestStatus}
+            // returnStatus="Pickup Schedule"
             pickupConfirmationCode="2568"
             returnLabelLink="https://example.com/return-label"
-          />
+          />}
           </Box>}
         <div className="order-files-space">
           {files?.length === 0 && <p className='no-files'>No files found</p>}

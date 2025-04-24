@@ -1,45 +1,62 @@
 import Button from '../../../stories/button/Button'
 import CreateDispute from './CreateDispute'
 import { Box, Modal } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { OrderFilesList } from '../../../components/OrderDetails/OrderFileList'
 import { ViewDetailsWrapper } from '../../Notification/styles'
-import DeliveryTimeline from './DeliveryDetailCard'
 import RequestReturnModal from './RequestReturnModal'
+import { trackByTrackingNumberService } from '../../../services/fedex'
 
 interface ViewDetailsProps {
-  orderId: string;
   myOrders?: 'yes' | 'no'; // Made optional and union type for better type safety
-  payment?: string;
-  files:{
-    fileName: string;
-    quantity: number;
-    pricing: number;
-  }[]
+  item: {
+    _id: string;
+    tracking_id: string;
+    paymentDetails: { amount: string }[];
+    order_status: string;
+    hasSuccessfulPayment: boolean;
+    updatedAt: string;
+    files: { fileName: string; quantity: number; pricing: number }[];
+    payment: { amount: string }[];
+  };
 }
 
 
 
-const ViewDetails = ({ orderId, myOrders = 'no', files, payment }: ViewDetailsProps) => {
+const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
   const [isCreateDispute, setIsCreateDispute] = useState(false);
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const showDispute = myOrders !== 'yes'; 
+  const trackingId = item?.tracking_id || '';
+  const [trackingDetails, setTrackingDetails] = useState([]);
+
+
+  useEffect(() => {
+    const fetchTrackingDetails = async () => {
+      try {
+        const response = await trackByTrackingNumberService(trackingId);
+        setTrackingDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching tracking details:', error);
+      }
+    }
+    if (trackingId) {
+      fetchTrackingDetails();
+    }
+  }, [trackingId]);
+
   return (
     <ViewDetailsWrapper>
-    
-   
-      <OrderFilesList  files={files} payment={payment}/>
-
+      <OrderFilesList trackingDetails={trackingDetails}  files={item.files} payment={item?.paymentDetails?.slice(-1)[0]?.amount} order_status={item.order_status}/>
       {showDispute && (
         <Box sx={{ marginTop: '3rem', width: '100%', display: 'flex', justifyContent: 'space-between' }}> 
-         <Button 
+       {item.order_status === "Delivered" &&  <Button 
           className='createDispute-btn' 
           label='Return Request' 
           onClick={handleOpen}
-        />     
+        /> }    
         <RequestReturnModal open={open} onClose={handleClose}   shipmentId="893748945892734"/> 
           <Button 
           className='createDispute-btn' 
@@ -56,7 +73,7 @@ const ViewDetails = ({ orderId, myOrders = 'no', files, payment }: ViewDetailsPr
           onClose={() => setIsCreateDispute(false)}
         >
           <CreateDispute 
-            orderId={orderId} 
+            orderId={item._id} 
             setIsCreateDispute={setIsCreateDispute} 
           />
         </Modal>
