@@ -24,9 +24,9 @@ export const getPlacedOrderService = async (pagination: number, orderId?: string
     try {
         let response;
         if (orderId) {
-            response = await api.get(`/api/v1/get-placed-orders/${orderId}`);
+            response = await api.get(`/get-placed-orders/${orderId}`);
         } else {
-            response = await api.get(`/api/v1/get-placed-orders`, {
+            response = await api.get(`/get-placed-orders`, {
                 params: {
                     page: pagination
                 }

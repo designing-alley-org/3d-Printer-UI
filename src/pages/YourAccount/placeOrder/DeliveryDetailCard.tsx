@@ -1,64 +1,80 @@
-import React from 'react';
+import * as React from 'react';
 import {
     Box,
     Typography,
-    Link,
     Chip,
+    Stepper,
+    Step,
+    StepLabel,
+    StepConnector,
+    stepConnectorClasses,
+    Skeleton,
     useTheme
 } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 
 interface DeliveryStage {
-    label: string;
-    location: string;
-    dateTime: string;
-    completed: boolean;
+    derivedStatus: string;
+    city: string;
+    scanTimestamp: string;
+    completed?: boolean;
+    location?: string;
+    dateTime?: string;
 }
 
 interface DeliveryTimelineProps {
     trackingId: string;
-    stages: DeliveryStage[];
+    stages?: DeliveryStage[];
     deliveryStatus: string;
-    returnStatus: string;
+    returnStatus?: string;
     pickupConfirmationCode: string;
     returnLabelLink: string;
 }
 
-const TimelineContainer = styled(Box)({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'relative',
-    marginTop: '16px',
-    paddingBottom: '24px'
-});
 
-const StepCircle = styled('div')<{ completed: boolean }>(({ completed }) => ({
-    width: 16,
-    height: 16,
-    borderRadius: '50%',
-    backgroundColor: completed ? '#3f51b5' : '#ccc',
-    border: completed ? 'none' : '2px solid #ccc',
-    zIndex: 1
+const DeliveryDetailSkeleton = () => {
+    return (
+        <Box p={3} border="1px solid #ddd" borderRadius={4} boxShadow={1} width="100%" mx="auto" mb={3}>
+            {/* Delivery Status Section */}
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Skeleton variant="text" width="30%" />
+                <Skeleton variant="rectangular" width={100} height={30} />
+            </Box>
+
+            {/* Tracking ID Section */}
+            <Skeleton variant="text" width="50%" />
+            <Skeleton variant="text" width="30%" />
+
+            {/* Stepper (Delivery Stages) */}
+            <Skeleton variant="rectangular" height={60} width="100%" sx={{ mt: 2 }} />
+
+            {/* Return Status Section */}
+            <Box mt={2}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                    <Skeleton variant="text" width="30%" />
+                    <Skeleton variant="rectangular" width={100} height={30} />
+                </Box>
+                <Box display="flex" justifyContent="space-between" flexWrap="wrap">
+                    <Skeleton variant="text" width="40%" />
+                    <Skeleton variant="text" width="40%" />
+                </Box>
+            </Box>
+        </Box>
+    );
+};
+
+// Custom connector style
+const CustomConnector = styled(StepConnector)(({ theme }) => ({
+    [`&.${stepConnectorClasses.alternativeLabel}`]: {
+        top: 10,
+        left: 'calc(-50% + 16px)',
+        right: 'calc(50% + 16px)',
+    },
+    [`& .${stepConnectorClasses.line}`]: {
+        borderColor: '#1e6fff',
+        borderTopWidth: 2,
+    },
 }));
-
-const StepLine = styled('div')<{ completed: boolean }>(({ completed, theme }) => ({
-    minWidth: 2,
-    flexGrow: 1,
-    backgroundColor: completed ? theme.palette.primary.main : '#ccc',
-    height: 2,
-    position: 'absolute',
-    top: '50%',
-    left: 0,
-    right: 0,
-    zIndex: 0
-}));
-
-const StepLabel = styled(Box)({
-    textAlign: 'center',
-    marginTop: 8,
-    minWidth: 120
-});
 
 const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
     trackingId,
@@ -69,6 +85,14 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
     returnLabelLink
 }) => {
     const theme = useTheme();
+    console.log("stages", stages);
+
+    if (!stages || stages.length === 0) {
+        return (
+            <DeliveryDetailSkeleton/>
+        );
+    }
+    
 
     return (
         <Box p={3} border="1px solid #ddd" borderRadius={4} boxShadow={1} width="100%" mx="auto" mb={3}>
@@ -77,37 +101,38 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
                 <Chip label={deliveryStatus} color="primary" variant="outlined" />
             </Box>
 
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="body2" color="textSecondary">
-                    Tracking ID: <strong>{trackingId}</strong>
-                </Typography>
-            </Box>
+            <Typography variant="body2" color="textSecondary" mb={2}>
+                Tracking ID: <strong>{trackingId}</strong>
+            </Typography>
 
-            <TimelineContainer>
+            <Stepper
+                alternativeLabel
+                activeStep={-1}
+                connector={<CustomConnector />}
+                sx={{
+                    '& .MuiStepLabel-label': {
+                        color: "#1e6fff",
+                        fontWeight: 500
+                    },
+                    '& .MuiStepIcon-root': {
+                        color: "#1e6fff",
+                    }
+                }}
+            >
                 {stages.map((stage, index) => (
-                    <React.Fragment key={index}>
-                        <Box display="flex" flexDirection="column" alignItems="center" width="100%">
-                            <StepCircle completed={stage.completed} />
-                            <StepLabel>
-                                <Typography variant="body2" fontWeight={600}>{stage.label}</Typography>
-                                <Typography variant="body2" color="textSecondary">{stage.location}</Typography>
-                                <Typography variant="caption" color="textSecondary">{stage.dateTime}</Typography>
-                            </StepLabel>
-                        </Box>
-                        {index < stages.length - 1 && (
-                            <Box
-                                flexGrow={1}
-                                height={2}
-                                bgcolor={stage.completed ? theme.palette.primary.main : '#ccc'}
-                                mt={-2}
-                                zIndex={0}
-                            />
-                        )}
-                    </React.Fragment>
+                    <Step key={index}>
+                        <StepLabel>
+                            <Typography fontWeight={600}>{stage.derivedStatus}</Typography>
+                            <Typography variant="body2" color="textSecondary">{stage.city}</Typography>
+                            <Typography variant="caption" color="textSecondary">{stage.scanTimestamp.split('T')[0]}</Typography> 
+                            <br />
+                            <Typography variant="caption" color="textSecondary">{stage.scanTimestamp.slice(11)}</Typography>
+                        </StepLabel>
+                    </Step>
                 ))}
-            </TimelineContainer>
+            </Stepper>
 
-            <Box mt={4}>
+           {returnStatus && <Box mt={2}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                     <Typography variant="h6">Return Status</Typography>
                     <Chip label={returnStatus} color="primary" variant="outlined" />
@@ -116,11 +141,11 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
                     <Typography variant="body2" mb={1}>
                         Pickup Confirmation Code: <strong>{pickupConfirmationCode}</strong>
                     </Typography>
-                    <Link href={returnLabelLink} underline="hover" target="_blank">
+                    <Typography component="a" href={returnLabelLink} target="_blank" underline="hover">
                         📄 Download Return Label
-                    </Link>
+                    </Typography>
                 </Box>
-            </Box>
+            </Box>}
         </Box>
     );
 };

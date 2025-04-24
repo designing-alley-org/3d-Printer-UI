@@ -110,7 +110,7 @@ const PlaceOrder = () => {
             />
             {selectedOrderId === item._id && (
               <div className="view-details-container">
-                <ViewDetails orderId={item._id} files={item.files} payment={item?.paymentDetails?.slice(-1)[0]?.amount}/>
+                <ViewDetails item={item}/>
               </div>
             )}
           </div>
