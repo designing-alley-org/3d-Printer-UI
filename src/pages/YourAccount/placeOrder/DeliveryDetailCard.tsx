@@ -104,12 +104,20 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
             <Typography variant="body2" color="textSecondary" mb={2}>
                 Tracking ID: <strong>{trackingId}</strong>
             </Typography>
-
+    <Box
+    sx={{
+        overflowX: 'auto',
+        '&::-webkit-scrollbar': {
+            height: 6,
+        },
+        
+    }}>
             <Stepper
                 alternativeLabel
                 activeStep={-1}
                 connector={<CustomConnector />}
                 sx={{
+                    m:2,
                     '& .MuiStepLabel-label': {
                         color: "#1e6fff",
                         fontWeight: 500
@@ -131,6 +139,7 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
                     </Step>
                 ))}
             </Stepper>
+            </Box>
 
            {returnStatus && <Box mt={2}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
