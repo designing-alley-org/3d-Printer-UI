@@ -21,6 +21,8 @@ import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
 import {  toast } from 'react-toastify';
 import TabComponent from '../Tab';
+import { useDispatch } from 'react-redux';
+import { resetQuoteState, setFalseQuoteData, setQuoteData } from '../../store/quote/quote';
 
 interface ModelDimensions {
   height: number;
@@ -56,7 +58,7 @@ const styles = {
 const CardLayout = () => {
   const { pathname } = useLocation();
   const [activeTabs, setActiveTabs] = useState<number[]>([]);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileData[]>([]);
   const totalTabs = quoteTexts.length;
@@ -66,6 +68,8 @@ const CardLayout = () => {
   const {  addressId } = useSelector((state: any) => state.address);
   const fileDetails = useSelector((state: any) => state.fileDetails.updateFiles);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const quoteData = useSelector((state: any) => state.quoteData);
+  console.log('quoteData', quoteData);
   // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
@@ -84,6 +88,7 @@ const CardLayout = () => {
       } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
         setActiveTabs([0, 1, 2]);
       } else if (pathname.includes(ROUTES.CHECKOUT) || pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+        
         setActiveTabs([0, 1, 2, 3]);
       } else {
         setActiveTabs([]);
@@ -103,7 +108,6 @@ const CardLayout = () => {
 
       const response = await api.post(`/checkout/${orderId}`);
       if (response.status === 200 && response.data.url) {
-        console.log('Payment URL:', response.data.url);
         window.location.href = response.data.url;
       } else {
         throw new Error('Invalid payment URL received');
@@ -149,6 +153,7 @@ const CardLayout = () => {
           setIsSaving,
           navigate,
         });
+        dispatch(resetQuoteState());
       } catch (error) {
         console.error('Error creating order:', error);
         toast.error('Failed to create order.', {
@@ -163,7 +168,9 @@ const CardLayout = () => {
       }
       navigate(`/get-quotes/${orderId}/quote`);
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
-      navigate(`/get-quotes/${orderId}/checkout`);
+      if(quoteData.quoteClosed) {
+        navigate(`/get-quotes/${orderId}/checkout`);
+      }
     } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
      if(addressId === ""){
         toast.warning('Please select a delivery address!');

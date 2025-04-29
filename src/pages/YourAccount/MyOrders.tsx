@@ -81,7 +81,7 @@ const MyOrders = () => {
 
                 {selectedOrderId === item._id && (
                   <div className="view-details-container">
-                    <ViewDetails orderId={item._id} myOrders="yes" files={item?.files} />
+                    <ViewDetails item={item} myOrders="yes"/>
                   </div>
                 )}
               </div>

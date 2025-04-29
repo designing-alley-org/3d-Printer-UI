@@ -91,11 +91,13 @@ const OngoingOrder = () => {
   }, [notifications, ordersData]);
 
   const ORDER_STATUS_ROUTES = {
-    order_created: "upload-stl",
+    created: "upload-stl",
     files_uploaded: "customize",
     order_customization: "customize",
     order_quote_created: "quote",
-    order_quote_negotiated: "checkout",
+    order_quote_negotiated: "quote",
+    payment_pending: "checkout",
+    order_quote_approved: "checkout",
   } as const;
 
   const handleNavigate = async (orderStatus: string, orderId: string) => {

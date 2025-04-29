@@ -166,7 +166,7 @@ const PaymentDetails: React.FC = () => {
           <div className="file">
             {quoteData.files.map((file, index) => (
               <span key={file.fileId || index} className="fileName">
-                <span className="dot">•</span>
+                <span className="dot">{index + 1}</span>
                 {file.fileName.split('-')[0]}
               </span>
             ))}

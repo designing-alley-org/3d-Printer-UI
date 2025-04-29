@@ -167,9 +167,13 @@ export const Body = styled.section`
       color: #2359b0;
     }
     .dot {
-      color: white;
-      width: 52px;
-      height: 32px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      justify-content: center;
+      padding: 0.25rem 0.5rem;
       background: #e5edf9;
       border-radius: 40px;
       margin-right: 12px;
