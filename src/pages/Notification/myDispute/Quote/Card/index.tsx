@@ -9,6 +9,8 @@ import { getQuoteByOrderId } from '../../../../../store/actions/getQuotes.ts';
 import arrow from '../../../../../assets/icons/arrow_drop_down_circle.svg';
 import './style.css';
 import ButtonWithIcon from '../../../../../stories/ButtonWithIcon/ButtonWithIcon.tsx';
+import { useDispatch } from 'react-redux';
+import { Dispatch } from 'redux';
 interface QuoteItem {
   fileName: string;
   quantity: number;
@@ -33,6 +35,7 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps,dispute_i
   const [allQuotes, setAllQuotes] = useState<QuoteData[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
+
   async function getQuotes() {
     getQuoteByOrderId({
       orderId: (orderId as string) || selectOrderIdProps || '',
