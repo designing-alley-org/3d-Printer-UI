@@ -32,11 +32,12 @@ export function OrderFilesList({  files,payment, trackingDetails , order_status 
         </span>
        { payment &&   
        <Box sx={{ marginTop: '20px', width: '100%' }}>
-       {order_status !== "order_placed" && <DeliveryTimeline
+       {order_status !== "order_placed" && 
+       <DeliveryTimeline
             trackingId={trackingId}
             stages={trackingDetailsData}
             deliveryStatus={latestStatus}
-            // returnStatus="Pickup Schedule"
+            returnStatus="Pickup Schedule"
             pickupConfirmationCode="2568"
             returnLabelLink="https://example.com/return-label"
           />}
