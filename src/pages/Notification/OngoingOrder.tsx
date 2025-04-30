@@ -96,6 +96,7 @@ const OngoingOrder = () => {
     order_customization: "customize",
     order_quote_created: "quote",
     order_quote_negotiated: "quote",
+    address_select: "checkout",
     payment_pending: "checkout",
     order_quote_approved: "checkout",
   } as const;
