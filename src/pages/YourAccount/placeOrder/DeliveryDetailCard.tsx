@@ -27,6 +27,8 @@ interface DeliveryStage {
 
 interface DeliveryTimelineProps {
     trackingId: string;
+    returnDetails: any;
+    hasReturnRequest?: boolean;
     stages?: DeliveryStage[];
     deliveryStatus: string;
     returnStatus?: string;
@@ -75,21 +77,25 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
     trackingId,
     stages,
     deliveryStatus,
+    hasReturnRequest,
     returnStatus,
     pickupConfirmationCode,
-    returnLabelLink
+    returnLabelLink,
+    returnDetails
 }) => {
+    console.log("returnDetails",)
     const [activeTab, setActiveTab] = React.useState<'shipment' | 'return'>('shipment');
     const isMobile = useMediaQuery("(max-width:600px)");
 
     if (!stages || stages.length === 0) {
         return <DeliveryDetailSkeleton />;
     }
+    console.log("returnDetails",returnDetails[0]?.tracking_id)
 
     return (
         <Box p={3} border="1px solid #ddd" borderRadius={4} boxShadow={1} width="100%" mx="auto" mb={3} >
             {/* Toggle Buttons */}
-            {returnStatus &&
+            {hasReturnRequest &&
                 <Box
                     display="flex"
                     justifyContent="space-between"
@@ -151,8 +157,9 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
                         <Typography variant="h6" color="textSecondary" sx={{ fontSize: isMobile ? '0.8rem' : '1.2rem', fontWeight: 600 }}>Delivery Detail</Typography>
                         <Chip label={deliveryStatus} color="success" variant="outlined" 
                         sx={{
-                            fontSize: isMobile ? '0.5rem' : '1rem',
+                            fontSize: isMobile ? '0.5rem' : '0.8rem',
                             fontWeight: 600,
+                            height:{xs:'1.2rem',md:'1.5rem'}
                         }}/>
                     </Box>
 
@@ -216,23 +223,24 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
             {activeTab === 'return' && returnStatus && (
                 <Box mt={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" mb={1}>
-                        <Typography variant="h6" sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }}>
+                        <Typography variant="h6" sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
                             Return Status
                         </Typography>
-                        <Chip label={returnStatus} color="success" variant="outlined" sx={{
-                            fontSize: isMobile ? '0.5rem' : '1rem',
+                        <Chip label={returnDetails[0]?.deliveryStatus} color="success" variant="outlined" sx={{
+                            fontSize: isMobile ? '0.5rem' : '0.8rem',
                             fontWeight: 600,
+                            height:{xs:'1.2rem',md:'1.5rem'}
                         }} />
                     </Box>
-                    <Box display="flex" justifyContent="space-between" flexWrap="wrap">
-                        <Typography variant="body2" mb={1} sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
+                   {returnDetails[0]?.tracking_id && <Box display="flex" justifyContent="space-between" flexWrap="wrap">
+                        <Typography variant="body2" mb={1} sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
                             Pickup Confirmation Code: <strong>{pickupConfirmationCode}</strong>
                         </Typography>
-                        <Typography component="a" href={returnLabelLink} target="_blank" underline="hover" sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
+                        <Typography component="a" href={returnLabelLink} target="_blank" underline="hover" sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
                             &nbsp;
                             Download Return Label
                         </Typography>
-                    </Box>
+                    </Box>}
                 </Box>
             )}
         </Box>

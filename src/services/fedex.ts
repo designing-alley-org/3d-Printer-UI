@@ -10,6 +10,22 @@ const trackByTrackingNumberService = async (trackingNumber: string) => {
     }
 }
 
-export  {
-    trackByTrackingNumberService
+const returnRequestService = async (shipmentId: string, formData: FormData) => {
+    try {
+        const response = await api.post(`/return-request/${shipmentId}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error with return request:", error);
+        throw error;
+    }
 }
+
+export  {
+    trackByTrackingNumberService,
+    returnRequestService
+}
+
