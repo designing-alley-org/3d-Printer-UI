@@ -12,10 +12,12 @@ interface IselectedOrder {
   payment?: string;
   trackingDetails?: any
   order_status?: string;
+  hasReturnRequest?: boolean;
+  returnDetails?:string[];
   };
 
 
-export function OrderFilesList({  files,payment, trackingDetails , order_status }: IselectedOrder) {
+export function OrderFilesList({  files,payment, trackingDetails , order_status, hasReturnRequest, returnDetails }: IselectedOrder) {
 
   const trackingId = trackingDetails?.trackingNumber || '';
   const trackingDetailsData = trackingDetails?.scanEvents?.reverse()
@@ -37,6 +39,8 @@ export function OrderFilesList({  files,payment, trackingDetails , order_status 
             trackingId={trackingId}
             stages={trackingDetailsData}
             deliveryStatus={latestStatus}
+            hasReturnRequest={hasReturnRequest}
+            returnDetails={returnDetails || []}
             returnStatus="Pickup Schedule"
             pickupConfirmationCode="2568"
             returnLabelLink="https://example.com/return-label"

@@ -11,7 +11,10 @@ interface ViewDetailsProps {
   myOrders?: 'yes' | 'no'; // Made optional and union type for better type safety
   item: {
     _id: string;
-    tracking_id: string;
+    returnDetails?:string[];
+    hasReturnRequest: boolean;
+    shipment_tracking_id: string;
+    shipmentId: string;
     paymentDetails: { amount: string }[];
     order_status: string;
     hasSuccessfulPayment: boolean;
@@ -29,7 +32,7 @@ const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const showDispute = myOrders !== 'yes'; 
-  const trackingId = item?.tracking_id || '';
+  const trackingId = item?.shipment_tracking_id || '';
   const [trackingDetails, setTrackingDetails] = useState([]);
 
 
@@ -49,7 +52,7 @@ const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
 
   return (
     <ViewDetailsWrapper>
-      <OrderFilesList trackingDetails={trackingDetails}  files={item.files} payment={item?.paymentDetails?.slice(-1)[0]?.amount} order_status={item.order_status}/>
+      <OrderFilesList trackingDetails={trackingDetails}  files={item.files} payment={item?.paymentDetails?.slice(-1)[0]?.amount} order_status={item.order_status} hasReturnRequest={item?.hasReturnRequest} returnDetails ={item?.returnDetails}/>
       {showDispute && (
         <Box sx={{ marginTop: '3rem', width: '100%', display: 'flex', justifyContent: 'space-between' }}> 
        {item.order_status === "Delivered" &&  <Button 
@@ -57,7 +60,7 @@ const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
           label='Return Request' 
           onClick={handleOpen}
         /> }    
-        <RequestReturnModal open={open} onClose={handleClose}   shipmentId="893748945892734"/> 
+        <RequestReturnModal open={open} onClose={handleClose}   shipmentId={item.shipmentId} orderID={item._id}/> 
           <Button 
           className='createDispute-btn' 
           label='Create Dispute' 

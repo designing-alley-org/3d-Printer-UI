@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
+import { returnRequestService } from '../../../services/fedex';
+import { toast } from 'react-toastify';
 
 interface ImagePreview {
     file: File;
@@ -21,12 +23,14 @@ interface RequestReturnModalProps {
     open: boolean;
     onClose: () => void;
     shipmentId: string;
+    orderID?: string;
 }
 
-const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, shipmentId }) => {
+const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, shipmentId, orderID }) => {
     const [images, setImages] = useState<ImagePreview[]>([]);
     const [reason, setReason] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -56,25 +60,35 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
         inputRef.current?.click();
     };
 
-    const handleSubmit = () => {
-        if (images.length < 2) {
-            alert('Please upload at least 2 images.');
-            return;
+    const handleSubmit = async () => {
+       
+        setIsLoading(true);
+        const formData = new FormData();
+        images.forEach((img) => {
+            formData.append('files', img.file);
+        });
+        formData.append('reason', reason);
+        formData.append('orderID', orderID || '');
+        try {
+            await returnRequestService(shipmentId, formData);
+            toast.success('Return request submitted successfully.');
+            setImages([]);
+            setReason('');
+            onClose();
+        } catch (error) {
+            toast.error('Error with return request. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
-        if (!reason.trim()) {
-            alert('Please provide a reason for return.');
-            return;
-        }
-        // Submit logic here...
+
         console.log('Submitted with reason:', reason);
-        onClose();
     };
 
     return (
         <Modal open={open} onClose={onClose}>
             <Box
                 sx={{
-                    width: 800,
+                    width: { xs: '90%', sm: '80%', md: '60%', lg: '50%' },
                     bgcolor: '#fff',
                     p: 4,
                     m: '100px auto',
@@ -118,7 +132,7 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
                                 <AddCircleOutlineIcon />
                             </IconButton>
                         </Box>
-                        <Typography variant="body2" sx={{ color: 'error.main', fontWeight: 500 }}>
+                        <Typography variant="body2" sx={{ color: 'error.main', fontWeight: 500 , fontSize: '0.8rem', mb: 2  }}>
                             Note: Must attach minimum 2 images.
                         </Typography>
                         <input
@@ -140,8 +154,8 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
                             <Grid item key={idx}>
                                 <Box
                                     sx={{
-                                        width: 64,
-                                        height: 64,
+                                        width: { xs: 64, sm: 80 },
+                                        height: { xs: 64, sm: 80 },
                                         borderRadius: 2,
                                         overflow: 'hidden',
                                         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
@@ -196,7 +210,7 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
                             },
                         }}
                     >
-                        Request Return
+                       {isLoading ? 'Loading...' : ' Request Return'}
                     </Button>
                 </Box>
             </Box>
