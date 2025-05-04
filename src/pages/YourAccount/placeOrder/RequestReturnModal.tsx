@@ -71,10 +71,10 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
         formData.append('orderID', orderID || '');
         try {
             await returnRequestService(shipmentId, formData);
-            toast.success('Return request submitted successfully.');
             setImages([]);
             setReason('');
             onClose();
+            window.location.reload();
         } catch (error) {
             toast.error('Error with return request. Please try again.');
         } finally {

@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
+import { formatOrderStatus } from '../../../utils/Validation';
 
 
 interface DeliveryStage {
@@ -155,7 +156,7 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
                 <>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                         <Typography variant="h6" color="textSecondary" sx={{ fontSize: isMobile ? '0.8rem' : '1.2rem', fontWeight: 600 }}>Delivery Detail</Typography>
-                        <Chip label={deliveryStatus} color="success" variant="outlined" 
+                        <Chip label={deliveryStatus.replace(/_/g, ' ')} color={deliveryStatus === "shipment_cancelled" ? "error" : "success"} variant="outlined" 
                         sx={{
                             fontSize: isMobile ? '0.5rem' : '0.8rem',
                             fontWeight: 600,
@@ -226,11 +227,18 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
                         <Typography variant="h6" sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
                             Return Status
                         </Typography>
-                        <Chip label={returnDetails[0]?.deliveryStatus} color="success" variant="outlined" sx={{
+                        <Chip label={formatOrderStatus(returnDetails[0]?.deliveryStatus)} color={returnDetails[0]?.deliveryStatus === "return_rejected" ? "error" : "success"} variant="outlined" sx={{
                             fontSize: isMobile ? '0.5rem' : '0.8rem',
                             fontWeight: 600,
                             height:{xs:'1.2rem',md:'1.5rem'}
                         }} />
+                    </Box>
+                    <Box>
+                        {returnDetails[0]?.rejectReason && (
+                            <Typography variant="body2" mb={1} sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
+                                Reject Reason: <strong>{returnDetails[0]?.rejectReason}</strong>
+                            </Typography>
+                        )}
                     </Box>
                    {returnDetails[0]?.tracking_id && <Box display="flex" justifyContent="space-between" flexWrap="wrap">
                         <Typography variant="body2" mb={1} sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>

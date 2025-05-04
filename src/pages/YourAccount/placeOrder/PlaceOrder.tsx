@@ -31,7 +31,6 @@ const PlaceOrder = () => {
   const dispatch = useDispatch();
   const orderId = useParams().orderId;
   const [allPlacedOrder, setAllPlacedOrder] = useState<Order[]>([]);
-  console.log("allPlacedOrder", allPlacedOrder);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [pagination, setPagination] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,7 +105,6 @@ const PlaceOrder = () => {
               buttonLabel={selectedOrderId === item._id ? "Hide " : "View "}
               placeOrderStatus={item.hasSuccessfulPayment ? "Success" : "Failed"}
               onButtonClick={() => handleViewDetails(item._id)}
-              // isUnread={notificationMap.get(item._id) ? !notificationMap.get(item._id)?.readStatus : false}
             />
             {selectedOrderId === item._id && (
               <div className="view-details-container">
