@@ -12,7 +12,6 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import { AppDispatch } from '../../store/store';
 import { login } from '../../store/auth/actions';
 import { RootState } from '../../store/types';
@@ -136,14 +135,11 @@ const Login: React.FC = () => {
 
             <Box sx={{
               display: 'flex', gap: 1, mb: 2, justifyContent: 'center', '& .MuiButton-root': {
-                fontSize:'.6rem',
+              fontSize:'.6rem',
               },
             }}>
               <SocialButton onClick={handleGoogleLogin} startIcon={<GoogleIcon />}>
-                Google
-              </SocialButton>
-              <SocialButton startIcon={<FacebookIcon />}>
-                Facebook
+              Google
               </SocialButton>
             </Box>
 

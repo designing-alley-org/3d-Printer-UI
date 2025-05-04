@@ -12,8 +12,11 @@ export const login =
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-      const response =  api.post('login', { email, password });
-      const res = await toast.promise(response, { pending: 'Logging in...', success: 'Login successful' });
+      const res = await toast.promise(
+        api.post('login', { email, password }),
+        { pending: 'Logging in...', success: 'Login successful' }
+      );
+      
       const token = res.data.token;
       localStorage.setItem('token', token);
       const user = res.data;

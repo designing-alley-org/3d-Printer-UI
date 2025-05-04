@@ -6,7 +6,6 @@ import { RootState } from '../../store/types';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, Button, Container, TextField, Typography, Paper, styled, useMediaQuery } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import { toast } from 'react-toastify';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -106,9 +105,8 @@ const RegisterForm: React.FC = () => {
               Or Continue With
             </Typography>
 
-            <Box sx={{ display: 'flex', gap: 1, mb: 2, justifyContent: 'center', '& .MuiButton-root': { fontSize: '.6rem' } }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, '& .MuiButton-root': { fontSize: '.6rem' } }}>
               <SocialButton startIcon={<GoogleIcon />}>Google</SocialButton>
-              <SocialButton startIcon={<FacebookIcon />}>Facebook</SocialButton>
             </Box>
 
             <Box sx={{ display: 'flex', gap: .6, justifyContent: 'space-between', mb: 2 }}>
