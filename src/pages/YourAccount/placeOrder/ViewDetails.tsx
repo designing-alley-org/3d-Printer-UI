@@ -52,14 +52,20 @@ const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
 
   return (
     <ViewDetailsWrapper>
+      
       <OrderFilesList trackingDetails={trackingDetails}  files={item.files} payment={item?.paymentDetails?.slice(-1)[0]?.amount} order_status={item.order_status} hasReturnRequest={item?.hasReturnRequest} returnDetails ={item?.returnDetails}/>
+    
+    
       {showDispute && (
         <Box sx={{ marginTop: '3rem', width: '100%', display: 'flex', justifyContent: 'space-between' }}> 
-       {item.order_status === "Delivered" &&  <Button 
+       {
+       item.order_status === "Delivered" &&  
+       <Button 
           className='createDispute-btn' 
           label='Return Request' 
           onClick={handleOpen}
-        /> }    
+        /> 
+        }    
         <RequestReturnModal open={open} onClose={handleClose}   shipmentId={item.shipmentId} orderID={item._id}/> 
           <Button 
           className='createDispute-btn' 
