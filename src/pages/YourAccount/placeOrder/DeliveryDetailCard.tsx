@@ -222,33 +222,63 @@ const DeliveryTimeline: React.FC<DeliveryTimelineProps> = ({
 
             {/* Return Details */}
             {activeTab === 'return' && returnStatus && (
-                <Box mt={2}>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" mb={1}>
-                        <Typography variant="h6" sx={{ fontSize: { xs: '0.8rem', md: '1rem' } }}>
+                <Box mt={2} p={2} border="1px solid #ddd" borderRadius={2} bgcolor="#f9f9f9">
+                    <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" mb={2}>
+                        <Typography variant="h6" sx={{ fontSize: { xs: '0.9rem', md: '1.1rem' }, fontWeight: 600 }}>
                             Return Status
                         </Typography>
-                        <Chip label={formatOrderStatus(returnDetails[0]?.deliveryStatus)} color={returnDetails[0]?.deliveryStatus === "return_rejected" ? "error" : "success"} variant="outlined" sx={{
-                            fontSize: isMobile ? '0.5rem' : '0.8rem',
-                            fontWeight: 600,
-                            height:{xs:'1.2rem',md:'1.5rem'}
-                        }} />
+                        <Chip 
+                            label={formatOrderStatus(returnDetails[0]?.deliveryStatus)} 
+                            color={returnDetails[0]?.deliveryStatus === "return_rejected" ? "error" : "success"} 
+                            variant="outlined" 
+                            sx={{
+                                fontSize: isMobile ? '0.6rem' : '0.9rem',
+                                fontWeight: 600,
+                                height: { xs: '1.4rem', md: '1.6rem' },
+                                borderRadius: '1rem'
+                            }} 
+                        />
                     </Box>
-                    <Box>
-                        {returnDetails[0]?.rejectReason && (
-                            <Typography variant="body2" mb={1} sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
-                                Reject Reason: <strong>{returnDetails[0]?.rejectReason}</strong>
+                    {returnDetails[0]?.rejectReason && (
+                        <Typography variant="body2" mb={2} sx={{ fontSize: { xs: '0.8rem', md: '0.9rem' }, color: 'text.secondary' }}>
+                            <strong>Reject Reason:</strong> {returnDetails[0]?.rejectReason}
+                        </Typography>
+                    )}
+                    {returnDetails[0]?.tracking_id && (
+                        <Box display="flex" flexDirection="column" gap={1}>
+                            <Typography 
+                                variant="body2" 
+                                sx={{ 
+                                    fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' }, 
+                                    color: 'text.secondary' 
+                                }}
+                            >
+                                <strong>Pickup Confirmation Code:</strong> {returnDetails[0]?.pickup?.pickupConfirmationCode}
                             </Typography>
-                        )}
-                    </Box>
-                   {returnDetails[0]?.tracking_id && <Box display="flex" justifyContent="space-between" flexWrap="wrap">
-                        <Typography variant="body2" mb={1} sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
-                            Pickup Confirmation Code: <strong>{pickupConfirmationCode}</strong>
-                        </Typography>
-                        <Typography component="a" href={returnLabelLink} target="_blank" underline="hover" sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
-                            &nbsp;
-                            Download Return Label
-                        </Typography>
-                    </Box>}
+                            <Typography 
+                                variant="body2" 
+                                sx={{ 
+                                    fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' }, 
+                                    color: 'text.secondary' 
+                                }}
+                            >
+                                <strong>Pickup Date and Time:</strong> {new Date(returnDetails[0]?.pickup?.pickupDate).toLocaleDateString()}, {returnDetails[0]?.pickup?.pickuplastTime}
+                            </Typography>
+                            <Typography 
+                                component="a" 
+                                href={returnDetails[0]?.labelUrl} 
+                                target="_blank" 
+                                underline="hover" 
+                                sx={{ 
+                                    fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' }, 
+                                    color: '#1e6fff', 
+                                    fontWeight: 500 
+                                }}
+                            >
+                                Download Return Label
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
             )}
         </Box>
