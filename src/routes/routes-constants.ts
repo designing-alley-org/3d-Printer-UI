@@ -20,7 +20,7 @@ export const ROUTES = {
   Notification: 'notification',
   CART: 'cart',
   SUCCESS: 'order-successful',
-  GOOGLE_AUTH: 'google-auth',
+  GOOGLE_AUTH: 'google-auth-handler',
   VERIFY_EMAIL: 'verify-email',
   FORGET_PASSWORD: 'forgot-password',
   MY_PROFILE: 'my-profile',
