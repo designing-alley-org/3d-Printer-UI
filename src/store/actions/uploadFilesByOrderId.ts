@@ -58,7 +58,6 @@ export const uploadFilesByOrderId = async ({
                 const response = await uploadFilesByOrderIdService(orderId, formData);
 
                 if (response.status === 200) {
-                    console.log("Files uploaded successfully!", response);
                     setFiles([]);
                     setActiveTabs([0, 1]);
                     navigate(`${response.data.data._id}/customize`);

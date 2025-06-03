@@ -14,7 +14,6 @@ interface ITabContainerProps {
 
 const TabComponent = (props: ITabContainerProps) => {
   const { tabs, activeTabs = 0 } = props;
-  console.log('activeTabs', activeTabs);
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [visibleRange, setVisibleRange] = useState<[number, number]>([0, 1]);

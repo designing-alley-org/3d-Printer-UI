@@ -22,7 +22,6 @@ const NotificationBox = () => {
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
-  //   console.log(notification);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,17 +60,14 @@ const NotificationBox = () => {
 
     // Listen for new disputes and update the list
     socket.on('QuoteNegotiateuserNotification', (data) => {
-      // console.log('New dispute received:', data);
 
       dispatch(addNotification(data));
     });
     socket.on('quoteNotification', (data) => {
-      // console.log('New order received:', data);
       dispatch(addNotification(data));
     });
 
     socket.on('QuoteApproveRejectuserNotification', (data) => {
-      // console.log('New order received:', data);
       dispatch(addNotification(data));
     });
 
