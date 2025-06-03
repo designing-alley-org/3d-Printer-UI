@@ -15,9 +15,6 @@ const fileReducer = ( state = initialState,action: FileActionTypes): FileReducer
   switch (action.type) {
     case ADD_FILE: {
       const { file, id } = action.payload;
-
-      console.log(action.payload);
-      
         // Check for duplicate files
         if (state.files.some(f => f.name === file.name)) {
           console.warn('File already exists');
@@ -32,8 +29,6 @@ const fileReducer = ( state = initialState,action: FileActionTypes): FileReducer
         size: `${file.size} bytes`,
         progress: 0,
       };
-
-      console.log(newFile);
 
       return {
         ...state,

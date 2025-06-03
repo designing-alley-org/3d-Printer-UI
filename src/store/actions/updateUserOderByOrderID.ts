@@ -6,7 +6,6 @@ export const updateUserOrderByOrderId = async ( orderId: string, navigate: any, 
         
         const response = await updateUserOrderByOrderIdService(orderId, data);
         if (response.status === 200) {
-            console.log('Files uploaded successfully!');
             navigate(`/get-quotes/${orderId}/checkout/payment`);
         }
     } catch (error) {

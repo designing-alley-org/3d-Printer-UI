@@ -45,3 +45,18 @@ export const getFile = async (fileUrl: string): Promise<Blob | undefined> => {
     request.onerror = () => reject(request.error);
   });
 };
+
+
+// src/utils/indexedDB.ts
+
+export const clearDB = async () => {
+  const db = await openDB();
+  return new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction('files', 'readwrite');
+    const store = transaction.objectStore('files');
+    const request = store.clear();
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+};

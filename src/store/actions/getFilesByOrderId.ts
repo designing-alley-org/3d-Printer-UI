@@ -15,7 +15,6 @@ export const getFilesByOrderId = ({ orderId, setFetchFiles, dispatch }: IGetFile
                 res = [];
             }
             setFetchFiles(res)
-            console.log('Files fetched Starting successfully:', res);
             dispatch(addAllFiles(res as FileDetail[]));
         })
         .catch((err) => {
@@ -53,7 +52,6 @@ export const getFilesByOrderIdForUploadstl = async (
             }
             return file; 
         });
-        console.log("Files fetched and updated successfully:", updatedFiles);
         return updatedFiles;
         
     } catch (err) {

@@ -23,6 +23,7 @@ import {  toast } from 'react-toastify';
 import TabComponent from '../Tab';
 import { useDispatch } from 'react-redux';
 import { resetQuoteState, setFalseQuoteData, setQuoteData } from '../../store/quote/quote';
+import { clearDB } from '../../utils/indexedDB';
 
 interface ModelDimensions {
   height: number;
@@ -69,7 +70,6 @@ const CardLayout = () => {
   const fileDetails = useSelector((state: any) => state.fileDetails.updateFiles);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const quoteData = useSelector((state: any) => state.quoteData);
-  console.log('quoteData', quoteData);
   // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
@@ -166,6 +166,7 @@ const CardLayout = () => {
         toast.warning('Apply specifications to all files before proceeding.');
         return;
       }
+      clearDB();
       navigate(`/get-quotes/${orderId}/quote`);
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
       if(quoteData.quoteClosed) {

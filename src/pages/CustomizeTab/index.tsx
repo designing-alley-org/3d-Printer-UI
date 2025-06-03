@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import {
   Customize,
   Files,
@@ -34,6 +34,7 @@ import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
+import ReloadButton from '../../components/Loader/ReloadButton';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -372,6 +373,14 @@ const CustomizeTab: React.FC = () => {
             Apply Selection
             {isLoading && <Loader />}
           </Button>
+         {!isApplyButtonDisabled && <Box 
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '1rem',
+            }}>
+          <ReloadButton/>
+          </Box>}
         </Customize>
       </Filescomponent>
       <ViewerStlModel
