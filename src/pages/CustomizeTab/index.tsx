@@ -374,11 +374,7 @@ const CustomizeTab: React.FC = () => {
             {isLoading && <Loader />}
           </Button>
          {!isApplyButtonDisabled && <Box 
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '1rem',
-            }}>
+           >
           <ReloadButton/>
           </Box>}
         </Customize>
