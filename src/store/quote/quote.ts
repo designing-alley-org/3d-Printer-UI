@@ -21,23 +21,20 @@ const quoteSlice = createSlice({
   reducers: {
     setQuoteData: (state, action: PayloadAction<Quote[]>) => {
       state.quoteData = action.payload;
+      const length = action.payload.length;
       state.quoteClosed =
-        action.payload.length > 1 &&
-        action.payload.every((quote) => quote.isClosed);
+        length > 0 &&
+        action.payload[length - 1].isClosed;
     },
     setFalseQuoteData: (state) => {
       state.quoteClosed = false;
-    },
-    resetQuoteState: () => ({
-      ...initialState,
-    }),
+    }
   },
 });
 
 export const {
   setQuoteData,
   setFalseQuoteData,
-  resetQuoteState,
 } = quoteSlice.actions;
 
 export default quoteSlice.reducer;
