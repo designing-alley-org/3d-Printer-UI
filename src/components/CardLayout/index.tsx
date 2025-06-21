@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useCallback } from 'react';
-import Header from '../Header';
 import './styles.css';
 import { TabLine } from './styles';
 import {
@@ -22,7 +21,6 @@ import { createOrder } from '../../store/actions/createOrder';
 import {  toast } from 'react-toastify';
 import TabComponent from '../Tab';
 import { useDispatch } from 'react-redux';
-import { resetQuoteState, setFalseQuoteData, setQuoteData } from '../../store/quote/quote';
 import { clearDB } from '../../utils/indexedDB';
 
 interface ModelDimensions {
@@ -69,7 +67,9 @@ const CardLayout = () => {
   const {  addressId } = useSelector((state: any) => state.address);
   const fileDetails = useSelector((state: any) => state.fileDetails.updateFiles);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-  const quoteData = useSelector((state: any) => state.quoteData);
+  const quoteDataClosed = useSelector((state: any) => state.quoteData.quoteClosed);
+
+
   // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
@@ -153,7 +153,6 @@ const CardLayout = () => {
           setIsSaving,
           navigate,
         });
-        dispatch(resetQuoteState());
       } catch (error) {
         console.error('Error creating order:', error);
         toast.error('Failed to create order.', {
@@ -169,7 +168,7 @@ const CardLayout = () => {
       clearDB();
       navigate(`/get-quotes/${orderId}/quote`);
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
-      if(quoteData.quoteClosed) {
+      if(quoteDataClosed) {
         navigate(`/get-quotes/${orderId}/checkout`);
       }
     } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
@@ -181,7 +180,7 @@ const CardLayout = () => {
     }else if (pathname.includes(`/get-quotes/${orderId}/checkout/select-delivery`)) {
       handlePayment();
     }
-  }, [files, navigate, orderId, pathname, allFilesCustomized, addressId]);
+  }, [files, navigate, orderId, pathname, allFilesCustomized, addressId, quoteDataClosed]);
 
   const renderButton = () => {
     const isCheckoutRoute = pathname === `/get-quotes/${orderId}/checkout`;
