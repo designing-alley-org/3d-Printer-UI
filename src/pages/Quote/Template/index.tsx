@@ -49,6 +49,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
   const [showNegotiate, setShowNegotiate] = useState<boolean>(false);
   const [updatedQuote, setUpdatedQuote] = useState<QuoteData | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const [isApproveLoading, setIsApproveLoading] = useState<boolean>(false);
 
   const handlePriceChange = (index: number, newPrice: string): void => {
     if (quote) {
@@ -91,6 +92,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
   ];
 
   const handleSend = async () => {
+    setIsApproveLoading(true);
     if (updatedQuote) {
       await api.post(`/negotiate-quote/${quote?._id}/${orderId}`, {
         data: updatedQuote.files,
@@ -100,6 +102,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
         approved: true,
       });
     }
+    setIsApproveLoading(false);
     getQuotes();
   };
 
@@ -499,6 +502,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                 <Button
                   label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
                   onClick={handleSend}
+                  loading={isApproveLoading}
                   className='approve-btn'
                 />
               </span>

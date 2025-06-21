@@ -68,6 +68,24 @@ const CardLayout = () => {
   const fileDetails = useSelector((state: any) => state.fileDetails.updateFiles);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const quoteDataClosed = useSelector((state: any) => state.quoteData.quoteClosed);
+  console.log("quoteDataClosed", quoteDataClosed);
+  const [isProcessingDisbled, setIsProcessingDisabled] = useState(false);
+
+
+
+  // Disable processing button if no files are uploaded
+  useEffect(() => {
+    if (pathname.includes(ROUTES.UPLOAD_STL)) {
+     files.length === 0 ? setIsProcessingDisabled(true) : setIsProcessingDisabled(false);
+    } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
+      allFilesCustomized ? setIsProcessingDisabled(false) : setIsProcessingDisabled(true);
+    }else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
+      quoteDataClosed ? setIsProcessingDisabled(false) : setIsProcessingDisabled(true);
+    } 
+    else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
+      addressId === "" ? setIsProcessingDisabled(true) : setIsProcessingDisabled(false);
+    }
+  }, [pathname, files, addressId, quoteDataClosed, allFilesCustomized]);
 
 
   // Check if all files have been customized
@@ -125,11 +143,6 @@ const CardLayout = () => {
 
   const onProceed = useCallback(async () => {
     if (pathname.includes(ROUTES.UPLOAD_STL)) {
-      if (files.length === 0) {
-        toast.warning('Please upload at least one file!');
-        return;
-      }
-
       setIsSaving(true);
       try {
         await uploadFilesByOrderId({
@@ -141,7 +154,6 @@ const CardLayout = () => {
           setIsSaving,
         });
       } catch (error) {
-        console.error('Error uploading files:', error);
         toast.error('Failed to upload files!');
         setIsSaving(false);
       }
@@ -161,16 +173,10 @@ const CardLayout = () => {
         setIsSaving(false);
       }
     } else if (pathname.includes(ROUTES.CUSTOMIZE)) {
-      if (!allFilesCustomized) {
-        toast.warning('Apply specifications to all files before proceeding.');
-        return;
-      }
       clearDB();
       navigate(`/get-quotes/${orderId}/quote`);
     } else if (pathname.includes(`/get-quotes/${orderId}/quote`)) {
-      if(quoteDataClosed) {
         navigate(`/get-quotes/${orderId}/checkout`);
-      }
     } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
      if(addressId === ""){
         toast.warning('Please select a delivery address!');
@@ -181,6 +187,9 @@ const CardLayout = () => {
       handlePayment();
     }
   }, [files, navigate, orderId, pathname, allFilesCustomized, addressId, quoteDataClosed]);
+
+
+  
 
   const renderButton = () => {
     const isCheckoutRoute = pathname === `/get-quotes/${orderId}/checkout`;
@@ -200,7 +209,7 @@ const CardLayout = () => {
               !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
             }
             className={isCheckoutRoute ? 'delivery' : 'proceed'}
-            disabled={isSaving}
+            disabled={isSaving || isProcessingDisbled}
             type={isCheckoutRoute ? "submit" : "button"}
           />
         </span>
