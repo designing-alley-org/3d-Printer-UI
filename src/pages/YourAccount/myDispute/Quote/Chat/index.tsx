@@ -18,9 +18,10 @@ interface Message {
 
 interface IChatProps {
   disputeId: string;
+  orderId: string; 
 }
 
-export default function Chat({ disputeId }: IChatProps) {
+export default function Chat({ disputeId,orderId }: IChatProps) {
   const user = useSelector((state: RootState) => state.user);
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
@@ -28,8 +29,7 @@ export default function Chat({ disputeId }: IChatProps) {
   > | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const defaultUserId = user?.user?._id;
-  const defaultMerchantId = user?.user?._id;
-  
+  const defaultMerchantId = user?.user?._id;  
 
   useEffect(() => {
     const newSocket: Socket = io(import.meta.env.VITE_AWS_URL as string, {
@@ -41,7 +41,7 @@ export default function Chat({ disputeId }: IChatProps) {
 
     newSocket.on('connect', () => {
       console.log('Connected to the server:', newSocket.id);
-      newSocket.emit('joinDispute', defaultUserId, disputeId);
+      newSocket.emit('joinDispute', defaultUserId, disputeId, orderId);
     });
 
     // Only update messages when receiving messages from others
@@ -88,6 +88,7 @@ export default function Chat({ disputeId }: IChatProps) {
         content,
         dispute_id: disputeId,
         sendBy: 'user',
+        orderId: orderId,
       };
 
       // Update local messages state immediately

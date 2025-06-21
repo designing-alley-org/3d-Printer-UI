@@ -110,7 +110,7 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps,dispute_i
         }
       </Box>
       <Box sx={{ height: '90%', width: '100%', mt: '1rem' }}>
-        <Chat disputeId={dispute_id}/>
+        <Chat disputeId={dispute_id} orderId={selectOrderIdProps}/>
       </Box>
     </QuoteBox>
   );

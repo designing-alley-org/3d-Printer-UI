@@ -40,14 +40,14 @@ export default function Chat() {
 
     newSocket.on('connect', () => {
       console.log('Connected to the server:', newSocket.id);
+      console.log("userId", defaultUserId);
       newSocket.emit('joinChat', defaultUserId, orderId);
-      newSocket.emit('joinChat', defaultMerchantId, orderId);
     });
 
     // Only update messages when receiving messages from others
     newSocket.on('receiveMessage', (newMessage: Message) => {
       // Check if the message is from another user
-      if (newMessage.sender !== defaultUserId) {
+      if (newMessage.sendBy=="admin") {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     });
