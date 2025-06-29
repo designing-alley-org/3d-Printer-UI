@@ -1,4 +1,4 @@
-import { Tooltip, Box, Button } from '@mui/material';
+import { Tooltip, Box, Button, useMediaQuery } from '@mui/material';
 import { RotateCcw } from 'lucide-react';
 
 const ReloadButton = () => {
@@ -6,12 +6,14 @@ const ReloadButton = () => {
     window.location.reload();
   };
 
+ const isSmallScreen = useMediaQuery('(max-width:600px)');
+
   return (
-    <Box sx={{
-      display: 'flex',
-      justifyContent: 'center',
-      marginTop: '0.5rem',
-    }}>
+    <Box
+      sx={{
+        marginTop:  '1rem',
+        marginLeft: '1rem',
+      }}>
       <Tooltip title="If you scale file size, then for actual view please reload it">
         <Button 
           variant='outlined' 
@@ -20,7 +22,7 @@ const ReloadButton = () => {
           sx={{ 
             border: '1px solid #ccc',
             borderRadius: '30px',
-            padding: '0.5rem 1rem',
+            padding: isSmallScreen ? '4px 8px' : '0.5rem 1rem',
             backgroundColor: '#f0f0f0',
             color: '#333',
             '&:hover': {
@@ -35,7 +37,7 @@ const ReloadButton = () => {
             },
           }}
         >
-          <RotateCcw size={20} />
+          <RotateCcw size={isSmallScreen ? 16 : 20} />
         </Button>
       </Tooltip>
     </Box>

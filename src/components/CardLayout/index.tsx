@@ -68,7 +68,6 @@ const CardLayout = () => {
   const fileDetails = useSelector((state: any) => state.fileDetails.updateFiles);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const quoteDataClosed = useSelector((state: any) => state.quoteData.quoteClosed);
-  console.log("quoteDataClosed", quoteDataClosed);
   const [isProcessingDisbled, setIsProcessingDisabled] = useState(false);
 
 

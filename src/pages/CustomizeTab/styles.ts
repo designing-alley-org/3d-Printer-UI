@@ -311,21 +311,14 @@ export const Customize = styled.article`
 
   .apply-button {
     position: relative;
-    width: fit-content;
     margin-top: 1rem;
+    height: 2.5rem;
     padding: 0.3rem 2rem;
     background: #0066ff;
     color: #ffffff;
     border-radius: 40px;
     font-size: 1.1rem;
     margin-bottom: -3rem;
-
-    .loader {
-      position: absolute;
-      right: -30px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
   }
 
   @media (max-width: 768px) {
@@ -349,6 +342,7 @@ export const Customize = styled.article`
       position: absolute;
       bottom: -0.5rem;
       left: -0.2rem;
+      height: 1.5rem;
       padding: 0.3rem 0.5rem;
       font-size: 0.46rem;
       margin-bottom: -2rem;
