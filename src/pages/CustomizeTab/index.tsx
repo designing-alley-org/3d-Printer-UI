@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button } from '@mui/material';
+import { Box, Button, useMediaQuery } from '@mui/material';
 import {
   Customize,
   Files,
@@ -63,7 +63,7 @@ const CustomizeTab: React.FC = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   const { updateFiles: fileDetails, activeFileId, files: orderFiles } = useSelector((state: any) => state.fileDetails);
 
@@ -258,11 +258,6 @@ const CustomizeTab: React.FC = () => {
 
   return (
     <Wrapper>
-      {/* <Heading>
-        <h3>Customize your Files</h3>
-        <h4>Edit your files as much as you want</h4>
-      </Heading> */}
-
       <Filescomponent>
         <Files isLoading={isLoading}>
           <span className="header">
@@ -353,7 +348,11 @@ const CustomizeTab: React.FC = () => {
               />
             ))}
           </div>
-          <div className="weight-section">
+          <div className="weight-section"
+            style={{
+             marginBottom: isSmallScreen ? '1rem' : '',
+            }}
+          >
             {dimensions?.weight !== null && dimensions?.weight > 0 && (
               <>
                 <p>Current Weight:</p>
@@ -361,7 +360,11 @@ const CustomizeTab: React.FC = () => {
               </>
             )}
           </div>
-          <Button
+         <Box 
+         sx={{
+          display: 'flex',
+         }}>
+           <Button
             className="apply-button"
             disabled={isApplyButtonDisabled || isLoading}
             onClick={handleApplySelection}
@@ -370,13 +373,18 @@ const CustomizeTab: React.FC = () => {
                 isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
             }}
           >
-            Apply Selection
-            {isLoading && <Loader />}
+           {isLoading ? "Applying..." : "Apply Selection"}
           </Button>
-         {!isApplyButtonDisabled && <Box 
-           >
+         {!isApplyButtonDisabled && 
+         <Box 
+         sx={{
+          position: isSmallScreen ? 'absolute' : '',
+          bottom: isSmallScreen ? '-0.5rem' : '',
+          right: isSmallScreen ? '0rem' : '',
+         }}>
           <ReloadButton/>
           </Box>}
+         </Box>
         </Customize>
       </Filescomponent>
       <ViewerStlModel
