@@ -3,13 +3,18 @@ import { TextField, styled } from '@mui/material';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '25px',
-    height: '2.2rem',
+    minHeight: '18px',
     fontSize: '0.9rem',
     marginTop: '0.5rem',
     border: '1px solid rgba(0, 0, 0, 0.12)',
     '& fieldset': {
       borderColor: 'transparent',
+    },
+    '& .MuiOutlinedInput-input': {
+      padding: '9px 16px',
+      height: 'auto',
     },
     '&:hover': {
       border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -23,12 +28,12 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '&.Mui-focused fieldset': {
       borderColor: 'transparent',
     },
-    '&.Mui-error': {
-      border: '1px solid #d32f2f',
-    },
   },
   [theme.breakpoints.down('sm')]: {
-    '& .MuiOutlinedInput-input, & .MuiInputLabel-outlined': {
+    '& .MuiOutlinedInput-root': {
+      minHeight: '40px',
+    },
+    '& .MuiInputLabel-outlined': {
       fontSize: '0.65rem',
     },
     '& .MuiInputLabel-shrink': {

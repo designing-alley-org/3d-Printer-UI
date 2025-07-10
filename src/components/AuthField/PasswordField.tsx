@@ -6,12 +6,17 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '25px',
-    height: '2.2rem',
+    minHeight: '18px',
     fontSize: '0.9rem',
     marginTop: '0.5rem',
     border: '1px solid rgba(0, 0, 0, 0.12)',
     '& fieldset': {
       borderColor: 'transparent',
+    },
+    '& .MuiOutlinedInput-input': {
+      padding: '8px 16px',
+      paddingRight: '48px', // Extra space for the eye icon
+      height: 'auto',
     },
     '&:hover': {
       border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -30,7 +35,15 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
   },
   [theme.breakpoints.down('sm')]: {
-    '& .MuiOutlinedInput-input, & .MuiInputLabel-outlined': {
+    '& .MuiOutlinedInput-root': {
+      minHeight: '40px',
+    },
+    '& .MuiOutlinedInput-input': {
+      padding: '10px 14px',
+      paddingRight: '44px', // Extra space for the eye icon on small screens
+      fontSize: '0.65rem',
+    },
+    '& .MuiInputLabel-outlined': {
       fontSize: '0.65rem',
     },
     '& .MuiInputLabel-shrink': {
