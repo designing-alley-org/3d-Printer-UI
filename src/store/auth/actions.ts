@@ -12,11 +12,7 @@ export const login =
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-      const res = await toast.promise(
-        api.post('login', { email, password }),
-        { pending: 'Logging in...', success: 'Login successful' }
-      );
-      
+      const res = await api.post('login', { email, password });
       const token = res.data.token;
       localStorage.setItem('token', token);
       const user = res.data;
@@ -24,7 +20,7 @@ export const login =
         type: LOGIN_SUCCESS,
         payload: user,
       });
-      
+      toast.success('Login successful! Welcome back!');
       navigate('/dashboard');
     } catch (error: any) {
       dispatch({
