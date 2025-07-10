@@ -38,10 +38,6 @@ export const register = (username: string, email: string, password: string, navi
             // Error setting up the request
             errorMessage = error.message;
         }
-
-        // Show error message to user
-        toast.error(errorMessage);
-
         // Dispatch failure action with the error message
         dispatch({
             type: REGISTER_FAILURE,
