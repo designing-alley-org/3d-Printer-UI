@@ -159,7 +159,7 @@ const ShippingDetails = () => {
                 />
               </div>
               <span className='address'>
-                <Edit 
+                {/* <Edit 
                   size={isSmallScreen ? 13 : 20} 
                   onClick={(e) => {
                     e.stopPropagation();
@@ -167,7 +167,7 @@ const ShippingDetails = () => {
                   }} 
                   className='edit-icon' 
                   style={{ cursor: 'pointer', color: '#1976d2' }}
-                />
+                /> */}
                 <Typography variant={isSmallScreen ? 'body1' : 'h6'}>{address.personName}</Typography>
                 <Typography variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.phoneNumber}</Typography>
                 <Typography  variant='body2'sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>

@@ -1,3 +1,5 @@
+import api from "../axiosConfig";
+
 // Dummy data for development
 const dummyAddresses = [
   {
@@ -24,27 +26,11 @@ const dummyAddresses = [
   },
 ];
 
-let addressIdCounter = 3;
 
 export const CreateAddressService = async (data: any): Promise<any> => {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Create new address with dummy data
-    const newAddress = {
-      ...data,
-      _id: String(addressIdCounter++),
-    };
-    
-    dummyAddresses.push(newAddress);
-    
-    return {
-      data: {
-        data: newAddress,
-        message: 'Address created successfully'
-      }
-    };
+    const response = await api.post(`/create-address`, data);
+    return response;
   } catch (error) {
     console.error("Error creating address:", error);
     throw error; 
@@ -75,20 +61,13 @@ export const updateAddressService = async (addressId: string, data: any): Promis
 };
 
 export const getAddressService = async (): Promise<any> => {
-  try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    return {
-      data: {
-        data: dummyAddresses,
-        message: 'Addresses fetched successfully'
-      }
-    };
-  } catch (error) {
-    console.error("Error fetching addresses:", error);
-    throw error;
-  }
+    try {
+        const res = await api.get('/get/address');
+        return res;
+    } catch (error) {
+        console.error('Error fetching address:', error);
+        throw error;
+    }
 };
 
 export const deleteAddressService = async (addressId: string): Promise<any> => {
