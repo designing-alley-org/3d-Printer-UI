@@ -18,7 +18,7 @@ import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { createOrder } from '../../store/actions/createOrder';
-import {  toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import TabComponent from '../Tab';
 import { useDispatch } from 'react-redux';
 import { clearDB } from '../../utils/indexedDB';
@@ -178,7 +178,13 @@ const CardLayout = () => {
         navigate(`/get-quotes/${orderId}/checkout`);
     } else if (pathname.includes(`/get-quotes/${orderId}/checkout`)) {
      if(addressId === ""){
-        toast.warning('Please select a delivery address!');
+        toast('Please select a delivery address!', {
+          icon: '⚠️',
+          style: {
+            background: '#FFF3CD',
+            color: '#856404',
+          },
+        });
         return;
      }
       navigate(`/get-quotes/${orderId}/checkout/select-delivery`);

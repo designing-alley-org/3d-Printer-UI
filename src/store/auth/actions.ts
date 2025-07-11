@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from './action_types';
 import { AuthActionTypes } from '../types';
 import api from '../../axiosConfig';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 export const login =
   (email: string, password: string, navigate: (path: string) => void) =>

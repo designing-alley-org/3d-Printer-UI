@@ -1,7 +1,7 @@
 import { FileDown, ChevronDown } from 'lucide-react';
 import './FileActions.css';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 interface FileActionsProps {
   quantity: number;

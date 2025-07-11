@@ -12,7 +12,7 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { returnRequestService } from '../../../services/fedex';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 interface ImagePreview {
     file: File;

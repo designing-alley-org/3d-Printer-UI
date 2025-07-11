@@ -3,7 +3,7 @@ import Pagin from "../../components/Paging/Pagin";
 import { NotificationCard } from "./NotificationCard";
 import { useNavigate } from "react-router-dom";
 import { getOngoingOrder } from "../../store/actions/getOngoingOrder";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { OngoingOrderWrapper } from "./styles";
 import { formatDateTime, formatOrderStatus } from "../../utils/Validation";

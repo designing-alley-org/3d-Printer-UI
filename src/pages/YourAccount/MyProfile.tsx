@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { updateUser, User } from '../../store/actions/updateUser';
 import { MainWrap, ProfileWrapper } from './styles';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { addUserDetails } from '../../store/user/reducer';
 import { useDispatch } from 'react-redux';
 import PhoneInput from '../../components/Account/PhoneNumber';
@@ -43,8 +43,9 @@ const MyProfile = () => {
       const res = await toast.promise(
         updateUser(updateData),
         {
-          pending: 'Updating...',
+          loading: 'Updating...',
           success: `${field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')} updated successfully`,
+          error: 'Failed to update profile'
         },
       );
       

@@ -1,4 +1,4 @@
-import { getAddressService } from "../../services/order";
+import { getAddressService } from "../../services/address";
 
 const getAddress = async () => {
    try {

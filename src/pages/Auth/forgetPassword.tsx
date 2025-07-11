@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, Button, Container, Typography, Paper, useMediaQuery, Alert } from '@mui/material';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { ROUTES } from '../../routes/routes-constants';
 import { sendPasswordResetService } from '../../services/user';
 import { Formik, Form } from 'formik';

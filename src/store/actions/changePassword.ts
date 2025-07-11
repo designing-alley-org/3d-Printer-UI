@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { resetPasswordService } from "../../services/user";
 
 export const changePassword = async (newPassword: string, token: string) => {

@@ -30,9 +30,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '&.Mui-focused fieldset': {
       borderColor: 'transparent',
     },
-    '&.Mui-error': {
-      border: '1px solid #d32f2f',
-    },
   },
   [theme.breakpoints.down('sm')]: {
     '& .MuiOutlinedInput-root': {

@@ -1,32 +1,27 @@
 import { Typography, useMediaQuery } from '@mui/material';
-import Input from '../../../stories/StandardInput/Input';
+import FormikInput from '../../../stories/StandardInput/FormikInput';
 import { InputWrapper, SubHeader, Wrapper } from './style';
-import {  cross, inputFields } from '../../../constants';
-import { set, useForm } from 'react-hook-form';
+import { cross, inputFields } from '../../../constants';
 import { useParams } from 'react-router-dom';
 import { createAddress } from '../../../store/actions/createAddress';
 import Button from '../../../stories/button/Button';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 import { getAddress } from '../../../store/actions/getAddress';
-import { toast } from 'react-toastify';
-import {  Trash } from 'lucide-react';
-import { deleteAddress } from '../../../store/actions/deleteAddress';
+import toast from 'react-hot-toast';
+import { Edit } from 'lucide-react';
+import { updateAddressService } from '../../../services/address';
+import { Formik, Form } from 'formik';
+import { addressValidationSchema } from '../../../validation';
 
 const ShippingDetails = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset
-  } = useForm();
-  
   const { orderId } = useParams();
   const dispatch = useDispatch();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-  const { addressData, addressId, isCreateAddress,deleteAddressRedux } = useSelector((state: any) => state.address);
+  const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
+  const [editingAddress, setEditingAddress] = useState<any>(null);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -47,66 +42,73 @@ const ShippingDetails = () => {
     fetchAddress();
   }, [dispatch, isCreateAddress]);
 
-  const handleAddress = async (data: any) => {
+  const getInitialValues = () => {
+    if (editingAddress) {
+      return {
+        personName: editingAddress.personName || '',
+        streetLines: editingAddress.streetLines || '',
+        city: editingAddress.city || '',
+        countryCode: editingAddress.countryCode || '',
+        postalCode: editingAddress.postalCode || '',
+        phoneNumber: editingAddress.phoneNumber || '',
+        email: editingAddress.email || '',
+        state: editingAddress.state || '',
+      };
+    }
+    return {
+      personName: '',
+      streetLines: '',
+      city: '',
+      countryCode: '',
+      postalCode: '',
+      phoneNumber: '',
+      email: '',
+      state: '',
+    };
+  };
+
+  const handleSubmitAddress = async (values: any, { resetForm }: any) => {
     try {
-      const { phoneNumber, countryCode, postalCode } = data;
-      if (phoneNumber) {
-        const cleanedNumber = phoneNumber.replace(/\D/g, '');
-        if (cleanedNumber.length === 10) {
-          data.phoneNumber = cleanedNumber;
-        } else {
-          toast.error('Phone number must be exactly 10 digits');
-          return;
-        }
-      }
-     
+      const cleanedValues = {
+        ...values,
+        phoneNumber: values.phoneNumber.replace(/\D/g, ''),
+        postalCode: values.postalCode.trim().toUpperCase(),
+        countryCode: values.countryCode.trim().toUpperCase(),
+      };
 
-      if (postalCode) {
-        const ukPostcodeRegex = /^(GIR 0AA|[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2})$/i;
-        const cleanedCode = postalCode.trim().toUpperCase();
-      
-        if (ukPostcodeRegex.test(cleanedCode)) {
-          data.postalCode = cleanedCode;
-          console.log('Postal code is valid:', cleanedCode);
-        } else {
-          toast.error('Enter a valid UK postal code');
-          return;
-        }
-      }
-
-      if(countryCode) {
-        const cleanedCode = countryCode.trim().toUpperCase();
-        const countryCodeRegex = /^[A-Z]{2}$/;
-        if (countryCodeRegex.test(cleanedCode)) {
-          data.countryCode = cleanedCode;
-        } else {
-          toast.error('Enter a valid country code');
-          return;
-        }
+      if (editingAddress) {
+        // Update existing address
+        await updateAddressService(editingAddress._id, cleanedValues);
+        toast.success('Address updated successfully');
+        setEditingAddress(null);
+      } else {
+        // Create new address
+        await createAddress({ ...cleanedValues, orderId });
+        toast.success('Address created successfully');
       }
       
-      const response = await createAddress(data);
       dispatch(toggleCreateAddress());
-      toast.success('Address created successfully');
-      reset();
+      resetForm();
+      
+      // Refresh address list
+      const response = await getAddress();
+      if (response?.data?.data) {
+        dispatch(addAddress(response.data.data));
+      }
     } catch (error) {
-      toast.error('Failed to create address');
-      console.error('Failed to create address:', error);
+      toast.error(editingAddress ? 'Failed to update address' : 'Failed to create address');
+      console.error('Failed to handle address:', error);
     }
   };
 
-  const handelDeleteAddress = async (addressId: string) => {
-    try {
-       await deleteAddress(addressId);
-       const response = await getAddress();
-          if (response?.data?.data) {
-            dispatch(addAddress(response.data.data));
-          }
-      toast.success('Address deleted successfully');
-    } catch (error) {
-      toast.error('Failed to delete address');
-      console.error('Failed to delete address:', error);
-    }
+  const handleEditAddress = (address: any) => {
+    setEditingAddress(address);
+    dispatch(toggleCreateAddress());
+  };
+
+  const handleCancelEdit = () => {
+    setEditingAddress(null);
+    dispatch(toggleCreateAddress());
   };
 
   return (
@@ -115,25 +117,25 @@ const ShippingDetails = () => {
         <Typography variant={isSmallScreen ? 'body1' : 'h1'}>Shipping Details</Typography>
         <span>
           <Button
-            label={!isCreateAddress ? "Create New" : "Save "}
+            label={!isCreateAddress ? "Create New" : editingAddress ? "Update" : "Save"}
             className='create-new-add'
             onClick={!isCreateAddress ? 
               () => dispatch(toggleCreateAddress()) : 
-              handleSubmit(handleAddress)
+              () => document.getElementById('address-form')?.dispatchEvent(new Event('submit', { bubbles: true }))
             }
           />
           {isCreateAddress && (
             <ButtonIcon
               svgPath={cross}
               className='cross-btn'
-              onClick={() => dispatch(toggleCreateAddress())}
+              onClick={handleCancelEdit}
             />
           )}
         </span>
       </div>
       
       <SubHeader>
-        {!isCreateAddress ? "Please Select" : " Please Enter"} Your Delivery Address
+        {!isCreateAddress ? "Please Select" : editingAddress ? "Please Update" : "Please Enter"} Your Delivery Address
       </SubHeader>
       
       {!isCreateAddress && (
@@ -157,7 +159,15 @@ const ShippingDetails = () => {
                 />
               </div>
               <span className='address'>
-                <Trash size={isSmallScreen ? 13 : 20} onClick={() => {handelDeleteAddress(address._id)}} className='delete-icon' />
+                {/* <Edit 
+                  size={isSmallScreen ? 13 : 20} 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditAddress(address);
+                  }} 
+                  className='edit-icon' 
+                  style={{ cursor: 'pointer', color: '#1976d2' }}
+                /> */}
                 <Typography variant={isSmallScreen ? 'body1' : 'h6'}>{address.personName}</Typography>
                 <Typography variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.phoneNumber}</Typography>
                 <Typography  variant='body2'sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>
@@ -172,26 +182,32 @@ const ShippingDetails = () => {
       )}
 
       {isCreateAddress && (
-        <form
-          id='shipping-form'
-          onSubmit={handleSubmit((data: any) => {
-            handleAddress({ ...data, orderId });
-          })}
+        <Formik
+          initialValues={getInitialValues()}
+          validationSchema={addressValidationSchema}
+          onSubmit={handleSubmitAddress}
+          enableReinitialize={true}
         >
-          <InputWrapper>
-            {inputFields.map((inputField, index) => (
-              <Input
-                key={index}
-                label={inputField.label}
-                name={inputField.name}
-                type={inputField.type}
-                placeholder={inputField.placeholder}
-                register={register}
-                errors={errors}
-              />
-            ))}
-          </InputWrapper>
-        </form>
+          {({ values, errors, touched, handleChange, handleBlur }) => (
+            <Form id="address-form">
+              <InputWrapper>
+                {inputFields.map((inputField, index) => (
+                  <FormikInput
+                    key={index}
+                    label={inputField.label}
+                    name={inputField.name}
+                    type={inputField.type}
+                    placeholder={inputField.placeholder}
+                    value={values[inputField.name as keyof typeof values]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched[inputField.name as keyof typeof touched] && errors[inputField.name as keyof typeof errors] ? String(errors[inputField.name as keyof typeof errors]) : undefined}
+                  />
+                ))}
+              </InputWrapper>
+            </Form>
+          )}
+        </Formik>
       )}
     </Wrapper>
   );

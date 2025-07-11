@@ -1,12 +1,16 @@
 import { BrowserRouter } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import Routing from './routes/Routing';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <ToastContainer autoClose={1000} hideProgressBar/>
+      <Toaster 
+      toastOptions={{
+          style: { fontSize: '0.7rem' }, // Reduced font size
+      }}
+      />
       <Routing />
     </BrowserRouter>
   );

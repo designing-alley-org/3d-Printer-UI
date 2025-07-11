@@ -3,7 +3,7 @@ import { RegisterActionTypes } from "../types";
 import { REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./action_types";
 import api from "../../axiosConfig";
 import { NavigateFunction } from "react-router-dom";  
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export const register = (username: string, email: string, password: string, navigate: NavigateFunction) => async (dispatch: Dispatch<RegisterActionTypes>) => {
     dispatch({ type: REGISTER_REQUEST });
