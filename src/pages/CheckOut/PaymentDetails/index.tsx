@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Modal, CircularProgress, useMediaQuery } from '@mui/material';
 import Button from '../../../stories/button/Button';
-import Input from '../../../stories/StandardInput/Input';
 import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import { toast } from 'react-toastify';
@@ -60,32 +59,31 @@ const PaymentDetails: React.FC = () => {
   const dispatch = useDispatch();
 
   // Redux state
-  const { deliveryData, selectedServiceType } = useSelector((state: any) => state.delivery);
+  const { deliveryData, selectedServiceType } = useSelector(
+    (state: any) => state.delivery
+  );
   const [showDeliveryData, setShowDeliveryData] = useState([]);
-  const { addressData, addressId } = useSelector((state: {
-    address: {
-      addressData: AddressData[];
-      addressId: string;
-    }
-  }) => state.address);
+  const { addressData, addressId } = useSelector(
+    (state: {
+      address: {
+        addressData: AddressData[];
+        addressId: string;
+      };
+    }) => state.address
+  );
 
-
-  
   // Filter delivery data
   useEffect(() => {
     if (!deliveryData || !selectedServiceType) {
       toast.error('Please select a delivery plan');
       navigate(`/get-quotes/${orderId}/checkout`);
       return;
-    };
-    const filteredData = deliveryData.find((data: any) => data.serviceType === selectedServiceType);
+    }
+    const filteredData = deliveryData.find(
+      (data: any) => data.serviceType === selectedServiceType
+    );
     setShowDeliveryData(filteredData?.ratedShipmentDetails ?? [{}]);
   }, [deliveryData, selectedServiceType]);
-
-
-
-
-
 
   // Effects
   useEffect(() => {
@@ -96,7 +94,9 @@ const PaymentDetails: React.FC = () => {
         setError(null);
         await getAllQuotes(setQuoteData, orderId);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch quote data');
+        setError(
+          err instanceof Error ? err.message : 'Failed to fetch quote data'
+        );
         console.error('Error fetching quote data:', err);
       } finally {
         setIsLoading(false);
@@ -106,8 +106,6 @@ const PaymentDetails: React.FC = () => {
     void fetchQuoteData();
   }, [orderId]);
 
-  
-
   // Calculate totals
   const taxAmount = (quoteData.totalPrice * quoteData.tax) / 100;
   const totalAmount = quoteData.totalPrice + taxAmount;
@@ -115,7 +113,12 @@ const PaymentDetails: React.FC = () => {
   // Loading state
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="400px"
+      >
         <CircularProgress />
       </Box>
     );
@@ -137,29 +140,35 @@ const PaymentDetails: React.FC = () => {
       <header>
         <div className="orderNo">Order No: {orderId}</div>
         <h1>Payment</h1>
-        <h3 className="desc">Please check the details to proceed for payment</h3>
+        <h3 className="desc">
+          Please check the details to proceed for payment
+        </h3>
       </header>
 
       <Body>
         {/* Files Section */}
         <div className="files">
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: isSmallScreen ? '0.5rem' : '1rem',
-          }}>
-            <h2>Files</h2>
-            <Box sx={{
-              height: isSmallScreen ? 24 : 30,
-              width: isSmallScreen ? 24 : 30,
-              backgroundColor: '#66A3FF',
-              borderRadius: '50%',
+          <Box
+            sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-            }}>
+              justifyContent: 'space-between',
+              marginBottom: isSmallScreen ? '0.5rem' : '1rem',
+            }}
+          >
+            <h2>Files</h2>
+            <Box
+              sx={{
+                height: isSmallScreen ? 24 : 30,
+                width: isSmallScreen ? 24 : 30,
+                backgroundColor: '#66A3FF',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+              }}
+            >
               {quoteData.files.length}
             </Box>
           </Box>
@@ -200,11 +209,14 @@ const PaymentDetails: React.FC = () => {
 
           {/* Add Another Address */}
           <div className="Another">
-            <HouseIcon style={{ marginRight: '1rem', borderRadius: '50%' }} size={20}/>
-            <span onClick={() => navigate(`/get-quotes/${orderId}/checkout`)}>Change  Address</span>
+            <HouseIcon
+              style={{ marginRight: '1rem', borderRadius: '50%' }}
+              size={20}
+            />
+            <span onClick={() => navigate(`/get-quotes/${orderId}/checkout`)}>
+              Change Address
+            </span>
           </div>
-
-        
 
           {/* Delivery Details */}
           <DeliveryDetails>
@@ -220,36 +232,46 @@ const PaymentDetails: React.FC = () => {
 
         {/* Billing Details */}
         <div className="details">
-  <h4>Billing Details</h4>
-  <Price>
-    <div>
-      <span className="priceDetail">
-        <span>Price</span>
-        <span className="price">${quoteData.totalPrice.toFixed(2)}</span>
-      </span>
-      <span className="priceDetail">
-        <span>Delivery Price</span>
-        <span className="price">${showDeliveryData?.[0]?.totalNetCharge}</span>
-      </span>
-      <span className="priceDetail">
-        <span>Taxes</span>
-        <span className="price">${(quoteData?.tax.toFixed(2)*quoteData.totalPrice.toFixed(2))/100}</span>
-      </span>
-    </div>
-    <div>
-      <span className="priceDetail">
-        <span className="total">Total</span>
-        <span className="price">
-          ${(
-            Number(quoteData.totalPrice) + 
-            Number(showDeliveryData?.[0]?.totalNetCharge || 0) + 
-            Number(quoteData?.tax)*quoteData.totalPrice/100
-          ).toFixed(2)}
-        </span>
-      </span>
-    </div>
-  </Price>
-</div>
+          <h4>Billing Details</h4>
+          <Price>
+            <div>
+              <span className="priceDetail">
+                <span>Price</span>
+                <span className="price">
+                  ${quoteData.totalPrice.toFixed(2)}
+                </span>
+              </span>
+              <span className="priceDetail">
+                <span>Delivery Price</span>
+                <span className="price">
+                  ${showDeliveryData?.[0]?.totalNetCharge}
+                </span>
+              </span>
+              <span className="priceDetail">
+                <span>Taxes</span>
+                <span className="price">
+                  $
+                  {(quoteData?.tax.toFixed(2) *
+                    quoteData.totalPrice.toFixed(2)) /
+                    100}
+                </span>
+              </span>
+            </div>
+            <div>
+              <span className="priceDetail">
+                <span className="total">Total</span>
+                <span className="price">
+                  $
+                  {(
+                    Number(quoteData.totalPrice) +
+                    Number(showDeliveryData?.[0]?.totalNetCharge || 0) +
+                    (Number(quoteData?.tax) * quoteData.totalPrice) / 100
+                  ).toFixed(2)}
+                </span>
+              </span>
+            </div>
+          </Price>
+        </div>
       </Body>
     </Wrapper>
   );

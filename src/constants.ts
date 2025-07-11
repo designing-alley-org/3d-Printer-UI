@@ -93,7 +93,7 @@ export const accTab = [
   { id: 3, label: 'MY DISPUTE', path: ROUTES.MY_DISPUTE },
   { id: 4, label: 'PLACE ORDER', path: ROUTES.PLACE_ORDER },
   { id: 5, label: 'PASSWORD', path: ROUTES.PASSWORD },
-  { id: 6, label: 'SETTINGS', path: ROUTES.ACCOUNT_SETTINGS },
+  // { id: 6, label: 'SETTINGS', path: ROUTES.ACCOUNT_SETTINGS },
 ];
 
 export const notificationTab = [
@@ -193,6 +193,12 @@ export const inputFields = [
     name: 'email',
     type: 'email',
     placeholder: 'Enter your email',
+  },
+  {
+    label: 'State',
+    name: 'state',
+    type: 'text',
+    placeholder: 'Enter your state',
   },
 ];
 export const scaleFields = [
