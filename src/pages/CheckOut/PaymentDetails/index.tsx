@@ -5,7 +5,7 @@ import { Box, Modal, CircularProgress, useMediaQuery } from '@mui/material';
 import Button from '../../../stories/button/Button';
 import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { HouseIcon } from 'lucide-react';
 
 // Types

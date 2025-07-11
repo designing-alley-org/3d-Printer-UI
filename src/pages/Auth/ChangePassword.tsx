@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import { Box, Button,  Container, TextField,  Paper, styled, useMediaQuery, Typography } from '@mui/material';
 import { ROUTES } from '../../routes/routes-constants';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { changePassword } from '../../store/actions/changePassword';
 import { validatePassword } from '../../utils/Validation';
 

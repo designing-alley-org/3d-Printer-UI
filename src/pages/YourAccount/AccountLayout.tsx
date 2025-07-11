@@ -4,7 +4,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import Button from '../../stories/button/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
 import api from '../../axiosConfig';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 import { useCallback } from 'react';
@@ -20,7 +20,9 @@ const AccountLayout = () => {
   const handleLogout = useCallback(async () => {
     try {
       await toast.promise(api.get('/logout'), {
-        pending: 'Logging out...',
+        loading: 'Logging out...',
+        success: 'Logged out successfully',
+        error: 'Logout failed'
       });
       localStorage.removeItem('token');
       window.location.href = '/login';

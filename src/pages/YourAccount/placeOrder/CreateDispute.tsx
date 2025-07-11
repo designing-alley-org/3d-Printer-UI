@@ -3,7 +3,7 @@ import { InputField } from '../../../stories/Input/InputField';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
 import Button from '../../../stories/button/Button';
 import { createDispute } from '../../../store/actions/CreateDispute';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { CreateDisputeWrapper } from './style';
 
 interface DisputeForm {

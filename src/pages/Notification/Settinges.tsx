@@ -5,7 +5,7 @@ import { updateNotificationServicer } from '../../store/actions/updateNotificati
 import { useEffect } from 'react';
 import { getNotificationPreferences } from '../../store/actions/getNotificationPreferences';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 const Settinges = () => {
   
   const [notificationPreferences,setNotificationPreferences] = useState<any>([]);
@@ -20,8 +20,9 @@ const Settinges = () => {
     try {
       const res =  updateNotificationServicer(category, true, selectedFrequency);
       await toast.promise(res, {
-        pending: `Updating notification for ${category}`,
+        loading: `Updating notification for ${category}`,
         success: ` Updated  for ${category}`,
+        error: `Failed to update notification for ${category}`
       });
     } catch (error) {
       toast.error(`Failed to update notification for ${category}`);

@@ -13,7 +13,7 @@ import {
   addDeliveryData,
   selectDeliveryPlan,
 } from '../../../store/Address/deliveryDetails';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import Carousel from 'react-multi-carousel';
 // Types
 interface Rate {
@@ -166,7 +166,13 @@ const DeliveryPlan: React.FC = () => {
   // Handlers
   const handleProceed = async () => {
     if (selectedPlanIndex === -1) {
-      toast.warning('Please select a delivery plan');
+      toast('Please select a delivery plan', {
+        icon: '⚠️',
+        style: {
+          background: '#FFF3CD',
+          color: '#856404',
+        },
+      });
       setError('Please select a delivery plan');
       return;
     }

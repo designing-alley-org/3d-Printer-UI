@@ -10,7 +10,7 @@ import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 import { getAddress } from '../../../store/actions/getAddress';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { Edit } from 'lucide-react';
 import { updateAddressService } from '../../../services/address';
 import { Formik, Form } from 'formik';

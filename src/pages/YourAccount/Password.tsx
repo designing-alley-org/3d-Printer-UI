@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PasswordWrapper } from './styles';
 import { InputField } from '../../stories/Input/InputField';
 import Button from '../../stories/button/Button';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { updatePassword } from '../../store/actions/updatePassword';
 import { validatePassword } from '../../utils/Validation';
 
@@ -62,7 +62,11 @@ const Password = () => {
             setLoading(true);
             const { old_password, new_password } = form;
             const response =  updatePassword(old_password, new_password);
-            await toast.promise(response, { pending: 'Updating...', success: 'Password updated successfully' });
+            await toast.promise(response, { 
+                loading: 'Updating...', 
+                success: 'Password updated successfully',
+                error: 'Failed to update password'
+            });
             setForm({ old_password: '', new_password: '', confirmPassword: '' });
             setLoading(false);
         } catch (error:any) {

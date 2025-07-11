@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { sendPasswordResetService } from "../../services/user";
 
 export const sendResetLink = async (email: string) => {
