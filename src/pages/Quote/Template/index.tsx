@@ -478,6 +478,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                     label={'Negotiate'}
                     onClick={() => setShowNegotiate(!showNegotiate)}
                     className='negotiate-btn'
+                    style={{ width: isSmallScreen ? '6rem' : '8rem' }}
                   />
                 </span>
               </Box>
