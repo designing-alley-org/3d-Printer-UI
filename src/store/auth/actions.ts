@@ -21,7 +21,7 @@ export const login =
         payload: user,
       });
       toast.success('Login successful! Welcome back!');
-      navigate('/dashboard');
+      navigate('/get-quotes');
     } catch (error: any) {
       dispatch({
         type: LOGIN_FAILURE,
