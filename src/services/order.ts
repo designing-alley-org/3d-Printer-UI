@@ -197,6 +197,16 @@ const getAllQuotesService = async (orderId: string): Promise<any> => {
     }
 }
 
+const isOrderQuoteClosedService = async (orderId: string): Promise<boolean> => {
+    try {
+        const response = await api.get(`/is-order-quote-closed/${orderId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error checking if order quote is closed:', error);
+        throw error;
+    }
+}
+
 const getAddressService = async () => {
     try {
         const res = await api.get('/get/address');
@@ -220,6 +230,6 @@ const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => 
 
 
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService };
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService };
 
 
