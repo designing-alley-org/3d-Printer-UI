@@ -9,7 +9,7 @@ import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 import { Box, useMediaQuery } from '@mui/material';
-import Button from '../../stories/button/Button';
+import MUIButton from '../../stories/MUIButton/Button';
 import { LogOut } from 'lucide-react';
 
 const MyProfile = () => {
@@ -96,10 +96,14 @@ const MyProfile = () => {
             isEditing={!!editState.phone_no}
           />
           {isSmallScreen && (
-            <Box sx={{ display: 'flex', justifyContent: 'right', marginTop: '3rem' }}>
-             <Button onClick={handleLogout} className='logout_btn'>
-              <LogOut size={'17'} style={{ transform: 'rotate(180deg)' }}/>
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'right', marginTop: '2.5rem' }}>
+            <MUIButton
+              label="Logout"
+              icon={<LogOut size={15} />}
+              btnVariant="dark"
+              onClick={handleLogout}
+              size='small'
+            />
             </Box>
           )}
         </MainWrap>

@@ -13,7 +13,6 @@ const QuoteCard = () => {
         <Typography sx={styles.instantQuoteText}>
           Get Instant live quotes from our merchants!
         </Typography>
-
         <Box sx={styles.cardBox}>
           {cardItems.map((item) => (
             <Card

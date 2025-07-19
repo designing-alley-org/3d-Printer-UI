@@ -1,48 +1,72 @@
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface IAppThemeProvider {
   children: ReactNode;
 }
 
-function AppThemeProvider(props: IAppThemeProvider) {
-  const { children } = props;
+const AppThemeProvider = ({ children }: IAppThemeProvider) => {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#8638a0',
+        main: '#1E65F5',
       },
       secondary: {
-        main: '#8638a00d',
+        main: '#0f60d9ff',
       },
-      background: {},
+      background: {
+        default: '#ffffff',
+        paper: '#f9f9f9',
+      },
     },
     typography: {
-      fontFamily: ' "Michroma", sans-serif',
+      fontFamily: '"Roboto", sans-serif',
       subtitle1: {
         fontSize: '1.375rem',
+        textTransform: 'none',
       },
       subtitle2: {
         fontSize: '1.25rem',
+        textTransform: 'none',
       },
       body1: {
         fontSize: '1rem',
+        textTransform: 'none',
       },
       h1: {
         fontSize: '1.5rem',
-        [`@media screen and (max-width: 540px)`]: {
+        fontWeight: 500,
+        textTransform: 'none',
+        '@media screen and (max-width: 540px)': {
           fontSize: '1.75rem',
         },
-        fontWeight: 500,
       },
-      h2:{
+      h2: {
         fontSize: '2rem',
         fontWeight: 400,
-      }
+        textTransform: 'none',
+      },
+    },
+    shape: {
+      borderRadius: 999,
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none',
+          },
+        },
+      },
     },
   });
 
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
-}
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
+  );
+};
 
 export default AppThemeProvider;

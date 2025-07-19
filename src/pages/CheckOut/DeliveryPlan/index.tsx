@@ -1,10 +1,14 @@
-import { Box, Typography, CircularProgress, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  useMediaQuery,
+} from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from './Card';
 import { ButtonWrap, CardBox } from './styles';
-import Button from '../../../stories/button/Button';
 import api from '../../../axiosConfig';
 import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
 import { RootState } from '../../../store/types';
@@ -15,14 +19,13 @@ import {
 } from '../../../store/Address/deliveryDetails';
 import toast from 'react-hot-toast';
 import Carousel from 'react-multi-carousel';
+import MUIButton from '../../../stories/MUIButton/Button';
 // Types
 interface Rate {
   serviceName: string;
   serviceType: string;
   packagingType: string;
-  ratedShipmentDetails: Array<{
-    totalNetCharge: number;
-  }>;
+  ratedShipmentDetails: Array<{ totalNetCharge: number }>;
 }
 
 interface DeliveryData {
@@ -38,9 +41,7 @@ interface ApiError {
 
 interface OrderFile {
   quantity: number;
-  dimensions: {
-    weight: number;
-  };
+  dimensions: { weight: number };
 }
 
 interface Order {
@@ -49,24 +50,11 @@ interface Order {
 
 // Define the responsive breakpoints for the carousel
 const responsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 3,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 2,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
+  superLargeDesktop: { breakpoint: { max: 4000, min: 3000 }, items: 3 },
+  desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3 },
+  tablet: { breakpoint: { max: 1024, min: 464 }, items: 2 },
+  mobile: { breakpoint: { max: 464, min: 0 }, items: 1 },
 };
-
 
 //
 const DeliveryPlan: React.FC = () => {
@@ -99,7 +87,6 @@ const DeliveryPlan: React.FC = () => {
 
   const totalWeight = order ? calculateTotalWeight(order) : 0;
 
-
   // Fetch order data
   useEffect(() => {
     const fetchOrder = async () => {
@@ -130,12 +117,7 @@ const DeliveryPlan: React.FC = () => {
 
       if (!order) return;
 
-      
-      const DELIVERY_PAYLOAD = {
-        addressId,
-        units: 'KG',
-        value: totalWeight,
-      };
+      const DELIVERY_PAYLOAD = { addressId, units: 'KG', value: totalWeight };
 
       try {
         setIsLoading(true);
@@ -168,10 +150,7 @@ const DeliveryPlan: React.FC = () => {
     if (selectedPlanIndex === -1) {
       toast('Please select a delivery plan', {
         icon: '⚠️',
-        style: {
-          background: '#FFF3CD',
-          color: '#856404',
-        },
+        style: { background: '#FFF3CD', color: '#856404' },
       });
       setError('Please select a delivery plan');
       return;
@@ -181,21 +160,16 @@ const DeliveryPlan: React.FC = () => {
       setIsLoading(true);
       dispatch(selectDeliveryPlan(selectedPlanName));
       const data = {
-          delivery_service: {
+        delivery_service: {
           service_type: selectedPlanName,
-          service_price: deliveryData?.rates?.[selectedPlanIndex]?.ratedShipmentDetails[0]?.totalNetCharge || 0,
-          total_weight: {
-            weight: totalWeight || 0,
-            unit: 'KG',
-      },
+          service_price:
+            deliveryData?.rates?.[selectedPlanIndex]?.ratedShipmentDetails[0]
+              ?.totalNetCharge || 0,
+          total_weight: { weight: totalWeight || 0, unit: 'KG' },
         },
         address: addressId,
       };
-      await updateUserOrderByOrderId(
-        orderId as string,
-        navigate,
-        data
-      );
+      await updateUserOrderByOrderId(orderId as string, navigate, data);
     } catch (err) {
       const error = err as ApiError;
       setError(error.message || 'Failed to update order');
@@ -227,10 +201,10 @@ const DeliveryPlan: React.FC = () => {
         <Typography color="error" variant="h6">
           {error}
         </Typography>
-        <Button
+        <MUIButton
           label="Try Again"
           onClick={() => window.location.reload()}
-          sx={{ marginTop: '1rem' }}
+          style={{ marginTop: '1rem' }}
         />
       </Box>
     );
@@ -239,43 +213,44 @@ const DeliveryPlan: React.FC = () => {
   // Render main content
   return (
     <Box sx={{ padding: '0 1rem' }}>
-      <Typography variant={isSmallScreen ? 'body1':'h1'} sx={{ color: '#001047', marginBottom: '2rem' }}>
+      <Typography
+        variant={isSmallScreen ? 'body1' : 'h1'}
+        sx={{ color: '#001047', marginBottom: '2rem' }}
+      >
         Select Delivery Plan
       </Typography>
-       <CardBox>
+      <CardBox>
         <div className="cards">
-        <Carousel 
-          responsive={responsive} 
-          infinite={false} 
-          autoPlay={false} 
-        >
-        {deliveryData?.rates?.map((plan, index) => (
-          <Card
-            key={`delivery-plan-${index}`}
-            deliveryName={plan.serviceName}
-            deliveryTime={plan.serviceType}
-            deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
-            packaging={plan.packagingType}
-            active={selectedPlanIndex}
-            setActive={setSelectedPlanIndex}
-            name={selectedPlanName}
-            setName={setSelectedPlanName}
-            index={index}
-          />
-        ))}
-      </Carousel>
-      </div>
+          <Carousel responsive={responsive} infinite={false} autoPlay={false}>
+            {deliveryData?.rates?.map((plan, index) => (
+              <Card
+                key={`delivery-plan-${index}`}
+                deliveryName={plan.serviceName}
+                deliveryTime={plan.serviceType}
+                deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
+                packaging={plan.packagingType}
+                active={selectedPlanIndex}
+                setActive={setSelectedPlanIndex}
+                name={selectedPlanName}
+                setName={setSelectedPlanName}
+                index={index}
+              />
+            ))}
+          </Carousel>
+        </div>
       </CardBox>
       <ButtonWrap>
-        <div className="btn"> 
-          <span className="proc">
-            <Button
-              label="Proceed"
-              onClick={handleProceed}
-              disabled={selectedPlanIndex === -1 || isLoading}
-            />
-          </span>
-        </div>
+        <MUIButton
+          label="Proceed"
+          onClick={handleProceed}
+          disabled={selectedPlanIndex === -1 || isLoading}
+          size="large"
+          style={{
+            width: isSmallScreen ? '100%' : 'auto',
+            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.7rem 2.8rem',
+            fontSize: isSmallScreen ? '0.9rem' : '1rem',
+          }}
+        />
       </ButtonWrap>
     </Box>
   );

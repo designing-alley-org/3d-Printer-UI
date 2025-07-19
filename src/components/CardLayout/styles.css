@@ -4,7 +4,7 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  border-radius: 0px 0px 40px 0px;
+  border-radius: 0px 0px 40px 40px;
 
   @media (max-width: 767px) {
     padding: 1rem;
@@ -43,115 +43,8 @@
 .cardLayout {
   margin-top: 4rem;
   padding-bottom: 2rem;
-  .btn {
-    display: flex;
-    justify-content: space-between;
-    > div {
-      background-color: white;
-      width: 77%;
-      height: 4rem;
-      border-bottom-right-radius: 4rem;
-      border-bottom-left-radius: 2rem;
-      display: flex;
-      justify-content: end;
-      &::after {
-        content: '';
-        position: absolute;
-        margin-right: -4.7rem;
-        background-color: transparent;
-        width: 5.25rem;
-        height: 2.5rem;
-        rotate: 180deg;
-        border-bottom-right-radius: 8.25rem;
-        box-shadow: 0.813rem 0.4rem 0 0 #fff;
-      }
-    }
-    .proc {
-      padding: 1rem;
-      button {
-        background-color: #1e6fff;
-        border-radius: 40px;
-        margin-right: unset;
-      }
-      .delivery {
-        padding: 0.9rem 3rem;
-      }
-      .proceed {
-        padding: 0.9rem 7rem;
-      }
-    }
   }
 
-  @media (max-width: 767px) {
-    .btn {
-      > div {
-        width: 45%;
-        height: 3rem;
-        border-bottom-right-radius: 2.5rem;
-        border-bottom-left-radius: 2rem;
-        position: relative;
-        &::after {
-          content: '';
-          position: absolute;
-          margin-right: -4.3rem;
-          background-color: transparent;
-          left:10.4rem;
-          top: -.2rem;
-          width: 4rem;
-          height: 2.5rem;
-          rotate: 183deg;
-          border-bottom-right-radius: 8.25rem;
-          box-shadow: 0.813rem 0.4rem 0 0 hsl(0, 0%, 100%);
-        }
-      }
-      .proc {
-        padding: 0.5rem;
-        button {
-          background-color: #1e6fff;
-          border-radius: 40px;
-          width: 100%;
-        }
-        .delivery {
-          padding: 0.7rem 1rem;
-          font-size: small;
-        }
-        .proceed {
-          padding: 0.7rem 2.8rem;
-        }
-      }
-    }
 
-    @media screen and (max-width: 430px) {
-      .btn {
-        > div {
-          &::after {
-            left:11.1rem;
-            rotate: 189deg;
-          }
-        }
-      }
-    }
-    @media screen and (max-width: 390px) {
-      .btn {
-        > div {
-          &::after {
-            left:9.74rem;
-          }
-        }
-      }
-      @media screen and (max-width: 375px) {
-        .btn {
-          > div {
-            &::after {
-              left:9.3rem;
-            }
-          }
-        }
-      }
-    }
-   
 
-   
-  }
-}
 

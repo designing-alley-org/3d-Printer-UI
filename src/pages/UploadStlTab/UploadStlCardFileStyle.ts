@@ -87,7 +87,7 @@ export const infoBox: SxProps = {
 
 export const fileName: SxProps = {
   width: '100%',
-  fontFamily: 'Michroma',
+
   fontWeight: '400',
   fontSize: '1rem',
   color: '#0047FF',
@@ -97,7 +97,7 @@ export const fileName: SxProps = {
 };
 
 export const dimensionLabel: SxProps = {
-  fontFamily: 'Montserrat',
+
   fontSize: '.9rem',
   fontWeight: '700',
   color: '#001331',
@@ -108,7 +108,7 @@ export const dimensionLabel: SxProps = {
 };
 
 export const dimensionsValue: SxProps = {
-  fontFamily: 'Montserrat',
+
   fontSize: '.9rem',
   fontWeight: '500',
   color: '#001331',

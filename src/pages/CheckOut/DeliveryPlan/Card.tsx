@@ -2,6 +2,7 @@ import { Body, Header, MainCard, Specs } from './styles';
 import Button from '../../../stories/button/Button';
 import icon from '../../../assets/icons/avg_pace.svg';
 import { useMediaQuery } from '@mui/material';
+import MUIButton from '../../../stories/MUIButton/Button';
 
 interface CardProps {
   deliveryName: string;
@@ -50,7 +51,7 @@ export default function Card({
         <div className="btm">
           <span className="cost">${deliveryCost}</span>
           <span className="btn">
-            <Button
+            <MUIButton
               label={active !== index ? 'Select' : 'Selected'}
               onClick={() => handleClick(index, deliveryTime)}
             />

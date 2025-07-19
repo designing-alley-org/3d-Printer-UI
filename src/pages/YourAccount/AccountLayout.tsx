@@ -1,13 +1,13 @@
 import { accTab, navtabSmallScreen } from '../../constants';
 import { AccWrapper, MainComp, SideTab } from './styles';
 import { Box, useMediaQuery } from '@mui/material';
-import Button from '../../stories/button/Button';
-import LogoutIcon from '@mui/icons-material/Logout';
 import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 import { useCallback } from 'react';
+import MUIButton from '../../stories/MUIButton/Button';
+import { LogOut } from 'lucide-react';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
@@ -50,24 +50,16 @@ const AccountLayout = () => {
               >
                 {item.label}
               </span>
-              <Box
-                sx={{
-                  height: '5rem',
-                  borderLeft: `20px solid ${item.id === activeTab ? 'white' : 'transparent'}`,
-                  backgroundColor: item.id === activeTab ? 'white' : 'transparent',
-                  position: 'absolute',
-                  left: '3.4%',
-                  zIndex: 9,
-                  borderRadius: '3rem 0rem 0rem 3rem',
-                }}
-              />
             </Box>
           ))}
         </section>
-
-        <Button label="Logout" onClick={handleLogout} className="logout_btn">
-          <LogoutIcon sx={{ color: 'white', transform: 'rotate(180deg)', marginLeft: '.6rem' }} />
-        </Button>
+        <MUIButton
+          label="Logout"
+          icon={<LogOut size={15} />}
+          btnVariant="dark"
+          onClick={handleLogout}
+          style={{ marginTop: 'auto', height: '40px', width: '60%', }}
+        />
       </SideTab>
       {isSmallScreen &&
       <SmallScreenTab

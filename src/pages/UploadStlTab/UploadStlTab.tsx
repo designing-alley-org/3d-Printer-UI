@@ -30,8 +30,8 @@ interface FileData {
 }
 
 interface UploadStlTabProps {
-  files: FileData[];
-  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
+  files: any;
+  setFiles: ( files: FileData[] ) => void;
 }
 
 const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {

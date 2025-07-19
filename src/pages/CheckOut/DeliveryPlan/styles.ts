@@ -160,17 +160,6 @@ export const ButtonWrap = styled.div`
   display: flex;
   justify-content: end;
   margin-top: 2rem;
-  .btn {
-    button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-      width: 10rem;
-      height: 2.5rem;
-      font-size: 1rem;
-      }
-
-  }
   @media (max-width: 600px) {
     margin-top: 1rem;
     }

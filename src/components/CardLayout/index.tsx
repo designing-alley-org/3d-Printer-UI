@@ -22,6 +22,7 @@ import toast from 'react-hot-toast';
 import TabComponent from '../Tab';
 import { useDispatch } from 'react-redux';
 import { clearDB } from '../../utils/indexedDB';
+import MUIButton from '../../stories/MUIButton/Button';
 
 interface ModelDimensions {
   height: number;
@@ -205,20 +206,23 @@ const CardLayout = () => {
     }
 
     return (
-      <div className="btn">
-        <div></div>
-        <span className="proc">
-          <Button
-            label={isCheckoutRoute ? "Proceed to Delivery" : !pathname.includes(ROUTES.PAYMENT) ? "Proceed" : "pay"}
+      <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: '2rem' }}>
+          <MUIButton
+            label={isCheckoutRoute ? "Proceed to Delivery" : !pathname.includes(ROUTES.PAYMENT) ? "Save & Proceed" : "Pay"}
             onClick={
               !pathname.includes(ROUTES.PAYMENT) ? onProceed : handlePayment
             }
-            className={isCheckoutRoute ? 'delivery' : 'proceed'}
             disabled={isSaving || isProcessingDisbled}
             type={isCheckoutRoute ? "submit" : "button"}
+            btnVariant="primary"
+            size='large'
+            style={{
+              width: isSmallScreen ? '100%' : 'auto',
+              padding: isSmallScreen ? '0.7rem 1.5rem' : '0.7rem 2.8rem',
+              fontSize: isSmallScreen ? '0.9rem' : '1rem',
+            }}
           />
-        </span>
-      </div>
+      </Box>
     );
   };
 
@@ -232,13 +236,14 @@ const CardLayout = () => {
         )}
         <TabComponent tabs={quoteTexts} numberId={false} activeTabs={activeTabs.length} insideTab={true}/>
       </div>
-      
+
       <div className="mainCardContent">
         {pathname.includes(ROUTES.UPLOAD_STL) ? (
           <UploadStlCard files={files} setFiles={setFiles} />
         ) : (
           <Outlet context={{ files, setFiles }} />
         )}
+      {renderButton()}
       </div>
 
       {isSaving && (
@@ -250,7 +255,6 @@ const CardLayout = () => {
         </Box>
       )}
 
-      {renderButton()}
     </div>
   );
 };

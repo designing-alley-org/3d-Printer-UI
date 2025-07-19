@@ -3,7 +3,6 @@ import { QuoteBox } from './styles';
 import Chat from '../Chat';
 import { useEffect, useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
-import './style.css';
 import { useParams } from 'react-router-dom';
 import { getQuoteByOrderId } from '../../../../../store/actions/getQuotes.ts';
 import arrow from '../../../../../assets/icons/arrow_drop_down_circle.svg';

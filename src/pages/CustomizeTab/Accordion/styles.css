@@ -140,7 +140,7 @@
     border-radius: 50px;
     color: #2359b0;
     background-color: #ffffff;
-    font-family: 'Montserrat';
+    font-family: 'Roboto';
     font-size: 0.8rem;
     border: 1px solid #dde9fc;
     transition: background-color 0.3s ease;
@@ -172,7 +172,7 @@
     height: 1.5rem;
     border-radius: 50px;
     margin-left: 0.6rem;
-    font-family: 'Montserrat';
+    font-family: 'Roboto';
     border: 0.1px solid #66a3ff;
     transition: background-color 0.3s ease;
     background-color: #0047ff;

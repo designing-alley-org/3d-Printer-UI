@@ -1,5 +1,4 @@
 import AccountLayout from './AccountLayout';
-import Button from '../../stories/button/Button';
 import { MainWrapper } from './styles';
 
 const Account = () => {

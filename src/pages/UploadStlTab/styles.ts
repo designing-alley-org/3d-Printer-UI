@@ -10,7 +10,7 @@ export const mainHeader : SxProps = {
 }
 
 export const infoText: SxProps = {
-  fontFamily: 'Montserrat',
+
   fontWeight: 400,
   fontSize: '0.8rem',
   color: '#0066FF',
@@ -34,7 +34,7 @@ export const unitSection: SxProps = {
 export const unitText: SxProps = {
   color: '#0047FF',
   
-  fontFamily: 'Michroma',
+
   fontSize: '1rem',
   marginRight: '1rem',
   '@media (max-width: 768px)': {
@@ -49,7 +49,7 @@ export const unitButton: SxProps = {
   borderRadius: '50px',
   marginRight: '0.7rem',
   backgroundColor: '#EAEEFF',
-  fontFamily: 'Montserrat',
+
   border: 'none',
   transition: 'background-color 0.3s ease',
   '@media (max-width: 768px)': {
@@ -73,7 +73,7 @@ export const fileCountSection: SxProps = {
 
 export const fileText: SxProps = {
   fontSize: '1.1rem',
-  fontFamily: 'Michroma',
+
   fontWeight: 400,
   color: '#0047FF',
   '@media (max-width: 768px)': {
@@ -83,7 +83,7 @@ export const fileText: SxProps = {
 
 export const fileBoxText: SxProps = {
   fontSize: '.8rem',
-  fontFamily: 'Montserrat',
+
   fontWeight: 400,
   color: '#0066FF',
   '@media (max-width: 768px)': {
@@ -164,7 +164,7 @@ export const uploadIcon: SxProps = {
 };
 
 export const uploadText: SxProps = {
-  fontFamily: 'Michroma',
+
   fontSize: '1.2rem',
   fontWeight: 400,
   textAlign: 'center',
