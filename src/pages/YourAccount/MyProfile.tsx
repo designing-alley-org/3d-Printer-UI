@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 import { Box, useMediaQuery } from '@mui/material';
 import MUIButton from '../../stories/MUIButton/Button';
+import { LogOut } from 'lucide-react';
 
 const MyProfile = () => {
   const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
@@ -95,12 +96,13 @@ const MyProfile = () => {
             isEditing={!!editState.phone_no}
           />
           {isSmallScreen && (
-            <Box sx={{ display: 'flex', justifyContent: 'right', marginTop: '3rem' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'right', marginTop: '2.5rem' }}>
             <MUIButton
               label="Logout"
+              icon={<LogOut size={15} />}
               btnVariant="dark"
               onClick={handleLogout}
-              style={{ marginTop: 'auto', height: '30px' }}
+              size='small'
             />
             </Box>
           )}

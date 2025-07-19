@@ -7,6 +7,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 import { useCallback } from 'react';
 import MUIButton from '../../stories/MUIButton/Button';
+import { LogOut } from 'lucide-react';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
@@ -54,9 +55,10 @@ const AccountLayout = () => {
         </section>
         <MUIButton
           label="Logout"
+          icon={<LogOut size={15} />}
           btnVariant="dark"
           onClick={handleLogout}
-          style={{ marginTop: 'auto', marginRight: '20px', }}
+          style={{ marginTop: 'auto', height: '40px', width: '60%', }}
         />
       </SideTab>
       {isSmallScreen &&
