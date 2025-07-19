@@ -5,6 +5,7 @@ import Button from '../../../stories/button/Button';
 import './style.css';
 import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
+import MUIButton from '../../../stories/MUIButton/Button';
 
 interface QuoteItem {
   fileName: string;
@@ -470,17 +471,9 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
                   fontWeight="bold"
                   sx={{ fontSize: isSmallScreen ? '0.57rem' : '0.8rem' }}
                 >
-                  Don’t Like our pricing? Click on negotiate ; to negotiate
-                  pricing Details Live
+                 Don’t like our pricing? Click on Negotiate to quote your price.
                 </Typography>
-                <span className="negotiation">
-                  <Button
-                    label={'Negotiate'}
-                    onClick={() => setShowNegotiate(!showNegotiate)}
-                    className='negotiate-btn'
-                    style={{ width: isSmallScreen ? '6rem' : '8rem' }}
-                  />
-                </span>
+                 
               </Box>
             ) : (
               <Typography variant={isSmallScreen ? 'body2' : 'h1'} sx={{ color: '#2359B0', mb: 2 }}>
@@ -500,11 +493,24 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
               )
             ) : quote.approvedBy ? (
               <span className="approve-container">
-                <Button
+                 <MUIButton
+                    label={!showNegotiate ? 'Negotiate' : 'No Negotiate'}
+                    onClick={() => setShowNegotiate(!showNegotiate)}
+                    btnVariant="outlined"
+                    disabled={isApproveLoading}
+                    style={{
+                    width: isSmallScreen ? '7rem' : '',
+                    fontSize: isSmallScreen ? '0.6rem' : '',
+                  }} 
+                    />
+                <MUIButton
                   label={!showNegotiate ? 'Approve' : 'Send to Merchant'}
                   onClick={handleSend}
                   loading={isApproveLoading}
-                  className='approve-btn'
+                  style={{
+                    width: isSmallScreen ? '7rem' : '',
+                    fontSize: isSmallScreen ? '0.6rem' : '',
+                  }}                  
                 />
               </span>
             ) : null}
@@ -512,7 +518,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
         </>
       ) : (
         <Typography variant={isSmallScreen ? 'body1' : 'h1'} sx={{ color: '#2359B0', mb: 2 }}>
-          No Quote Found
+          Please wait, the quote will be created shortly.
         </Typography>
       )}
     </TemplateWrapper>

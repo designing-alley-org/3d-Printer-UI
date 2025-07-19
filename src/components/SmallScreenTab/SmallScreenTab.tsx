@@ -15,7 +15,6 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
   const [isSmallScreenTab, setIsSmallScreenTab] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  console.log(data);
 
   // Handle clicking outside the wrapper
   useEffect(() => {

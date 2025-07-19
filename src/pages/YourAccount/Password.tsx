@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { PasswordWrapper } from './styles';
 import { InputField } from '../../stories/Input/InputField';
-import Button from '../../stories/button/Button';
 import toast from 'react-hot-toast';
 import { updatePassword } from '../../store/actions/updatePassword';
 import { validatePassword } from '../../utils/Validation';
+import MUIButton from '../../stories/MUIButton/Button';
+import { Box, useMediaQuery } from '@mui/material';
 
 interface FormState {
     old_password: string;
@@ -23,7 +24,7 @@ const Password = () => {
     
     // Check if all fields have values and are different from their initial state
     const hasChanges = Object.values(form).every(value => value.length > 0);
-    
+    const isSmallScreen = useMediaQuery('(max-width:768px)');
     const handleChange = (key: keyof FormState) => (value: string) => {
         setForm(prev => ({ ...prev, [key]: value }));
         setErr(''); // Clear errors when user makes changes
@@ -100,14 +101,13 @@ const Password = () => {
                         ))}
                         {err && <p className="error">{err}</p>}
                     </div>
-                    <div className="button-wrapper">
-                        <Button
-                            className="button-save"
-                            label={loading ? 'Saving...' : 'Save'}
-                            type="submit"
+                    <Box sx={{ position: 'relative', mt: isSmallScreen ? 4 : 27 }}>
+                        <MUIButton
+                            label={loading ? 'Saving...' : 'Save Password'}
                             disabled={!hasChanges}
+                            type="submit"
                         />
-                    </div>
+                    </Box>
                 </form>
             </div>
         </PasswordWrapper>

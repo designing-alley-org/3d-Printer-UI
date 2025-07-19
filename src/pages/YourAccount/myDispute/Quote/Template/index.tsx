@@ -507,7 +507,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
       </>
     ) : (
       <Typography variant={isSmallScreen ? 'body1' : 'h1'} sx={{ color: '#2359B0', mb: 2 }}>
-        No Quote Found
+        Please wait, the quote will be created shortly.
       </Typography>
     )}
   </TemplateWrapper>

@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import {
   Customize,
   Files,
@@ -35,6 +35,8 @@ import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByN
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
 import ReloadButton from '../../components/Loader/ReloadButton';
+import MUIButton from '../../stories/MUIButton/Button';
+import { RotateCcw } from 'lucide-react';
 // Define FileData type
 interface FileData {
   _id: string;
@@ -364,26 +366,29 @@ const CustomizeTab: React.FC = () => {
          sx={{
           display: 'flex',
          }}>
-           <Button
-            className="apply-button"
-            disabled={isApplyButtonDisabled || isLoading}
-            onClick={handleApplySelection}
-            style={{
-              background:
-                isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
-            }}
-          >
-           {isLoading ? "Applying..." : "Apply Selection"}
-          </Button>
+          <MUIButton
+          label="Apply Selection"
+          disabled={isApplyButtonDisabled || isLoading}
+          onClick={handleApplySelection}
+          loading={isLoading}
+          style={{
+            background: isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
+            height: isSmallScreen ? '2.5rem' : '3rem',
+            width: isSmallScreen ? '100%' : '10rem',
+            marginRight: isSmallScreen ? '0' : '1rem',
+            marginBottom: isSmallScreen ? '1rem' : '0',
+          }}
+          />
          {!isApplyButtonDisabled && 
-         <Box 
-         sx={{
-          position: isSmallScreen ? 'absolute' : '',
-          bottom: isSmallScreen ? '-0.5rem' : '',
-          right: isSmallScreen ? '0rem' : '',
-         }}>
-          <ReloadButton/>
-          </Box>}
+         <Box>
+          <MUIButton
+            btnVariant='outlined'
+            tooltip='If you scale file size, then for actual view please reload it'
+            icon= {<RotateCcw size={isSmallScreen ? 16 : 20} />}
+            onClick={() => window.location.reload()}
+            disabled={isLoading}
+          />
+         </Box>}
          </Box>
         </Customize>
       </Filescomponent>

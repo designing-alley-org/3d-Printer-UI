@@ -9,8 +9,7 @@ import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 import { Box, useMediaQuery } from '@mui/material';
-import Button from '../../stories/button/Button';
-import { LogOut } from 'lucide-react';
+import MUIButton from '../../stories/MUIButton/Button';
 
 const MyProfile = () => {
   const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
@@ -97,9 +96,12 @@ const MyProfile = () => {
           />
           {isSmallScreen && (
             <Box sx={{ display: 'flex', justifyContent: 'right', marginTop: '3rem' }}>
-             <Button onClick={handleLogout} className='logout_btn'>
-              <LogOut size={'17'} style={{ transform: 'rotate(180deg)' }}/>
-            </Button>
+            <MUIButton
+              label="Logout"
+              btnVariant="dark"
+              onClick={handleLogout}
+              style={{ marginTop: 'auto', height: '30px' }}
+            />
             </Box>
           )}
         </MainWrap>

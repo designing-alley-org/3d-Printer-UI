@@ -6,11 +6,7 @@ function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <Toaster 
-      toastOptions={{
-          style: { fontSize: '0.7rem' }, // Reduced font size
-      }}
-      />
+      <Toaster />
       <Routing />
     </BrowserRouter>
   );

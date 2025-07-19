@@ -40,19 +40,6 @@ export const Wrapper = styled.section`
       top: -0.3rem;
       right: -3rem;
     }
-
-    button {
-      width: content;
-      border-radius: 2rem;
-      background: #1e6fff;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      &:hover {
-        background: rgb(132, 175, 248);
-        color: white;
-      }
-    }
   }
 
   .address-list {

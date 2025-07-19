@@ -5,13 +5,9 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    include: ['jwt-decode', 'lodash-es'],
-  },
   resolve: {
-    extensions: ['.ts', '.tsx'],
     alias: {
-      'lodash-es': path.resolve(__dirname, 'node_modules/lodash-es'),
+      'lodash-es': 'lodash-es',
     },
   },
   build: {

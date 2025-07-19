@@ -1,20 +1,19 @@
-import { Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import FormikInput from '../../../stories/StandardInput/FormikInput';
 import { InputWrapper, SubHeader, Wrapper } from './style';
-import { cross, inputFields } from '../../../constants';
+import {  inputFields } from '../../../constants';
 import { useParams } from 'react-router-dom';
 import { createAddress } from '../../../store/actions/createAddress';
-import Button from '../../../stories/button/Button';
 import { useEffect, useState } from 'react';
-import ButtonIcon from '../../../stories/BottonIcon/ButtonIcon';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, setAddressId, toggleCreateAddress } from '../../../store/Address/address.reducer';
 import { getAddress } from '../../../store/actions/getAddress';
 import toast from 'react-hot-toast';
-import { Edit } from 'lucide-react';
+import {  X } from 'lucide-react';
 import { updateAddressService } from '../../../services/address';
 import { Formik, Form } from 'formik';
 import { addressValidationSchema } from '../../../validation';
+import MUIButton from '../../../stories/MUIButton/Button';
 
 const ShippingDetails = () => {
   const { orderId } = useParams();
@@ -115,23 +114,24 @@ const ShippingDetails = () => {
     <Wrapper>
       <div className='header'>
         <Typography variant={isSmallScreen ? 'body1' : 'h1'}>Shipping Details</Typography>
-        <span>
-          <Button
-            label={!isCreateAddress ? "Create New" : editingAddress ? "Update" : "Save"}
-            className='create-new-add'
-            onClick={!isCreateAddress ? 
-              () => dispatch(toggleCreateAddress()) : 
+       <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <MUIButton
+            label={!isCreateAddress ? "Create New" : editingAddress ? "Update" : "Save Address"}
+            btnVariant="primary"
+            onClick={!isCreateAddress ?
+              () => dispatch(toggleCreateAddress()) :
               () => document.getElementById('address-form')?.dispatchEvent(new Event('submit', { bubbles: true }))
             }
           />
           {isCreateAddress && (
-            <ButtonIcon
-              svgPath={cross}
-              className='cross-btn'
+            <MUIButton
+            tooltip='Cancel Edit'
+              btnVariant="outlined"
+              icon={<X size={isSmallScreen ? 13 : 20} />}
               onClick={handleCancelEdit}
             />
           )}
-        </span>
+       </Box>
       </div>
       
       <SubHeader>

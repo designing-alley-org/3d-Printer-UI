@@ -1,5 +1,6 @@
 import React from "react";
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box } from "@mui/material";
+import MUIButton from "../../stories/MUIButton/Button";
 
 // Props Type Definition
 type InputProps = {
@@ -64,23 +65,11 @@ const EditableInput: React.FC<InputProps> = ({
         disabled={!isEditing || disabled}
         sx={{ ...inputStyles, width: { xs: 260, sm: 570 } }}
       />
-
-      <Button
+      <MUIButton
+        label={!isEditing ? `Change ${name}` : "Save"}
         onClick={toggleEdit}
         disabled={isLoading}
-        sx={{
-          bgcolor: "#1E6FFF",
-          width: { xs: 120, sm: 150 },
-          borderRadius: { xs: 4, sm: 6 },
-          fontSize: { xs: 8, sm: 12 },
-          color: "white",
-          "&:hover": {
-            bgcolor: "rgb(119, 157, 223)",
-          },
-        }}
-      >
-        {!isEditing ? `Change ${name} ` : "Save"}
-      </Button>
+      />
     </Box>
   );
 };

@@ -309,18 +309,6 @@ export const Customize = styled.article`
     margin-bottom: 0.5rem;
   }
 
-  .apply-button {
-    position: relative;
-    margin-top: 1rem;
-    height: 2.5rem;
-    padding: 0.3rem 2rem;
-    background: #0066ff;
-    color: #ffffff;
-    border-radius: 40px;
-    font-size: 1.1rem;
-    margin-bottom: -3rem;
-  }
-
   @media (max-width: 768px) {
     width: 100%;
     position: relative;
@@ -336,25 +324,6 @@ export const Customize = styled.article`
     }
     .weight-section {
       font-size: 0.8rem;
-    }
-    .apply-button {
-      z-index: 1;
-      position: absolute;
-      bottom: -0.5rem;
-      left: -0.2rem;
-      height: 1.5rem;
-      padding: 0.3rem 0.5rem;
-      font-size: 0.46rem;
-      margin-bottom: -2rem;
-      &:hover {
-        transform: scale(1.01);
-      }
-      .loader {
-        position: absolute;
-        right: -30px;
-        top: 50%;
-        transform: translateY(-50%);
-      }
     }
   }
 `;

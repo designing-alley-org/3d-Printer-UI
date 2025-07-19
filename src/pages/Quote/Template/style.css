@@ -1,37 +1,11 @@
 .approve-container {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
   padding:1rem 2rem;
-  background-color: #ffffff;
   border-radius: 2rem 0rem 1.5rem 0 ;
-  .approve-btn{  
-    background-color: #1e6fff;
-    width: 11.5rem;
-    font-size: 0.8rem;
-    border-radius: 40px;
-    &::before {
-      content: '';
-      position: absolute;
-      width: 2rem;
-      height: 3.5rem;
-      background-color: #ffffff;
-      clip-path: polygon(100% 100%, 0% 100%, 100% 0);
-      bottom: 0;
-      right: 15.1rem;
-    }
-  }
   @media screen and (max-width: 768px) {
     position: relative;
     padding:0rem;
-    .approve-btn {
-      position: absolute;
-      right: 1rem;
-      width: 8rem;
-      font-size: 0.55rem;
-      &::before {
-        display: none;
-      }
-    } 
   }
 }
 .proc {
@@ -46,23 +20,6 @@
   }
 }
 
-.negotiation {
-  .negotiate-btn{
-    padding: 0.5rem;
-    border-radius: 50px;
-    padding: 0.5rem;
-    color: #2359b0;
-    background-color: #ffffff;
-    font-family: 'Montserrat';
-    font-size: 0.8rem;
-    border: 1px solid #dde9fc;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
-    @media screen and (max-width: 768px) {
-      font-size: 0.6rem;
-    }
-  }
-}
 .fields {
   > div {
     width: 100% !important;

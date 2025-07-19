@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { TextField, MenuItem, Box, Button } from "@mui/material";
+import { TextField, MenuItem, Box } from "@mui/material";
+import MUIButton from "../../stories/MUIButton/Button";
 
 type PhoneInputProps = {
   extension?: string;
@@ -119,23 +120,11 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
         sx={{ ...inputStyles, width: { xs: 170, sm: 460 } }}
       />
       </Box>
-
-      <Button
+      <MUIButton
+        label={!isEditing ? 'Change Number' : 'Save'}
         onClick={toggleEdit}
         disabled={isLoading}
-        sx={{
-          bgcolor: isEditing ? "#1E6FFF" : "#1E6FFF",
-          width: { xs: 120, sm: 190 },
-          borderRadius: { xs: 4, sm: 6 },
-          fontSize: { xs: 8, sm: 12 },
-          color: "white",
-          "&:hover": {
-            bgcolor: "rgb(119, 157, 223)",
-          },
-        }}
-      >
-        {!isEditing ? 'Change Number' : 'Save'}
-      </Button>
+      />
     </Box>
   );
 };

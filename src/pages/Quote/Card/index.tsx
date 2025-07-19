@@ -3,13 +3,12 @@ import { QuoteBox } from './styles';
 import Chat from '../Chat';
 import { useEffect, useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
-import './style.css';
 import { useParams } from 'react-router-dom';
 import { getQuoteByOrderId } from '../../../store/actions/getQuotes.ts';
-import arrow from '../../../assets/icons/arrow_drop_down_circle.svg';
-import './style.css';
-import ButtonWithIcon from '../../../stories/ButtonWithIcon/ButtonWithIcon.tsx';
 import { useDispatch } from 'react-redux';
+import MUIButton from '../../../stories/MUIButton/Button.tsx';
+import { ArrowRightIcon } from 'lucide-react';
+
 interface QuoteItem {
   fileName: string;
   quantity: number;
@@ -35,14 +34,14 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   async function getQuotes() {
     getQuoteByOrderId({
       orderId: (orderId as string) || selectOrderIdProps || '',
       setAllQuotes,
       setQuote,
       activeIndex,
-      dispatch
+      dispatch,
     });
   }
   useEffect(() => {
@@ -50,43 +49,37 @@ const dispatch = useDispatch();
   }, []);
   return (
     <QuoteBox>
-      <Typography
-        sx={{ color: '#0C2850', position: 'absolute', top: '-1%',width:isSmallScreen?'45%':'100%',}}
-        variant={isSmallScreen ? 'body2' : 'h1'}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: isSmallScreen ? '90%' : '95%',
+          top: '1rem',
+          left: '1rem',
+          zIndex: 1,
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
       >
-        Connecting For {selectOrderIdProps ? 'Dispute' : 'Quote'}
-      </Typography>
-      <Box sx={{ position: 'absolute', right: isSmallScreen ? '-3.5rem' :  '-3rem', top: '0' }}>
-        {' '}
-        <span className="quoteBtn">
-          <ButtonWithIcon
-            label="SHOW QUOTE"
-            handleClick={() => {
-              setShowQuote(!showQuote);
-              getQuotes();
-            }}
-            sx={{
-              height: isSmallScreen ? '1.5rem' : '2.7rem',
-              fontSize: isSmallScreen ? '0.6rem !important' : '0.8rem',
-              width: isSmallScreen ? '7rem !important' : '', 
-              padding: isSmallScreen ? '0rem !important' : '',
-            }}
-            iconPosition="end"
-            Icon={
-              <img
-                src={arrow}
-                style={{
-                  filter: 'brightness(0) invert(1)',
-                  transform: showQuote ? 'rotate(180deg)' : undefined,
-                  transition: 'all 0.3s ease-in-out',
-                  height: isSmallScreen ? '0.9rem' : '1.5rem',
-                  width: isSmallScreen ? '0.9rem' : '1.5rem',
-                }}
-                alt="Arrow"
-              />
-            }
-          />
-        </span>
+        <Typography
+          sx={{ color: '#0C2850' }}
+          variant={isSmallScreen ? 'body2' : 'h1'}
+        >
+          Connecting For {selectOrderIdProps ? 'Dispute' : 'Quote'}
+        </Typography>
+        <MUIButton
+          label={showQuote ? 'Hide Quote' : 'Show Quote'}
+          btnVariant="icon-soft"
+          size={isSmallScreen ? 'small' : 'large'}
+          icon={<ArrowRightIcon size={isSmallScreen ? 16 : 20} />}
+          onClick={() => {
+            setShowQuote(!showQuote);
+            getQuotes();
+          }}
+          style={{
+            width: isSmallScreen ? '7rem' : '',
+            fontSize: isSmallScreen ? '0.6rem' : '',
+          }}
+        />
       </Box>
       <Box
         sx={{

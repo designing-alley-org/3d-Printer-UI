@@ -36,16 +36,6 @@ export const MainWrap = styled.section`
     color: #2359b0;
     margin-top: 2rem;
   }
-  .logout_btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    height: 1.9rem;
-    background: #0066ff;
-    border-radius: 2rem;
-  }
 
   .input {
     background: #e6f0ff;
@@ -60,29 +50,7 @@ export const MainWrap = styled.section`
   .input-disabled {
     background: transparent;
   }
-  .btn {
-    button {
-      border-radius: 2rem;
-      font-size: 0.8rem;
-      background: #1e6fff;
-      width: content;
-      margin-left: 4rem;
-    }
-  }
 
-  .edit-btn {
-    cursor: pointer;
-    margin-left: 1rem;
-    padding: 0.6rem;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(139, 177, 243);
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    transition: all 0.2s ease;
-  }
   @media (max-width: 768px) {
     p {
       font-size: 0.8rem;
@@ -91,15 +59,6 @@ export const MainWrap = styled.section`
       margin-top: 0.4rem;
       width: 100%;
       height: 2.5rem;
-    }
-    .btn {
-      button {
-        width: content;
-        padding: 0.5rem 0.7rem;
-        margin-top: 1rem;
-        font-size: 0.7rem;
-        margin-left: 0rem;
-      }
     }
   }
 `;
@@ -136,22 +95,7 @@ export const SideTab = styled.section`
     display: flex;
     flex-direction: column;
   }
-  .logout_btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    height: 1.9rem;
-    background: #0066ff;
-    border-radius: 2rem;
-    padding: 1rem;
-    width: 50%;
-    transition: all 0.2s ease;
-    &:hover {
-      background: #0047ff;
-    }
-  }
+  
   @media (max-width: 768px) {
     display: none;
   }
@@ -615,23 +559,6 @@ export const PasswordWrapper = styled.main`
         width: 90%;
         border-radius: 2rem;
         box-shadow: 0px 0px 4px 0px #66a3ff inset;
-      }
-    }
-
-    .button-wrapper {
-      position: relative;
-      .button-save {
-        position: absolute;
-        width: 10rem;
-        left: 0;
-        bottom: 0;
-        border-radius: 2rem;
-        background: #1e6fff;
-        margin-left: 5rem;
-        transition: all 0.2s ease;
-        &:hover {
-          background: #0047ff;
-        }
       }
     }
   }
