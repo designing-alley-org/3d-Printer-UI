@@ -79,7 +79,7 @@ export const Body = styled.section`
       margin-left:0.5rem;
       font-size: 14px;
       font-weight: bold;
-      font-family: Montserrat;
+      font-family: Roboto;
       color: #001331;
     }
     .dot {
@@ -98,7 +98,7 @@ export const Body = styled.section`
         margin-top: 0.1rem;
         margin-left: 0.5rem;
         font-size: 0.8rem;
-        font-family: Montserrat;
+        font-family: Roboto;
         font-weight: 400;
       }
     }

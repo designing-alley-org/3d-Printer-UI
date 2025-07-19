@@ -18,11 +18,15 @@ const Index: React.FC = () => {
     DefaultEventsMap,
     DefaultEventsMap
   > | null>(null);
+
+  
   const [activeTabs, setActiveTabs] = useState<number>(0);
   const { pathname } = useLocation();
   const user=useSelector((state:any)=>state.user);
   const userId=user.user._id;
   const dispatch = useDispatch();
+
+
   useEffect(() => {
     if (pathname.includes(ROUTES.DASHBOARD)) {
       setActiveTabs(0);
@@ -50,12 +54,6 @@ const Index: React.FC = () => {
       console.log('Connected to the server:', newSocket.id);
       if(userId) newSocket.emit('login',{userId,role: 'user'});      
     });
-
-    // // Only update messages when receiving messages from others
-    // newSocket.on('statusUpdate', ({userId,role,status}) => {
-    //   // Check if the message is from another user
-    //   console.log('statusUpdate', {userId,role,status});
-    // });
 
     newSocket.on('disconnect', () => {
       console.log('Disconnected from the server');

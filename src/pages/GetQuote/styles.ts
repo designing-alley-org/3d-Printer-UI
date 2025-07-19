@@ -17,7 +17,7 @@ export const upperQuoteText: SxProps = {
 };
 
 export const instantQuoteText: SxProps = {
-  fontFamily: 'Michroma',
+
   fontSize: '1.5rem',
   color: '#1E6FFF',
   padding: '1rem 0rem',
@@ -57,14 +57,14 @@ export const quoteIcon: SxProps = {
 };
 
 export const quoteIdText: SxProps = {
-  fontFamily: 'Michroma',
+
   fontWeight: 400,
   fontSize: '2.25rem',
   color: '#0047FF',
 };
 
 export const quoteLabelText: SxProps = {
-  fontFamily: 'Montserrat',
+
   fontWeight: 500,
   fontSize: '1.25rem',
   color: '#0047FF',

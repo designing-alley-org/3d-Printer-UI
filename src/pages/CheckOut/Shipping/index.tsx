@@ -116,7 +116,7 @@ const ShippingDetails = () => {
         <Typography variant={isSmallScreen ? 'body1' : 'h1'}>Shipping Details</Typography>
        <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <MUIButton
-            label={!isCreateAddress ? "Create New" : editingAddress ? "Update" : "Save Address"}
+            label={!isCreateAddress ? "Create New" : editingAddress ? "Update" : "Save"}
             btnVariant="primary"
             onClick={!isCreateAddress ?
               () => dispatch(toggleCreateAddress()) :

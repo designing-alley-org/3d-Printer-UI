@@ -29,7 +29,7 @@
     width: 20rem;
     font-size: 1rem;
     padding: 1rem;
-    font-family: 'Montserrat';
+    font-family: 'Roboto';
     color: #ffffff;
   }
 }
@@ -42,7 +42,7 @@
     padding: 1rem;
     color: #2359b0;
     background-color: #ffffff;
-    font-family: 'Montserrat';
+    font-family: 'Roboto';
     border: 1px solid #dde9fc;
     text-transform: uppercase;
     transition: background-color 0.3s ease;

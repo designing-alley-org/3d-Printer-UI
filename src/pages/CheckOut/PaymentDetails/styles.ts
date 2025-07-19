@@ -12,7 +12,7 @@ export const Wrapper = styled.main`
   }
 
   .orderNo {
-    font-family: Montserrat;
+    font-family: Roboto;
     font-size: 14px;
     font-weight: 400;
     line-height: 22.38px;

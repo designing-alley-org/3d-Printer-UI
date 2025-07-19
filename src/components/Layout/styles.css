@@ -1,19 +1,24 @@
 .Content {
-  min-height: 62rem;
+  width: 100%;
+  min-height: calc(52rem);
   background-size: cover;
   background-position: center;
-  border-radius: 40px;
+  border-radius: 30px;
+
   background-image: url(/src/assets/images/backgroundimg.png);
-  @media (max-width: 768px) {
-    padding: 0.5rem;
-    min-height: 100%;
-  } 
 }
 
 .mainContent {
   padding: 1rem;
-  @media (max-width: 768px) {
-    padding: 0.5rem;
-  }  
+  position: relative;
 }
 
+@media (max-width: 768px) {
+  .Content {
+    padding: 0.5rem;
+    min-height: 100%;
+  }
+  .mainContent {
+    padding: 0.5rem;
+  }
+}

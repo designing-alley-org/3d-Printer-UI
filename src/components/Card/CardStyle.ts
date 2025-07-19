@@ -22,7 +22,6 @@ export const BoxWrapper = styled(Box)({
 
 
 export const IdText = styled(Typography)({
-  fontFamily: 'Michroma, sans-serif',
   fontWeight: 400,
   fontSize: '1.3rem',
   color: '#1E6FFF',
@@ -59,7 +58,7 @@ export const IconBox = styled(Box)({
 
 
 export const UpperText = styled(Typography)({
-  fontFamily: 'Michroma, sans-serif',
+
   fontWeight: 400,
   fontSize: '1rem',
   color: '#001331',
@@ -73,7 +72,7 @@ export const UpperText = styled(Typography)({
 });
 
 export const BottomText = styled(Typography)({
-  fontFamily: 'Montserrat, sans-serif',
+
   fontWeight: 400,
   fontSize: '0.9rem',
   color: '#001331',

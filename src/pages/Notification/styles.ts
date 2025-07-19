@@ -182,10 +182,10 @@ export const Data = styled.main`
   color: #002e72;
   margin-top: 1rem;
   margin-left: 3rem;
-  font-family: Montserrat;
+  font-family: Roboto;
 
   .title {
-    font-family: Montserrat;
+    font-family: Roboto;
     font-size: 1rem;
     font-weight: 500;
   }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Wrapper = styled.section`
   margin-top: 4rem;
   h2 {
-    font-family: Montserrat;
+    font-family: Roboto;
     font-size: 20px;
     font-weight: 400;
     line-height: 24.38px;
@@ -108,7 +108,7 @@ export const Numbers = styled.section`
       margin: unset;
     }
     h3 {
-      font-family: Montserrat;
+      font-family: Roboto;
       font-weight: 100;
     }
     padding-bottom: 1rem;
