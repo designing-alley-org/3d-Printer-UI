@@ -16,6 +16,7 @@ import { Bell } from 'lucide-react';
 interface NotificationCardProps {
   orderId: string;
   dateTime: string;
+  statusKey?: string;
   statusText?: string;
   statusColor?: string;
   message: string;
@@ -28,6 +29,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   orderId,
   dateTime,
   statusText,
+  statusKey = '',
   statusColor = 'green',
   message,
   buttonText,
@@ -35,7 +37,6 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   isUnread = false,
 }) => {
   const isMobile = useMediaQuery('(max-width:600px)');
-
   return (
     <Box marginBottom={2}>
       {/* Top Row: Order ID and Date */}
@@ -59,7 +60,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
               variant="body2"
               sx={{ display: 'flex', alignItems: 'center' }}
             >
-              Payment Status:{' '}
+             { statusKey ||' Payment Status:'}{' '}
               <FiberManualRecordIcon
                 sx={{ color: statusColor, fontSize: 12, mx: 0.5 }}
               />

@@ -168,6 +168,7 @@ const MyDisputes: React.FC = () => {
                 orderId={dispute.orderId}
                 dateTime={formatDateTime(dispute.createdAt)}
                 buttonText="Chat"
+                statusKey="Dispute Status:"
                 statusText={dispute.status}
                 statusColor={dispute.status === 'resolved' ? 'green' : dispute.status === 'inProgress' ? 'orange' : 'red'}
                 onButtonClick={handleChatOpen(dispute)}

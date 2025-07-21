@@ -1,16 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { notificationIcon } from '../../constants';
-import Notifications from '../NotificationDropdown';
-import './Notification.css';
 import { io } from 'socket.io-client';
-import { useParams } from 'react-router-dom';
-import api from '../../axiosConfig';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   addNotification,
   setNotification,
 } from '../../store/notification/notification';
+import { NotificationViewer } from '../Notifications';
+import api from '../../axiosConfig';
+
+import {
+  Badge,
+  Box,
+  IconButton,
+  useMediaQuery,
+} from '@mui/material';
+import { Bell } from 'lucide-react';
 
 const socket = io(import.meta.env.VITE_AWS_URL as string);
 
@@ -21,8 +25,8 @@ const NotificationBox = () => {
   const dispatch = useDispatch();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const notificationRef = useRef<HTMLDivElement>(null);
-
-
+ const isMobile = useMediaQuery('(max-width:600px)');
+  // Hide notification viewer if clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -36,69 +40,81 @@ const NotificationBox = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [notificationRef]);
+  }, []);
 
+  // Fetch existing notifications
   useEffect(() => {
-    async function fetchNotications() {
+    async function fetchNotifications() {
       try {
         const response = await api.get('/get-notify');
-        const filteredNotifications = response.data.message.filter(
-          (notification: any) => notification.readStatus !== true
+        const filtered = response.data.message.filter(
+          (n: any) => n.readStatus !== true
         );
-        dispatch(setNotification(filteredNotifications));
+        dispatch(setNotification(filtered));
       } catch (error) {
         console.error(error);
       }
     }
-    fetchNotications();
+
+    fetchNotifications();
   }, []);
 
+  // WebSocket setup
   useEffect(() => {
-    // Notify the server that the admin has connected
-
     socket.emit('userConnected');
 
-    // Listen for new disputes and update the list
-    socket.on('QuoteNegotiateuserNotification', (data) => {
+    const events = [
+      'QuoteNegotiateuserNotification',
+      'quoteNotification',
+      'QuoteApproveRejectuserNotification',
+    ];
 
-      dispatch(addNotification(data));
-    });
-    socket.on('quoteNotification', (data) => {
-      dispatch(addNotification(data));
-    });
-
-    socket.on('QuoteApproveRejectuserNotification', (data) => {
-      dispatch(addNotification(data));
+    events.forEach((event) => {
+      socket.on(event, (data) => {
+        dispatch(addNotification(data));
+      });
     });
 
     return () => {
-      socket.off('disconnect');
+      events.forEach((event) => socket.off(event));
     };
   }, []);
 
   return (
-    <span className="notification-container">
-      <div
-        className="notificationIconContainer"
+    <Box position="relative" display="inline-block">
+      <IconButton
         onClick={(e) => {
           e.stopPropagation();
           setShowNotification((prev) => !prev);
         }}
+        color="primary"
       >
-        <img src={notificationIcon} alt="notificationIcon" />
-        {notification.length > 0 && (
-          <div className="notificationCount">{notification.length}</div>
-        )}
-      </div>
+        <Badge
+          badgeContent={notification.length}
+          color="error"
+          invisible={notification.length === 0}
+          
+        >
+          <Bell size={22} />
+        </Badge>
+      </IconButton>
+
       {showNotification && (
-        <div className="notificationContainer" ref={notificationRef}>
-          <Notifications
-            notification={notification}
-            setShowNotification={setShowNotification}
-          />
-        </div>
+        <Box
+          ref={notificationRef}
+          position="absolute"
+          top="3rem"
+          left={isMobile ? '-9rem' : '-7rem'}
+          zIndex={1000}
+        >
+        
+            <NotificationViewer
+              notification={notification}
+              setShowNotification={setShowNotification}
+            />
+        </Box>
       )}
-    </span>
+    </Box>
   );
 };
 

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Typography } from "@mui/material";
 import { getPlacedOrder } from "../../store/actions/getPlacedOrder";
 import { deleteNotification } from "../../store/notification/notification";
 import api from "../../axiosConfig";
@@ -10,6 +8,7 @@ import Pagin from "../../components/Paging/Pagin";
 import { useNavigate } from "react-router-dom";
 import NoDataFound from "../../components/NoDataFound";
 import { NotificationCard, NotificationCardSkeletonList, NotificationInnerContainer } from "../../components/Notifications";
+
 interface Order {
   _id: string;
   order_status: string;
