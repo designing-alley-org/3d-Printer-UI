@@ -1,7 +1,7 @@
 import Button from '../../stories/button/Button';
-import { NotificationWarper, Data } from './styles';
 import airplane from '../../assets/images/airplane.svg';
 import { arrowRight } from '../../constants';
+import { Data, NotificationWarper } from './styles';
 
 interface NotificationCardProps {
   title: string;

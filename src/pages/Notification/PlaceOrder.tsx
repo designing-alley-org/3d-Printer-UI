@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Loader } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Typography } from "@mui/material";
 import { getPlacedOrder } from "../../store/actions/getPlacedOrder";
 import { deleteNotification } from "../../store/notification/notification";
 import api from "../../axiosConfig";
-import { NotificationCard } from "./NotificationCard";
 import { formatDateTime, formatOrderStatus } from "../../utils/Validation";
 import Pagin from "../../components/Paging/Pagin";
 import { useNavigate } from "react-router-dom";
+import NoDataFound from "../../components/NoDataFound";
+import { NotificationCard, NotificationCardSkeletonList, NotificationInnerContainer } from "../../components/Notifications";
+
 interface Order {
   _id: string;
   order_status: string;
@@ -86,46 +86,35 @@ const PlaceOrder = () => {
   };
 
   return (
-    <Box sx={{
-      minHeight: '40rem',
-      position: 'relative',
-    }}>
-      <Typography  variant='h6'
-      sx={{
-        fontSize: {
-          xs: '01rem',
-          md: '1.4rem',
-        },
-        borderBottom: '1px solid #1e6fff',
-        paddingBottom: '0.9rem',
-      }}>
-        Placed Orders
-      </Typography>
+    <NotificationInnerContainer text="Place Orders">
       {isLoading ? (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-          <Loader size="30" color="#0066ff" />
-        </div>
+       <NotificationCardSkeletonList  />
       ) : allPlacedOrder.length > 0 ? (
         allPlacedOrder.map((item) => (
           <div key={item._id}>
             <NotificationCard
-              title={formatOrderStatus(item.order_status)}
-              orderNumber={item._id}
+              orderId={item._id}
               dateTime={formatDateTime(item.updatedAt)}
-              placeOrderStatus={item.hasSuccessfulPayment ? "Success" : "Failed"}
-              buttonLabel={"View "}
+              statusText={item.hasSuccessfulPayment ? "Success" : "Failed"}
+              statusColor={item.hasSuccessfulPayment ? "green" : "red"}
+              message={`${formatOrderStatus(item.order_status)}`}
+              buttonText="View"
               onButtonClick={() => handleViewDetails(item._id)}
               isUnread={notificationMap.get(item._id) ? !notificationMap.get(item._id)?.readStatus : false}
             />
+
           </div>
         ))
       ) : (
-        <Typography sx={{ color: "#525E86" ,display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem"}}>No Place Order found.</Typography>
+       <NoDataFound
+          text="No Placed Orders Found"
+          description="You have not placed any orders yet."
+        />
       )}
      {totalPages > 1 && <div className='pagination'>
         <Pagin setPagination={setPagination} totalPages={totalPages} />
       </div>}
-    </Box>
+    </NotificationInnerContainer>
   );
 };
 

@@ -4,7 +4,7 @@ import { NotWrapper, MainComp, SideTab } from './styles';
 import OngoingOrder from './OngoingOrder';
 import PlaceOrder from './PlaceOrder';
 import { Box, useMediaQuery } from '@mui/material';
-import MyDisputes from './myDispute';
+import MyDisputes from './MyDispute';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 
 
@@ -23,18 +23,6 @@ const NotificationLayout = () => {
             style={{ display: 'flex', alignItems: 'center' }}
           >
             {item.label}
-            <Box
-              sx={{
-                height: '5rem',
-                borderLeft: `20px solid ${item.id === activeTab ? 'white' : 'transparent'}`,
-                backgroundColor:
-                  item.id === activeTab ? 'white' : 'transparent',
-                position: 'absolute',
-                left: '4.8%',
-                zIndex: 9,
-                borderRadius: '3rem 0rem 0rem 3rem',
-              }}
-            ></Box>
           </span>
         ))}
       </SideTab>
