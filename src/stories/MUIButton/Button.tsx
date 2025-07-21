@@ -119,7 +119,7 @@ export default function   MUIButton({
         type={type}
         fullWidth={fullWidth}
         aria-label={ariaLabel || label || 'icon-button'}
-        title={label || ariaLabel || ''}
+        label={label || ariaLabel || ''}
         btnVariant={btnVariant}
         size={size}
         disabled={disabled || loading}
