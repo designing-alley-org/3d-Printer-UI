@@ -6,6 +6,7 @@ import { Button, TextField, useMediaQuery } from '@mui/material';
 import PrinterCard from '../../../components/PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dimensions, FileDetail, UpdateValueById } from '../../../store/customizeFilesDetails/reducer';
+import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
 
 interface AccordionProps {
   icon: string;
@@ -317,7 +318,7 @@ const Accordion: React.FC<AccordionProps> = ({
         )}
         {id === '6' && (
           <div className="infill">
-            <Dropdown
+            {/* <Dropdown
               options={options}
               onSelect={(option) => handelChangeValue('infill', option?.value as string)}
               defaultValue={
@@ -325,6 +326,13 @@ const Accordion: React.FC<AccordionProps> = ({
                   ? 5
                   : String(formData?.infill)
               }
+            /> */}
+            <SingleSelectDropdown
+              options={options}
+              onChange={(option) => handelChangeValue('infill', option.value)}
+              defaultValue={options.find(opt => opt.value === String(formData?.infill))}
+              titleHelper="Select Infill Percentage"
+              error={false}
             />
           </div>
         )}

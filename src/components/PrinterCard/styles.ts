@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.main`
-  border: 0.1px solid #66a3ff;
+export const Wrapper = styled.main<{ isSelected: boolean }>`
+  border: ${props => props.isSelected ? '1px solid #0066ff' : '1px solid #ddd'};
   background-color: #e8f1ff;
   width: 100%;
   border-radius: 24px;
@@ -9,17 +9,6 @@ export const Wrapper = styled.main`
   cursor: pointer;
   margin: 0.5rem 0;
   position: relative;
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0rem;
-    right: 0;
-    background-color: #ffffff;
-    border-radius: 24px 0px 24px 0px;
-    height: 2.8rem;
-    width: 8.3rem;
-  }
-
   img {
     height: 1.5rem;
     width: 1.5rem;
@@ -32,52 +21,19 @@ export const Wrapper = styled.main`
       rotate: 180deg;
     }
   }
-  .select {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    button {
-      border-radius: 50px;
-      font-weight: 500;
-      z-index: 1;
-      font-size: 0.6rem;
-      color: white;
-      padding: 0.4rem 1rem;
-      background: #1e6fff;
-    }
-  }
+
 
   @media (max-width: 768px) {
     width: 100%;
     position: relative;
     padding: 0.5rem 0.5rem;
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0rem;
-      right: 0;
-      background-color: #ffffff;
-      border-radius: 15px 0px 24px 0px;
-      height: 2.3rem;
-      width: 6.5rem;
-    }
+
 
     img {
       height: 1rem;
       width: 1rem;
     }
 
-    .select {
-      button {
-        border-radius: 50px;
-        font-weight: 500;
-        z-index: 1;
-        font-size: 0.5rem;
-        color: white;
-        padding: 0.3rem 0.5rem;
-        background: #1e6fff;
-      }
-    }
   }
 `;
 export const Header = styled.header`
