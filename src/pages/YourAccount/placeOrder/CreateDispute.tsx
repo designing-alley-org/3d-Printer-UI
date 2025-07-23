@@ -5,6 +5,8 @@ import Button from '../../../stories/button/Button';
 import { createDispute } from '../../../store/actions/CreateDispute';
 import toast from 'react-hot-toast';
 import { CreateDisputeWrapper } from './style';
+import MUIButton from '../../../stories/MUIButton/Button';
+import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
 
 interface DisputeForm {
   dispute_type: string;
@@ -142,16 +144,18 @@ const CreateDispute = ({ orderId,setIsCreateDispute }: CreateDisputeProps) => {
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="dispute-type">Dispute Type</label>
-            <Dropdown
+            <div className="form-group">
+            <label htmlFor="dispute-type">
+              Dispute Type
+            </label>
+            <SingleSelectDropdown
               options={disputeTypes}
-              onSelect={handleDisputeTypeSelect}
-              defaultValue={formData.dispute_type}
+              onChange={handleDisputeTypeSelect}
+              defaultValue={disputeTypes.find(opt => opt.value === formData.dispute_type)}
               titleHelper="Select Dispute Type"
-              error={errors.dispute_type}
+              error={!!errors.dispute_type}
             />
-          </div>
+            </div>
           <div className="form-group">
             <label htmlFor="dispute-reason">
               Dispute reason
@@ -170,11 +174,10 @@ const CreateDispute = ({ orderId,setIsCreateDispute }: CreateDisputeProps) => {
             />
           </div>
           <div className="form-group">
-            <Button
+            <MUIButton
               type="submit"
               label={isSubmitting ? 'Creating...' : 'Create Dispute'}
               disabled={isSubmitting}
-              className='btn-dispute'
             />
           </div>
         </form>

@@ -6,8 +6,10 @@ import { formatDateTime, formatOrderStatus } from "../../../utils/Validation";
 import { Loader } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography } from "@mui/material";
-import { NotificationCard } from "../../Notification/NotificationCard";
 import { useParams } from "react-router-dom";
+import NotificationCard from "../../Notification/NotificationCard";
+import OldNotificationCardSkeletonList from "../../../components/Notifications/OldNotificationCardSkeletonList";
+import NoDataFound from "../../../components/NoDataFound";
 
 interface Order {
   _id: string;
@@ -92,9 +94,7 @@ const PlaceOrder = () => {
         Placed Orders
       </Typography>
       {isLoading ? (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-          <Loader size="30" color="#0066ff" />
-        </div>
+       <OldNotificationCardSkeletonList />
       ) : allPlacedOrder.length > 0 ? (
         allPlacedOrder.map((item) => (
           <div key={item._id}>
@@ -114,7 +114,10 @@ const PlaceOrder = () => {
           </div>
         ))
       ) : (
-        <Typography sx={{ color: "#525E86" ,display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem"}}>No Place Order found.</Typography>
+      <NoDataFound
+        text="No Placed Orders Found"
+        description="Check back later."
+      />
       )}
      {totalPages > 1 && <div className='pagination'>
         <Pagin setPagination={setPagination} totalPages={totalPages} />

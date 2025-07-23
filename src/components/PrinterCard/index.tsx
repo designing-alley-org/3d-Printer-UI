@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import arrow from '../../assets/icons/arrow_drop_down_circle.svg';
 import { Body, Header, Wrapper } from './styles';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import MUIButton from '../../stories/MUIButton/Button';
 
 interface BuildVolume {
   x: number;
@@ -118,7 +119,7 @@ const PrinterCard = ({
   );
 
   return (
-    <Wrapper onClick={toggleAccordion}>
+    <Wrapper onClick={toggleAccordion} isSelected={isSelected}>
       <Header>
         <section>
           <span className="title">{title}</span>
@@ -130,11 +131,21 @@ const PrinterCard = ({
         </span>
       </Header>
       <Body>{isOpen && <section>{renderPrinterData(data)}</section>}</Body>
-      <span className="select">
-        <Button onClick={handleSelect}>
+      <Box
+        display='flex'
+        justifyContent='flex-end'
+        alignItems='center'
+        padding='0.5rem'
+        className="select-button">
+        {/* <Button onClick={handleSelect}>
           {isSelected ? 'UNSELECT' : 'SELECT'}
-        </Button>
-      </span>
+        </Button> */}
+        <MUIButton
+        label={isSelected ? 'Unselect' : 'select'}
+        btnVariant={isSelected ? 'primary' : 'icon-soft'}
+        size='small'
+        onClick={handleSelect}/>
+         </Box>
     </Wrapper>
   );
 };

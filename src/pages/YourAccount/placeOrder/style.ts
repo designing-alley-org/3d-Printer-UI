@@ -60,12 +60,7 @@ export const CreateDisputeWrapper = styled.div`
         }
       }
 
-      .btn-dispute {
-        background: #0066ff;
-        font-size: 0.9rem;
-        font-weight: 500;
-      }
-
+     
       .error-message {
         color: #dc3545;
         font-size: 0.875rem;

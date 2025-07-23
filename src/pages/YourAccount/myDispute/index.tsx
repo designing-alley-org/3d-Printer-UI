@@ -6,8 +6,10 @@ import { ArrowLeftIcon, Loader } from 'lucide-react';
 import Quote from './Quote/Card';
 import { formatDateTime } from '../../../utils/Validation';
 import { Typography, useMediaQuery } from '@mui/material';
-import { NotificationCard } from '../../Notification/NotificationCard';
 import { useParams } from 'react-router-dom';
+import NotificationCard from '../../Notification/NotificationCard';
+import NoDataFound from '../../../components/NoDataFound';
+import OldNotificationCardSkeletonList from '../../../components/Notifications/OldNotificationCardSkeletonList';
 
 interface Dispute {
   _id: string;
@@ -100,9 +102,7 @@ const MyDisputes: React.FC = () => {
           }}>
           My Disputes
         </Typography>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-          <Loader size="30" color="#0066ff" />
-        </div>
+        <OldNotificationCardSkeletonList />
       </MyDisputesWrapper>
     );
   }
@@ -160,9 +160,10 @@ const MyDisputes: React.FC = () => {
           My Disputes
         </Typography>
           {disputeData.disputes.length === 0 ? (
-            <div className="no-Dispute">
-              <p>No disputes found</p>
-            </div>
+           <NoDataFound
+             text="No Disputes Found"
+             description="Check back later."
+           />
           ) : (
             <>
               {disputeData.disputes.map((dispute) => (

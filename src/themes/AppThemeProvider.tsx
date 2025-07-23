@@ -47,9 +47,6 @@ const AppThemeProvider = ({ children }: IAppThemeProvider) => {
         textTransform: 'none',
       },
     },
-    shape: {
-      borderRadius: 999,
-    },
     components: {
       MuiButton: {
         styleOverrides: {

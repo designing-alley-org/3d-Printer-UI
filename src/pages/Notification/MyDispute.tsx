@@ -170,7 +170,7 @@ const MyDisputes: React.FC = () => {
                 buttonText="Chat"
                 statusKey="Dispute Status:"
                 statusText={dispute.status}
-                statusColor={dispute.status === 'resolved' ? 'green' : dispute.status === 'inProgress' ? 'orange' : 'red'}
+                statusColor={dispute.status === 'Resolved' ? 'green' : dispute.status === 'inProgress' ? 'orange' : 'red'}
                 onButtonClick={handleChatOpen(dispute)}
                 isUnread={notification ? !notification.readStatus : false}
               />

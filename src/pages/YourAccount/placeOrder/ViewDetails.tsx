@@ -1,17 +1,18 @@
-import Button from '../../../stories/button/Button'
-import CreateDispute from './CreateDispute'
-import { Box, Modal } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { OrderFilesList } from '../../../components/OrderDetails/OrderFileList'
-import { ViewDetailsWrapper } from '../../Notification/styles'
-import RequestReturnModal from './RequestReturnModal'
-import { trackByTrackingNumberService } from '../../../services/fedex'
+import Button from '../../../stories/button/Button';
+import CreateDispute from './CreateDispute';
+import { Box, Modal } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { OrderFilesList } from '../../../components/OrderDetails/OrderFileList';
+import { ViewDetailsWrapper } from '../../Notification/styles';
+import RequestReturnModal from './RequestReturnModal';
+import { trackByTrackingNumberService } from '../../../services/fedex';
+import MUIButton from '../../../stories/MUIButton/Button';
 
 interface ViewDetailsProps {
   myOrders?: 'yes' | 'no'; // Made optional and union type for better type safety
   item: {
     _id: string;
-    returnDetails?:string[];
+    returnDetails?: string[];
     hasReturnRequest: boolean;
     shipment_tracking_id: string;
     shipmentId: string;
@@ -24,17 +25,14 @@ interface ViewDetailsProps {
   };
 }
 
-
-
-const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
+const ViewDetails = ({ myOrders = 'no', item }: ViewDetailsProps) => {
   const [isCreateDispute, setIsCreateDispute] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const showDispute = myOrders !== 'yes'; 
+  const showDispute = myOrders !== 'yes';
   const trackingId = item?.shipment_tracking_id || '';
   const [trackingDetails, setTrackingDetails] = useState([]);
-
 
   useEffect(() => {
     const fetchTrackingDetails = async () => {
@@ -44,7 +42,7 @@ const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
       } catch (error) {
         console.error('Error fetching tracking details:', error);
       }
-    }
+    };
     if (trackingId) {
       fetchTrackingDetails();
     }
@@ -52,43 +50,52 @@ const ViewDetails = ({  myOrders = 'no',  item }: ViewDetailsProps) => {
 
   return (
     <ViewDetailsWrapper>
-      
-      <OrderFilesList trackingDetails={trackingDetails}  files={item.files} payment={item?.paymentDetails?.slice(-1)[0]?.amount} order_status={item.order_status} hasReturnRequest={item?.hasReturnRequest} returnDetails ={item?.returnDetails}/>
-    
-    
-      {showDispute && (
-        <Box sx={{ marginTop: '3rem', width: '100%', display: 'flex', justifyContent: 'space-between' }}> 
-       {
-       item.order_status === "Delivered" &&  
-       <Button 
-          className='createDispute-btn' 
-          label='Return Request' 
-          onClick={handleOpen}
-        /> 
-        }    
-        <RequestReturnModal open={open} onClose={handleClose}   shipmentId={item.shipmentId} orderID={item._id}/> 
-          <Button 
-          className='createDispute-btn' 
-          label='Create Dispute' 
-          onClick={() => setIsCreateDispute(true)} 
-        />
-        </Box>
+      <OrderFilesList
+        trackingDetails={trackingDetails}
+        files={item.files}
+        payment={item?.paymentDetails?.slice(-1)[0]?.amount}
+        order_status={item.order_status}
+        hasReturnRequest={item?.hasReturnRequest}
+        returnDetails={item?.returnDetails}
+      />
 
-      )}
-      
-      {showDispute && isCreateDispute && (
-        <Modal 
-          open={isCreateDispute} 
-          onClose={() => setIsCreateDispute(false)}
+      {showDispute && (
+        <Box
+        gap={2}
+         display='flex'
+         justifyContent='space-between'
+         marginTop={2}
         >
-          <CreateDispute 
-            orderId={item._id} 
-            setIsCreateDispute={setIsCreateDispute} 
+          {item.order_status === 'Delivered' && (
+            <MUIButton
+              btnVariant="outlined"
+              label="Return Request"
+              onClick={handleOpen}
+            />
+          )}
+          <RequestReturnModal
+            open={open}
+            onClose={handleClose}
+            shipmentId={item.shipmentId}
+            orderID={item._id}
+          />
+          <MUIButton
+            label="Create Dispute"
+            onClick={() => setIsCreateDispute(true)}
+          />
+        </Box>
+      )}
+
+      {showDispute && isCreateDispute && (
+        <Modal open={isCreateDispute} onClose={() => setIsCreateDispute(false)}>
+          <CreateDispute
+            orderId={item._id}
+            setIsCreateDispute={setIsCreateDispute}
           />
         </Modal>
       )}
     </ViewDetailsWrapper>
-  )
-}
+  );
+};
 
-export default ViewDetails
+export default ViewDetails;

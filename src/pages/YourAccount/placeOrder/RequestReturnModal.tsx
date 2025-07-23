@@ -13,6 +13,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { returnRequestService } from '../../../services/fedex';
 import toast from 'react-hot-toast';
+import MUIButton from '../../../stories/MUIButton/Button';
 
 interface ImagePreview {
     file: File;
@@ -194,7 +195,7 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
 
                 {/* Submit Button */}
                 <Box mt={4} display="flex" justifyContent="flex-end">
-                    <Button
+                    {/* <Button
                         variant="contained"
                         onClick={handleSubmit}
                         disabled={images.length < 2 || !reason.trim()}
@@ -211,7 +212,13 @@ const RequestReturnModal: React.FC<RequestReturnModalProps> = ({ open, onClose, 
                         }}
                     >
                        {isLoading ? 'Loading...' : ' Request Return'}
-                    </Button>
+                    </Button> */}
+
+                    <MUIButton
+                        label={isLoading ? 'Loading...' : 'Request Return'}
+                        onClick={handleSubmit}
+                        disabled={images.length < 2 || !reason.trim()}
+                    />
                 </Box>
             </Box>
         </Modal>
