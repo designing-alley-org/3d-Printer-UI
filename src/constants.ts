@@ -62,21 +62,18 @@ export const tabData = [
     path: 'dashboard',
   },
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
-  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
   { id: 4, label: ''}, // This is created for notification... 
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
 ];
 
 export const DesktoptabData = [
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
-  { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
 ];
 
 export const MobiltabData = [
   { id: 0, label: '3D PRINT YOUR FUTURE', path: 'dashboard',},
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
-  // { id: 2, label: 'OUR SERVICES', path: ROUTES.SERVICES },
-  { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
+  { id: 2, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
 ];
 
 // Data for QuoteText
@@ -93,7 +90,6 @@ export const accTab = [
   { id: 3, label: 'My Dispute', path: ROUTES.MY_DISPUTE },
   { id: 4, label: 'Place Order', path: ROUTES.PLACE_ORDER },
   { id: 5, label: 'Password', path: ROUTES.PASSWORD },
-  // { id: 6, label: 'Settings', path: ROUTES.ACCOUNT_SETTINGS },
 ];
 
 export const notificationTab = [

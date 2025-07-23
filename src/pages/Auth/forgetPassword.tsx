@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Button, Container, Typography, Paper, useMediaQuery, Alert } from '@mui/material';
+import { Box, Container, Typography, Paper, useMediaQuery, Alert } from '@mui/material';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../../routes/routes-constants';
 import { sendPasswordResetService } from '../../services/user';
 import { Formik, Form } from 'formik';
 import { forgotPasswordValidationSchema } from '../../validation';
 import { InputField } from '../../components/AuthField';
+import MUIButton from '../../stories/MUIButton/Button';
 
 const ForgetPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -71,14 +72,13 @@ const ForgetPassword: React.FC = () => {
                     validationEnabled={true}
                   />
                 </Box>
-                <Button
-                  type="submit"
-                  variant="contained"
+                <MUIButton
+                  type='submit'
+                  label='Submit'
                   fullWidth
-                  sx={{ bgcolor: '#0066ff', borderRadius: '25px', py: 1, '&:hover': { bgcolor: '#0052cc' }, fontSize: isSmallScreen ? '0.8rem' : '1rem', }}
-                >
-                  Submit
-                </Button>
+                  size='large'
+                />
+
                 <Box sx={{ textAlign: 'center', mt: 2 }}>
                   <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>
                     Back to <Link to={ROUTES.LOGIN}>Login</Link>

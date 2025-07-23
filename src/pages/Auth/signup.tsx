@@ -9,6 +9,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Formik, Form } from 'formik';
 import { signupValidationSchema } from '../../validation';
 import { InputField, PasswordField } from '../../components/AuthField';
+import MUIButton from '../../stories/MUIButton/Button';
 
 const SocialButton = styled(Button)({
   borderRadius: '25px',
@@ -138,22 +139,17 @@ const RegisterForm: React.FC = () => {
                       Login
                     </Link>
                   </Typography>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    disabled={loading}
-                    sx={{
-                      width: '9rem',
-                      height: '2.3rem',
-                      bgcolor: '#0066ff',
-                      borderRadius: '25px',
-                      fontSize: isSmallScreen ? '0.85rem' : '.7rem',
-                      '&:hover': { bgcolor: '#0052cc' },
-                    }}
-                  >
-                    {loading ? 'Registering...' : 'Register'}
-                  </Button>
+                   <MUIButton
+                                      type="submit"
+                                      fullWidth
+                                      disabled={loading}
+                                      loading={loading}
+                                      label='Register'
+                                      style={{
+                                        width: '11rem',
+                                        height: '2.3rem',
+                                      }}
+                                    />
                 </Box>
               </Form>
             )}

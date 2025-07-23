@@ -37,6 +37,13 @@ const StyledButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'btnVariant',
 })<ButtonProps>(({ btnVariant }) => {
   switch (btnVariant) {
+    case 'primary':
+      return {
+        ...commonStyles,
+        backgroundColor: '#1E65F5',
+        color: '#fff',
+        '&:hover': { backgroundColor: '#155bbf' },
+      };
  
     case 'outlined':
       return {

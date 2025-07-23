@@ -3,7 +3,7 @@ import {  useState } from 'react';
 import { NotWrapper, MainComp, SideTab } from './styles';
 import OngoingOrder from './OngoingOrder';
 import PlaceOrder from './PlaceOrder';
-import { Box, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import MyDisputes from './MyDispute';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
-import { Box, Button,  Container, TextField,  Paper, styled, useMediaQuery, Typography } from '@mui/material';
+import { Box,  Container, TextField,  Paper, styled, useMediaQuery, Typography } from '@mui/material';
 import { ROUTES } from '../../routes/routes-constants';
-import toast from 'react-hot-toast';
 import { changePassword } from '../../store/actions/changePassword';
 import { validatePassword } from '../../utils/Validation';
+import MUIButton from '../../stories/MUIButton/Button';
 
 interface FormState {
     newPassword: string;
@@ -27,7 +27,7 @@ const ChangePassword: React.FC = () => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
   const [err, setErr] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading] = useState(false);
   const [form, setForm] = useState<FormState>({
     newPassword: '',
     confirmPassword: ''
@@ -93,18 +93,18 @@ const ChangePassword: React.FC = () => {
               />
             </Box>
             {err && <Typography sx={{ color: 'red', mb: 1, fontSize: isSmallScreen ? '0.5rem' : '.7rem' }}>{err}</Typography>}
-            <Button
-              type="submit"
-              variant="contained"
+            
+            <MUIButton
+              type='submit'
+              label='Save'
               fullWidth
-              sx={{ bgcolor: '#0066ff', borderRadius: '25px', py: 1, '&:hover': { bgcolor: '#0052cc' }, fontSize: isSmallScreen ? '0.8rem' : '0.9rem', }}
-            >
-                Save
-            </Button>
+              disabled={loading}
+              loading={loading}
+              />
             <Box sx={{ textAlign: 'center', mt: 2 }}>
             <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem' }}>
                 Back to <Link to={ROUTES.LOGIN}>Login</Link>
-              </Typography>
+            </Typography>
             </Box>
           </Box>
         </Paper>

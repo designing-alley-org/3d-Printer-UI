@@ -19,6 +19,7 @@ import "./styles.css";
 import { InputField, PasswordField } from '../../components/AuthField';
 import { Formik, Form } from 'formik';
 import { loginValidationSchema } from '../../validation';
+import MUIButton from '../../stories/MUIButton/Button';
 
 const SocialButton = styled(Button)({
   borderRadius: '25px',
@@ -146,23 +147,17 @@ const Login: React.FC = () => {
                       Register Now
                     </Link>
                   </Typography>
-
-                  <Button
+                  <MUIButton
                     type="submit"
-                    variant="contained"
                     fullWidth
                     disabled={loading}
-                    sx={{
+                    loading={loading}
+                    label={loading ? 'Logging in...' : 'Login'}
+                    style={{
                       width: '11rem',
                       height: '2.3rem',
-                      bgcolor: '#0066ff',
-                      borderRadius: '25px',
-                      fontSize: isSmallScreen ? '0.85rem' : '.7rem',
-                      '&:hover': { bgcolor: '#0052cc' },
                     }}
-                  >
-                    {loading ? 'Logging in...' : 'Login'}
-                  </Button>
+                  />
                 </Box>
               </Form>
             )}

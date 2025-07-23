@@ -1,7 +1,8 @@
-import Button from '../../stories/button/Button';
+import { Box, Typography, Badge, useMediaQuery } from '@mui/material';
+import { FC } from 'react';
 import airplane from '../../assets/images/airplane.svg';
-import { arrowRight } from '../../constants';
-import { Data, NotificationWarper } from './styles';
+import MUIButton from '../../stories/MUIButton/Button';
+import { ArrowRight } from 'lucide-react';
 
 interface NotificationCardProps {
   title: string;
@@ -12,10 +13,10 @@ interface NotificationCardProps {
   placeOrderStatus?: string;
   onButtonClick?: () => void;
   myOrders?: string;
-  isUnread?: boolean; // New prop for unread status
+  isUnread?: boolean;
 }
 
-export const NotificationCard: React.FC<NotificationCardProps> = ({
+const NotificationCard: FC<NotificationCardProps> = ({
   title,
   orderNumber,
   dateTime,
@@ -24,84 +25,188 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
   status,
   myOrders,
   placeOrderStatus,
-  isUnread, // Receiving isUnread prop
+  isUnread,
 }) => {
+  const isMobile = useMediaQuery('(max-width:768px)');
+
   return (
-    <NotificationWarper>
-      <div className="model">
-        <span className="modelView">
-          <img src={airplane} alt="" />
-        </span>
-      </div>
-      <Data>
-        <div className="title">
+    <Box
+      sx={{
+        width: '100%',
+        height: isMobile ? '4.5rem' : '7.0625rem',
+        display: 'flex',
+        alignItems: 'center',
+        padding: isMobile ? '0.5rem' : '0.8rem',
+        borderRadius: isMobile ? '1rem' : '1.25rem',
+        border: '1px solid #bbd6ff',
+        background: '#f6faff',
+        position: 'relative',
+        marginTop: '1rem',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          transform: 'scale(1.01)',
+        },
+      }}
+    >
+      {/* Image section */}
+      <Box
+        sx={{
+          background: '#f0f6ff',
+          boxShadow: '0px 4px 4px rgba(205, 225, 255, 1)',
+          height: isMobile ? '3rem' : '95%',
+          width: isMobile ? '3rem' : '6rem',
+          borderRadius: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Box
+          component="img"
+          src={airplane}
+          alt="icon"
+          sx={{ width: isMobile ? '2.5rem' : 'auto' }}
+        />
+      </Box>
+
+      {/* Text Section */}
+      <Box
+        sx={{
+          marginLeft: isMobile ? '1rem' : '3rem',
+          flex: 1,
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          fontWeight={500}
+          sx={{
+            fontSize: isMobile ? '0.7rem' : '1rem',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           {title}
           {isUnread && (
-            <span
-              style={{
-                background: 'blue',
-                height: '10px',
-                width: '10px',
-                borderRadius: '50%',
-                display: 'inline-block',
-                marginLeft: '8px',
+            <Badge
+              variant="dot"
+              color="primary"
+              sx={{
+                marginLeft: '0.5rem',
+                '& .MuiBadge-dot': {
+                  height: '10px',
+                  width: '10px',
+                  borderRadius: '50%',
+                },
               }}
-            ></span>
+            />
           )}
-        </div>
+        </Typography>
 
-        <div className="description">
-          <div>
-            <p>
-              ORDER NO. <span>{orderNumber}</span>
-            </p>
-            <p>
-              DATE & TIME <span>{dateTime}</span>
-            </p>
-          </div>
-        </div>
-      </Data>
-      <div className="btn">
-        <Button
-          label={buttonLabel}
-          onClick={() => onButtonClick && onButtonClick()}
-          className="btn-icon"
+        <Box
+          display= 'flex'
+          flexDirection='column'
+          sx={{
+            fontSize: isMobile ? '0.4rem' : '0.6rem',
+            fontWeight: 400,
+            marginTop: '0.2rem',
+          }}
         >
-          <img src={arrowRight} alt="" />
-        </Button>
-        {placeOrderStatus && (
-           <Button
-           label={` ${placeOrderStatus === 'Success' ? 'Successful' : 'Failed'}`}
-           style={{
-             backgroundColor:
-             placeOrderStatus === 'Success' ? 'rgb(93, 214, 93)': 'rgb(244, 68, 68)',
-           }}
-           className="btn-status"
-         />
-        )}
-        {status && (
-          <Button
-            label={status === 'Resolved' ? 'Closed' : 'InProgress'}
-            style={{
-              backgroundColor:
-                status === 'Resolved' ? 'rgb(244, 68, 68)' : 'rgb(93, 214, 93)',
-            }}
-            className="btn-status"
-          />
-        )}
-        {myOrders && (
-          <Button
-            label={myOrders
-              .split('_')
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' ')
-              .replace('Order', '')}
-            style={{ backgroundColor: 'rgb(93, 151, 214)' }}
-            onClick={() => onButtonClick && onButtonClick()}
-            className="btn-status"
-          />
-        )}
-      </div>
-    </NotificationWarper>
+            <Typography component="span"  fontSize={isMobile ? '0.6rem' : '0.8rem'}> 
+               ORDER NO : {orderNumber}
+          </Typography>
+            <Typography
+              component="span"
+              fontSize={isMobile ? '0.6rem' : '0.8rem'}
+            >
+            DATE & TIME : {dateTime}
+            </Typography>
+        </Box>
+      </Box>
+
+      {/* Buttons Section */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignContent="flex-end"
+        position={'relative'}
+        gap={3}
+      >
+        {/* Icon Button */}
+        <MUIButton
+          size="small"
+          onClick={onButtonClick}
+          icon={<ArrowRight size={20} />}
+          btnVariant="icon-soft"
+          label={buttonLabel}
+        />
+
+        <Box marginLeft={isMobile ? '0.5rem' : '3rem'} >
+          {/* Order Status */}
+          {placeOrderStatus && (
+            <Badge
+              badgeContent={placeOrderStatus}
+              color={
+                placeOrderStatus === 'InProgress'
+                  ? 'primary'
+                  : placeOrderStatus === 'Success'
+                    ? 'success'
+                    : 'secondary'
+              }
+              sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor:
+                    placeOrderStatus === 'InProgress'
+                      ? '#f44444'
+                      : placeOrderStatus === 'Success'
+                        ? '#4caf50'
+                        : '#5d96d6',
+                  color: 'white',
+                  fontSize: isMobile ? '0.3rem' : '0.6rem',
+                },
+              }}
+            />
+          )}
+
+          {/* Complaint Status */}
+          {status && (
+            <Badge
+              badgeContent={status}
+              color={status === 'InProgress' ? 'primary' : 'secondary'}
+              sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor:
+                    status === 'InProgress' ? '#5d96d6' : '#f44444',
+                  color: 'white',
+                  fontSize: isMobile ? '0.3rem' : '0.6rem',
+                  borderRadius: '44px',
+                },
+              }}
+            />
+          )}
+
+          {/* My Orders */}
+          {myOrders && (
+            <Badge
+              badgeContent={myOrders
+                .split('_')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')
+                .replace('Order', '')}
+              color="primary"
+              sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor: '#5d96d6',
+                  color: 'white',
+                  fontSize: isMobile ? '0.3rem' : '0.6rem',
+                  borderRadius: '44px',
+                },
+              }}
+            />
+          )}
+        </Box>
+      </Box>
+    </Box>
   );
 };
+
+export default NotificationCard;

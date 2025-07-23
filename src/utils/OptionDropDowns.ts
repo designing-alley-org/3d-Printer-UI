@@ -1,4 +1,4 @@
-import { Option } from "../stories/Dropdown/Dropdown";
+import { Option } from "../stories/Dropdown/SingleSelectDropdown";
 
 const filterByDayMonthYear: Option[] = [
     {id: 1, value: 'month', label: 'Month'},

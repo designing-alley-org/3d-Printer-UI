@@ -1,4 +1,3 @@
-import { NotificationCard } from "../Notification/NotificationCard";
 import { useEffect, useState } from "react";
 import { getUserOrder } from "../../store/actions/getUserOrder";
 import Pagin from "../../components/Paging/Pagin";
@@ -6,6 +5,9 @@ import { OrderWrapper } from "./styles";
 import { Loader } from "lucide-react";
 import { formatDateTime, formatOrderStatus } from "../../utils/Validation";
 import ViewDetails from "./placeOrder/ViewDetails";
+import NotificationCard from "../Notification/NotificationCard";
+import NoDataFound from "../../components/NoDataFound";
+import OldNotificationCardSkeletonList from "../../components/Notifications/OldNotificationCardSkeletonList";
 
 // Define interfaces for type safety
 interface Order {
@@ -13,15 +15,15 @@ interface Order {
   order_status: string;
   files: string[];
   updatedAt: string;
+ totalPages: number; // Optional, in case the API does not return this
   // Add other order properties as needed
 }
 
 interface OrderResponse {
   orders: Order[];
-  totalPages: number;
 }
 
-const MyOrders = () => {
+export const MyOrders = () => {
   const [orders, setOrders] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,13 +61,12 @@ const MyOrders = () => {
         <h1 className="orders-title">TOTAL ORDERS</h1>
 
         {isLoading ? (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "5rem" }}>
-            <Loader size="30" color="#0066ff" />
-          </div>
+          <OldNotificationCardSkeletonList />
         ) : !orders?.orders?.length ? (
-          <div className="no-orders-container">
-            <p className="no-orders">No orders found.</p>
-          </div>
+          <NoDataFound
+            text="No Orders Found"
+            description="Check back later."
+          />
         ) : (
           <div className="orders-list">
             {orders.orders.map((item: Order) => (
@@ -99,4 +100,3 @@ const MyOrders = () => {
   );
 };
 
-export default MyOrders;

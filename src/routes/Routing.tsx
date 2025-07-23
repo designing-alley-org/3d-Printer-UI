@@ -29,7 +29,7 @@ import MyDisputes from '../pages/YourAccount/myDispute/index.tsx';
 import PlaceOrder from '../pages/YourAccount/placeOrder/PlaceOrder.tsx';
 import Password from '../pages/YourAccount/Password.tsx';
 import Settings from '../pages/YourAccount/Settings.tsx';
-import MyOrders from '../pages/YourAccount/MyOrders.tsx';
+import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
 
 const Routing: React.FC = () => {
   return (
