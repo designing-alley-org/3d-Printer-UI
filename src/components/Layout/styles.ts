@@ -25,7 +25,10 @@ export const Wrapper = styled(Box)(({ theme }) => ({
 }));
 
 export const Wrap = styled('section')(({ theme }) => ({
-  margin: '0rem 2rem',
+margin: '0rem 2rem',
+padding:'2rem',
+
+  minHeight: '90vh',
   [theme.breakpoints.down('md')]: {
     margin: '0rem ',
     '.get-quote-heading': {

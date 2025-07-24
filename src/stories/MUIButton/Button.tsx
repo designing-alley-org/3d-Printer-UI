@@ -104,6 +104,7 @@ const StyledButton = styled(Button, {
         minHeight: '2rem',
         width: '2rem',
         height: '2rem',
+        border: '1px solid #1E6FFF',
         backgroundColor: '#a7c9ff',
         color: '#000',
         display: 'flex',
@@ -142,7 +143,6 @@ export default function   MUIButton({
         type={type}
         fullWidth={fullWidth}
         aria-label={ariaLabel || label || 'icon-button'}
-        label={label || ariaLabel || ''}
         btnVariant={btnVariant}
         size={size}
         disabled={disabled || loading}

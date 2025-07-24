@@ -54,26 +54,19 @@ export const viewButton: SxProps = {
   justifyContent: 'center',
   alignItems: 'center',
   backgroundColor: '#66A3FF',
-  height: '2rem',
-  width: '2rem',
   borderRadius: '50%',
+  padding: '.3rem',
   cursor: 'pointer',
+  minHeight: '1.7rem',
+  minWidth: '1.7rem',
+  width: '1.7rem',
+  height: '1.7rem',
+  border: 'none',
   transition: 'transform 0.3s ease',
-  '&:hover': {
-    backgroundColor: '#5592e6',
-    transform: 'scale(1.1)',
-  },
-  '& img': {
-    width: '1rem',
-    height: '1rem',
-  },
   '@media (max-width: 768px)': {
     width: '1.5rem',
     height: '1.5rem',
-    '& img': {
-      width: '.7rem',
-      height: '.7rem',
-    },
+    
   },
 };
 

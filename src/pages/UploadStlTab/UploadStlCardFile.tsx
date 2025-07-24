@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Typography, TextField, CircularProgress, useMediaQuery } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
-import {  vector } from '../../constants';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
 import { getFile } from '../../utils/indexedDB';
 import MUIButton from '../../stories/MUIButton/Button';
-import { Minus, Plus, X } from 'lucide-react';
+import { Box as BoxIcon, Minus, Plus, X } from 'lucide-react';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -219,15 +218,14 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                   Error loading file preview
                 </Typography>
               )}
-              <Box
-                sx={styles.viewButton}
+             
+              <MUIButton
+                btnVariant='icon-rounded'
+                icon={<BoxIcon color='#ffffff' strokeWidth={1} />}
                 onClick={handleViewerOpen}
-                role="button"
-                tabIndex={0}
                 aria-label="Open 3D viewer"
-              >
-                <img src={vector} alt="View 3D model" />
-              </Box>
+                style={styles.viewButton as React.CSSProperties}
+                />
             </Box>
           </Box>
 
@@ -265,7 +263,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
             </Box>
             <Box sx={styles.quantityValueBox}>
               <MUIButton
-                icon={<Minus color='#1E65F5' />}
+                icon={<Minus color='#1E65F5' size={15}/>}
                 onClick={() => handleQuantityChange('decrease')}
                 disabled={file.quantity <= QUANTITY_LIMITS.MIN}
                 aria-label="Decrease quantity"
@@ -303,7 +301,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               }}
               />
               <MUIButton
-                icon={<Plus color='#1E65F5' />}
+                icon={<Plus color='#1E65F5' size={15} />}
                 onClick={() => handleQuantityChange('increase')}
                 disabled={file.quantity >= QUANTITY_LIMITS.MAX}
                 aria-label="Increase quantity"
@@ -321,6 +319,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 style={{
                   backgroundColor: 'transparent',
                   boxShadow: 'none',
+                  border: 'none'
                 }}
               />
         </Box>

@@ -1,7 +1,8 @@
-import { Box, Paper, Skeleton, Typography } from '@mui/material';
+import { Box, Paper, Skeleton, Typography, useMediaQuery } from '@mui/material';
 import React from 'react';
 import MUIButton from '../../stories/MUIButton/Button';
 import StepLayoutSkleton from '../skeleton/StepLayoutSkleton';
+import { useNavigate } from 'react-router-dom';
 
 interface StepLayoutProps {
   stepNumber: number;
@@ -9,11 +10,13 @@ interface StepLayoutProps {
   stepText?: string;
   onClick?: () => void;
   stepDescription?: string;
+  isBackDisabled?: boolean;
   orderId?: string;
   isDisabled?: boolean;
   isLoading?: boolean;
   children?: React.ReactNode;
   isPageLoading?: boolean;
+  
 }
 
 const StepLayout = ({
@@ -27,7 +30,11 @@ const StepLayout = ({
   isLoading,
   children,
   isPageLoading = false,
+  isBackDisabled = false,
 }: StepLayoutProps) => {
+
+  const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
 
   if (isPageLoading) {
@@ -42,11 +49,12 @@ const StepLayout = ({
           width: '100%',
           height: '100%',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          flexDirection: isSmallScreen ? 'column' : 'row',
+          alignItems: isSmallScreen ? 'start' : 'center',
+          justifyContent: isSmallScreen ? 'start' : 'space-between',
         }}
       >
-        <Typography variant="h4" component="h3" gutterBottom sx={{ fontWeight: 600 }} color='primary'>
+        <Typography variant={isSmallScreen ? "h6" : "h4"} component="h3" gutterBottom sx={{ fontWeight: 600 }} color='primary'>
           Step {stepNumber}. {stepText || 'Default Step Text'}
         </Typography>
         <Typography variant="body1" gutterBottom sx={{ fontWeight: 500 }} color='secondary'>
@@ -55,7 +63,7 @@ const StepLayout = ({
       </Box>
 
       {stepDescription && (
-        <Box sx={{ padding: '1rem', textAlign: 'start' , maxWidth: '900px'}}>
+        <Box sx={{  textAlign: 'start' , maxWidth: '900px'}}>
           <Typography variant="body2">{stepDescription}</Typography>
         </Box>
       )}
@@ -76,9 +84,25 @@ const StepLayout = ({
         sx={{
           textAlign: 'center',
           display: 'flex',
+          gap: '1rem',
           justifyContent: 'flex-end',
         }}
       >
+        <MUIButton
+          btnVariant='outlined'
+          onClick={() => {
+            if (stepNumber > 1) {
+              navigate(-1);
+            }
+          }}
+          disabled={stepNumber === 1 ? true : isBackDisabled ? true : false}
+          label='Go Back'
+          style={{
+            width: 'fit-content',
+            padding: '0.7rem 2.5rem',
+            borderColor: stepNumber === 1 ? 'transparent' : 'primary.main',
+          }}
+        />
         <MUIButton
           label={buttonLabel || 'Next'}
           onClick={onClick}
@@ -87,7 +111,6 @@ const StepLayout = ({
           style={{
             width: 'fit-content',
             padding: '0.7rem 2rem',
-            fontSize: '1rem',
           }}
         />
       </Box>
