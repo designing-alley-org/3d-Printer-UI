@@ -12,7 +12,6 @@ import {
 import { quoteTexts } from '../../constants';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
-import Button from '../../stories/button/Button';
 import UploadStlCard from '../../pages/UploadStlTab/UploadStlTab';
 import api from '../../axiosConfig';
 import { useSelector } from 'react-redux';

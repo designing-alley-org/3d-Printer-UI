@@ -6,8 +6,8 @@ import NotificationBox from './NotificationBox';
 import { Box, Typography } from '@mui/material';
 
 interface ITab {
-    activeTabs?: number;
-    setShowTab?: React.Dispatch<React.SetStateAction<boolean>>;
+    activeTabs: number;
+    setShowTab: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const NavTabMenu = ({ setShowTab, activeTabs }: ITab) => {
     const navigate = useNavigate();

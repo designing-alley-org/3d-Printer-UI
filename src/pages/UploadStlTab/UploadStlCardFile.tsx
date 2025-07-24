@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Typography, TextField, CircularProgress, useMediaQuery } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
-import { cross, plus, minus, vector } from '../../constants';
+import {  vector } from '../../constants';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
-import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import { getFile } from '../../utils/indexedDB';
+import MUIButton from '../../stories/MUIButton/Button';
+import { Minus, Plus, X } from 'lucide-react';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -263,17 +264,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               <Typography sx={styles.fileName}>Quantity</Typography>
             </Box>
             <Box sx={styles.quantityValueBox}>
-              <ButtonIcon
-              width={isSmallScreen ? '1.5rem' : '1.8rem'}
-              height={isSmallScreen ? '1.5rem' : '1.8rem'}
-              bgColor="#DDE9FC"
-              border="1px solid #66A3FF"
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-              svgPath={minus}
-              onClick={() => handleQuantityChange('decrease')}
-              disabled={file.quantity <= QUANTITY_LIMITS.MIN}
-              aria-label="Decrease quantity"
-              imagePadding="0.1rem"
+              <MUIButton
+                icon={<Minus color='#0066FF' />}
+                onClick={() => handleQuantityChange('decrease')}
+                disabled={file.quantity <= QUANTITY_LIMITS.MIN}
+                aria-label="Decrease quantity"
+                btnVariant='icon-rounded'
               />
               <TextField
               value={file.quantity}
@@ -306,29 +302,22 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 },
               }}
               />
-
-              <ButtonIcon
-              width={isSmallScreen ? '.5rem' : '1.8rem'}
-              height={isSmallScreen ? '.5rem' : '1.8rem'}
-              border="1px solid #66A3FF"
-              bgColor="#DDE9FC"
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-              svgPath={plus}
-              onClick={() => handleQuantityChange('increase')}
-              disabled={file.quantity >= QUANTITY_LIMITS.MAX}
-              aria-label="Increase quantity"
-              imagePadding={isSmallScreen ? '0.2rem' : '0.1rem'}
+              <MUIButton
+                icon={<Plus color='#0066FF' />}
+                onClick={() => handleQuantityChange('increase')}
+                disabled={file.quantity >= QUANTITY_LIMITS.MAX}
+                aria-label="Increase quantity"
+                btnVariant='icon-rounded'
               />
             </Box>
           </Box>
           </Box>
-          <ButtonIcon
-                width="3rem"
-                height="3rem"
-                svgPath={cross}
+              <MUIButton
+                icon={<X color='#0066FF' size={20} />}
                 onClick={handleRemove}
                 aria-label="Remove file"
-                 imagePadding="0.1rem"
+                btnVariant='icon-rounded'
+                size='small'
               />
         </Box>
 

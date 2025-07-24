@@ -7,19 +7,20 @@ interface IHeader {
   activeTabs?: number;
   insideTab?: boolean;
 }
-const Header = (props: IHeader) => {
-  const { tabData, activeTabs } = props;
+
+const Header = ({ tabData, activeTabs = 0 }: IHeader) => {
   return (
     <Wrapper>
       <section>
-        <span className='desktop-navBar-container'>
-        <DesktopNav activeTabs={activeTabs || 0}/>
+        <span className="desktop-navBar-container">
+          <DesktopNav activeTabs={activeTabs} />
         </span>
-        <span className='mobile-navBar-container'>
-        <MobileHeader activeTabs={activeTabs || 0}/>
+        <span className="mobile-navBar-container">
+          <MobileHeader activeTabs={activeTabs}  />
         </span>
       </section>
     </Wrapper>
   );
 };
+
 export default Header;

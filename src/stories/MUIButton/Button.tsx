@@ -13,6 +13,7 @@ interface ButtonProps {
     | 'black'
     | 'icon-outline'
     | 'icon-filled'
+    | 'icon-rounded'
     | 'icon-soft';
   onClick?: () => void;
   fullWidth?: boolean;
@@ -77,7 +78,7 @@ const StyledButton = styled(Button, {
     case 'icon-outline':
       return {
         ...commonStyles,
-        border: '2px solid #6da5f7',
+        border: '1px solid #6da5f7',
         color: '#3a78dd',
         backgroundColor: 'transparent',
       };
@@ -94,6 +95,21 @@ const StyledButton = styled(Button, {
         backgroundColor: '#a7c9ff',
         color: '#3a78dd',
         border: '2px solid #89b7ff',
+        '&:hover': { backgroundColor: '#8ab6ff', borderColor: '#6da5f7' },
+      };
+    case 'icon-rounded' :
+      return {
+        borderRadius: '50%',
+        minWidth: '2rem',
+        minHeight: '2rem',
+        width: '2rem',
+        height: '2rem',
+        backgroundColor: '#a7c9ff',
+        color: '#000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 0,
         '&:hover': { backgroundColor: '#8ab6ff', borderColor: '#6da5f7' },
       };
     default:

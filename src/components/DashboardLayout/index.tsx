@@ -1,28 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import Button from '../../stories/button/Button';
-import { Bottom, Wrapper } from './styles';
-import { useMediaQuery } from '@mui/material';
+import MUIButton from '../../stories/MUIButton/Button';
+import { Box } from '@mui/material';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   return (
-    <Wrapper>
-      <header>3D Print It All</header>
-      <Bottom>
-        <div className={isSmallScreen ? 'howitwork' : 'curve'}>
-          {isSmallScreen ? <p>How it works</p> : 'How it works'}
-        </div>
-        <div></div>
-        <div className={isSmallScreen ? 'btnMobile' : 'btn'}>
-          <Button
-            label="Get Quote"
-            onClick={() => navigate('/get-quotes')}
-          ></Button>
-        </div>
-      </Bottom>
-    </Wrapper>
+    <Box minHeight="calc(100vh - 2rem)" display="flex" flexDirection="column" alignItems="center" position='relative'>
+       <MUIButton
+        label="Get Quote"
+        onClick={() => navigate('/get-quotes')}
+        size='large'
+        style={{
+          position: 'absolute',
+          bottom: '1rem',
+          right: '1rem',
+        }}
+      />
+    </Box>
   );
 };
 

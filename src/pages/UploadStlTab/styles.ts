@@ -1,24 +1,5 @@
 import { SxProps } from '@mui/material';
 
-export const mainHeader : SxProps = {
-  margin: '1rem 0rem',
-  fontSize:'1.5rem',
-  fontWeight: 600,
-  '@media (max-width: 768px)': {
-    fontSize: '1.2rem',
-  }
-}
-
-export const infoText: SxProps = {
-
-  fontWeight: 400,
-  fontSize: '0.8rem',
-  color: '#0066FF',
-  '@media (max-width: 768px)': {
-    fontSize: '0.7rem',
-  }
-};
-
 export const unitContainer: SxProps = {
   display: 'flex',
   alignItems: 'center',

@@ -11,6 +11,7 @@ import { deleteStlFileByFileId } from '../../store/actions/deleteStlFileByFileId
 import { getFilesByOrderIdForUploadstl } from '../../store/actions/getFilesByOrderId';
 import { Loader } from 'lucide-react';
 import Button from '../../stories/button/Button';
+import StepLayout from '../../components/Layout/StepLayout';
 
 interface ModelDimensions {
   height: number;
@@ -31,7 +32,7 @@ interface FileData {
 
 interface UploadStlTabProps {
   files: any;
-  setFiles: ( files: FileData[] ) => void;
+  setFiles: (files: FileData[]) => void;
 }
 
 const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
@@ -49,7 +50,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
         setFiles(res || []);
         console.log('Files fetched successfully!', res);
       } catch (error) {
-        console.error("Error in fetchOrderFiles:", error);
+        console.error('Error in fetchOrderFiles:', error);
       } finally {
         setIsPageLoading(false);
       }
@@ -114,7 +115,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     [setFiles]
   );
 
-  // Handle file removal  
+  // Handle file removal
   const handleRemoveFile = useCallback(
     async (fileId: string) => {
       const isValidMongoId = /^[0-9a-fA-F]{24}$/.test(fileId);
@@ -133,7 +134,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
           prevActiveFileId === fileId ? null : prevActiveFileId
         );
       } catch (error) {
-        console.error("Error removing file:", error);
+        console.error('Error removing file:', error);
       }
     },
     [orderId, setFiles, setActiveFileId]
@@ -208,34 +209,33 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
     []
   );
 
-  if (isPageLoading) {
-    return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
-      <Loader color='#0066FF'/>
-    </Box>;
-  }
-
   return (
-    <Box>
-      <Typography sx={styles.mainHeader}>Upload Your Files</Typography>
-      <Typography sx={styles.infoText}>
-        Set the required quantities for each file and if their sizes appear too
-        small, change the unit of measurement to inches. <br />
-        Click on 3D Viewer for a 360° preview of your files.
-      </Typography>
+    <StepLayout
+      stepNumber={1}
+      stepText="Upload STL Files"
+      stepDescription="Set the required quantities for each file and if their sizes appear too small, change the unit of measurement to inches. 
+Click on 3D Viewer for a 360° preview of your files."
+      buttonLabel="Save & Proceed"
+      onClick={() => console.log('Proceed to next step')}
+      orderId={orderId}
+      isLoading={false}
+      isPageLoading={isPageLoading}
+      isDisabled={files.length === 0}
+    >
       <Box sx={styles.unitContainer}>
         <Box sx={styles.unitSection}>
           <Typography sx={styles.unitText}>Unit of Measurement</Typography>
-            {uploadDimBtnData.map((item) => (
+          {uploadDimBtnData.map((item) => (
             <Button
               onClick={() => handleUnitClick(item.name)}
               key={item.id}
               style={{
-              ...styles.unitButton,
-              ...(selectedUnit === item.name && styles.activeButton),
+                ...styles.unitButton,
+                ...(selectedUnit === item.name && styles.activeButton),
               }}
               label={item.name}
             />
-            ))}
+          ))}
         </Box>
         <Box sx={styles.fileCountSection}>
           <Typography sx={styles.fileText}>Files</Typography>
@@ -281,7 +281,7 @@ const UploadStlCard: React.FC<UploadStlTabProps> = ({ files, setFiles }) => {
           ))}
         </Box>
       </Box>
-    </Box>
+    </StepLayout>
   );
 };
 
