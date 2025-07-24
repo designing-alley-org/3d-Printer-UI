@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { styled } from '@mui/system';
+import { padding, styled } from '@mui/system';
 
 export const Wrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -31,6 +31,8 @@ padding:'2rem',
   minHeight: '90vh',
   [theme.breakpoints.down('md')]: {
     margin: '0rem ',
+    padding:'0rem',
+    paddingTop:'4rem',
     '.get-quote-heading': {
       fontSize: '1rem',
     },

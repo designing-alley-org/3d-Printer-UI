@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, useMediaQuery } from '@mui/material';
 import {
@@ -34,27 +34,10 @@ import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import ReloadButton from '../../components/Loader/ReloadButton';
 import MUIButton from '../../stories/MUIButton/Button';
 import { RotateCcw } from 'lucide-react';
-// Define FileData type
-interface FileData {
-  _id: string;
-  fileName: string;
-  fileUrl: string;
-  quantity: number;
-  color: string;
-  material: string;
-  technology: string;
-  printer: string;
-  infill: number;
-  unit: string;
-  dimensions: {
-    height: number;
-    length: number;
-    width: number;
-  };
-}
+import { FileData } from '../../types/uploadFiles';
+import StepLayout from '../../components/Layout/StepLayout';
 
 const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
@@ -66,29 +49,35 @@ const CustomizeTab: React.FC = () => {
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const navigate = useNavigate();
 
-  const { updateFiles: fileDetails, activeFileId, files: orderFiles } = useSelector((state: any) => state.fileDetails);
-
+  const {
+    updateFiles: fileDetails,
+    activeFileId,
+    files: orderFiles,
+  } = useSelector((state: any) => state.fileDetails);
 
   // Extract the active file from the files
   const activeFile = useMemo(() => {
     if (!fileDetails) return null;
-    return fileDetails.find((file: FileDetail) => file._id === activeFileId) || null;
+    return (
+      fileDetails.find((file: FileDetail) => file._id === activeFileId) || null
+    );
   }, [fileDetails, activeFileId]);
-
-
-
 
   // For Contain old dimensions of the active file
   const activeFileIndexDimensions = useMemo(() => {
     if (!orderFiles || !activeFileId) return null;
-    const activeFileObj = orderFiles.find((file: FileDetail) => file._id === activeFileId);
-    return activeFileObj ? { unit: activeFileObj.unit || '', dimensions: activeFileObj.dimensions } : null;
+    const activeFileObj = orderFiles.find(
+      (file: FileDetail) => file._id === activeFileId
+    );
+    return activeFileObj
+      ? { unit: activeFileObj.unit || '', dimensions: activeFileObj.dimensions }
+      : null;
   }, [activeFileId, orderFiles]);
 
-
-  const { color, material, technology, printer, infill, dimensions, unit } = activeFile || {};
-
+  const { color, material, technology, printer, infill, dimensions, unit } =
+    activeFile || {};
 
   const materialCompatibility = useSelector(
     (state: any) => state.specification.material_with_mass
@@ -96,8 +85,6 @@ const CustomizeTab: React.FC = () => {
   const materialMass = materialCompatibility?.find(
     (mat: any) => mat.material_name === material
   )?.material_mass;
-
-
 
   // Fetch files from the server
   useEffect(() => {
@@ -110,8 +97,6 @@ const CustomizeTab: React.FC = () => {
     };
     if (orderId) fetchOrder();
   }, [orderId, dispatch]);
-
-
 
   // Store files in IndexedDB
   useEffect(() => {
@@ -149,9 +134,6 @@ const CustomizeTab: React.FC = () => {
     fetchSpec();
   }, [fetchSpec]);
 
-
-
-
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
@@ -175,7 +157,6 @@ const CustomizeTab: React.FC = () => {
   const handleViewerClose = useCallback(() => {
     setViewerOpen(false);
   }, []);
-
 
   // Clear printer data when selectedId changes
   useEffect(() => {
@@ -241,7 +222,6 @@ const CustomizeTab: React.FC = () => {
         activeFileId: activeFileId as string,
         dispatch,
       });
-
     } catch (error) {
       console.error('Error applying selection:', error);
     } finally {
@@ -249,159 +229,174 @@ const CustomizeTab: React.FC = () => {
     }
   };
 
-  if (isPageLoading) {
-    return (
-      <LoadingWrapper>
-        <Loader />
-        <p>Loading details...</p>
-      </LoadingWrapper>
-    );
-  }
 
   return (
-    <Wrapper>
-      <Filescomponent>
-        <Files isLoading={isLoading}>
-          <span className="header">
-            <span className="file">Files</span>
-            <span className="count">{files.length}</span>
-          </span>
-          <div className="file-list">
-            <UploadedFile >
-              {fileDetails.map((file: any) => (
-                <span
-                  key={file._id}
-                  className="upload-file"
-                  onClick={() => handleSetActiveFile(file._id)}
-                  style={{
-                    boxShadow:
-                      activeFileId === file._id
-                        ? '0px 0px 4.8px 0px #66A3FF'
-                        : 'none',
-                    border:
-                      activeFileId === file._id ? '1px solid #66A3FF' : 'none',
-                  }}
-                >
-                  <Model>
-                    <span className="model-preview">
-                      <ViewModelStl
-                        fileUrl={file.fileUrl}
-                        modelColor={file.color}
-                      />
-                    </span>
-                    <span
-                      className="view-model"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenViewer(file._id);
-                      }}
-                    >
-                      <img src={vector_black} alt="View model" />
-                    </span>
-                  </Model>
-                  <ModelName>
-                    {file?.fileName.split('_')[1] || file?.fileName.split('/').pop()}
-                  </ModelName>
-                  <CustomizeBox>
-                    {[
-                      { icon: materialIcon, key: 'material' },
-                      { icon: colorIcon, key: 'color' },
-                      { icon: printerIcon, key: 'printer' },
-                      { icon: infil, key: 'infill', additionalStyle: { width: '1rem' } },
-                    ].map(({ icon, key, additionalStyle }) => (
-                      <img
-                        src={icon}
-                        alt={key}
-                        style={{
-                          filter:
-                            fileDetails.some((f: any) => f._id === file._id && f[key])
+    <StepLayout
+      stepNumber={2}
+      stepDescription="Set the required quantities for each file and if their sizes appear too small, change the unit of measurement to inches. 
+     Click on 3D Viewer for a 360° preview of your files."
+      onClick={() => console.log('log')}
+      orderId={orderId}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
+      isLoading={false}
+      isPageLoading={isPageLoading}
+      isDisabled={files.length === 0}
+    >
+        <Filescomponent>
+          <Files isLoading={isLoading}>
+            <span className="header">
+              <span className="file">Files</span>
+              <span className="count">{files.length}</span>
+            </span>
+            <div className="file-list">
+              <UploadedFile>
+                {fileDetails.map((file: any) => (
+                  <span
+                    key={file._id}
+                    className="upload-file"
+                    onClick={() => handleSetActiveFile(file._id)}
+                    style={{
+                      boxShadow:
+                        activeFileId === file._id
+                          ? '0px 0px 4.8px 0px #66A3FF'
+                          : 'none',
+                      border:
+                        activeFileId === file._id
+                          ? '1px solid #66A3FF'
+                          : 'none',
+                    }}
+                  >
+                    <Model>
+                      <span className="model-preview">
+                        <ViewModelStl
+                          fileUrl={file.fileUrl}
+                          modelColor={file.color}
+                        />
+                      </span>
+                      <span
+                        className="view-model"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenViewer(file._id);
+                        }}
+                      >
+                        <img src={vector_black} alt="View model" />
+                      </span>
+                    </Model>
+                    <ModelName>
+                      {file?.fileName.split('_')[1] ||
+                        file?.fileName.split('/').pop()}
+                    </ModelName>
+                    <CustomizeBox>
+                      {[
+                        { icon: materialIcon, key: 'material' },
+                        { icon: colorIcon, key: 'color' },
+                        { icon: printerIcon, key: 'printer' },
+                        {
+                          icon: infil,
+                          key: 'infill',
+                          additionalStyle: { width: '1rem' },
+                        },
+                      ].map(({ icon, key, additionalStyle }) => (
+                        <img
+                          src={icon}
+                          alt={key}
+                          style={{
+                            filter: fileDetails.some(
+                              (f: any) => f._id === file._id && f[key]
+                            )
                               ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
                               : 'none',
-                          ...additionalStyle,
-                        }}
-                        key={key}
-                      />
-                    ))}
-                  </CustomizeBox>
-                </span>
-              ))}
-            </UploadedFile>
-          </div>
-        </Files>
-        <Customize>
-          <div className="customize-container">
-            {
-              activeFileId === null ?
-                <div className='no-file'>
-                  <h3 className='no-file-title'>Please select a file to customize</h3>
-                </div> : null
-            }
-            {activeFileId && customize.map((item) => (
-              <AccordionMemo
-                key={item.id}
-                icon={item.icon}
-                id={item.id}
-                title={item.name}
-                printerData={printerData}
-                printerMessage={printerMessage}
-                fileData={activeFile}
-                oldDimensions={activeFileIndexDimensions}
-
+                            ...additionalStyle,
+                          }}
+                          key={key}
+                        />
+                      ))}
+                    </CustomizeBox>
+                  </span>
+                ))}
+              </UploadedFile>
+            </div>
+          </Files>
+          <Customize>
+            <div className="customize-container">
+              {activeFileId === null ? (
+                <div className="no-file">
+                  <h3 className="no-file-title">
+                    Please select a file to customize
+                  </h3>
+                </div>
+              ) : null}
+              {activeFileId &&
+                customize.map((item) => (
+                  <AccordionMemo
+                    key={item.id}
+                    icon={item.icon}
+                    id={item.id}
+                    title={item.name}
+                    printerData={printerData}
+                    printerMessage={printerMessage}
+                    fileData={activeFile}
+                    oldDimensions={activeFileIndexDimensions}
+                  />
+                ))}
+            </div>
+            <div
+              className="weight-section"
+              style={{
+                marginBottom: isSmallScreen ? '1rem' : '',
+              }}
+            >
+              {dimensions?.weight !== null && dimensions?.weight > 0 && (
+                <>
+                  <p>Current Weight:</p>
+                  <p>{`${dimensions?.weight.toFixed(2)}gm`}</p>
+                </>
+              )}
+            </div>
+            <Box
+              sx={{
+                display: 'flex',
+              }}
+            >
+              <MUIButton
+                label="Apply Selection"
+                disabled={isApplyButtonDisabled || isLoading}
+                onClick={handleApplySelection}
+                loading={isLoading}
+                style={{
+                  background:
+                    isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
+                  height: isSmallScreen ? '2.5rem' : '3rem',
+                  width: isSmallScreen ? '100%' : '10rem',
+                  marginRight: isSmallScreen ? '0' : '1rem',
+                  marginBottom: isSmallScreen ? '1rem' : '0',
+                }}
               />
-            ))}
-          </div>
-          <div className="weight-section"
-            style={{
-             marginBottom: isSmallScreen ? '1rem' : '',
-            }}
-          >
-            {dimensions?.weight !== null && dimensions?.weight > 0 && (
-              <>
-                <p>Current Weight:</p>
-                <p>{`${dimensions?.weight.toFixed(2)}gm`}</p>
-              </>
-            )}
-          </div>
-         <Box 
-         sx={{
-          display: 'flex',
-         }}>
-          <MUIButton
-          label="Apply Selection"
-          disabled={isApplyButtonDisabled || isLoading}
-          onClick={handleApplySelection}
-          loading={isLoading}
-          style={{
-            background: isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
-            height: isSmallScreen ? '2.5rem' : '3rem',
-            width: isSmallScreen ? '100%' : '10rem',
-            marginRight: isSmallScreen ? '0' : '1rem',
-            marginBottom: isSmallScreen ? '1rem' : '0',
-          }}
-          />
-         {!isApplyButtonDisabled && 
-         <Box>
-          <MUIButton
-            btnVariant='outlined'
-            tooltip='If you scale file size, then for actual view please reload it'
-            icon= {<RotateCcw size={isSmallScreen ? 16 : 20} />}
-            onClick={() => window.location.reload()}
-            disabled={isLoading}
-          />
-         </Box>}
-         </Box>
-        </Customize>
-      </Filescomponent>
-      <ViewerStlModel
-        fileUrl={activeFile?.fileUrl}
-        isOpen={isViewerOpen}
-        onClose={handleViewerClose}
-        activeFileId={activeFileId}
-        files={files as any}
-        onSetActiveFile={handleSetActiveFile}
-        color={activeFile?.color}
-      />
-    </Wrapper>
+              {!isApplyButtonDisabled && (
+                <Box>
+                  <MUIButton
+                    btnVariant="outlined"
+                    tooltip="If you scale file size, then for actual view please reload it"
+                    icon={<RotateCcw size={isSmallScreen ? 16 : 20} />}
+                    onClick={() => window.location.reload()}
+                    disabled={isLoading}
+                  />
+                </Box>
+              )}
+            </Box>
+          </Customize>
+        </Filescomponent>
+        <ViewerStlModel
+          fileUrl={activeFile?.fileUrl}
+          isOpen={isViewerOpen}
+          onClose={handleViewerClose}
+          activeFileId={activeFileId}
+          files={files as any}
+          onSetActiveFile={handleSetActiveFile}
+          color={activeFile?.color}
+        />
+    </StepLayout>
   );
 };
 
