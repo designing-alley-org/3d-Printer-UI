@@ -129,9 +129,9 @@ export const uploadFilesByOrderId = async ({
             const response = await uploadNewFiles(orderId, updatedFiles);
             console.log("consolesdfknajksdfkhabsdfkjahjsvs")
             setFiles([]);
-            console.log('redirect path', `get-quotes/${orderId}/customize`);
+            console.log('redirect path', `/get-quotes/${orderId}/customize`);
 
-            navigate(`get-quotes/${orderId}/customize`);
+            navigate(`/get-quotes/${orderId}/customize`);
 
         } catch (uploadError) {
             console.error("Error during file upload:", uploadError);

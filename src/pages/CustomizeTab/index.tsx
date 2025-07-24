@@ -48,14 +48,17 @@ const CustomizeTab: React.FC = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
+  const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
-
+  
   const {
     updateFiles: fileDetails,
     activeFileId,
     files: orderFiles,
   } = useSelector((state: any) => state.fileDetails);
+
+  console.log('fileDetails',allFilesCustomized)
 
   // Extract the active file from the files
   const activeFile = useMemo(() => {
@@ -64,6 +67,15 @@ const CustomizeTab: React.FC = () => {
       fileDetails.find((file: FileDetail) => file._id === activeFileId) || null
     );
   }, [fileDetails, activeFileId]);
+
+
+    // Check if all files have been customized
+  useEffect(() => {
+    const allFilesCustom = fileDetails.every(
+      (file: any) => file?.dimensions?.weight
+    );
+    setAllFilesCustomized(allFilesCustom);
+  }, [fileDetails]);
 
   // For Contain old dimensions of the active file
   const activeFileIndexDimensions = useMemo(() => {
@@ -233,6 +245,7 @@ const CustomizeTab: React.FC = () => {
   return (
     <StepLayout
       stepNumber={2}
+      stepText='Customize'
       stepDescription="Set the required quantities for each file and if their sizes appear too small, change the unit of measurement to inches. 
      Click on 3D Viewer for a 360° preview of your files."
       onClick={() => console.log('log')}
@@ -240,162 +253,167 @@ const CustomizeTab: React.FC = () => {
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
       isLoading={false}
       isPageLoading={isPageLoading}
-      isDisabled={files.length === 0}
+      isDisabled={!allFilesCustomized}
     >
-        <Filescomponent>
-          <Files isLoading={isLoading}>
-            <span className="header">
-              <span className="file">Files</span>
-              <span className="count">{files.length}</span>
-            </span>
-            <div className="file-list">
-              <UploadedFile>
-                {fileDetails.map((file: any) => (
-                  <span
-                    key={file._id}
-                    className="upload-file"
-                    onClick={() => handleSetActiveFile(file._id)}
-                    style={{
-                      boxShadow:
-                        activeFileId === file._id
-                          ? '0px 0px 4.8px 0px #66A3FF'
-                          : 'none',
-                      border:
-                        activeFileId === file._id
-                          ? '1px solid #66A3FF'
-                          : 'none',
-                    }}
-                  >
-                    <Model>
-                      <span className="model-preview">
-                        <ViewModelStl
-                          fileUrl={file.fileUrl}
-                          modelColor={file.color}
-                        />
-                      </span>
-                      <span
-                        className="view-model"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOpenViewer(file._id);
+      <Box
+        display='flex'
+        border={1}
+        borderRadius={3}
+        borderColor={'#66A3FF'}
+        >
+        <Files isLoading={isLoading}>
+          <span className="header">
+            <span className="file">Files</span>
+            <span className="count">{files.length}</span>
+          </span>
+          <div className="file-list">
+            <UploadedFile>
+              {fileDetails.map((file: any) => (
+                <span
+                  key={file._id}
+                  className="upload-file"
+                  onClick={() => handleSetActiveFile(file._id)}
+                  style={{
+                    boxShadow:
+                      activeFileId === file._id
+                        ? '0px 0px 4.8px 0px #66A3FF'
+                        : 'none',
+                    border:
+                      activeFileId === file._id
+                        ? '1px solid #66A3FF'
+                        : 'none',
+                  }}
+                >
+                  <Model>
+                    <span className="model-preview">
+                      <ViewModelStl
+                        fileUrl={file.fileUrl}
+                        modelColor={file.color}
+                      />
+                    </span>
+                    <span
+                      className="view-model"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenViewer(file._id);
+                      }}
+                    >
+                      <img src={vector_black} alt="View model" />
+                    </span>
+                  </Model>
+                  <ModelName>
+                    {file?.fileName.split('_')[1] ||
+                      file?.fileName.split('/').pop()}
+                  </ModelName>
+                  <CustomizeBox>
+                    {[
+                      { icon: materialIcon, key: 'material' },
+                      { icon: colorIcon, key: 'color' },
+                      { icon: printerIcon, key: 'printer' },
+                      {
+                        icon: infil,
+                        key: 'infill',
+                        additionalStyle: { width: '1rem' },
+                      },
+                    ].map(({ icon, key, additionalStyle }) => (
+                      <img
+                        src={icon}
+                        alt={key}
+                        style={{
+                          filter: fileDetails.some(
+                            (f: any) => f._id === file._id && f[key]
+                          )
+                            ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
+                            : 'none',
+                          ...additionalStyle,
                         }}
-                      >
-                        <img src={vector_black} alt="View model" />
-                      </span>
-                    </Model>
-                    <ModelName>
-                      {file?.fileName.split('_')[1] ||
-                        file?.fileName.split('/').pop()}
-                    </ModelName>
-                    <CustomizeBox>
-                      {[
-                        { icon: materialIcon, key: 'material' },
-                        { icon: colorIcon, key: 'color' },
-                        { icon: printerIcon, key: 'printer' },
-                        {
-                          icon: infil,
-                          key: 'infill',
-                          additionalStyle: { width: '1rem' },
-                        },
-                      ].map(({ icon, key, additionalStyle }) => (
-                        <img
-                          src={icon}
-                          alt={key}
-                          style={{
-                            filter: fileDetails.some(
-                              (f: any) => f._id === file._id && f[key]
-                            )
-                              ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                              : 'none',
-                            ...additionalStyle,
-                          }}
-                          key={key}
-                        />
-                      ))}
-                    </CustomizeBox>
-                  </span>
-                ))}
-              </UploadedFile>
-            </div>
-          </Files>
-          <Customize>
-            <div className="customize-container">
-              {activeFileId === null ? (
-                <div className="no-file">
-                  <h3 className="no-file-title">
-                    Please select a file to customize
-                  </h3>
-                </div>
-              ) : null}
-              {activeFileId &&
-                customize.map((item) => (
-                  <AccordionMemo
-                    key={item.id}
-                    icon={item.icon}
-                    id={item.id}
-                    title={item.name}
-                    printerData={printerData}
-                    printerMessage={printerMessage}
-                    fileData={activeFile}
-                    oldDimensions={activeFileIndexDimensions}
-                  />
-                ))}
-            </div>
-            <div
-              className="weight-section"
+                        key={key}
+                      />
+                    ))}
+                  </CustomizeBox>
+                </span>
+              ))}
+            </UploadedFile>
+          </div>
+        </Files>
+        <Customize>
+          <div className="customize-container">
+            {activeFileId === null ? (
+              <div className="no-file">
+                <h3 className="no-file-title">
+                  Please select a file to customize
+                </h3>
+              </div>
+            ) : null}
+            {activeFileId &&
+              customize.map((item) => (
+                <AccordionMemo
+                  key={item.id}
+                  icon={item.icon}
+                  id={item.id}
+                  title={item.name}
+                  printerData={printerData}
+                  printerMessage={printerMessage}
+                  fileData={activeFile}
+                  oldDimensions={activeFileIndexDimensions}
+                />
+              ))}
+          </div>
+          <div
+            className="weight-section"
+            style={{
+              marginBottom: isSmallScreen ? '1rem' : '',
+            }}
+          >
+            {dimensions?.weight !== null && dimensions?.weight > 0 && (
+              <>
+                <p>Current Weight:</p>
+                <p>{`${dimensions?.weight.toFixed(2)}gm`}</p>
+              </>
+            )}
+          </div>
+          <Box
+            sx={{
+              display: 'flex',
+            }}
+          >
+            <MUIButton
+              label="Apply Selection"
+              disabled={isApplyButtonDisabled || isLoading}
+              onClick={handleApplySelection}
+              loading={isLoading}
               style={{
-                marginBottom: isSmallScreen ? '1rem' : '',
+                background:
+                  isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
+                height: isSmallScreen ? '2.5rem' : '3rem',
+                width: isSmallScreen ? '100%' : '10rem',
+                marginRight: isSmallScreen ? '0' : '1rem',
+                marginBottom: isSmallScreen ? '1rem' : '0',
               }}
-            >
-              {dimensions?.weight !== null && dimensions?.weight > 0 && (
-                <>
-                  <p>Current Weight:</p>
-                  <p>{`${dimensions?.weight.toFixed(2)}gm`}</p>
-                </>
-              )}
-            </div>
-            <Box
-              sx={{
-                display: 'flex',
-              }}
-            >
-              <MUIButton
-                label="Apply Selection"
-                disabled={isApplyButtonDisabled || isLoading}
-                onClick={handleApplySelection}
-                loading={isLoading}
-                style={{
-                  background:
-                    isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
-                  height: isSmallScreen ? '2.5rem' : '3rem',
-                  width: isSmallScreen ? '100%' : '10rem',
-                  marginRight: isSmallScreen ? '0' : '1rem',
-                  marginBottom: isSmallScreen ? '1rem' : '0',
-                }}
-              />
-              {!isApplyButtonDisabled && (
-                <Box>
-                  <MUIButton
-                    btnVariant="outlined"
-                    tooltip="If you scale file size, then for actual view please reload it"
-                    icon={<RotateCcw size={isSmallScreen ? 16 : 20} />}
-                    onClick={() => window.location.reload()}
-                    disabled={isLoading}
-                  />
-                </Box>
-              )}
-            </Box>
-          </Customize>
-        </Filescomponent>
-        <ViewerStlModel
-          fileUrl={activeFile?.fileUrl}
-          isOpen={isViewerOpen}
-          onClose={handleViewerClose}
-          activeFileId={activeFileId}
-          files={files as any}
-          onSetActiveFile={handleSetActiveFile}
-          color={activeFile?.color}
-        />
+            />
+            {!isApplyButtonDisabled && (
+              <Box>
+                <MUIButton
+                  btnVariant="outlined"
+                  tooltip="If you scale file size, then for actual view please reload it"
+                  icon={<RotateCcw size={isSmallScreen ? 16 : 20} />}
+                  onClick={() => window.location.reload()}
+                  disabled={isLoading}
+                />
+              </Box>
+            )}
+          </Box>
+        </Customize>
+      </Box>
+      <ViewerStlModel
+        fileUrl={activeFile?.fileUrl}
+        isOpen={isViewerOpen}
+        onClose={handleViewerClose}
+        activeFileId={activeFileId}
+        files={files as any}
+        onSetActiveFile={handleSetActiveFile}
+        color={activeFile?.color}
+      />
     </StepLayout>
   );
 };

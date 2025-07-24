@@ -31,15 +31,6 @@ export const Heading = styled.section`
 }
 
 `;
-export const Filescomponent = styled.section`
-  display: flex;
-  margin-top: 12px;
-  height: 100%;
-  @media (max-width: 768px) {
-    flex-direction: column;
-    width: 100%;
-  }
-`;
 export const LoadingWrapper = styled.section`
   position: fixed;
   top: 0;
@@ -60,11 +51,14 @@ export const Files = styled.article<{ isLoading: boolean }>`
   pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
   opacity: ${props => (props.isLoading ? 0.6 : 1)};
   width: 35%;
-  border: 1px solid #66a3ff;
-  border-radius: 8px;
+  border-right: 1px solid #66A3FF;
+  background: #F1F6FE;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+
   padding: 4px;
   margin-right: 20px;
-  height: 30rem;
+  height: 39rem;
   overflow-y: auto;
   .header {
     display: flex;
@@ -93,13 +87,13 @@ export const Files = styled.article<{ isLoading: boolean }>`
     width: 100%;
     border-radius: 11px;
     margin-right: 0;
-    height: 10rem;
+    height: 30rem;
     overflow-y: hidden;
+    border-right: none;
     .header {
       padding: 0 0.5rem;
       .file {
-        margin: 0 0.2rem;
-        font-size: 1rem;
+        margin:
       }
       .count {
         width: 1rem;
@@ -134,6 +128,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
 
 export const UploadedFile = styled.section`
   display: flex;
+  padding: 0 1rem;
   flex-direction: column;
   .upload-file {
     height: 6rem;
@@ -272,7 +267,7 @@ export const CustomizeBox = styled.section`
 export const Customize = styled.article`
   display: flex;
   flex-direction: column;
-  width: 60%;
+  flex: 1;
 
   .no-file {
     display: flex;
@@ -282,7 +277,7 @@ export const Customize = styled.article`
 
   .customize-container {
     overflow-y: auto;
-    height: 30rem;
+    height: 32rem;
   }
   .text {
     display: flex;
