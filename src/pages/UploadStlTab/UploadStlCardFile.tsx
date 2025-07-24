@@ -265,7 +265,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
             </Box>
             <Box sx={styles.quantityValueBox}>
               <MUIButton
-                icon={<Minus color='#0066FF' />}
+                icon={<Minus color='#1E65F5' />}
                 onClick={() => handleQuantityChange('decrease')}
                 disabled={file.quantity <= QUANTITY_LIMITS.MIN}
                 aria-label="Decrease quantity"
@@ -303,7 +303,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               }}
               />
               <MUIButton
-                icon={<Plus color='#0066FF' />}
+                icon={<Plus color='#1E65F5' />}
                 onClick={() => handleQuantityChange('increase')}
                 disabled={file.quantity >= QUANTITY_LIMITS.MAX}
                 aria-label="Increase quantity"
@@ -313,11 +313,15 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
           </Box>
           </Box>
               <MUIButton
-                icon={<X color='#0066FF' size={20} />}
+                icon={<X size={30} strokeWidth={1} />}
                 onClick={handleRemove}
                 aria-label="Remove file"
-                btnVariant='icon-rounded'
                 size='small'
+                btnVariant='icon-rounded'
+                style={{
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                }}
               />
         </Box>
 
