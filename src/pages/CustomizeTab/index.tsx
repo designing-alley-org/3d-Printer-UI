@@ -45,7 +45,7 @@ const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
