@@ -54,7 +54,6 @@ const CustomizeTab: React.FC = () => {
     files: orderFiles,
   } = useSelector((state: any) => state.fileDetails);
 
-  console.log('fileDetails',allFilesCustomized)
 
   // Extract the active file from the files
   const activeFile = useMemo(() => {
@@ -101,6 +100,7 @@ const CustomizeTab: React.FC = () => {
         orderId: orderId as string,
         setFetchFiles,
         dispatch,
+        setIsPageLoading,
       });
     };
     if (orderId) fetchOrder();
@@ -341,7 +341,7 @@ const CustomizeTab: React.FC = () => {
                 </h3>
               </div>
             ) : null}
-            {activeFileId &&
+            {activeFileId && activeFile &&
                <AccordionMemo
                 key={activeFileId} // Fixed: Using activeFileId as key instead of undefined item.id
                 printerData={printerData}

@@ -31,21 +31,6 @@ export const Heading = styled.section`
 }
 
 `;
-export const LoadingWrapper = styled.section`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-  p {
-    margin-left: 1rem;
-  }
-`;
 
 export const Files = styled.article<{ isLoading: boolean }>`
   pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
@@ -58,7 +43,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
 
   padding: 4px;
   margin-right: 20px;
-  height: 39rem;
+  height: 43rem;
   overflow-y: auto;
   .header {
     display: flex;
@@ -277,7 +262,7 @@ export const Customize = styled.article`
 
   .customize-container {
     overflow-y: auto;
-    height: 39rem;
+    height: 39.5rem;
   }
   .text {
     display: flex;

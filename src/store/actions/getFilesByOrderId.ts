@@ -5,10 +5,12 @@ import { addAllFiles, FileDetail } from "../customizeFilesDetails/reducer"
 interface IGetFilesByOrderId {
     orderId: string,
     setFetchFiles: any,
-    dispatch: any
+    dispatch: any,
+    setIsPageLoading: any
 }
-export const getFilesByOrderId = ({ orderId, setFetchFiles, dispatch }: IGetFilesByOrderId
+export const getFilesByOrderId = ({ orderId, setFetchFiles, dispatch, setIsPageLoading }: IGetFilesByOrderId
 ) => {
+    setIsPageLoading(true);
     getFilesByOrderIdService(orderId)
         .then((res) => {
             if (!res) {

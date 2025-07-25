@@ -71,7 +71,7 @@ const Accordion: React.FC<AccordionProps> = ({
   const [formData, setFormData] = useState<FileDetail | undefined>(fileData);
   const dataspec = useSelector((state: any) => state.specification);
 
-  console.log('printerData', printerData);
+  console.log('printerMessage', printerMessage);
 
   useEffect(() => {
     setFormData(fileData);
@@ -96,6 +96,8 @@ const Accordion: React.FC<AccordionProps> = ({
     () => mapPrinterData(printerData),
     [printerData]
   );
+
+  console.log('mappedPrinters', mappedPrinters);
 
   const handleUnitChange = (option: Option) => {
     const newUnit = option.value as 'mm' | 'inch';
@@ -176,6 +178,8 @@ const Accordion: React.FC<AccordionProps> = ({
       })),
     []
   );
+
+
 
   if (!fileData) {
     return (
@@ -293,6 +297,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 btnVariant="icon-soft"
                 icon={<RotateCcw size={16} />}
                 iconPosition="start"
+                style={{ color: '#ffffffff',backgroundColor: '#66A3FF',border: 'none' }}
               />
               {oldDimensions && (
                 <Typography
@@ -445,7 +450,7 @@ const Accordion: React.FC<AccordionProps> = ({
               Printer
             </Typography>
           </Box>
-          <PrinterDropdown
+         { printerMessage === '' ?  <PrinterDropdown
             options={mappedPrinters}
             onChange={(option) => handelChangeValue('printer', option.id)}
             defaultValue={mappedPrinters.find(
@@ -454,7 +459,10 @@ const Accordion: React.FC<AccordionProps> = ({
             titleHelper="Please Select First Material and Technology"
             sx={{ width: '100%' }}
             disabled={!formData?.material || !formData?.technology}
-          />
+          /> : 
+          <Typography variant="body2" color="textSecondary">
+           {printerMessage || 'No printers available for the selected material and technology.'}
+          </Typography>}
         </Grid>
       </Grid>
 
