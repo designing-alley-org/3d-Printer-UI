@@ -1,15 +1,16 @@
-import { Bottom, Wrapper } from '../../components/DashboardLayout/styles';
 // import { ROUTES } from '../../routes/routes-constants';
+
+import { Box } from "@mui/material";
 
 const Services = () => {
   return (
-    <Wrapper>
+    <Box>
       <header>3D PRINT YOUR FUTURE</header>
-      <Bottom>
+      <Box>
         <div className="curve">ABOUT US</div>
         <div></div>
-      </Bottom>
-    </Wrapper>
+      </Box>
+    </Box>
   );
 };
 

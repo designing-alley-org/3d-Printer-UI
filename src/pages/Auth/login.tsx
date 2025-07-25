@@ -72,10 +72,10 @@ const Login: React.FC = () => {
             {({ values, errors, touched, handleChange, handleBlur }) => (
               <Form style={{ textAlign: 'left' }}>
                 <Typography sx={{ fontWeight: 500, fontSize:  '1rem' }}>
-                  WELCOME TO
+                  Welcome Back!
                 </Typography>
                 <Typography sx={{ mb: 1, fontWeight: 700, fontSize: isSmallScreen ? '1.2rem' : '1.3rem' }}>
-                  3D PRINT YOUR FUTURE
+                  3D Printer Your Future
                 </Typography>
 
                 <Typography sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize:'1rem' }}>

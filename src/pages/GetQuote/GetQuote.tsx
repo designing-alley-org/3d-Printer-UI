@@ -4,11 +4,30 @@ import { Box, Typography } from '@mui/material';
 import { cardItems } from '../../constants';
 import Card from '../../components/Card/Card';
 import * as styles from './styles';
-import { styled } from 'styled-components';
+import MUIButton from '../../stories/MUIButton/Button';
+import { createOrder } from '../../store/actions/createOrder';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const QuoteCard = () => {
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+
+  const handleSave = async() => {
+
+  await createOrder({
+      setActiveTabs: (tabs: number[]) => console.log('Active Tabs:', tabs),
+      setIsSaving: (isSaving: boolean) => console.log('Is Saving:', isSaving),
+      navigate,
+    });
+    // console.log('Order ID:', data);
+    // navigate(`/get-quotes/${data}/upload-stl`);
+  };
+
+
   return (
-    <Wrapper>
+    <Box sx={styles.innerBox}>
       <Box sx={styles.content}>
         <Typography sx={styles.instantQuoteText}>
           Get Instant live quotes from our merchants!
@@ -24,10 +43,25 @@ const QuoteCard = () => {
             />
           ))}
         </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'end',
+            marginTop: '2rem',
+          }}
+        >
+          <MUIButton
+            btnVariant="primary"
+            label="Get Quote"
+            loading={isSaving}
+            onClick={handleSave}
+            style={{ marginTop: '2rem' }}
+          />
+        </Box>
       </Box>
-    </Wrapper>
+    </Box>
   );
 };
-const Wrapper = styled.section``;
 
 export default QuoteCard;

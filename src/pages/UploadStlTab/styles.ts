@@ -1,27 +1,9 @@
 import { SxProps } from '@mui/material';
 
-export const mainHeader : SxProps = {
-  margin: '1rem 0rem',
-  fontSize:'1.5rem',
-  fontWeight: 600,
-  '@media (max-width: 768px)': {
-    fontSize: '1.2rem',
-  }
-}
-
-export const infoText: SxProps = {
-
-  fontWeight: 400,
-  fontSize: '0.8rem',
-  color: '#0066FF',
-  '@media (max-width: 768px)': {
-    fontSize: '0.7rem',
-  }
-};
-
 export const unitContainer: SxProps = {
   display: 'flex',
   alignItems: 'center',
+  padding: '0rem',
   justifyContent: 'space-between',
   margin: '1rem 0rem',
 };
@@ -32,14 +14,10 @@ export const unitSection: SxProps = {
 };
 
 export const unitText: SxProps = {
-  color: '#0047FF',
-  
-
-  fontSize: '1rem',
   marginRight: '1rem',
   '@media (max-width: 768px)': {
     fontSize: '0.7rem',
-  }
+  },
 };
 
 export const unitButton: SxProps = {
@@ -55,11 +33,9 @@ export const unitButton: SxProps = {
   '@media (max-width: 768px)': {
     fontSize: '0.5rem',
     marginRight: '0.5rem',
-      height: '1rem'
+    height: '1rem',
   },
-
 };
-
 
 export const activeButton: SxProps = {
   backgroundColor: '#0047FF', // Change color when active
@@ -78,7 +54,7 @@ export const fileText: SxProps = {
   color: '#0047FF',
   '@media (max-width: 768px)': {
     fontSize: '0.7rem',
-  }
+  },
 };
 
 export const fileBoxText: SxProps = {
@@ -88,7 +64,7 @@ export const fileBoxText: SxProps = {
   color: '#0066FF',
   '@media (max-width: 768px)': {
     fontSize: '0.7rem',
-  }
+  },
 };
 
 export const filesBox: SxProps = {
@@ -104,13 +80,15 @@ export const filesBox: SxProps = {
     width: '1.5rem',
     height: '1.5rem',
     marginLeft: '.5rem',
-  }
+  },
 };
 
 export const fileUploadContainer: SxProps = {
   margin: '1rem 0',
   borderRadius: '1rem',
-  backgroundColor: '#DDE9FC',
+  backgroundColor: '#F6FAFF',
+  boxShadow: '8px 8px 8px 0px #00000014',
+  border: '1px solid #D9D9D9',
   padding: '1rem',
   display: 'flex',
   flexDirection: 'column',
@@ -118,60 +96,31 @@ export const fileUploadContainer: SxProps = {
   alignItems: 'center',
 };
 
-export const uploadBox: SxProps = {
-  margin: '1rem 0',
-  width: '4rem',
-  height: '4rem',
-  borderRadius: '50%',
-  backgroundColor: '#FFFFFF',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'relative',
-  cursor: 'pointer',  
-  transition: 'background-color 0.3s ease, transform 0.3s ease', 
-
-  '&:hover': {
-    backgroundColor: '#f0f0f0', // Change background on hover
-    transform: 'scale(1.1)', // Slight scale effect on hover
-  },
-
-  '@media (max-width: 768px)': {
-    width: '2.5rem',
-    height: '2.5rem',
-    margin: '.4rem 0',
-  }
-};
-
 export const hiddenInput: SxProps = {
-  opacity: 0,
-  width: '4rem',
-  height: '4rem',
-  cursor: 'pointer',
+  display: 'none',
 };
 
 export const uploadIcon: SxProps = {
-  width: '1.5rem',
-  height: '1.5rem',
-  fontSize: '2.5rem',
-  position: 'absolute',
-  top:0,
-  bottom:0,
-  left:0,
-  right:0,
-  margin: 'auto',
-  
+  marginBottom: '1rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  width: '3rem',
+  height: '3rem',
+  minHeight: '3rem',
+  minWidth: '3rem',
+  backgroundColor: '#FFFFFF',
 };
 
 export const uploadText: SxProps = {
-
-  fontSize: '1.2rem',
-  fontWeight: 400,
+  fontSize: '1rem',
+  fontWeight: 600,
   textAlign: 'center',
-  color: '#1E6FFF',
+  color: 'primary.main',
   '@media (max-width: 768px)': {
     fontSize: '.8rem',
-  }
+  },
 };
 
 export const fileCardContainer: SxProps = {
@@ -187,6 +136,5 @@ export const fileCardContainer: SxProps = {
   '@media (max-width: 768px)': {
     height: '15rem',
     padding: '.3rem .5rem',
-  }
+  },
 };
-

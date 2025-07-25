@@ -4,6 +4,8 @@ import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import { arrow_left, arrow_right, cross } from '../../constants';
 import * as styles from './ViewerStlModelStyles';
+import MUIButton from '../../stories/MUIButton/Button';
+import { X } from 'lucide-react';
 
 // Interface for the file data coming from CustomizeTab
 interface FileData {
@@ -134,7 +136,21 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
         <Box sx={styles.modalContainer}>
           <Box sx={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <Box sx={styles.closeButton}>
-              <ButtonIcon svgPath={cross} onClick={handleClose} imagePadding={isSmallScreen ? '2px' : '0px'}/>
+              {/* <ButtonIcon svgPath={cross} onClick={handleClose} imagePadding={isSmallScreen ? '2px' : '0px'}/> */}
+              <MUIButton
+                btnVariant='icon-rounded'
+                icon={<X  color='#1E65F5' strokeWidth={2} />}
+                onClick={handleClose}
+                aria-label="Close 3D viewer"
+                style={{
+                  marginTop: isSmallScreen ? '0.5rem' : '1rem',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  boxShadow: 'none',
+                  padding: 0,
+
+                }}
+              />
             </Box>
             <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
             <Box sx={styles.viewerContent}>

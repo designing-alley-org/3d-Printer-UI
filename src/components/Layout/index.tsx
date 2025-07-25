@@ -1,32 +1,53 @@
 import { useEffect, useState } from 'react';
-import Footer from '../Footer';
-import Header from '../Header';
-import './styles.css';
-import { Wrap } from '../Header/styles';
+import Header from './HeaderLayout';
 import { tabData } from '../../constants';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../../store/actions/getCurrentUser';
+import { Box, Typography } from '@mui/material';
+import { styled, useMediaQuery } from '@mui/system';
+import { Wrap } from './styles';
 
 const API_URL = import.meta.env.VITE_AWS_URL as string;
+
+// Styled Components using MUI
+const MainContent = styled(Box)(({ theme }) => ({
+  padding: '1rem',
+  position: 'relative',
+  [theme.breakpoints.down('md')]: {
+    padding: '0.5rem',
+  },
+}));
+
+const ContentBox = styled(Box)(({ theme }) => ({
+  width: '100%',
+  backgroundImage: 'url(/src/assets/images/backgroundimg.png)',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  borderRadius: '25px',
+  [theme.breakpoints.down('md')]: {
+    padding: '0.5rem',
+    minHeight: '100%',
+  },
+}));
+
 const Index: React.FC = () => {
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
     DefaultEventsMap
   > | null>(null);
-
-  
   const [activeTabs, setActiveTabs] = useState<number>(0);
   const { pathname } = useLocation();
-  const user=useSelector((state:any)=>state.user);
-  const userId=user.user._id;
+  const user = useSelector((state: any) => state.user);
+  const userId = user?.user?._id;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
 
-
+  // Set active tab based on path
   useEffect(() => {
     if (pathname.includes(ROUTES.DASHBOARD)) {
       setActiveTabs(0);
@@ -41,9 +62,9 @@ const Index: React.FC = () => {
     }
   }, [pathname]);
 
-  
+  // Setup Socket.io connection
   useEffect(() => {
-    const newSocket: Socket = io( API_URL, {
+    const newSocket: Socket = io(API_URL, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
     });
@@ -52,7 +73,7 @@ const Index: React.FC = () => {
 
     newSocket.on('connect', () => {
       console.log('Connected to the server:', newSocket.id);
-      if(userId) newSocket.emit('login',{userId,role: 'user'});      
+      if (userId) newSocket.emit('login', { userId, role: 'user' });
     });
 
     newSocket.on('disconnect', () => {
@@ -68,6 +89,7 @@ const Index: React.FC = () => {
     };
   }, [userId]);
 
+  // Fetch current user on mount
   useEffect(() => {
     const fetchData = async () => {
       await getCurrentUser(dispatch);
@@ -76,32 +98,43 @@ const Index: React.FC = () => {
   }, []);
 
   return (
-    <div className="rootLayout">
-      <main className="mainContent">
-        <div className="Content">
-          <div className="header">
-            <Header tabData={tabData} activeTabs={activeTabs} />
-          </div>
-          <div className="mContent">
-            {activeTabs === 1 ? (
-              <Wrap>
-                {pathname === '/get-quotes' && (
-                  <h1 className="get-quote-heading">
-                    START 3D PRINTING YOUR FUTURE
-                  </h1>
-                )}
-                {<Outlet />}
-              </Wrap>
-            ) : (
-              <Outlet />
+    <Box width={'100%'} height="100%" display="flex" flexDirection="column">
+      <MainContent>
+        <ContentBox>
+          <Box
+            className="header"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingTop: '1rem',
+            }}
+          >
+            {!isSmallScreen && (
+              <Typography
+                variant="h4"
+                onClick={() => navigate('/')}
+                sx={{
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textAlign: 'center',
+                  fontSize: '1.7rem',
+                  marginTop: '1rem',
+                  marginLeft: '3rem',
+                }}
+              >
+                3D PRINT YOUR FUTURE
+              </Typography>
             )}
-          </div>
-        </div>
-      </main>
-      <div className="footer">
-        <Footer />
-      </div>
-    </div>
+            <Header tabData={tabData} activeTabs={activeTabs} />
+          </Box>
+            <Wrap>
+              <Outlet />
+            </Wrap>
+        </ContentBox>
+      </MainContent>
+    </Box>
   );
 };
 

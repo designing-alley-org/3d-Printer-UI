@@ -6,39 +6,37 @@ import {
   Button,
   Typography,
   SxProps,
-  Theme
+  Theme,
 } from '@mui/material';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-export interface Option {
+export interface ColorOption {
   id: number | string;
   label: string;
   value: string;
 }
 
-interface SingleSelectDropdownProps {
-  options: Option[];
-  defaultValue?: Option;
-  onChange: (selected: Option) => void;
+interface ColorDropdownProps {
+  options: ColorOption[];
+  defaultValue?: ColorOption;
+  onChange: (selected: ColorOption) => void;
   className?: string;
   sx?: SxProps<Theme>;
   titleHelper?: string;
   error?: boolean;
-  style?: React.CSSProperties;
 }
 
-const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
+const ColorDropdown: React.FC<ColorDropdownProps> = ({
   options,
   defaultValue,
   onChange,
   className,
   sx,
   titleHelper,
-  style,
-  error = false
+  error = false,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selected, setSelected] = useState<Option>(defaultValue || { id: '', label: '', value: '' });
+  const [selected, setSelected] = useState<ColorOption | undefined>(defaultValue);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,7 +46,7 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
     setAnchorEl(null);
   };
 
-  const handleSelect = (option: Option) => {
+  const handleSelect = (option: ColorOption) => {
     setSelected(option);
     onChange(option);
     handleClose();
@@ -68,31 +66,44 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
           color: error ? 'error.main' : 'black',
           fontWeight: 400,
           fontSize: '1rem',
+          width: '100%',
+          justifyContent: 'space-between',
           textTransform: 'none',
           display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
           alignItems: 'center',
           gap: 1,
           '&:hover': {
             borderColor: error ? 'error.main' : '#88A2F0',
           },
-          ...style,
         }}
       >
-        <span>{selected.label ? selected.label : titleHelper}</span>
-       
+        {selected ? (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                backgroundColor: selected.value,
+                mr: 1,
+              }}
+            />
+            <span>{selected.label}</span>
+          </Box>
+        ) : (
+          <span>{titleHelper}</span>
+        )}
         {open ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
       </Button>
-       <Typography
-          variant="caption"
-          sx={{
-            color: error ? 'error.main' : 'text.secondary',
-            marginLeft: 'auto',
-          }}
-        >
-          {error ? 'Please select an option' : ''}
-        </Typography>
+      <Typography
+        variant="caption"
+        sx={{
+          color: error ? 'error.main' : 'text.secondary',
+          marginLeft: 'auto',
+        }}
+      >
+        {error ? 'Please select an option' : ''}
+      </Typography>
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -109,7 +120,7 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
         {options.map((option) => (
           <MenuItem
             key={option.value}
-            selected={selected.value === option.value}
+            selected={selected?.value === option.value}
             onClick={() => handleSelect(option)}
             sx={{
               fontSize: '16px',
@@ -122,6 +133,15 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
               },
             }}
           >
+            <Box
+              sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                backgroundColor: option.value,
+                mr: 1,
+              }}
+            />
             {option.label}
           </MenuItem>
         ))}
@@ -130,4 +150,4 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
   );
 };
 
-export default SingleSelectDropdown;
+export default ColorDropdown;

@@ -218,38 +218,7 @@ export const scaleFields = [
     placeholder: 'Enter Length',
   },
 ];
-export const customize = [
-  {
-    id: '1',
-    icon: scaleIcon,
-    name: 'Scale',
-  },
-  {
-    id: '2',
-    icon: technologyIcon,
-    name: 'Technology',
-  },
-  {
-    id: '3',
-    icon: materialIcon,
-    name: 'Material',
-  },
-  {
-    id: '4',
-    icon: colorIcon,
-    name: 'Colors',
-  },
-  {
-    id: '5',
-    icon: printerIcon,
-    name: 'Printers',
-  },
-  {
-    id: '6',
-    icon: infillIcon,
-    name: 'Infill',
-  },
-];
+
 
 export const dimensionsOption = [
   {

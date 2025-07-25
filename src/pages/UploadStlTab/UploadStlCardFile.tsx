@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Box, Typography, TextField, CircularProgress, useMediaQuery } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
-import { cross, plus, minus, vector } from '../../constants';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
-import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import { getFile } from '../../utils/indexedDB';
+import MUIButton from '../../stories/MUIButton/Button';
+import { Box as BoxIcon, Minus, Plus, X } from 'lucide-react';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -218,15 +218,14 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                   Error loading file preview
                 </Typography>
               )}
-              <Box
-                sx={styles.viewButton}
+             
+              <MUIButton
+                btnVariant='icon-rounded'
+                icon={<BoxIcon color='#ffffff' strokeWidth={1} />}
                 onClick={handleViewerOpen}
-                role="button"
-                tabIndex={0}
                 aria-label="Open 3D viewer"
-              >
-                <img src={vector} alt="View 3D model" />
-              </Box>
+                style={styles.viewButton as React.CSSProperties}
+                />
             </Box>
           </Box>
 
@@ -263,17 +262,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               <Typography sx={styles.fileName}>Quantity</Typography>
             </Box>
             <Box sx={styles.quantityValueBox}>
-              <ButtonIcon
-              width={isSmallScreen ? '1.5rem' : '1.8rem'}
-              height={isSmallScreen ? '1.5rem' : '1.8rem'}
-              bgColor="#DDE9FC"
-              border="1px solid #66A3FF"
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-              svgPath={minus}
-              onClick={() => handleQuantityChange('decrease')}
-              disabled={file.quantity <= QUANTITY_LIMITS.MIN}
-              aria-label="Decrease quantity"
-              imagePadding="0.1rem"
+              <MUIButton
+                icon={<Minus color='#1E65F5' size={15}/>}
+                onClick={() => handleQuantityChange('decrease')}
+                disabled={file.quantity <= QUANTITY_LIMITS.MIN}
+                aria-label="Decrease quantity"
+                btnVariant='icon-rounded'
               />
               <TextField
               value={file.quantity}
@@ -306,29 +300,27 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 },
               }}
               />
-
-              <ButtonIcon
-              width={isSmallScreen ? '.5rem' : '1.8rem'}
-              height={isSmallScreen ? '.5rem' : '1.8rem'}
-              border="1px solid #66A3FF"
-              bgColor="#DDE9FC"
-              style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
-              svgPath={plus}
-              onClick={() => handleQuantityChange('increase')}
-              disabled={file.quantity >= QUANTITY_LIMITS.MAX}
-              aria-label="Increase quantity"
-              imagePadding={isSmallScreen ? '0.2rem' : '0.1rem'}
+              <MUIButton
+                icon={<Plus color='#1E65F5' size={15} />}
+                onClick={() => handleQuantityChange('increase')}
+                disabled={file.quantity >= QUANTITY_LIMITS.MAX}
+                aria-label="Increase quantity"
+                btnVariant='icon-rounded'
               />
             </Box>
           </Box>
           </Box>
-          <ButtonIcon
-                width="3rem"
-                height="3rem"
-                svgPath={cross}
+              <MUIButton
+                icon={<X size={30} strokeWidth={1} />}
                 onClick={handleRemove}
                 aria-label="Remove file"
-                 imagePadding="0.1rem"
+                size='small'
+                btnVariant='icon-rounded'
+                style={{
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
+                  border: 'none'
+                }}
               />
         </Box>
 

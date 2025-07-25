@@ -12,7 +12,7 @@ const AppThemeProvider = ({ children }: IAppThemeProvider) => {
         main: '#1E65F5',
       },
       secondary: {
-        main: '#0f60d9ff',
+        main: '#002E72',
       },
       background: {
         default: '#ffffff',

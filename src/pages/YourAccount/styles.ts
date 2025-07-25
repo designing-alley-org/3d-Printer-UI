@@ -108,20 +108,19 @@ export const MainComp = styled.section`
   min-height: 30rem;
   @media (max-width: 768px) {
     width: 100%;
-    margin: 0rem;
     padding: 0 0.5rem;
     border: none;
   }
 `;
 export const MainWrapper = styled.main`
-  margin: 3rem;
+  margin: 0rem;
   .heading {
     color: white;
     font-size: 2rem;
   }
   .bottom {
     display: flex;
-    margin-top: 2rem;
+    margin-top: 1rem;
   }
   .text {
     width: 90%;

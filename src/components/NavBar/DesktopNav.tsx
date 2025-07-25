@@ -30,7 +30,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
 
   return (
     <nav className='mainHeader'>
-      <h1 onClick={() =>{ navigate('/')}}>3D PRINT YOUR FUTURE</h1>
+     
       <div className='header-nav'>
         {DesktoptabData.map((item) => (
           <div className='tab' key={item.id} onClick={() => {navigate(item.path)}}>

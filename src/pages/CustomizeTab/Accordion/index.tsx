@@ -1,67 +1,81 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import './styles.css';
-import Dropdown, { Option } from '../../../stories/Dropdown/Dropdown';
-import { sizeOption, info, group } from '../../../constants';
-import { Button, TextField, useMediaQuery } from '@mui/material';
-import PrinterCard from '../../../components/PrinterCard';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Typography, Grid, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dimensions, FileDetail, UpdateValueById } from '../../../store/customizeFilesDetails/reducer';
-import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
+import {
+  Dimensions,
+  FileDetail,
+  UpdateValueById,
+} from '../../../store/customizeFilesDetails/reducer';
+import SingleSelectDropdown, {
+  Option,
+} from '../../../stories/Dropdown/SingleSelectDropdown';
+import MUIButton from '../../../stories/MUIButton/Button';
+import { sizeOption } from '../../../constants';
+import ColorDropdown from '../../../stories/Dropdown/ColorDropdown';
+import PrinterDropdown from '../../../stories/Dropdown/PrinterDropdown';
+import {
+  Ruler,
+  Settings,
+  Circle,
+  Palette,
+  Grid3X3,
+  Printer,
+  RotateCcw,
+} from 'lucide-react';
+import StyledNumberInput from '../../../stories/Input/StyledNumberInput';
 
 interface AccordionProps {
-  icon: string;
-  id: string;
-  title: string;
-  printerData: PrinterData[];
-  printerMessage: string;
+  printerData: any[];
   fileData: FileDetail;
-  oldDimensions: { unit: string | null; dimensions: Dimensions; } | null
-}
-
-interface PrinterData {
-  title: string;
-  subTitle: string;
-  desc: string;
-  data: Array<{ name: string; val: string }>;
-}
-
-interface MaterialWithMass {
-  material_name: string;
-  material_mass: number;
-}
-
-interface Specification {
-  color: string[];
-  technologyType: string[];
-  material_with_mass: MaterialWithMass[];
+  oldDimensions: { unit: string | null; dimensions: Dimensions } | null;
+  printerMessage: string;
 }
 
 const MM_TO_INCH = 1 / 25.4;
 const INCH_TO_MM = 25.4;
 
+const mapPrinterData = (printers: any[]) => {
+  return printers.map((p: any) => ({
+    id: p._id,
+    name: p.name,
+    details: {
+      buildVolume: p.buildVolume
+        ? `${p.buildVolume.x} x ${p.buildVolume.y} x ${p.buildVolume.z} mm`
+        : 'N/A',
+      layerResolution: p.layerResolution
+        ? `${p.layerResolution.min} - ${p.layerResolution.max} mm`
+        : 'N/A',
+      nozzleSize: p.nozzleSize ? `${p.nozzleSize} mm` : 'N/A',
+      printSpeed: p.printSpeed ? `${p.printSpeed} mm/s` : 'N/A',
+      materialCompatibility:
+        p.materialCompatibility && Array.isArray(p.materialCompatibility)
+          ? p.materialCompatibility
+              .map((mat: any) => mat.material_name)
+              .join(', ')
+          : 'N/A',
+      technologyType:
+        p.technologyType && Array.isArray(p.technologyType)
+          ? p.technologyType.join(', ')
+          : 'N/A',
+    },
+  }));
+};
+
 const Accordion: React.FC<AccordionProps> = ({
-  icon,
-  id,
-  title,
   printerData,
-  printerMessage,
   fileData,
   oldDimensions,
+  printerMessage,
 }) => {
-
   const dispatch = useDispatch();
-
-  const [selectedTech, setSelectedTech] = useState<string>('');
-  const [formData, setFormData] = useState<FileDetail>();
-
+  const [formData, setFormData] = useState<FileDetail | undefined>(fileData);
   const dataspec = useSelector((state: any) => state.specification);
 
-  const isSmallScreen = useMediaQuery('(max-width:768px)');
+  console.log('printerMessage', printerMessage);
 
   useEffect(() => {
     setFormData(fileData);
   }, [fileData]);
-  
 
   const convertDimensions = (
     value: number,
@@ -74,45 +88,62 @@ const Accordion: React.FC<AccordionProps> = ({
       : Math.abs(value * INCH_TO_MM);
   };
 
-  const handelChangeValue = (filed:string, value:string) => {
-    setFormData(prev => ({ ...prev, [filed]: value }));
-  }
+  const handelChangeValue = (field: string, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }) as FileDetail);
+  };
+
+  const mappedPrinters = useMemo(
+    () => mapPrinterData(printerData),
+    [printerData]
+  );
+
+  console.log('mappedPrinters', mappedPrinters);
 
   const handleUnitChange = (option: Option) => {
     const newUnit = option.value as 'mm' | 'inch';
-    if( newUnit === formData?.unit) return
+    if (newUnit === formData?.unit) return;
 
     const unit = formData?.unit || 'mm';
 
-      // Convert current dimensions when unit changes
-      const convertedHeight = convertDimensions(formData?.dimensions?.height, unit, newUnit);
-      const convertedWidth = convertDimensions(formData?.dimensions?.width, unit, newUnit);
-      const convertedLength = convertDimensions(formData?.dimensions?.length, unit, newUnit);
+    const convertedHeight = convertDimensions(
+      formData?.dimensions?.height || 0,
+      unit,
+      newUnit
+    );
+    const convertedWidth = convertDimensions(
+      formData?.dimensions?.width || 0,
+      unit,
+      newUnit
+    );
+    const convertedLength = convertDimensions(
+      formData?.dimensions?.length || 0,
+      unit,
+      newUnit
+    );
 
-
-      handelChangeValue('unit', newUnit);
-      handelChangeValue('dimensions', {
-        height: convertedHeight,
-        width: convertedWidth,
-        length: convertedLength,
-      });
-
+    handelChangeValue('unit', newUnit);
+    handelChangeValue('dimensions', {
+      height: convertedHeight,
+      width: convertedWidth,
+      length: convertedLength,
+    });
   };
 
-  // Handle input changes
   const handleChange =
     (field: 'height' | 'width' | 'length') =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(event.target.value.replace(/[^\d.]/g, ''));
-
       if (value) {
-        setFormData({
-          ...formData,
-          dimensions: {
-            ...formData?.dimensions,
-            [field]: value,
-          },
-        });
+        setFormData(
+          (prev) =>
+            ({
+              ...prev,
+              dimensions: {
+                ...prev?.dimensions,
+                [field]: value,
+              },
+            }) as FileDetail
+        );
       }
     };
 
@@ -120,24 +151,23 @@ const Accordion: React.FC<AccordionProps> = ({
     if (formData) {
       dispatch(UpdateValueById({ id: fileData._id, data: formData }));
     }
-  }, [formData]);
+  }, [formData, dispatch, fileData._id]);
 
-  // Revert to original dimensions
   const handleRevert = () => {
-    setFormData({
-      ...formData,
-      unit: oldDimensions?.unit || 'mm',
-      dimensions: {
-        ...formData?.dimensions,
-        height: oldDimensions?.dimensions?.height || 0,
-        width: oldDimensions?.dimensions?.width || 0,
-        length: oldDimensions?.dimensions?.length || 0,
-      },
-    });
+    setFormData(
+      (prev) =>
+        ({
+          ...prev,
+          unit: oldDimensions?.unit || 'mm',
+          dimensions: {
+            ...prev?.dimensions,
+            height: oldDimensions?.dimensions?.height || 0,
+            width: oldDimensions?.dimensions?.width || 0,
+            length: oldDimensions?.dimensions?.length || 0,
+          },
+        }) as FileDetail
+    );
   };
-
-
-
 
   const options = useMemo(
     () =>
@@ -149,195 +179,312 @@ const Accordion: React.FC<AccordionProps> = ({
     []
   );
 
+
+
   if (!fileData) {
     return (
-      <div className="accordion">
-        <div className="accordion-header">
-          <span className="title">
-            <h2>Please select a file then proceed</h2>
-          </span>
-        </div>
-      </div>
+      <Box sx={{ m: 2 }}>
+        <Typography>Please select a file then proceed</Typography>
+      </Box>
     );
   }
 
   return (
-    <div className="accordion">
-      <div className="accordion-header">
-        <span className="title">
-          <img src={icon} alt="icon" />
-          <h2>{title}</h2>
-        </span>
-      </div>
-      <div className="accordion-content">
-        {id === '1' && (
-          <div className="scale">
-            <div className="scaling">
-              <p>Scale In</p>
-              <p>Height</p>
-              <p>Width</p>
-              <p>Length</p>
-            </div>
-            <div className="scale-input">
-              <Dropdown
-                options={sizeOption}
-                onSelect={handleUnitChange}
-                defaultValue={formData?.unit ? formData?.unit : 'mm'}
-                className="dropdown_unit"
-              />
-              
-                    {['height', 'width', 'length'].map((field) => (
-                      <TextField
-                        key={field}
-                        type="number"
-                        variant="outlined"
-                        className="fields"
-                        value={formData?.dimensions[field as 'height' | 'width' | 'length']}
-                        onChange={handleChange(
-                          field as 'height' | 'width' | 'length'
-                        )}
-                        inputProps={{
-                          inputMode: 'numeric',
-                          pattern: '[0-9]*',
-                          style: {
-                            textAlign: 'left',
-                            width: '100%',
-                            paddingRight: '8px',
-                            height: isSmallScreen ? '.5rem' : '.7rem',
-                            fontSize: isSmallScreen ? '.5rem' : '.8rem',
-                          },
-                  }}
-                />
-              ))}
-            </div>
-            <div className="revert">
-              <Button className="btn" onClick={handleRevert}>
-                Revert to original
-              </Button>
-              {oldDimensions && (
-                <p>
-                  {oldDimensions?.dimensions?.height.toFixed(2)} {oldDimensions?.unit}  x{' '}
-                  {oldDimensions?.dimensions?.width.toFixed(2)} {oldDimensions?.unit}x{' '}
-                  {oldDimensions?.dimensions?.length.toFixed(2)} {oldDimensions?.unit}
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-        {id === '2' && (
-          <>
-            {dataspec &&
-              dataspec?.technologyType.map((item : string) => (
-                <Button
-                  key={item}
-                  className={formData?.technology === item ? 'active' : 'btn'}
-                  onClick={() => handelChangeValue('technology', item)}
-                >
-                  {item}
-                </Button>
-              ))}
-            <div className="check-box">
-              {formData?.technology ? (
-                <img src={group} alt="group" />
-              ) : (
-                <img src={info} alt="info" />
-              )}
-            </div>
-          </>
-        )}
-        {id === '3' && (
-          <>
-            {dataspec &&
-              dataspec?.material_with_mass?.map((item:{material_name: string, material_mass: number},index: number) => (
-                <Button
-                  key={index}
-                  className={
-                    formData?.material === item?.material_name ? 'active' : 'btn'
-                  }
-                  onClick={() => handelChangeValue('material', item?.material_name)}
-                >
-                  {item.material_name}
-                </Button>
-              ))}
-            <div className="check-box">
-              {formData?.material ? (
-                <img src={group} alt="group" />
-              ) : (
-                <img src={info} alt="info" />
-              )}
-            </div>
-          </>
-        )}
-        {id === '4' && (
-          <>
-            {dataspec?.color.map((item:string) => (
-              <Button
-                key={item}
-                className={ formData?.color === item ? 'active' : 'btn'}
-                onClick={() => handelChangeValue('color', item)}
-              >
-                <span
-                  className="btn-color"
-                  style={{ backgroundColor: item }}
-                ></span>
-                {item}
-              </Button>
-            ))}
-            <div className="check-box">
-              {formData?.color ? (
-                <img src={group} alt="group" />
-              ) : (
-                <img src={info} alt="info" />
-              )}
-            </div>
-          </>
-        )}
-        {id === '5' && (
-          <>
-            {(formData?.technology === '' || formData?.material === '') && (
-              <p className="no-data">Please select Material and Technology</p>
-            )}
-            {printerData.length <= 0 && formData?.material && formData?.technology && (
-              <p className="no-data">
-                {printerMessage ? printerMessage : 'Loading...'}
-              </p>
-            )}
-            {printerData.length > 0 &&
-              printerData?.map((item: any, idx: number) => (
-                <PrinterCard
-                  key={idx}
-                  title={item.name}
-                  subTitle={item.model}
-                  desc={item.printerName}
-                  data={item}
-                  isSelected={formData?.printer === item._id}
-                  onSelect={() => handelChangeValue('printer', item._id)}
-                />
-              ))}
-          </>
-        )}
-        {id === '6' && (
-          <div className="infill">
-            {/* <Dropdown
-              options={options}
-              onSelect={(option) => handelChangeValue('infill', option?.value as string)}
-              defaultValue={
-                formData?.infill == null
-                  ? 5
-                  : String(formData?.infill)
-              }
-            /> */}
+    <Box p={1}>
+      {/* Scale Section */}
+      <Box
+        sx={{
+          p: 1,
+          backgroundColor: '#FAFAFA',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Ruler size={20} style={{ marginRight: '8px', color: '#1976d2' }} />
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 600 }}
+            color="secondary.main"
+          >
+            Scale
+          </Typography>
+        </Box>
+
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            border: '1px solid #66A3FF',
+            boxShadow: '8px 8px 8px 0px #00000014',
+            borderRadius: '12px',
+            padding: '16px',
+            margin: 0,
+          }}
+        >
+          <Grid size={3}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Scale In
+            </Typography>
             <SingleSelectDropdown
-              options={options}
-              onChange={(option) => handelChangeValue('infill', option.value)}
-              defaultValue={options.find(opt => opt.value === String(formData?.infill))}
-              titleHelper="Select Infill Percentage"
+              options={sizeOption}
+              onChange={handleUnitChange}
+              defaultValue={sizeOption.find(
+                (opt) => opt.value === formData?.unit
+              )}
+              titleHelper="Select"
               error={false}
+              sx={{ width: '100%' }} // Ensure full width
             />
-          </div>
-        )}
-      </div>
-    </div>
+          </Grid>
+
+          <Grid size={3}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Height
+            </Typography>
+            <StyledNumberInput
+              value={formData?.dimensions.height}
+              onChange={handleChange('height')}
+            />
+          </Grid>
+
+          <Grid size={3}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Width
+            </Typography>
+            <StyledNumberInput
+              value={formData?.dimensions.width}
+              onChange={handleChange('width')}
+            />
+          </Grid>
+
+          <Grid size={3}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Length
+            </Typography>
+            <StyledNumberInput
+              value={formData?.dimensions.length}
+              onChange={handleChange('length')}
+            />
+          </Grid>
+
+          <Grid size={12}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+              }}
+            >
+              <MUIButton
+                onClick={handleRevert}
+                size="small"
+                label="Revert To Original"
+                btnVariant="icon-soft"
+                icon={<RotateCcw size={16} />}
+                iconPosition="start"
+                style={{ color: '#ffffffff',backgroundColor: '#66A3FF',border: 'none' }}
+              />
+              {oldDimensions && (
+                <Typography
+                  variant="caption"
+                  sx={{ color: '#235ab0', textAlign: 'right' }}
+                >
+                  {oldDimensions?.dimensions?.height.toFixed(2)}{' '}
+                  {oldDimensions?.unit} x{' '}
+                  {oldDimensions?.dimensions?.width.toFixed(2)}{' '}
+                  {oldDimensions?.unit} x{' '}
+                  {oldDimensions?.dimensions?.length.toFixed(2)}{' '}
+                  {oldDimensions?.unit}
+                </Typography>
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* Configuration Options */}
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        <Grid size={6}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Settings size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Technology
+            </Typography>
+          </Box>
+          <SingleSelectDropdown
+            options={
+              dataspec?.technologyType.map((tech: string, index: number) => ({
+                id: index,
+                label: tech,
+                value: tech,
+              })) || []
+            }
+            onChange={(option) => handelChangeValue('technology', option.value)}
+            defaultValue={dataspec?.technologyType
+              .map((tech: string, index: number) => ({
+                id: index,
+                label: tech,
+                value: tech,
+              }))
+              .find((opt: Option) => opt.value === formData?.technology)}
+            titleHelper="Select Technology"
+            sx={{ width: '100%' }} // Ensure full width
+          />
+        </Grid>
+
+        <Grid size={6}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Circle size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Material
+            </Typography>
+          </Box>
+          <SingleSelectDropdown
+            options={
+              dataspec?.material_with_mass?.map(
+                (mat: { material_name: string }, index: number) => ({
+                  id: index,
+                  label: mat.material_name,
+                  value: mat.material_name,
+                })
+              ) || []
+            }
+            onChange={(option) => handelChangeValue('material', option.value)}
+            defaultValue={dataspec?.material_with_mass
+              ?.map((mat: { material_name: string }, index: number) => ({
+                id: index,
+                label: mat.material_name,
+                value: mat.material_name,
+              }))
+              .find((opt: Option) => opt.value === formData?.material)}
+            titleHelper="Select Material"
+            sx={{ width: '100%' }}
+          />
+        </Grid>
+
+        <Grid size={6}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Palette size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Colour
+            </Typography>
+          </Box>
+          <ColorDropdown
+            options={
+              dataspec?.color.map((c: string, index: number) => ({
+                id: index,
+                label: c,
+                value: c,
+              })) || []
+            }
+            onChange={(option) => handelChangeValue('color', option.value)}
+            defaultValue={dataspec?.color
+              .map((c: string, index: number) => ({
+                id: index,
+                label: c,
+                value: c,
+              }))
+              .find((opt: any) => opt.value === formData?.color)}
+            titleHelper="Select Color"
+            sx={{ width: '100%' }}
+          />
+        </Grid>
+
+        <Grid size={6}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Grid3X3 size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Infill
+            </Typography>
+          </Box>
+          <SingleSelectDropdown
+            options={options}
+            onChange={(option) => handelChangeValue('infill', option.value)}
+            defaultValue={options.find(
+              (opt) => opt.value === String(formData?.infill)
+            )}
+            titleHelper="Select Infill"
+            sx={{ width: '100%' }}
+          />
+        </Grid>
+
+        <Grid size={12}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Printer size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500 }}
+              color="secondary.main"
+            >
+              Printer
+            </Typography>
+          </Box>
+         { printerMessage === '' ?  <PrinterDropdown
+            options={mappedPrinters}
+            onChange={(option) => handelChangeValue('printer', option.id)}
+            defaultValue={mappedPrinters.find(
+              (opt) => opt.id === formData?.printer
+            )}
+            titleHelper="Please Select First Material and Technology"
+            sx={{ width: '100%' }}
+            disabled={!formData?.material || !formData?.technology}
+          /> : 
+          <Typography variant="body2" color="textSecondary">
+           {printerMessage || 'No printers available for the selected material and technology.'}
+          </Typography>}
+        </Grid>
+      </Grid>
+
+      {/* Current Weight */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mt: 4,
+          pt: 2,
+          borderTop: '1px solid #E0E0E0',
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Current Weight
+        </Typography>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+          {fileData?.dimensions?.weight || 0} gm
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

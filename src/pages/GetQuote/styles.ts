@@ -2,11 +2,12 @@
 import { SxProps } from '@mui/material';
 
 export const innerBox: SxProps = {
-  height: '90%',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
+backgroundColor: '#F9FAFB',
+padding: '2rem',
+borderRadius: '25px',
+boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
 };
+
 export const content: SxProps = {
   padding: '0rem 0rem 1rem',
 };

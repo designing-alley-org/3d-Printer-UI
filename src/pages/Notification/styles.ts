@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 export const NotWrapper = styled.section`
   background: white;
-  padding: 2rem;
+  padding: 0rem;
   border-radius: 2rem;
   display: flex;
   @media (max-width: 768px) {
@@ -52,15 +52,11 @@ export const MainComp = styled.section`
   }
 `;
 export const MainWrapper = styled.main`
-  margin: 4rem;
-  padding-bottom: 2rem;
   h1 {
     color: white;
     font-size: 1.9rem;
   }
   @media (max-width: 768px) {
-    margintop: 4rem;
-    margin: 4rem 0.2rem;
     h1 {
       font-size: 1rem;
     }
