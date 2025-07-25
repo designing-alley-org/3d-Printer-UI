@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './styles.css';
-import Dropdown, { Option } from '../../../stories/Dropdown/Dropdown';
 import { sizeOption, info, group } from '../../../constants';
 import { Button, TextField, useMediaQuery } from '@mui/material';
 import PrinterCard from '../../../components/PrinterCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dimensions, FileDetail, UpdateValueById } from '../../../store/customizeFilesDetails/reducer';
-import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
+import SingleSelectDropdown, { Option } from '../../../stories/Dropdown/SingleSelectDropdown';
+import MUIButton from '../../../stories/MUIButton/Button';
 
 interface AccordionProps {
   icon: string;
@@ -179,11 +179,18 @@ const Accordion: React.FC<AccordionProps> = ({
               <p>Length</p>
             </div>
             <div className="scale-input">
-              <Dropdown
+              {/* <Dropdown
                 options={sizeOption}
                 onSelect={handleUnitChange}
                 defaultValue={formData?.unit ? formData?.unit : 'mm'}
                 className="dropdown_unit"
+              /> */}
+              <SingleSelectDropdown
+                options={sizeOption}
+                onChange={handleUnitChange}
+                defaultValue={sizeOption.find(opt => opt.value === formData?.unit)}
+                titleHelper="Select Unit"
+                error={false}
               />
               
                     {['height', 'width', 'length'].map((field) => (
@@ -191,7 +198,6 @@ const Accordion: React.FC<AccordionProps> = ({
                         key={field}
                         type="number"
                         variant="outlined"
-                        className="fields"
                         value={formData?.dimensions[field as 'height' | 'width' | 'length']}
                         onChange={handleChange(
                           field as 'height' | 'width' | 'length'
@@ -200,9 +206,8 @@ const Accordion: React.FC<AccordionProps> = ({
                           inputMode: 'numeric',
                           pattern: '[0-9]*',
                           style: {
-                            textAlign: 'left',
-                            width: '100%',
-                            paddingRight: '8px',
+                            border: '1px solid #66A3FF',
+                            borderRadius: '10px',
                             height: isSmallScreen ? '.5rem' : '.7rem',
                             fontSize: isSmallScreen ? '.5rem' : '.8rem',
                           },
@@ -210,10 +215,13 @@ const Accordion: React.FC<AccordionProps> = ({
                 />
               ))}
             </div>
-            <div className="revert">
-              <Button className="btn" onClick={handleRevert}>
-                Revert to original
-              </Button>
+              <MUIButton
+                onClick={handleRevert}
+                size="small"
+                label='Revert to original'
+                btnVariant='icon-soft'
+                
+              />
               {oldDimensions && (
                 <p>
                   {oldDimensions?.dimensions?.height.toFixed(2)} {oldDimensions?.unit}  x{' '}
@@ -222,7 +230,6 @@ const Accordion: React.FC<AccordionProps> = ({
                 </p>
               )}
             </div>
-          </div>
         )}
         {id === '2' && (
           <>

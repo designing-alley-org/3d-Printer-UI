@@ -60,12 +60,12 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
         onClick={handleClick}
         variant="outlined"
         sx={{
-          borderRadius: '30px',
+          borderRadius: '10px',
           padding: '4px 12px',
-          borderColor: error ? 'error.main' : 'primary.main',
-          color: error ? 'error.main' : 'primary.main',
-          fontWeight: 500,
-          fontSize: '16px',
+          borderColor: error ? 'error.main' : ' #66A3FF',
+          color: error ? 'error.main' : 'black',
+          fontWeight: 400,
+          fontSize: '1rem',
           textTransform: 'none',
           display: 'flex',
           alignItems: 'center',
@@ -94,8 +94,9 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
         onClose={handleClose}
         PaperProps={{
           sx: {
-            borderRadius: '20px',
-            paddingY: 1,
+            borderRadius: '15px',
+            marginTop: '5px',
+            paddingY: 0,
             minWidth: 160,
           },
         }}
@@ -108,7 +109,6 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
             sx={{
               fontSize: '16px',
               paddingX: 3,
-              color: '#1e6fff',
               '&.Mui-selected': {
                 backgroundColor: '#E7F0FF',
               },
