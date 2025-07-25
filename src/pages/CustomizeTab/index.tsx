@@ -6,15 +6,12 @@ import { Box, useMediaQuery } from '@mui/material';
 import {
   Customize,
   Files,
-  Filescomponent,
   UploadedFile,
-  Wrapper,
   Model,
   ModelName,
   CustomizeBox,
-  LoadingWrapper,
 } from './styles';
-import { customize, vector_black } from '../../constants';
+import {  vector_black } from '../../constants';
 import { AccordionMemo } from './Accordion';
 import materialIcon from '../../assets/icons/materialIcon.svg';
 import colorIcon from '../../assets/icons/colorIcon.svg';
@@ -27,7 +24,6 @@ import {
 import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
 import { saveFile } from '../../utils/indexedDB';
 import ViewModelStl from '../../components/ViewStlFile';
-import Loader from '../../components/Loader/Loader';
 import { getFilesByOrderId } from '../../store/actions/getFilesByOrderId';
 import { getWeightByFileId } from '../../store/actions/getWeightByFileId';
 import { getSpecificationData } from '../../store/actions/getSpecificationData';
@@ -346,32 +342,16 @@ const CustomizeTab: React.FC = () => {
               </div>
             ) : null}
             {activeFileId &&
-              customize.map((item) => (
-                <AccordionMemo
-                  key={item.id}
-                  icon={item.icon}
-                  id={item.id}
-                  title={item.name}
-                  printerData={printerData}
-                  printerMessage={printerMessage}
-                  fileData={activeFile}
-                  oldDimensions={activeFileIndexDimensions}
-                />
-              ))}
+               <AccordionMemo
+                key={activeFileId} // Fixed: Using activeFileId as key instead of undefined item.id
+                printerData={printerData}
+                fileData={activeFile}
+                oldDimensions={activeFileIndexDimensions}
+                printerMessage={printerMessage}
+              />
+              }
           </div>
-          <div
-            className="weight-section"
-            style={{
-              marginBottom: isSmallScreen ? '1rem' : '',
-            }}
-          >
-            {dimensions?.weight !== null && dimensions?.weight > 0 && (
-              <>
-                <p>Current Weight:</p>
-                <p>{`${dimensions?.weight.toFixed(2)}gm`}</p>
-              </>
-            )}
-          </div>
+         
           <Box
             sx={{
               display: 'flex',

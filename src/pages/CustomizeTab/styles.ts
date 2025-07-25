@@ -277,7 +277,7 @@ export const Customize = styled.article`
 
   .customize-container {
     overflow-y: auto;
-    height: 32rem;
+    height: 39rem;
   }
   .text {
     display: flex;
