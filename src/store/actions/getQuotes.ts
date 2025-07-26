@@ -24,7 +24,6 @@ export const getQuoteByOrderId = async ({
         setAllQuotes(quotes);
         if(dispatch) {
             dispatch(setQuoteData(quotes));
-            console.log("Quotes set in Redux store:", quotes);
         }
         if (quotes.length > 0 && quotes[activeIndex]) {
             setQuote(quotes[activeIndex]);

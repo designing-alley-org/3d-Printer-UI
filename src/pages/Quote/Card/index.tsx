@@ -3,11 +3,13 @@ import { QuoteBox } from './styles';
 import Chat from '../Chat';
 import { useEffect, useState } from 'react';
 import QuoteTemplate from '../Template/index.tsx';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getQuoteByOrderId } from '../../../store/actions/getQuotes.ts';
 import { useDispatch } from 'react-redux';
 import MUIButton from '../../../stories/MUIButton/Button.tsx';
 import { ArrowRightIcon } from 'lucide-react';
+import StepLayout from '../../../components/Layout/StepLayout.tsx';
+import { useSelector } from 'react-redux';
 
 interface QuoteItem {
   fileName: string;
@@ -34,20 +36,43 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [showQuote, setShowQuote] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const quoteDataClosed = useSelector((state: any) => state.quoteData.quoteClosed);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   async function getQuotes() {
-    getQuoteByOrderId({
+  await  getQuoteByOrderId({
       orderId: (orderId as string) || selectOrderIdProps || '',
       setAllQuotes,
       setQuote,
       activeIndex,
       dispatch,
+    }).then(() => {
+      setIsPageLoading(false);
+    }).catch((error) => {
+      console.error("Error fetching quotes:", error);
+      setIsPageLoading(false);
     });
+   
   }
   useEffect(() => {
     getQuotes();
   }, []);
+
   return (
+    <StepLayout
+      stepNumber={3}
+      stepText='Quote'
+      stepDescription="Review the quote details and connect with the supplier."
+      onClick={() =>  navigate(`/get-quotes/${orderId}/checkout`)}
+      orderId={orderId}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/customize`)}
+      isLoading={false}
+      isPageLoading={isPageLoading}
+      isDisabled={!quoteDataClosed}
+    >
     <QuoteBox>
       <Box
         sx={{
@@ -109,5 +134,6 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
         <Chat />
       </Box>
     </QuoteBox>
+    </StepLayout>
   );
 }

@@ -20,7 +20,6 @@ export const SubHeader = styled.div`
 `;
 
 export const Wrapper = styled.section`
-  padding: 0rem 2rem;
   .header {
     display: flex;
     justify-content: space-between;
