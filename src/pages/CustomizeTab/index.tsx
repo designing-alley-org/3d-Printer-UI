@@ -41,7 +41,7 @@ const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [isPageLoading, setIsPageLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
@@ -244,7 +244,7 @@ const CustomizeTab: React.FC = () => {
       stepText='Customize'
       stepDescription="Set the required quantities for each file and if their sizes appear too small, change the unit of measurement to inches. 
      Click on 3D Viewer for a 360° preview of your files."
-      onClick={() => console.log('log')}
+      onClick={() =>  navigate(`/get-quotes/${orderId}/quote`)}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
       isLoading={false}

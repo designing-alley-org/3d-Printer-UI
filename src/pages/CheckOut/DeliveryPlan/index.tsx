@@ -20,6 +20,7 @@ import {
 import toast from 'react-hot-toast';
 import Carousel from 'react-multi-carousel';
 import MUIButton from '../../../stories/MUIButton/Button';
+import StepLayout from '../../../components/Layout/StepLayout';
 // Types
 interface Rate {
   serviceName: string;
@@ -180,79 +181,53 @@ const DeliveryPlan: React.FC = () => {
     }
   };
 
-  // Render loading state
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="200px"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  // Render error state
-  if (error) {
-    return (
-      <Box sx={{ padding: '2rem', textAlign: 'center' }}>
-        <Typography color="error" variant="h6">
-          {error}
-        </Typography>
-        <MUIButton
-          label="Try Again"
-          onClick={() => window.location.reload()}
-          style={{ marginTop: '1rem' }}
-        />
-      </Box>
-    );
-  }
-
-  // Render main content
+  
   return (
-    <Box sx={{ padding: '0 1rem' }}>
-      <Typography
-        variant={isSmallScreen ? 'body1' : 'h1'}
-        sx={{ color: '#001047', marginBottom: '2rem' }}
-      >
-        Select Delivery Plan
-      </Typography>
-      <CardBox>
-        <div className="cards">
-          <Carousel responsive={responsive} infinite={false} autoPlay={false}>
-            {deliveryData?.rates?.map((plan, index) => (
-              <Card
-                key={`delivery-plan-${index}`}
-                deliveryName={plan.serviceName}
-                deliveryTime={plan.serviceType}
-                deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
-                packaging={plan.packagingType}
-                active={selectedPlanIndex}
-                setActive={setSelectedPlanIndex}
-                name={selectedPlanName}
-                setName={setSelectedPlanName}
-                index={index}
-              />
-            ))}
-          </Carousel>
-        </div>
-      </CardBox>
-      <ButtonWrap>
-        <MUIButton
-          label="Proceed"
-          onClick={handleProceed}
-          disabled={selectedPlanIndex === -1 || isLoading}
-          size="large"
-          style={{
-            width: isSmallScreen ? '100%' : 'auto',
-            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.7rem 2.8rem',
-            fontSize: isSmallScreen ? '0.9rem' : '1rem',
-          }}
-        />
-      </ButtonWrap>
-    </Box>
+    <StepLayout
+      stepNumber={5}
+      stepText="Shipping Delivery Plan"
+      stepDescription="Please Select a delivery plan. Based on your order and address, we have provided the best delivery options."
+      onClick={handleProceed}
+      orderId={orderId}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/checkout`)}
+      isLoading={false}
+      isPageLoading={isLoading}
+      isDisabled={selectedPlanIndex === -1 || isLoading}
+    >
+      {error ? (
+        <Box sx={{ padding: '2rem', textAlign: 'center' }}>
+          <Typography color="error" variant="h6">
+            {error}
+          </Typography>
+          <MUIButton
+            label="Try Again"
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '1rem' }}
+          />
+        </Box>
+      ) : (
+        <CardBox>
+          <div className="cards">
+            <Carousel responsive={responsive} infinite={false} autoPlay={false}>
+              {deliveryData?.rates?.map((plan, index) => (
+                <Card
+                  key={`delivery-plan-${index}`}
+                  deliveryName={plan.serviceName}
+                  deliveryTime={plan.serviceType}
+                  deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
+                  packaging={plan.packagingType}
+                  active={selectedPlanIndex}
+                  setActive={setSelectedPlanIndex}
+                  name={selectedPlanName}
+                  setName={setSelectedPlanName}
+                  index={index}
+                />
+              ))}
+            </Carousel>
+          </div>
+        </CardBox>
+      )}
+    </StepLayout>
   );
 };
 

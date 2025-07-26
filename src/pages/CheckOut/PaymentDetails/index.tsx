@@ -7,6 +7,7 @@ import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import toast from 'react-hot-toast';
 import { HouseIcon } from 'lucide-react';
+import StepLayout from '../../../components/Layout/StepLayout';
 
 // Types
 interface QuoteProps {
@@ -110,19 +111,6 @@ const PaymentDetails: React.FC = () => {
   const taxAmount = (quoteData.totalPrice * quoteData.tax) / 100;
   const totalAmount = quoteData.totalPrice + taxAmount;
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
   // Error state
   if (error) {
@@ -136,14 +124,18 @@ const PaymentDetails: React.FC = () => {
   }
 
   return (
-    <Wrapper>
-      <header>
-        <div className="orderNo">Order No: {orderId}</div>
-        <h1>Payment</h1>
-        <h3 className="desc">
-          Please check the details to proceed for payment
-        </h3>
-      </header>
+    <StepLayout
+      stepNumber={6}
+      stepText="Payment Details"
+      stepDescription="Please check the details to proceed for payment"
+      onClick={() => navigate(`/get-quotes/${orderId}/checkout/payment`)}
+      orderId={orderId}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/checkout/select-delivery`)}
+      isLoading={false}
+      isPageLoading={isLoading}
+      isDisabled={false}
+      buttonLabel="Proceed to Payment"
+    >
 
       <Body>
         {/* Files Section */}
@@ -273,7 +265,7 @@ const PaymentDetails: React.FC = () => {
           </Price>
         </div>
       </Body>
-    </Wrapper>
+    </StepLayout>
   );
 };
 

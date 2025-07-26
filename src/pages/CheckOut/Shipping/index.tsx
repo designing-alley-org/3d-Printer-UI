@@ -2,7 +2,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import FormikInput from '../../../stories/StandardInput/FormikInput';
 import { InputWrapper, SubHeader, Wrapper } from './style';
 import {  inputFields } from '../../../constants';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { createAddress } from '../../../store/actions/createAddress';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,6 +14,7 @@ import { updateAddressService } from '../../../services/address';
 import { Formik, Form } from 'formik';
 import { addressValidationSchema } from '../../../validation';
 import MUIButton from '../../../stories/MUIButton/Button';
+import StepLayout from '../../../components/Layout/StepLayout';
 
 const ShippingDetails = () => {
   const { orderId } = useParams();
@@ -21,6 +22,8 @@ const ShippingDetails = () => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const { addressData, addressId, isCreateAddress } = useSelector((state: any) => state.address);
   const [editingAddress, setEditingAddress] = useState<any>(null);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -35,6 +38,8 @@ const ShippingDetails = () => {
           // if (error?.response?.data?.message) {
           //   toast.info(error?.response?.data?.message);
           // }
+        } finally {
+          setIsPageLoading(false);
         }
       }
     };
@@ -111,10 +116,20 @@ const ShippingDetails = () => {
   };
 
   return (
+    <StepLayout
+      stepNumber={4}
+      stepText='Shipping Details'
+      stepDescription="Please Select Your Delivery Address. If you don't have an address, create a new one."
+      onClick={() =>  navigate(`/get-quotes/${orderId}/checkout/select-delivery`)}
+      orderId={orderId}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/quote`)}
+      isLoading={false}
+      isPageLoading={isPageLoading}
+      isDisabled={!addressId}
+    >
     <Wrapper>
       <div className='header'>
-        <Typography variant={isSmallScreen ? 'body1' : 'h1'}>Shipping Details</Typography>
-       <Box sx={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', width: '100%' , marginBottom: '1rem', gap: '1rem'}}>
           <MUIButton
             label={!isCreateAddress ? "Create New" : editingAddress ? "Update" : "Save"}
             btnVariant="primary"
@@ -125,18 +140,18 @@ const ShippingDetails = () => {
           />
           {isCreateAddress && (
             <MUIButton
-            tooltip='Cancel Edit'
+              tooltip='Cancel Edit'
               btnVariant="outlined"
               icon={<X size={isSmallScreen ? 13 : 20} />}
               onClick={handleCancelEdit}
+              style={{
+                border:'none',
+                boxShadow: 'none',
+              }}
             />
           )}
        </Box>
       </div>
-      
-      <SubHeader>
-        {!isCreateAddress ? "Please Select" : editingAddress ? "Please Update" : "Please Enter"} Your Delivery Address
-      </SubHeader>
       
       {!isCreateAddress && (
         <div className="address-list">
@@ -210,6 +225,7 @@ const ShippingDetails = () => {
         </Formik>
       )}
     </Wrapper>
+    </StepLayout>
   );
 };
 

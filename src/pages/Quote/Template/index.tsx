@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Divider, Typography, TextField, useMediaQuery } from '@mui/material';
 import { TemplateWrapper } from './styles';
-import Button from '../../../stories/button/Button';
 import './style.css';
 import api from '../../../axiosConfig';
 import { useParams } from 'react-router-dom';
