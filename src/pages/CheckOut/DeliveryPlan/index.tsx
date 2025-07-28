@@ -1,14 +1,8 @@
-import {
-  Box,
-  Typography,
-  CircularProgress,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from './Card';
-import { ButtonWrap, CardBox } from './styles';
 import api from '../../../axiosConfig';
 import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
 import { RootState } from '../../../store/types';
@@ -18,7 +12,11 @@ import {
   selectDeliveryPlan,
 } from '../../../store/Address/deliveryDetails';
 import toast from 'react-hot-toast';
-import Carousel from 'react-multi-carousel';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Navigation, Pagination } from 'swiper/modules';
 import MUIButton from '../../../stories/MUIButton/Button';
 import StepLayout from '../../../components/Layout/StepLayout';
 // Types
@@ -50,12 +48,6 @@ interface Order {
 }
 
 // Define the responsive breakpoints for the carousel
-const responsive = {
-  superLargeDesktop: { breakpoint: { max: 4000, min: 3000 }, items: 3 },
-  desktop: { breakpoint: { max: 3000, min: 1024 }, items: 3 },
-  tablet: { breakpoint: { max: 1024, min: 464 }, items: 2 },
-  mobile: { breakpoint: { max: 464, min: 0 }, items: 1 },
-};
 
 //
 const DeliveryPlan: React.FC = () => {
@@ -70,6 +62,8 @@ const DeliveryPlan: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const isMediumScreen = useMediaQuery('(max-width:960px)');
+
   // Hooks
   const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
@@ -181,7 +175,9 @@ const DeliveryPlan: React.FC = () => {
     }
   };
 
-  
+  const deliveryOptions = deliveryData?.rates || [];
+  const itemsPerSlide = isSmallScreen ? 1 : isMediumScreen ? 2 : 3;
+
   return (
     <StepLayout
       stepNumber={5}
@@ -194,6 +190,7 @@ const DeliveryPlan: React.FC = () => {
       isPageLoading={isLoading}
       isDisabled={selectedPlanIndex === -1 || isLoading}
     >
+      <Box sx={{ textAlign: 'center', marginBottom: '2rem' }}>
       {error ? (
         <Box sx={{ padding: '2rem', textAlign: 'center' }}>
           <Typography color="error" variant="h6">
@@ -206,27 +203,31 @@ const DeliveryPlan: React.FC = () => {
           />
         </Box>
       ) : (
-        <CardBox>
-          <div className="cards">
-            <Carousel responsive={responsive} infinite={false} autoPlay={false}>
-              {deliveryData?.rates?.map((plan, index) => (
-                <Card
-                  key={`delivery-plan-${index}`}
-                  deliveryName={plan.serviceName}
-                  deliveryTime={plan.serviceType}
-                  deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
-                  packaging={plan.packagingType}
-                  active={selectedPlanIndex}
-                  setActive={setSelectedPlanIndex}
-                  name={selectedPlanName}
-                  setName={setSelectedPlanName}
-                  index={index}
-                />
-              ))}
-            </Carousel>
-          </div>
-        </CardBox>
+        <Swiper
+          modules={[Navigation, Pagination]}
+          spaceBetween={50}
+          slidesPerView={itemsPerSlide}
+          navigation
+          pagination={{ clickable: true }}
+        >
+          {deliveryOptions.map((plan, index) => (
+            <SwiperSlide key={`delivery-plan-${plan.serviceType}`}>
+              <Card
+                deliveryName={plan.serviceName}
+                deliveryTime={plan.serviceType}
+                deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
+                packaging={plan.packagingType}
+                active={selectedPlanIndex}
+                setActive={setSelectedPlanIndex}
+                name={selectedPlanName}
+                setName={setSelectedPlanName}
+                index={index}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       )}
+      </Box>
     </StepLayout>
   );
 };

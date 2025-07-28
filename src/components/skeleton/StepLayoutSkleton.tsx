@@ -4,7 +4,7 @@ import { Paper, Box, Skeleton, Stack } from '@mui/material';
 const StepLayoutSkeleton = () => {
     return (
         <Paper
-            elevation={3}
+            elevation={0}
             sx={{
                 padding: '2rem',
                 borderRadius: '30px',
@@ -14,7 +14,7 @@ const StepLayoutSkeleton = () => {
             data-testid="step-layout-skeleton"
         >
             {/* Header Skeleton */}
-            <Box
+            {/* <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -24,7 +24,7 @@ const StepLayoutSkeleton = () => {
             >
                 <Skeleton variant="text" width="35%" height={44} />
                 <Skeleton variant="circular" width={36} height={36} />
-            </Box>
+            </Box> */}
 
             {/* Subheader Skeleton */}
             <Skeleton variant="text" width="60%" height={28} sx={{ mb: 2 }} />

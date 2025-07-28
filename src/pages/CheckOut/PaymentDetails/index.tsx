@@ -1,13 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { Box, Modal, CircularProgress, useMediaQuery } from '@mui/material';
-import Button from '../../../stories/button/Button';
-import { Body, Price, Wrapper, DeliveryDetails, ModalContent } from './styles';
+import { useSelector } from 'react-redux';
+import {
+  Box,
+  Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Radio,
+  Divider,
+  Chip,
+} from '@mui/material';
+import { Edit2, } from 'lucide-react';
+import StepLayout from '../../../components/Layout/StepLayout';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import toast from 'react-hot-toast';
-import { HouseIcon } from 'lucide-react';
-import StepLayout from '../../../components/Layout/StepLayout';
+import MUIButton from '../../../stories/MUIButton/Button';
+import api from '../../../axiosConfig';
 
 // Types
 interface QuoteProps {
@@ -30,17 +41,6 @@ interface AddressData {
   postalCode: string;
 }
 
-interface AddressFormData {
-  personName: string;
-  companyName: string;
-  streetLines: string[];
-  city: string;
-  stateOrProvinceCode: string;
-  countryCode: string;
-  postalCode: string;
-  orderId?: string;
-}
-
 const PaymentDetails: React.FC = () => {
   // State
   const [quoteData, setQuoteData] = useState<QuoteProps>({
@@ -48,22 +48,18 @@ const PaymentDetails: React.FC = () => {
     totalPrice: 0,
     tax: 0,
   });
-
-  console.log('quoteData', quoteData?.files?.length);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showAddressModal, setShowAddressModal] = useState(false);
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const [isSaving, setIsSaving] = useState(false);
+
   // Hooks
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   // Redux state
   const { deliveryData, selectedServiceType } = useSelector(
     (state: any) => state.delivery
   );
-  const [showDeliveryData, setShowDeliveryData] = useState([]);
   const { addressData, addressId } = useSelector(
     (state: {
       address: {
@@ -72,6 +68,8 @@ const PaymentDetails: React.FC = () => {
       };
     }) => state.address
   );
+
+  const [showDeliveryData, setShowDeliveryData] = useState<any[]>([]);
 
   // Filter delivery data
   useEffect(() => {
@@ -84,7 +82,7 @@ const PaymentDetails: React.FC = () => {
       (data: any) => data.serviceType === selectedServiceType
     );
     setShowDeliveryData(filteredData?.ratedShipmentDetails ?? [{}]);
-  }, [deliveryData, selectedServiceType]);
+  }, [deliveryData, selectedServiceType, navigate, orderId]);
 
   // Effects
   useEffect(() => {
@@ -107,164 +105,266 @@ const PaymentDetails: React.FC = () => {
     void fetchQuoteData();
   }, [orderId]);
 
-  // Calculate totals
-  const taxAmount = (quoteData.totalPrice * quoteData.tax) / 100;
-  const totalAmount = quoteData.totalPrice + taxAmount;
+  const selectedAddress = addressData.find(
+    (address) => address._id === addressId
+  );
 
 
-  // Error state
-  if (error) {
-    return (
-      <Box sx={{ padding: '2rem', textAlign: 'center' }}>
-        <h2>Error</h2>
-        <p>{error}</p>
-        <Button label="Try Again" onClick={() => window.location.reload()} />
-      </Box>
-    );
-  }
+  const handlePayment = async () => {
+    try {
+      setIsSaving(true);
+
+      const response = await api.post(`/checkout/${orderId}`);
+      if (response.status === 200 && response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        throw new Error('Invalid payment URL received');
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      toast.error('Failed to process payment!', {
+        position: "bottom-right",
+        });
+     
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+
+ 
 
   return (
     <StepLayout
       stepNumber={6}
       stepText="Payment Details"
       stepDescription="Please check the details to proceed for payment"
-      onClick={() => navigate(`/get-quotes/${orderId}/checkout/payment`)}
+      onClick={handlePayment}
       orderId={orderId}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/checkout/select-delivery`)}
-      isLoading={false}
+      onClickBack={() =>
+        navigate(`/get-quotes/${orderId}/checkout/select-delivery`)
+      }
+      isLoading={isSaving}
       isPageLoading={isLoading}
       isDisabled={false}
       buttonLabel="Proceed to Payment"
     >
-
-      <Body>
-        {/* Files Section */}
-        <div className="files">
+      {
+        error ?  <Box sx={{ padding: '2rem', textAlign: 'center' }}>
+        <Typography variant="h5" color="error">
+          Error
+        </Typography>
+        <Typography paragraph>{error}</Typography>
+        <MUIButton label="Try Again" onClick={() => window.location.reload()} />
+      </Box> :
+        <Paper
+        elevation={0}
+        sx={{
+          p: 2,
+          borderRadius: 2,
+          border: '1px solid',
+          borderColor: 'primary.main',
+          height: '20rem ',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              md: 'repeat(3, 1fr)',
+            },
+            gap: 2,
+            height: '100%',
+          }}
+        >
+          {/* Files Section */}
           <Box
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: isSmallScreen ? '0.5rem' : '1rem',
+              borderRight: { md: '1px solid' },
+              borderColor: { md: 'primary.main' },
+              pr: { md: 2 },
             }}
           >
-            <h2>Files</h2>
             <Box
               sx={{
-                height: isSmallScreen ? 24 : 30,
-                width: isSmallScreen ? 24 : 30,
-                backgroundColor: '#66A3FF',
-                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
+                justifyContent: 'space-between',
+                mb: 1,
               }}
             >
-              {quoteData.files.length}
+              <Typography variant="h6">Files</Typography>
+              <Chip label={quoteData.files.length} color="primary" />
+            </Box>
+            <List dense>
+              {quoteData.files.map((file, index) => (
+                <ListItem key={file.fileId || index} disableGutters>
+                  <ListItemIcon sx={{ minWidth: 'auto', mr: 1.5 }}>
+                    <Chip label={index + 1} size="small" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={file.fileName.split('-')[0]}
+                    primaryTypographyProps={{
+                      variant: 'body2',
+                      color: 'text.secondary',
+                    }}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+
+          {/* Shipping Address Section */}
+          <Box
+            sx={{
+              borderRight: { md: '1px solid' },
+              borderColor: { md: 'primary.main' },
+              pr: { md: 2 },
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Shipping Address
+            </Typography>
+            {selectedAddress && (
+              <Box
+                sx={{ mb: 2 }}
+                display="flex"
+                alignItems="start"
+                justifyContent="space-between"
+              >
+                <Box display={'flex'} alignItems="start" gap={1}>
+                  {/*  Radio buttonselected */}
+                  <Radio checked={true} color="primary" sx={{ padding: 0 }} />
+                  <Typography variant="body2" color="primary.main">
+                    {`${selectedAddress.personName}, ${selectedAddress.companyName}`}
+                    <br />
+                    {`${selectedAddress.streetLines.join(', ')}`}
+                    <br />
+                    {`${selectedAddress.city}, ${selectedAddress.postalCode}`}
+                    <br />
+                    {`${selectedAddress.countryCode}`}
+                  </Typography>
+                </Box>
+
+                <MUIButton
+                  icon={<Edit2 size={12} />}
+                  label="Edit"
+                  onClick={() => navigate(`/get-quotes/${orderId}/checkout`)}
+                  size="small"
+                  style={{
+                    color: '#000000ff',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    boxShadow: 'none',
+                  }}
+                />
+              </Box>
+            )}
+            <Box>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h6" gutterBottom>
+                Delivery Details
+              </Typography>
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    component="span"
+                    fontWeight="bold"
+                    color="primary.main"
+                  >
+                    Delivery plan :
+                  </Typography>{' '}
+                  {selectedServiceType}
+                </Typography>
+              </Box>
             </Box>
           </Box>
-          <div className="file">
-            {quoteData.files.map((file, index) => (
-              <span key={file.fileId || index} className="fileName">
-                <span className="dot">{index + 1}</span>
-                {file.fileName.split('-')[0]}
-              </span>
-            ))}
-          </div>
-        </div>
 
-        {/* Shipping Address Section */}
-        <div className="address">
-          <h2>Shipping Address</h2>
-          <div className="addDetails">
-            {addressData.map((address) => (
-              <div className="details" key={address._id}>
-                {addressId === address._id && (
-                  <label>
-                    <input
-                      type="radio"
-                      value={address._id}
-                      checked={addressId === address._id}
-                      onChange={(e) => handleAddressChange(e, address)}
-                    />
-                    <span>
-                      {`${address.personName}, ${address.companyName}, ${address.streetLines[0]} 
-                    ${address.city}, ${address.stateOrProvinceCode}, ${address.countryCode}, 
-                    ${address.postalCode}`}
-                    </span>
-                  </label>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Add Another Address */}
-          <div className="Another">
-            <HouseIcon
-              style={{ marginRight: '1rem', borderRadius: '50%' }}
-              size={20}
-            />
-            <span onClick={() => navigate(`/get-quotes/${orderId}/checkout`)}>
-              Change Address
-            </span>
-          </div>
-
-          {/* Delivery Details */}
-          <DeliveryDetails>
-            <h2>Delivery Details</h2>
-            <div className="delivery-info">
-              <p>
-                <span className="label">Delivery plan :</span>
-              </p>
-              <p>{selectedServiceType}</p>
-            </div>
-          </DeliveryDetails>
-        </div>
-
-        {/* Billing Details */}
-        <div className="details">
-          <h4>Billing Details</h4>
-          <Price>
-            <div>
-              <span className="priceDetail">
-                <span>Price</span>
-                <span className="price">
-                  ${quoteData.totalPrice.toFixed(2)}
-                </span>
-              </span>
-              <span className="priceDetail">
-                <span>Delivery Price</span>
-                <span className="price">
-                  ${showDeliveryData?.[0]?.totalNetCharge}
-                </span>
-              </span>
-              <span className="priceDetail">
-                <span>Taxes</span>
-                <span className="price">
-                  $
-                  {(quoteData?.tax.toFixed(2) *
-                    quoteData.totalPrice.toFixed(2)) /
-                    100}
-                </span>
-              </span>
-            </div>
-            <div>
-              <span className="priceDetail">
-                <span className="total">Total</span>
-                <span className="price">
+          {/* Billing Details */}
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Billing Details
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="primary.main">
+                    Price
+                  </Typography>
+                  <Typography variant="body2">
+                    ${quoteData.totalPrice.toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="primary.main">
+                    Delivery Price
+                  </Typography>
+                  <Typography variant="body2">
+                    ${showDeliveryData?.[0]?.totalNetCharge}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                  }}
+                >
+                  <Typography variant="body2" color="primary.main">
+                    Taxes
+                  </Typography>
+                  <Typography variant="body2">
+                    $
+                    {((quoteData?.tax / 100) * quoteData.totalPrice).toFixed(2)}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Divider sx={{ mt: 10, mb: 4 }} />
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  mt: 'auto',
+                }}
+              >
+                <Typography variant="h6" color="primary.main">
+                  Total
+                </Typography>
+                <Typography variant="h6" color="primary.main">
                   $
                   {(
                     Number(quoteData.totalPrice) +
                     Number(showDeliveryData?.[0]?.totalNetCharge || 0) +
                     (Number(quoteData?.tax) * quoteData.totalPrice) / 100
                   ).toFixed(2)}
-                </span>
-              </span>
-            </div>
-          </Price>
-        </div>
-      </Body>
+                </Typography>
+              </Box>
+          </Box>
+        </Box>
+      </Paper>
+      }
     </StepLayout>
   );
 };

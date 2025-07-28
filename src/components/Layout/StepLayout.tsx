@@ -36,9 +36,9 @@ const StepLayout = ({
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
-  if (isPageLoading) {
-    return <StepLayoutSkleton />;
-  }
+  // if (isPageLoading) {
+  //   return <StepLayoutSkleton />;
+  // }
   return (
     <Paper
       elevation={3}
@@ -92,7 +92,7 @@ const StepLayout = ({
           pointerEvents: isLoading ? 'none' : 'auto',
         }}
       >
-        {children}
+        {isPageLoading ? <StepLayoutSkleton /> : children}
       </Box>
 
       <Box
