@@ -19,9 +19,10 @@ interface Message {
 interface IChatProps {
   disputeId: string;
   orderId: string; 
+  isResolved: boolean;
 }
 
-export default function Chat({ disputeId,orderId }: IChatProps) {
+export default function Chat({ disputeId,orderId, isResolved }: IChatProps) {
   const user = useSelector((state: RootState) => state.user);
   const [socket, setSocket] = useState<Socket<
     DefaultEventsMap,
@@ -109,13 +110,14 @@ export default function Chat({ disputeId,orderId }: IChatProps) {
   return (
     <Box sx={{ width: '100%', height: '110%', display: 'flex', flexDirection: 'column' }}>
       <ChatBody messages={messages} />
+     {!isResolved &&
       <ChatFooter
         socket={socket}
         sender={defaultUserId}
         receiver={defaultMerchantId}
         disputeId={disputeId}
         onSendMessage={handleSendMessage}
-      />
+      />}
     </Box>
   );
 }

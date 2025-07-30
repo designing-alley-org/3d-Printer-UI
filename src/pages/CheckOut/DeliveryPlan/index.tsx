@@ -1,4 +1,4 @@
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,15 +12,13 @@ import {
   selectDeliveryPlan,
 } from '../../../store/Address/deliveryDetails';
 import toast from 'react-hot-toast';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Navigation, Pagination } from 'swiper/modules';
 import MUIButton from '../../../stories/MUIButton/Button';
 import StepLayout from '../../../components/Layout/StepLayout';
 // Types
-interface Rate {
+export interface Rate {
   serviceName: string;
   serviceType: string;
   packagingType: string;
@@ -190,7 +188,6 @@ const DeliveryPlan: React.FC = () => {
       isPageLoading={isLoading}
       isDisabled={selectedPlanIndex === -1 || isLoading}
     >
-      <Box sx={{ textAlign: 'center', marginBottom: '2rem' }}>
       {error ? (
         <Box sx={{ padding: '2rem', textAlign: 'center' }}>
           <Typography color="error" variant="h6">
@@ -203,31 +200,32 @@ const DeliveryPlan: React.FC = () => {
           />
         </Box>
       ) : (
-        <Swiper
-          modules={[Navigation, Pagination]}
-          spaceBetween={50}
-          slidesPerView={itemsPerSlide}
-          navigation
-          pagination={{ clickable: true }}
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '16px',
+            padding: '1rem',
+          }}
         >
           {deliveryOptions.map((plan, index) => (
-            <SwiperSlide key={`delivery-plan-${plan.serviceType}`}>
-              <Card
-                deliveryName={plan.serviceName}
-                deliveryTime={plan.serviceType}
-                deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
-                packaging={plan.packagingType}
-                active={selectedPlanIndex}
-                setActive={setSelectedPlanIndex}
-                name={selectedPlanName}
-                setName={setSelectedPlanName}
-                index={index}
-              />
-            </SwiperSlide>
+            <Card
+              key={index}
+              deliveryName={plan.serviceName}
+              serviceType={plan.serviceType}
+              deliveryCost={plan.ratedShipmentDetails[0]?.totalNetCharge}
+              packaging={plan.packagingType}
+              active={selectedPlanIndex}
+              setActive={setSelectedPlanIndex}
+              name={selectedPlanName}
+              setName={setSelectedPlanName}
+              index={index}
+              item={plan}
+            />
           ))}
-        </Swiper>
+        </Box>
       )}
-      </Box>
     </StepLayout>
   );
 };

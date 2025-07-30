@@ -143,7 +143,7 @@ const MyDisputes: React.FC = () => {
             </div>
           </div>
           <div>
-            <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId} />
+            <Quote dispute_id={selectedDispute?._id} selectOrderIdProps={selectedDispute?.orderId}  isResolved={selectedDispute?.status === 'Resolved'} />
           </div>
         </>
       ) : (
