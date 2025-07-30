@@ -57,7 +57,7 @@ const PaymentDetails: React.FC = () => {
   const navigate = useNavigate();
 
   // Redux state
-  const { deliveryData, selectedServiceType } = useSelector(
+  const { deliveryData, selectedServiceType, selectedDeliveryData } = useSelector(
     (state: any) => state.delivery
   );
   const { addressData, addressId } = useSelector(
@@ -69,7 +69,8 @@ const PaymentDetails: React.FC = () => {
     }) => state.address
   );
 
-  const [showDeliveryData, setShowDeliveryData] = useState<any[]>([]);
+
+
 
   // Filter delivery data
   useEffect(() => {
@@ -78,10 +79,7 @@ const PaymentDetails: React.FC = () => {
       navigate(`/get-quotes/${orderId}/checkout`);
       return;
     }
-    const filteredData = deliveryData.find(
-      (data: any) => data.serviceType === selectedServiceType
-    );
-    setShowDeliveryData(filteredData?.ratedShipmentDetails ?? [{}]);
+  
   }, [deliveryData, selectedServiceType, navigate, orderId]);
 
   // Effects
@@ -144,6 +142,7 @@ const PaymentDetails: React.FC = () => {
       onClickBack={() =>
         navigate(`/get-quotes/${orderId}/checkout/select-delivery`)
       }
+      isBackDisabled={isSaving || isLoading}
       isLoading={isSaving}
       isPageLoading={isLoading}
       isDisabled={false}
@@ -321,7 +320,7 @@ const PaymentDetails: React.FC = () => {
                     Delivery Price
                   </Typography>
                   <Typography variant="body2">
-                    ${showDeliveryData?.[0]?.totalNetCharge}
+                    ${selectedDeliveryData?.ratedShipmentDetails?.[0].totalNetCharge ?? 'N/A'}
                   </Typography>
                 </Box>
                 <Box
@@ -356,7 +355,7 @@ const PaymentDetails: React.FC = () => {
                   $
                   {(
                     Number(quoteData.totalPrice) +
-                    Number(showDeliveryData?.[0]?.totalNetCharge || 0) +
+                    Number(selectedDeliveryData?.ratedShipmentDetails?.[0].totalNetCharge || 0) +
                     (Number(quoteData?.tax) * quoteData.totalPrice) / 100
                   ).toFixed(2)}
                 </Typography>

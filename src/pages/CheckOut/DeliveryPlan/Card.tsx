@@ -2,14 +2,17 @@ import {
   Card as MuiCard,
   CardContent,
   Typography,
-  Button,
   Box,
 } from '@mui/material';
 import icon from '../../../assets/icons/avg_pace.svg';
+import MUIButton from '../../../stories/MUIButton/Button';
+import { useDispatch } from 'react-redux';
+import { selectDeliveryData } from '../../../store/Address/deliveryDetails';
 
 interface CardProps {
+  item: any;
   deliveryName: string;
-  deliveryTime: string;
+  serviceType: string;
   deliveryCost: number;
   packaging: string;
   active: number;
@@ -20,101 +23,143 @@ interface CardProps {
 }
 
 export default function Card({
+  item,
   deliveryName,
-  deliveryTime,
+  serviceType,
   deliveryCost,
-  packaging,
   active,
   setActive,
   setName,
   index,
 }: CardProps) {
+  const dispatch = useDispatch();
   const handleClick = (idx: number, name: string) => {
     if (active === idx) {
       setActive(-1);
       return;
     }
+    dispatch(selectDeliveryData(item));
     setActive(idx);
     setName(name);
   };
+
 
   const isSelected = active === index;
 
   return (
     <MuiCard
+      onClick={() => handleClick(index, deliveryName)}
       sx={{
-        backgroundColor: '#deebff',
+        backgroundColor: isSelected ? 'primary.main' : '#F0F8FF',
         borderRadius: '1rem',
-        width: { xs: '100%',},
+        width: { xs: '100%' },
         maxWidth: { xs: '100%', sm: '320px', md: '320px' },
         minHeight: '24rem',
-        border: `1px solid ${isSelected ? '#0047FF' : '#e8eff9'}`,
+        border: `1px solid ${isSelected ? 'primary.main' : '#e8eff9'}`,
         boxShadow: isSelected ? '0px 4px 20px rgba(0, 71, 255, 0.2)' : 'none',
         transition: 'all 0.3s ease-in-out',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        cursor: 'pointer',
         '@media (max-width: 600px)': {
           minHeight: '20rem',
         },
+        color: isSelected ? '#FFFFFF' : 'primary.main',
       }}
     >
-      <CardContent
-        sx={{
-          padding: { xs: '1rem', md: '1.5rem' },
-          color: '#1e6fff',
-        }}
-      >
-        <img
-          src={icon}
-          alt="delivery icon"
-          style={{ width: '2rem', marginBottom: '1.5rem' }}
-        />
-        <Typography variant="h6" component="div" sx={{ fontSize: { xs: '0.9rem', md: '1rem' } }}>
-          {deliveryName}
-        </Typography>
-        <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}>
-          {deliveryTime}
-        </Typography>
-      </CardContent>
-      <CardContent
-        sx={{
-          padding: { xs: '1rem', md: '1.5rem' },
-        }}
-      >
-        <Box sx={{ color: '#2359b0', fontSize: { xs: '0.7rem', md: '0.9rem' } }}>
-          <Typography>Time: {deliveryTime}</Typography>
-          <Typography>Cost: {deliveryCost}</Typography>
-          <Typography>Packaging: {packaging}</Typography>
-        </Box>
+      <CardContent sx={{ padding: { xs: '1rem', md: '1.5rem' } }}>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: '1rem',
+            marginBottom: '1rem',
           }}
         >
           <Typography
-            variant="h6"
-            sx={{ color: '#235ab0', fontSize: { xs: '0.8rem', md: '1rem' } }}
+            variant="h5"
+            component="div"
+            sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main' }}
           >
-            ${deliveryCost}
+            {deliveryName}
           </Typography>
-          <Button
-            variant="contained"
-            onClick={() => handleClick(index, deliveryTime)}
-            sx={{
-              borderRadius: '2rem',
-              background: isSelected ? '#0047FF' : '#1e6fff',
-              fontSize: { xs: '0.6rem', md: '0.8rem' },
-              height: { xs: '1.5rem', md: '2rem' },
+          <img
+            src={icon}
+            alt="delivery icon"
+            style={{
+              width: '2rem',
+              filter: isSelected ? 'brightness(0) invert(1)' : 'none',
             }}
-          >
-            {active !== index ? 'Select' : 'Selected'}
-          </Button>
+          />
         </Box>
+        <Typography
+          variant="h3"
+          component="div"
+          sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main' }}
+        >
+          ${deliveryCost.toFixed(2)}
+        </Typography>
+      </CardContent>
+      <CardContent sx={{ padding: { xs: '1rem', md: '1.5rem' } }}>
+        <Box
+          sx={{
+            color: isSelected ? '#FFFFFF' : 'primary.main',
+            fontSize: { xs: '0.8rem', md: '0.9rem' },
+            '& > *': {
+              display: 'flex',
+              alignItems: 'center',
+              marginBottom: '0.5rem',
+            },
+            '& svg': {
+              marginRight: '0.5rem',
+            },
+          }}
+        >
+          <Typography>
+            <CheckIcon /> Time: {serviceType}
+          </Typography>
+          <Typography>
+            <CheckIcon /> Packaging: Done
+          </Typography>
+        </Box>
+      </CardContent>
+      <CardContent
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: { xs: '1rem', md: '1.5rem' },
+        }}
+      >
+        <MUIButton
+          label={isSelected ? "Selected" : "Select Plan"}
+            style={{
+            borderRadius: '2rem',
+            padding: '0.75rem',
+            background: isSelected ? '#FFFFFF' : '#1E65F5',
+            color: isSelected ? '#1E65F5' : '#FFFFFF',
+          }}
+          fullWidth
+        >
+         
+        </MUIButton>
       </CardContent>
     </MuiCard>
   );
 }
+
+const CheckIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ marginRight: '8px' }}
+  >
+    <path
+      d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+      fill="currentColor"
+    />
+  </svg>
+);

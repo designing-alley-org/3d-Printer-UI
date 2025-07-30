@@ -9,8 +9,9 @@ interface ChatFooterProps {
   socket: Socket | null;
   sender: string;
   receiver: string;
-  orderId: string;
+  orderId?: string;
   onSendMessage: (content: string, files: any[]) => void;
+  disputeId: string;
 }
 
 function isValidFile(file: File) {
