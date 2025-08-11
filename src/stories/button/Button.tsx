@@ -1,55 +1,43 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode } from 'react';
+import React from "react";
+import { Button, ButtonProps, CircularProgress, useTheme } from "@mui/material";
 
-interface ButtonProps {
-  label?: string;
-  onClick?: (e?: any) => void;
-  width?: string; 
-  height?: string;
-  disabled?: boolean;
-  color?: string; 
-  children?: ReactNode;
+interface CustomButtonProps extends ButtonProps {
   loading?: boolean;
-  className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  [key: string]: any; 
 }
 
-const Button: React.FC<ButtonProps> = ({
-  label,
-  onClick,
-  width,
-  height,
-  color = '#ffffff',
-  children,
-  className = '',
-  type = 'button',
+const CustomButton: React.FC<CustomButtonProps> = ({
   loading = false,
-  disabled = false,
+  children,
+  disabled,
+  sx,
   ...props
 }) => {
-  const isDisabled = loading || disabled;
-
-  const baseStyle: React.CSSProperties = {
-    color: isDisabled ? '#999999' : color, 
-    backgroundColor: isDisabled ? '#e0e0e0' : '', 
-    cursor: isDisabled ? 'not-allowed' : 'pointer',
-    opacity: isDisabled ? 0.6 : 1,
-    border:  isDisabled ? 'none' : '',
-  };
+  const theme = useTheme();
 
   return (
-    <button
-      style={baseStyle}
-      onClick={isDisabled ? undefined : onClick}
-      className={className}
-      type={type}
-      disabled={isDisabled}
+    <Button
       {...props}
+      disabled={loading || disabled}
+      sx={{
+        borderRadius: (theme.shape.borderRadius as number) * 1.33, // 24px from theme (multiplier in case)
+        padding: "10px 16px",
+        fontWeight: theme.typography.button.fontWeight,
+        textTransform: "none",
+        ...sx, // merge custom overrides last
+      }}
     >
-      {loading ? 'Loading...' : (label || children)}
-    </button>
+      {loading ? (
+        <CircularProgress
+          size={20}
+          sx={{
+            color: props.variant === "contained" ? theme.palette.common.white : theme.palette.primary.main,
+          }}
+        />
+      ) : (
+        children
+      )}
+    </Button>
   );
 };
 
-export default Button;
+export default CustomButton;
