@@ -1,33 +1,24 @@
 import React, { useState } from 'react';
-import { useNavigate, Link, useParams } from 'react-router-dom';
-import { Box,  Container, TextField,  Paper, styled, useMediaQuery, Typography } from '@mui/material';
+import { useNavigate, Link } from 'react-router-dom';
+import { Box, Container, Paper, Typography, Alert } from '@mui/material';
 import { ROUTES } from '../../routes/routes-constants';
 import { changePassword } from '../../store/actions/changePassword';
 import { validatePassword } from '../../utils/Validation';
-import MUIButton from '../../stories/MUIButton/Button';
+import CustomButton from '../../stories/button/CustomButton';
+import CustomTextField from '../../stories/inputs/CustomTextField';
+
+// Importing icons
+import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 interface FormState {
     newPassword: string;
     confirmPassword?: string;
 }
-const StyledTextField = styled(TextField)({
-    '& .MuiOutlinedInput-root': {
-      marginTop: '0.5rem',
-      height: '2.2rem',
-      fontSize: '0.8rem',
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-      borderRadius: '25px',
-      '& fieldset': { borderColor: 'transparent' },
-      '&:hover fieldset': { borderColor: 'transparent' },
-      '&.Mui-focused fieldset': { borderColor: '#0066ff' },
-    },
-  });
 
 const ChangePassword: React.FC = () => {
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
   const [err, setErr] = useState('');
-  const [ loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<FormState>({
     newPassword: '',
     confirmPassword: ''
@@ -38,12 +29,12 @@ const ChangePassword: React.FC = () => {
   const handleChange = (key: keyof FormState) => (value: string) => {
     setForm(prev => ({ ...prev, [key]: value }));
     setErr(''); 
-};
+  };
 
- const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const { newPassword, confirmPassword } = form;
-   if(!validatePassword(newPassword, setErr)) return;
+    if(!validatePassword(newPassword, setErr)) return;
     if (newPassword !== confirmPassword) {
         setErr('Passwords do not match');
         return;
@@ -57,59 +48,140 @@ const ChangePassword: React.FC = () => {
     } finally {
         setLoading(false);
     }
-};
+  };
 
   return (
-    <div className='AuthBG'>
-      <Container maxWidth='xs'>
-        <Paper elevation={3} sx={{ p: 3, borderRadius: '20px', background: 'white', mt: 3 }}>    
-        <Box component="form" onSubmit={handleSave} sx={{ textAlign: 'left' }}>
-          <Typography  sx={{ mb: 1, fontWeight: 500,fontSize: isSmallScreen ? '0.8rem' : '1rem' }}>
-                Change Password
-            </Typography>
-            <Typography sx={{ mb: 2, color: 'text.secondary', fontSize: isSmallScreen ? '0.7rem' : '.8rem' }}>
-                Enter your new password
-            </Typography>
-            <Box sx={{ mb: 2 }}>
-            <Typography sx={{ mb: 1, fontSize: isSmallScreen ? '0.7rem' : '.8rem' }}>New Password</Typography>
-              <StyledTextField
-                fullWidth
-                type="password"
-                value={form.newPassword}
-                onChange={(e) => handleChange('newPassword')(e.target.value)}
-                placeholder="New Password"
-                variant="outlined"
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-            <Typography sx={{ mb: 1, fontSize: isSmallScreen ? '0.7rem' : '.8rem' }}>Confirm Password</Typography>
-              <StyledTextField
-                fullWidth
-                type="password"
-                value={form.confirmPassword}
-                onChange={(e) => handleChange('confirmPassword')(e.target.value)}
-                placeholder="Confirm Password"
-                variant="outlined"
-              />
-            </Box>
-            {err && <Typography sx={{ color: 'red', mb: 1, fontSize: isSmallScreen ? '0.5rem' : '.7rem' }}>{err}</Typography>}
-            
-            <MUIButton
-              type='submit'
-              label='Save'
-              fullWidth
-              disabled={loading}
-              loading={loading}
-              />
-            <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem' }}>
-                Back to <Link to={ROUTES.LOGIN}>Login</Link>
-            </Typography>
+    <Container
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)'
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          borderRadius: '24px',
+          background: 'white',
+          width: '100%',
+          maxWidth: '400px',
+          textAlign: 'center'
+        }}
+      >
+        <Box component="form" onSubmit={handleSave}>
+          {/* Logo/Icon Section */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mb: 3
+            }}
+          >
+            <Box
+              sx={{
+                backgroundColor: 'background.default',
+                borderRadius: '50%',
+                width: '80px',
+                height: '80px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <PrintOutlinedIcon sx={{ fontSize: '2.5rem', color: 'white' }} />
             </Box>
           </Box>
-        </Paper>
-      </Container>
-    </div>
+
+          {/* Title and Subtitle */}
+          <Typography
+            variant='h5'
+            sx={{
+              fontWeight: 600,
+              fontSize: '1.5rem',
+              color: 'secondary.main',
+              mb: 1
+            }}
+          >
+            Change Password
+          </Typography>
+
+          <Typography
+            sx={{
+              mb: 4,
+              color: 'text.secondary',
+              fontSize: '0.9rem'
+            }}
+          >
+            Enter your new password
+          </Typography>
+
+          {/* Error Display */}
+          {err && (
+            <Box sx={{ mb: 2 }}>
+              <Alert severity="error" sx={{ borderRadius: '8px' }}>
+                {err}
+              </Alert>
+            </Box>
+          )}
+
+          {/* New Password Field */}
+          <Box sx={{ mb: 2, textAlign: 'left' }}>
+            <CustomTextField
+              fullWidth
+              type="password"
+              value={form.newPassword}
+              onChange={(e) => handleChange('newPassword')(e.target.value)}
+              placeholder="New Password"
+              variant="outlined"
+            />
+          </Box>
+
+          {/* Confirm Password Field */}
+          <Box sx={{ mb: 3, textAlign: 'left' }}>
+            <CustomTextField
+              fullWidth
+              type="password"
+              value={form.confirmPassword}
+              onChange={(e) => handleChange('confirmPassword')(e.target.value)}
+              placeholder="Confirm Password"
+              variant="outlined"
+            />
+          </Box>
+
+          {/* Save Button */}
+          <CustomButton
+            type='submit'
+            fullWidth
+            variant="contained"
+            disabled={loading}
+            loading={loading}
+            sx={{
+              mb: 2,
+            }}
+          >
+            Save
+          </CustomButton>
+
+          {/* Back to Login Link */}
+          <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+            Back to{' '}
+            <Link
+              to={ROUTES.LOGIN}
+              style={{
+                fontWeight: 'bold',
+                color: '#0066ff',
+                textDecoration: 'none'
+              }}
+            >
+              Login
+            </Link>
+          </Typography>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

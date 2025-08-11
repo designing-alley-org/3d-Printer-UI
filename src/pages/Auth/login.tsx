@@ -72,7 +72,7 @@ const Login: React.FC = () => {
               >
                 <Box
                   sx={{
-                    backgroundColor: '#060B35',
+                    backgroundColor: 'background.default',
                     borderRadius: '50%',
                     width: '80px',
                     height: '80px',
@@ -93,7 +93,7 @@ const Login: React.FC = () => {
                 sx={{
                   fontWeight: 600,
                   fontSize: '1.5rem',
-                  color: '#2A2D2F',
+                  color: 'secondary.main',
                   mb: 1,
                 }}
               >
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
               <Typography
                 sx={{
                   mb: 4,
-                  color: '#6B6B6B',
+                  color: 'text.secondary',
                   fontSize: '0.9rem',
                 }}
               >
@@ -157,7 +157,7 @@ const Login: React.FC = () => {
                   to="/forgot-password"
                   style={{
                     textDecoration: 'none',
-                    color: '#6B6B6B',
+                    color: 'text.secondary',
                     fontSize: '0.875rem',
                   }}
                 >
@@ -197,13 +197,13 @@ const Login: React.FC = () => {
               </CustomButton>
 
               {/* Register Link */}
-              <Typography sx={{ fontSize: '0.875rem', color: '#6B6B6B' }}>
+              <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
                 Don't have an account?{' '}
                 <Link
                   to="/signup"
                   style={{
                     fontWeight: 'bold',
-                    color: '#0066ff',
+                    color: '#006BCD',
                     textDecoration: 'none',
                   }}
                 >
