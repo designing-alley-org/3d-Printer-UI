@@ -1,5 +1,5 @@
 
-import Button from '../../stories/button/Button';
+import Button from '../../stories/button/CustomButton';
 import { ContactBtn, Wrapper } from './styles';
 
 const Contact = () => {

@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { InputField } from '../../../stories/Input/InputField';
 import Dropdown from '../../../stories/Dropdown/Dropdown';
-import Button from '../../../stories/button/Button';
+import Button from '../../../stories/button/CustomButton';
 import { createDispute } from '../../../store/actions/CreateDispute';
 import toast from 'react-hot-toast';
 import { CreateDisputeWrapper } from './style';

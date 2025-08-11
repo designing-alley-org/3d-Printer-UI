@@ -18,7 +18,6 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, 'variant'> {
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
-  const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
 
   const isPasswordField = props.type === "password";
@@ -29,17 +28,8 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
       type={isPasswordField && !showPassword ? "password" : "text"}
       sx={{
         "& .MuiOutlinedInput-root": {
-          borderRadius: "32px", // from theme
-          "& fieldset": {
-            borderColor: theme.palette.divider,
-          },
-          "&:hover fieldset": {
-            borderColor: theme.palette.primary.main,
-          },
-          "&.Mui-focused fieldset": {
-            borderColor: theme.palette.primary.main,
-            borderWidth: "2px",
-          },
+          backgroundColor: '#FFFFFF',
+          borderRadius: "32px"
         },
         ...props.sx, // allow overrides
       }}

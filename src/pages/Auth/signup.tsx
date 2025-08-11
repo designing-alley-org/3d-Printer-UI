@@ -30,11 +30,6 @@ const RegisterForm: React.FC = () => {
   const { loading, error } = useSelector((state: RootState) => state.register);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
 
-  // Remove toast error notification since we'll show it inline
-  // useEffect(() => {
-  //   if (error) toast.error(error);
-  // }, [error]);
-
   const initialValues = {
     name: '',
     email: '',

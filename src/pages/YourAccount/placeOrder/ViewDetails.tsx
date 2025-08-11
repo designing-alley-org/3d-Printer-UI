@@ -1,4 +1,4 @@
-import Button from '../../../stories/button/Button';
+import Button from '../../../stories/button/CustomButton';
 import CreateDispute from './CreateDispute';
 import { Box, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
