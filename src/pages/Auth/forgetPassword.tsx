@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Typography, Paper, Alert } from '@mui/material';
+import { Box, Container, Typography, Paper, Alert, useTheme } from '@mui/material';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../../routes/routes-constants';
 import { sendPasswordResetService } from '../../services/user';
@@ -15,7 +15,7 @@ import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 const ForgetPassword: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
-
+  const theme = useTheme();
   const initialValues = {
     email: '',
   };
@@ -36,6 +36,8 @@ const ForgetPassword: React.FC = () => {
   return (
     <Container
       sx={{
+        minWidth: '100%',
+        background: theme.palette.primary.main,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -47,7 +49,7 @@ const ForgetPassword: React.FC = () => {
         sx={{
           p: 4,
           borderRadius: '24px',
-          background: 'white',
+          background: 'background.paper',
           width: '100%',
           maxWidth: '400px',
           textAlign: 'center'
@@ -70,7 +72,7 @@ const ForgetPassword: React.FC = () => {
               >
                 <Box
                   sx={{
-                    backgroundColor: 'background.default',
+                    backgroundColor: 'primary.main',
                     borderRadius: '50%',
                     width: '60px',
                     height: '60px',
@@ -152,7 +154,7 @@ const ForgetPassword: React.FC = () => {
                   to={ROUTES.LOGIN}
                   style={{
                     fontWeight: 'bold',
-                    color: '#0066ff',
+                    color: theme.palette.customColors.linkBlue,
                     textDecoration: 'none'
                   }}
                 >

@@ -1,6 +1,5 @@
 import { MobiltabData, navtabSmallScreen } from '../../constants'
 import { useEffect, useRef, useState } from 'react'
-import './MobileNav.css'
 import { useNavigate } from 'react-router-dom';
 import NotificationBox from './NotificationBox';
 import { Box, Typography } from '@mui/material';

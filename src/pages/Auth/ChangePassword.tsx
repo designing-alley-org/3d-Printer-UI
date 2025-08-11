@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Paper, Typography, Alert } from '@mui/material';
+import { Box, Container, Paper, Typography, Alert, useTheme } from '@mui/material';
 import { ROUTES } from '../../routes/routes-constants';
 import { changePassword } from '../../store/actions/changePassword';
 import { validatePassword } from '../../utils/Validation';
@@ -23,6 +23,7 @@ const ChangePassword: React.FC = () => {
     newPassword: '',
     confirmPassword: '',
   });
+  const theme = useTheme();
 
   const token = new URLSearchParams(window.location.search).get('token');
 
@@ -57,7 +58,8 @@ const ChangePassword: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
+        minWidth: '100%',
+        background: theme.palette.primary.main,
       }}
     >
       <Paper
@@ -65,7 +67,6 @@ const ChangePassword: React.FC = () => {
         sx={{
           p: 4,
           borderRadius: '24px',
-          background: 'white',
           width: '100%',
           maxWidth: '400px',
           textAlign: 'center',
@@ -82,7 +83,7 @@ const ChangePassword: React.FC = () => {
           >
             <Box
               sx={{
-                backgroundColor: 'background.default',
+                backgroundColor: 'primary.main',
                 borderRadius: '50%',
                 width: '60px',
                 height: '60px',
@@ -172,7 +173,7 @@ const ChangePassword: React.FC = () => {
               to={ROUTES.LOGIN}
               style={{
                 fontWeight: 'bold',
-                color: '#0066ff',
+                color: theme.palette.customColors.linkBlue,
                 textDecoration: 'none',
               }}
             >

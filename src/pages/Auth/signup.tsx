@@ -4,7 +4,7 @@ import { AppDispatch } from '../../store/store';
 import { register } from '../../store/auth/registerActions';
 import { RootState } from '../../store/types';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Typography, Paper, Alert } from '@mui/material';
+import { Box, Container, Typography, Paper, Alert, useTheme } from '@mui/material';
 import { Formik, Form } from 'formik';
 import { signupValidationSchema } from '../../validation';
 import CustomButton from '../../stories/button/CustomButton';
@@ -17,6 +17,7 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const { loading, error } = useSelector((state: RootState) => state.register);
+  const theme = useTheme();
 
   const initialValues = {
     name: '',
@@ -35,6 +36,8 @@ const RegisterForm: React.FC = () => {
   return (
     <Container
       sx={{
+        minWidth: '100%',
+        background: theme.palette.primary.main,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -46,7 +49,6 @@ const RegisterForm: React.FC = () => {
         sx={{
           p: 4,
           borderRadius: '24px',
-          background: 'white',
           width: '100%',
           maxWidth: '400px',
           textAlign: 'center',
@@ -69,7 +71,7 @@ const RegisterForm: React.FC = () => {
               >
                 <Box
                   sx={{
-                    backgroundColor: 'background.default',
+                    backgroundColor: 'primary.main',
                     borderRadius: '50%',
                     width: '60px',
                     height: '60px',

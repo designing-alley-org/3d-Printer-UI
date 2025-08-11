@@ -13,6 +13,7 @@ import {
   Box,
   IconButton,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { Bell } from 'lucide-react';
 
@@ -26,6 +27,7 @@ const NotificationBox = () => {
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const notificationRef = useRef<HTMLDivElement>(null);
  const isMobile = useMediaQuery('(max-width:600px)');
+ const theme = useTheme();
   // Hide notification viewer if clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -93,9 +95,8 @@ const NotificationBox = () => {
           badgeContent={notification.length}
           color="error"
           invisible={notification.length === 0}
-          
         >
-          <Bell size={22} />
+          <Bell size={22} color={theme.palette.background.paper} />
         </Badge>
       </IconButton>
 

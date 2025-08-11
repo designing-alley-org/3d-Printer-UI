@@ -1,22 +1,79 @@
+// theme.ts
 import { createTheme } from "@mui/material/styles";
 
+// 1️⃣ Extend MUI's Palette types to include customColors
+declare module "@mui/material/styles" {
+  interface Palette {
+    customColors: {
+      primaryDark: string;
+      primaryLight: string;
+      textDark: string;
+      textLight: string;
+      lightTextOverDark: string;
+      linkBlue: string;
+      success: string;
+      pending: string;
+      warning: string;
+      inProgress: string;
+    };
+  }
+  interface PaletteOptions {
+    customColors?: {
+      primaryDark: string;
+      primaryLight: string;
+      textDark: string;
+      textLight: string;
+      lightTextOverDark: string;
+      linkBlue: string;
+      success: string;
+      pending: string;
+      warning: string;
+      inProgress: string;
+    };
+  }
+}
+
+// 2️⃣ Create theme with MUI defaults + custom colors
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#060B35", // your primary blue
+      main: "#060B35", // Primary Dark
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#2A2D2F", // text black
+      main: "#2A2D2F", // Text Dark
     },
     text: {
-      primary: "#2A2D2F",
-      secondary: "#6B6B6B",
+      primary: "#2A2D2F", // Text Dark
+      secondary: "#5F6368", // Text Light
     },
     divider: "#D7D7D7",
     background: {
-      default: "#060B35", // app background
-      paper: "#FFFFFF", // card background
+      default: "#F5F5F5", // App background
+      paper: "#FFFFFF", // Card background
+    },
+    success: {
+      main: "#00C247",
+    },
+    warning: {
+      main: "#EA1701",
+    },
+    info: {
+      main: "#3B82F6",
+    },
+
+    // Custom non-standard colors
+    customColors: {
+      primaryDark: "#060B35",
+      primaryLight: "#FFFFFF",
+      textDark: "#2A2D2F",
+      textLight: "#5F6368",
+      lightTextOverDark: "#DDDDDD",
+      linkBlue: "#006BCD",
+      success: "#00C247",
+      pending: "#DEA300",
+      warning: "#EA1701",
+      inProgress: "#3B82F6",
     },
   },
 
@@ -29,7 +86,7 @@ const theme = createTheme({
     },
     body1: {
       fontSize: "0.875rem",
-      color: "#6B6B6B",
+      color: "#5F6368",
     },
     button: {
       textTransform: "none",
@@ -38,7 +95,7 @@ const theme = createTheme({
   },
 
   shape: {
-    borderRadius: 24, // card default
+    borderRadius: 24,
   },
 
   components: {

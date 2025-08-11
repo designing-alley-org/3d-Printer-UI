@@ -6,6 +6,7 @@ import {
   Typography,
   Paper,
   CircularProgress,
+  useTheme,
 } from '@mui/material';
 import api from '../../axiosConfig';
 import CustomButton from '../../stories/button/CustomButton';
@@ -22,6 +23,7 @@ function VerifyEmail() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const theme = useTheme();
 
   useEffect(() => {
     if (token) {
@@ -63,7 +65,8 @@ function VerifyEmail() {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
+        background: theme.palette.primary.main,
+        minWidth: '100%',
       }}
     >
       <Paper
@@ -87,7 +90,7 @@ function VerifyEmail() {
         >
           <Box
             sx={{
-              backgroundColor: 'background.default',
+              backgroundColor: 'primary.main',
               borderRadius: '50%',
               width: '60px',
               height: '60px',
@@ -152,13 +155,13 @@ function VerifyEmail() {
               }}
             >
               {isSuccess ? (
-                <CheckCircleIcon sx={{ fontSize: '3rem', color: '#4CAF50' }} />
+                <CheckCircleIcon sx={{ fontSize: '3rem', color: theme.palette.success.main }} />
               ) : (
-                <ErrorIcon sx={{ fontSize: '3rem', color: '#F44336' }} />
+                <ErrorIcon sx={{ fontSize: '3rem', color: theme.palette.warning.main }} />
               )}
               <Typography
                 sx={{
-                  color: isSuccess ? '#4CAF50' : '#F44336',
+                  color: isSuccess ? 'success.main' : 'warning.main',
                   fontSize: '1rem',
                   fontWeight: 500,
                 }}
@@ -190,7 +193,7 @@ function VerifyEmail() {
               to="/login"
               style={{
                 fontWeight: 'bold',
-                color: '#0066ff',
+                color: theme.palette.customColors.linkBlue,
                 textDecoration: 'none',
               }}
             >
