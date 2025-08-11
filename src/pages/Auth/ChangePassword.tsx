@@ -11,8 +11,8 @@ import CustomTextField from '../../stories/inputs/CustomTextField';
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 interface FormState {
-    newPassword: string;
-    confirmPassword?: string;
+  newPassword: string;
+  confirmPassword?: string;
 }
 
 const ChangePassword: React.FC = () => {
@@ -21,32 +21,32 @@ const ChangePassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<FormState>({
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
 
   const token = new URLSearchParams(window.location.search).get('token');
 
   const handleChange = (key: keyof FormState) => (value: string) => {
-    setForm(prev => ({ ...prev, [key]: value }));
-    setErr(''); 
+    setForm((prev) => ({ ...prev, [key]: value }));
+    setErr('');
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const { newPassword, confirmPassword } = form;
-    if(!validatePassword(newPassword, setErr)) return;
+    if (!validatePassword(newPassword, setErr)) return;
     if (newPassword !== confirmPassword) {
-        setErr('Passwords do not match');
-        return;
+      setErr('Passwords do not match');
+      return;
     }
     try {
-        setLoading(true);
-        await changePassword(newPassword, token || '');
-        navigate(ROUTES.LOGIN);
+      setLoading(true);
+      await changePassword(newPassword, token || '');
+      navigate(ROUTES.LOGIN);
     } catch (error: any) {
-        setErr(error.message);
+      setErr(error.message);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -57,7 +57,7 @@ const ChangePassword: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)'
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
       }}
     >
       <Paper
@@ -68,7 +68,7 @@ const ChangePassword: React.FC = () => {
           background: 'white',
           width: '100%',
           maxWidth: '400px',
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
         <Box component="form" onSubmit={handleSave}>
@@ -77,32 +77,32 @@ const ChangePassword: React.FC = () => {
             sx={{
               display: 'flex',
               justifyContent: 'center',
-              mb: 3
+              mb: 3,
             }}
           >
             <Box
               sx={{
                 backgroundColor: 'background.default',
                 borderRadius: '50%',
-                width: '80px',
-                height: '80px',
+                width: '60px',
+                height: '60px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
-              <PrintOutlinedIcon sx={{ fontSize: '2.5rem', color: 'white' }} />
+              <PrintOutlinedIcon sx={{ fontSize: '2rem', color: 'white' }} />
             </Box>
           </Box>
 
           {/* Title and Subtitle */}
           <Typography
-            variant='h5'
+            variant="h5"
             sx={{
               fontWeight: 600,
               fontSize: '1.5rem',
               color: 'secondary.main',
-              mb: 1
+              mb: 1,
             }}
           >
             Change Password
@@ -112,7 +112,7 @@ const ChangePassword: React.FC = () => {
             sx={{
               mb: 4,
               color: 'text.secondary',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
             }}
           >
             Enter your new password
@@ -153,7 +153,7 @@ const ChangePassword: React.FC = () => {
 
           {/* Save Button */}
           <CustomButton
-            type='submit'
+            type="submit"
             fullWidth
             variant="contained"
             disabled={loading}
@@ -173,7 +173,7 @@ const ChangePassword: React.FC = () => {
               style={{
                 fontWeight: 'bold',
                 color: '#0066ff',
-                textDecoration: 'none'
+                textDecoration: 'none',
               }}
             >
               Login

@@ -70,16 +70,18 @@ const ForgetPassword: React.FC = () => {
               >
                 <Box
                   sx={{
-                    backgroundColor: '#060B35',
+                    backgroundColor: 'background.default',
                     borderRadius: '50%',
-                    width: '80px',
-                    height: '80px',
+                    width: '60px',
+                    height: '60px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                   }}
                 >
-                  <PrintOutlinedIcon sx={{ fontSize: '2.5rem', color: 'white' }} />
+                  <PrintOutlinedIcon
+                    sx={{ fontSize: '2rem', color: 'white' }}
+                  />
                 </Box>
               </Box>
 

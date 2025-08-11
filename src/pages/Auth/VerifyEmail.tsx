@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
-import { Box, Container, Typography, Paper, CircularProgress } from '@mui/material';
-import api from "../../axiosConfig";
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  CircularProgress,
+} from '@mui/material';
+import api from '../../axiosConfig';
 import CustomButton from '../../stories/button/CustomButton';
 
 // Importing icons
@@ -32,7 +38,9 @@ function VerifyEmail() {
             setMessage(response.data.message);
             setIsSuccess(false);
           } else {
-            setMessage('Failed to verify email. The token may be invalid or expired.');
+            setMessage(
+              'Failed to verify email. The token may be invalid or expired.'
+            );
             setIsSuccess(false);
           }
         })
@@ -55,7 +63,7 @@ function VerifyEmail() {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)'
+        background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
       }}
     >
       <Paper
@@ -66,7 +74,7 @@ function VerifyEmail() {
           background: 'white',
           width: '100%',
           maxWidth: '400px',
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
         {/* Logo/Icon Section */}
@@ -74,32 +82,32 @@ function VerifyEmail() {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            mb: 3
+            mb: 3,
           }}
         >
           <Box
             sx={{
               backgroundColor: 'background.default',
               borderRadius: '50%',
-              width: '80px',
-              height: '80px',
+              width: '60px',
+              height: '60px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
-            <PrintOutlinedIcon sx={{ fontSize: '2.5rem', color: 'white' }} />
+            <PrintOutlinedIcon sx={{ fontSize: '2rem', color: 'white' }} />
           </Box>
         </Box>
 
         {/* Title */}
         <Typography
-          variant='h5'
+          variant="h5"
           sx={{
             fontWeight: 600,
             fontSize: '1.5rem',
             color: 'secondary.main',
-            mb: 1
+            mb: 1,
           }}
         >
           Email Verification
@@ -109,7 +117,7 @@ function VerifyEmail() {
           sx={{
             mb: 4,
             color: 'text.secondary',
-            fontSize: '0.9rem'
+            fontSize: '0.9rem',
           }}
         >
           Professional 3D Printing Service
@@ -118,24 +126,41 @@ function VerifyEmail() {
         {/* Status Section */}
         <Box sx={{ mb: 4 }}>
           {loading ? (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-              <CircularProgress size={40} sx={{ color: 'background.default' }} />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <CircularProgress
+                size={40}
+                sx={{ color: 'background.default' }}
+              />
               <Typography sx={{ color: 'text.secondary' }}>
                 {message}
               </Typography>
             </Box>
           ) : (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
               {isSuccess ? (
                 <CheckCircleIcon sx={{ fontSize: '3rem', color: '#4CAF50' }} />
               ) : (
                 <ErrorIcon sx={{ fontSize: '3rem', color: '#F44336' }} />
               )}
-              <Typography 
-                sx={{ 
+              <Typography
+                sx={{
                   color: isSuccess ? '#4CAF50' : '#F44336',
                   fontSize: '1rem',
-                  fontWeight: 500
+                  fontWeight: 500,
                 }}
               >
                 {message}
@@ -166,7 +191,7 @@ function VerifyEmail() {
               style={{
                 fontWeight: 'bold',
                 color: '#0066ff',
-                textDecoration: 'none'
+                textDecoration: 'none',
               }}
             >
               Back to Login

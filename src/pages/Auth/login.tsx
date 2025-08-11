@@ -74,15 +74,15 @@ const Login: React.FC = () => {
                   sx={{
                     backgroundColor: 'background.default',
                     borderRadius: '50%',
-                    width: '80px',
-                    height: '80px',
+                    width: '60px',
+                    height: '60px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
                   <PrintOutlinedIcon
-                    sx={{ fontSize: '2.5rem', color: 'white' }}
+                    sx={{ fontSize: '2rem', color: 'white' }}
                   />
                 </Box>
               </Box>
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="User ID / Email / Mob No"
+                  placeholder="Email"
                   error={touched.email && !!errors.email}
                   helperText={touched.email ? errors.email : undefined}
                   variant="outlined"
