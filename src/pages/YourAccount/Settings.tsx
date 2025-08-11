@@ -1,4 +1,4 @@
-import Button from '../../stories/button/Button';
+import Button from '../../stories/button/CustomButton';
 import { MainWrap, ProfileWrapper } from './styles';
 
 const Settings = () => {

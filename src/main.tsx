@@ -3,15 +3,12 @@ import App from './App.tsx';
 import { Provider } from 'react-redux';
 import  store  from './store/store';
 import './index.css';
-import React from 'react';
-import AppThemeProvider from './themes/AppThemeProvider.js';
+import ThemeProviderWrapper from './themes/ThemeProviderWrapper.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
     <Provider store={store}>
-      <AppThemeProvider>
+      <ThemeProviderWrapper>
         <App />
-      </AppThemeProvider>
+      </ThemeProviderWrapper>
     </Provider>
-  // </React.StrictMode>
 );

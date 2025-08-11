@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Typography, Paper, useMediaQuery, Alert } from '@mui/material';
+import { Box, Container, Typography, Paper, Alert } from '@mui/material';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../../routes/routes-constants';
 import { sendPasswordResetService } from '../../services/user';
 import { Formik, Form } from 'formik';
 import { forgotPasswordValidationSchema } from '../../validation';
-import { InputField } from '../../components/AuthField';
-import MUIButton from '../../stories/MUIButton/Button';
+import CustomButton from '../../stories/button/CustomButton';
+import CustomTextField from '../../stories/inputs/CustomTextField';
+
+// Importing icons
+import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 const ForgetPassword: React.FC = () => {
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [error, setError] = useState<string>('');
 
   const initialValues = {
@@ -32,64 +34,136 @@ const ForgetPassword: React.FC = () => {
   };
 
   return (
-    <div className='AuthBG'>
-      <Container maxWidth='xs'>
-        <Paper elevation={3} sx={{ p: 3, borderRadius: '20px', background: 'white', mt: 3 }}>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={forgotPasswordValidationSchema}
-            onSubmit={handleForgotSubmit}
-          >
-            {({ values, errors, touched, handleChange, handleBlur }) => (
-              <Form style={{ textAlign: 'left' }}>
-                <Typography  sx={{ mb: 1, fontWeight: 500,fontSize: isSmallScreen ? '1rem' : '1.2rem' }}>
-                  Forgot Password
-                </Typography>
-                <Typography sx={{ mb: 3, color: 'text.secondary', fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>
-                  Enter your email address to reset your password.
-                </Typography>
-
-                {/* Backend Error Display */}
-                {error && (
-                  <Box sx={{ mb: 2 }}>
-                    <Alert severity="error" sx={{ borderRadius: '8px' }}>
-                      {error}
-                    </Alert>
-                  </Box>
-                )}
-
-                <Box sx={{ mb: 3 }}>
-                  <Typography sx={{ mb: 1, fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>Email</Typography>
-                  <InputField
-                    name="email"
-                    type="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="someone@example.com"
-                    error={touched.email && !!errors.email}
-                    helperText={touched.email ? errors.email : undefined}
-                    validationEnabled={true}
+    <Container
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          borderRadius: '24px',
+          background: 'white',
+          width: '100%',
+          maxWidth: '400px',
+          textAlign: 'center'
+        }}
+      >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={forgotPasswordValidationSchema}
+          onSubmit={handleForgotSubmit}
+        >
+          {({ values, errors, touched, handleChange, handleBlur }) => (
+            <Form>
+              {/* Logo/Icon Section */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  mb: 3
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor: 'background.default',
+                    borderRadius: '50%',
+                    width: '60px',
+                    height: '60px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PrintOutlinedIcon
+                    sx={{ fontSize: '2rem', color: 'white' }}
                   />
                 </Box>
-                <MUIButton
-                  type='submit'
-                  label='Submit'
-                  fullWidth
-                  size='large'
-                />
+              </Box>
 
-                <Box sx={{ textAlign: 'center', mt: 2 }}>
-                  <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.9rem' }}>
-                    Back to <Link to={ROUTES.LOGIN}>Login</Link>
-                  </Typography>
+              {/* Title and Subtitle */}
+              <Typography
+                variant='h5'
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '1.5rem',
+                  color: '#2A2D2F',
+                  mb: 1
+                }}
+              >
+                Forgot Password
+              </Typography>
+
+              <Typography
+                sx={{
+                  mb: 4,
+                  color: 'text.secondary',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Enter your email address to reset your password.
+              </Typography>
+
+              {/* Backend Error Display */}
+              {error && (
+                <Box sx={{ mb: 2 }}>
+                  <Alert severity="error" sx={{ borderRadius: '8px' }}>
+                    {error}
+                  </Alert>
                 </Box>
-              </Form>
-            )}
-          </Formik>
-        </Paper>
-      </Container>
-    </div>
+              )}
+
+              {/* Email Field */}
+              <Box sx={{ mb: 3, textAlign: 'left' }}>
+                <CustomTextField
+                  fullWidth
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter your email address"
+                  error={touched.email && !!errors.email}
+                  helperText={touched.email ? errors.email : undefined}
+                  variant="outlined"
+                />
+              </Box>
+
+              {/* Submit Button */}
+              <CustomButton
+                type='submit'
+                fullWidth
+                variant="contained"
+                sx={{
+                  mb: 2,
+                }}
+              >
+                Submit
+              </CustomButton>
+
+              {/* Back to Login Link */}
+              <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+                Back to{' '}
+                <Link
+                  to={ROUTES.LOGIN}
+                  style={{
+                    fontWeight: 'bold',
+                    color: '#0066ff',
+                    textDecoration: 'none'
+                  }}
+                >
+                  Login
+                </Link>
+              </Typography>
+            </Form>
+          )}
+        </Formik>
+      </Paper>
+    </Container>
   );
 };
 

@@ -1,51 +1,27 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  Box,
-  Button,
-  Container,
-  Typography,
-  Paper,
-  styled,
-  useMediaQuery,
-  Alert,
-} from '@mui/material';
-import GoogleIcon from '@mui/icons-material/Google';
 import { AppDispatch } from '../../store/store';
 import { login } from '../../store/auth/actions';
 import { RootState } from '../../store/types';
-import "./styles.css";
-import { InputField, PasswordField } from '../../components/AuthField';
+
+// Validation
 import { Formik, Form } from 'formik';
 import { loginValidationSchema } from '../../validation';
-import MUIButton from '../../stories/MUIButton/Button';
 
-const SocialButton = styled(Button)({
-  borderRadius: '25px',
-  padding: '8px 20px',
-  textTransform: 'none',
-  border: '1px solid #e0e0e0',
-  backgroundColor: 'white',
-  color: '#000',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  '&:hover': {
-    backgroundColor: '#f5f5f5',
-  },
-  '& .MuiSvgIcon-root': {
-    animation: 'none', // Disable any animation
-    transform: 'none', // Reset transform
-  },
-});
+// UI 
+import CustomButton from '../../stories/button/CustomButton';
+import CustomTextField from '../../stories/inputs/CustomTextField';
+import { Box, Container, Typography, Paper, Alert } from '@mui/material';
+
+// Importing icons
+import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const { loading, error } = useSelector((state: RootState) => state.auth);
-  
+
   const handleGoogleLogin = () => {
     window.open(`${import.meta.env.VITE_AWS_URL}/auth/google`, '_self');
   };
@@ -59,112 +35,186 @@ const Login: React.FC = () => {
     await dispatch(login(values.email, values.password, navigate));
   };
 
-
   return (
-    <div className='AuthBG' >
-      <Container maxWidth={'xs'}>
-        <Paper elevation={3} sx={{ p: isSmallScreen ? 3 : 4, borderRadius: '20px', background: 'white' }}>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={loginValidationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ values, errors, touched, handleChange, handleBlur }) => (
-              <Form style={{ textAlign: 'left' }}>
-                <Typography sx={{ fontWeight: 500, fontSize:  '1rem' }}>
-                  Welcome Back!
-                </Typography>
-                <Typography sx={{ mb: 1, fontWeight: 700, fontSize: isSmallScreen ? '1.2rem' : '1.3rem' }}>
-                  3D Printer Your Future
-                </Typography>
+    <Container
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+      }}
+    >
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          borderRadius: '24px',
+          background: 'white',
+          width: '100%',
+          maxWidth: '400px',
+          textAlign: 'center',
+        }}
+      >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={loginValidationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ values, errors, touched, handleChange, handleBlur }) => (
+            <Form>
+              {/* Logo/Icon Section */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  mb: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor: 'background.default',
+                    borderRadius: '50%',
+                    width: '60px',
+                    height: '60px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PrintOutlinedIcon
+                    sx={{ fontSize: '2rem', color: 'white' }}
+                  />
+                </Box>
+              </Box>
 
-                <Typography sx={{ mb: 2, color: '#0066ff', fontWeight: 500, fontSize:'1rem' }}>
-                  Login
-                </Typography>
+              {/* Title and Subtitle */}
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '1.5rem',
+                  color: 'secondary.main',
+                  mb: 1,
+                }}
+              >
+                3D Print Your Future
+              </Typography>
 
-                {/* Backend Error Display */}
-                {error && (
-                  <Box sx={{ mb: 2 }}>
-                    <Alert severity="error" sx={{ borderRadius: '8px' }}>
-                      {error}
-                    </Alert>
-                  </Box>
-                )}
+              <Typography
+                sx={{
+                  mb: 4,
+                  color: 'text.secondary',
+                  fontSize: '0.9rem',
+                }}
+              >
+                Professional 3D Printing Service
+              </Typography>
 
+              {/* Backend Error Display */}
+              {error && (
                 <Box sx={{ mb: 2 }}>
-                  <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>Email</Typography>
-                  <InputField
-                    name="email"
-                    type="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="someone@example.com"
-                    error={touched.email && !!errors.email}
-                    helperText={touched.email ? errors.email : undefined}
-                    validationEnabled={true}
-                  />
+                  <Alert severity="error" sx={{ borderRadius: '8px' }}>
+                    {error}
+                  </Alert>
                 </Box>
+              )}
 
-                <Box sx={{ mb: 2 }}>
-                  <Typography sx={{ fontSize: isSmallScreen ? '0.8rem' : '.9rem' }}>Password</Typography>
-                  <PasswordField
-                    name="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter Password Here"
-                    error={touched.password && !!errors.password}
-                    helperText={touched.password ? errors.password : undefined}
-                    validationEnabled={true}
-                  />
-                </Box>
+              {/* Email/User ID Field */}
+              <Box sx={{ mb: 2, textAlign: 'left' }}>
+                <CustomTextField
+                  fullWidth
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Email"
+                  error={touched.email && !!errors.email}
+                  helperText={touched.email ? errors.email : undefined}
+                  variant="outlined"
+                />
+              </Box>
 
-                <Box sx={{ textAlign: 'right', mb: 1 }}>
-                  <Link to="/forgot-password" style={{ textDecoration: 'none', color: '#FF0000', fontWeight: 'bold', fontSize :'.6rem' }}>
-                    Forgot Password?
-                  </Link>
-                </Box>
+              {/* Password Field */}
+              <Box sx={{ mb: 1, textAlign: 'left' }}>
+                <CustomTextField
+                  fullWidth
+                  name="password"
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Password"
+                  error={touched.password && !!errors.password}
+                  helperText={touched.password ? errors.password : undefined}
+                  variant="outlined"
+                />
+              </Box>
 
-                <Typography sx={{ mb: 2, textAlign: 'center', color: 'text.secondary', fontSize: isSmallScreen ? '0.8rem' : '.7rem' }}>
-                  Or Continue With
-                </Typography>
+              {/* Forgot Password Link */}
+              <Box sx={{ textAlign: 'right', mb: 3 }}>
+                <Link
+                  to="/forgot-password"
+                  style={{
+                    textDecoration: 'none',
+                    color: 'text.secondary',
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  Forget Password?
+                </Link>
+              </Box>
 
-                <Box sx={{
-                  display: 'flex', gap: 1, mb: 2, justifyContent: 'center', '& .MuiButton-root': {
-                  fontSize:'.6rem',
-                  },
-                }}>
-                  <SocialButton onClick={handleGoogleLogin} startIcon={<GoogleIcon />}>
-                  Google
-                  </SocialButton>
-                </Box>
+              {/* Login Button */}
+              <CustomButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={loading}
+                loading={loading}
+                sx={{
+                  mb: 2,
+                }}
+              >
+                Login
+              </CustomButton>
 
-                <Box sx={{ display: 'flex', gap: .6, justifyContent: 'space-between', mb: 2 }}>
-                  <Typography sx={{ fontSize: isSmallScreen ? '0.7rem' : '.8rem', textAlign: 'start' }}>
-                    New Here?{' '} <br />
-                    <Link to="/signup" style={{ fontWeight: 'bold', color: '#0066ff', fontSize: isSmallScreen ? '0.6rem' : '.9rem' }}>
-                      Register Now
-                    </Link>
-                  </Typography>
-                  <MUIButton
-                    type="submit"
-                    fullWidth
-                    disabled={loading}
-                    loading={loading}
-                    label={loading ? 'Logging in...' : 'Login'}
-                    style={{
-                      width: '11rem',
-                      height: '2.3rem',
-                    }}
-                  />
-                </Box>
-              </Form>
-            )}
-          </Formik>
-        </Paper>
-      </Container>
-    </div>
+              {/* Google Sign In Button */}
+              <CustomButton
+                fullWidth
+                variant="outlined"
+                onClick={handleGoogleLogin}
+                sx={{
+                  mb: 1,
+                }}
+              >
+                <img
+                  src="/Icon/Google-icon.svg"
+                  alt="Google Icon"
+                  style={{ marginRight: '8px', width: '20px', height: '20px' }}
+                />
+                Sign in with Google
+              </CustomButton>
+
+              {/* Register Link */}
+              <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+                Don't have an account?{' '}
+                <Link
+                  to="/signup"
+                  style={{
+                    fontWeight: 'bold',
+                    color: '#006BCD',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Register now.
+                </Link>
+              </Typography>
+            </Form>
+          )}
+        </Formik>
+      </Paper>
+    </Container>
   );
 };
 
