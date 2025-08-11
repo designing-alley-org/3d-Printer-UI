@@ -13,26 +13,9 @@ import { Wrap } from './styles';
 
 const API_URL = import.meta.env.VITE_AWS_URL as string;
 
-// Styled Components using MUI
-const MainContent = styled(Box)(({ theme }) => ({
-  padding: '1rem',
-  position: 'relative',
-  [theme.breakpoints.down('md')]: {
-    padding: '0.5rem',
-  },
-}));
 
-const ContentBox = styled(Box)(({ theme }) => ({
-  width: '100%',
-  backgroundImage: 'url(/src/assets/images/backgroundimg.png)',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  borderRadius: '25px',
-  [theme.breakpoints.down('md')]: {
-    padding: '0.5rem',
-    minHeight: '100%',
-  },
-}));
+
+
 
 const Index: React.FC = () => {
   const [socket, setSocket] = useState<Socket<
@@ -99,18 +82,7 @@ const Index: React.FC = () => {
 
   return (
     <Box width={'100%'} height="100%" display="flex" flexDirection="column">
-      <MainContent>
-        <ContentBox>
-          <Box
-            className="header"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingTop: '1rem',
-            }}
-          >
-            {!isSmallScreen && (
+            {/* {!isSmallScreen && (
               <Typography
                 variant="h4"
                 onClick={() => navigate('/')}
@@ -126,14 +98,13 @@ const Index: React.FC = () => {
               >
                 3D PRINT YOUR FUTURE
               </Typography>
-            )}
-            <Header tabData={tabData} activeTabs={activeTabs} />
-          </Box>
+            )} */}
+            <Box position='sticky' top={0} zIndex={1000}>
+              <Header activeTabs={activeTabs} />
+            </Box>
             <Wrap>
               <Outlet />
             </Wrap>
-        </ContentBox>
-      </MainContent>
     </Box>
   );
 };

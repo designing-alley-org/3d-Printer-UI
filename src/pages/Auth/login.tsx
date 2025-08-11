@@ -12,7 +12,7 @@ import { loginValidationSchema } from '../../validation';
 // UI 
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-import { Box, Container, Typography, Paper, Alert } from '@mui/material';
+import { Box, Container, Typography, Paper, Alert, useTheme } from '@mui/material';
 
 // Importing icons
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
@@ -20,6 +20,7 @@ import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
   const { loading, error } = useSelector((state: RootState) => state.auth);
 
   const handleGoogleLogin = () => {
@@ -38,10 +39,12 @@ const Login: React.FC = () => {
   return (
     <Container
       sx={{
+        minWidth: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
+        background: theme.palette.primary.main,
       }}
     >
       <Paper
@@ -49,7 +52,7 @@ const Login: React.FC = () => {
         sx={{
           p: 4,
           borderRadius: '24px',
-          background: 'white',
+          background: 'background.paper',
           width: '100%',
           maxWidth: '400px',
           textAlign: 'center',
@@ -72,7 +75,7 @@ const Login: React.FC = () => {
               >
                 <Box
                   sx={{
-                    backgroundColor: 'background.default',
+                    backgroundColor: 'primary.main',
                     borderRadius: '50%',
                     width: '60px',
                     height: '60px',
@@ -82,7 +85,7 @@ const Login: React.FC = () => {
                   }}
                 >
                   <PrintOutlinedIcon
-                    sx={{ fontSize: '2rem', color: 'white' }}
+                    sx={{ fontSize: '2rem', color: 'primary.contrastText' }}
                   />
                 </Box>
               </Box>
@@ -93,7 +96,7 @@ const Login: React.FC = () => {
                 sx={{
                   fontWeight: 600,
                   fontSize: '1.5rem',
-                  color: 'secondary.main',
+                  color: 'text.primary',
                   mb: 1,
                 }}
               >
@@ -157,7 +160,7 @@ const Login: React.FC = () => {
                   to="/forgot-password"
                   style={{
                     textDecoration: 'none',
-                    color: 'text.secondary',
+                    color: theme.palette.text.secondary,
                     fontSize: '0.875rem',
                   }}
                 >
@@ -174,6 +177,11 @@ const Login: React.FC = () => {
                 loading={loading}
                 sx={{
                   mb: 2,
+                  height: '48px',
+                  backgroundColor: 'primary.main',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                  }
                 }}
               >
                 Login
@@ -185,7 +193,7 @@ const Login: React.FC = () => {
                 variant="outlined"
                 onClick={handleGoogleLogin}
                 sx={{
-                  mb: 1,
+                  mb: 3,
                 }}
               >
                 <img
@@ -203,7 +211,7 @@ const Login: React.FC = () => {
                   to="/signup"
                   style={{
                     fontWeight: 'bold',
-                    color: '#006BCD',
+                    color: theme.palette.customColors.linkBlue,
                     textDecoration: 'none',
                   }}
                 >
