@@ -1,31 +1,36 @@
-import { DesktoptabData } from '../../constants'
-import { useNavigate } from 'react-router-dom'
-import NotificationBox from './NotificationBox'
-import { 
-  Box, 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Button, 
-  useTheme, 
+import { DesktoptabData } from '../../constants';
+import { useNavigate } from 'react-router-dom';
+import NotificationBox from './NotificationBox';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  useTheme,
   useMediaQuery,
-  IconButton
-} from '@mui/material'
-import { styled } from '@mui/material/styles'
+  IconButton,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+// Importing icons
+import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 interface ITab {
   activeTabs: number;
 }
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.primary.main,
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const NavButton = styled(Button)<{ active?: boolean }>(({ theme, active }) => ({
   position: 'relative',
-  color: active ? theme.palette.primary.main : theme.palette.text.primary,
+  color: active
+    ? theme.palette.primary.contrastText
+    : theme.palette.primary.contrastText,
   fontWeight: active ? 700 : 500,
   fontSize: '0.875rem',
   textTransform: 'uppercase',
@@ -33,8 +38,7 @@ const NavButton = styled(Button)<{ active?: boolean }>(({ theme, active }) => ({
   minHeight: '60px',
   borderRadius: 0,
   '&:hover': {
-    backgroundColor: 'rgba(6, 11, 53, 0.04)',
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
   },
   '&::after': {
     content: '""',
@@ -43,7 +47,9 @@ const NavButton = styled(Button)<{ active?: boolean }>(({ theme, active }) => ({
     left: 0,
     right: 0,
     height: '3px',
-    backgroundColor: active ? theme.palette.primary.main : 'transparent',
+    backgroundColor: active
+      ? theme.palette.primary.contrastText
+      : 'transparent',
     borderRadius: '2px 2px 0 0',
     transition: 'background-color 0.3s ease',
   },
@@ -56,33 +62,49 @@ const DesktopNav = ({ activeTabs }: ITab) => {
 
   return (
     <StyledAppBar position="static" elevation={0}>
-      <Toolbar 
-        sx={{ 
+      <Toolbar
+        sx={{
           justifyContent: 'space-between',
           minHeight: '60px !important',
           px: { xs: 2, md: 4 },
         }}
       >
         {/* Logo/Brand Section */}
+        <Box
+          sx={{
+            backgroundColor: 'background.paper',
+            borderRadius: '50%',
+            mr: 2,
+            width: '40px',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <PrintOutlinedIcon
+            sx={{ fontSize: '1.8rem', color: 'primary.main' }}
+          />
+        </Box>
         <Typography
           variant="h6"
           sx={{
             fontWeight: 700,
-            color: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
             fontSize: { xs: '1rem', md: '1.25rem' },
-            display: { xs: 'none', sm: 'block' }
+            display: { xs: 'none', sm: 'block' },
           }}
         >
           3D PRINT YOUR FUTURE
         </Typography>
 
         {/* Navigation Links */}
-        <Box 
-          sx={{ 
-            display: 'flex', 
+        <Box
+          sx={{
+            display: 'flex',
             alignItems: 'center',
             gap: { xs: 1, md: 2 },
-            ml: 'auto'
+            ml: 'auto',
           }}
         >
           {DesktoptabData.map((item) => (
@@ -93,7 +115,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
               sx={{
                 display: { xs: 'none', md: 'flex' },
                 fontSize: { md: '0.775rem', lg: '0.875rem' },
-                px: { md: 2, lg: 3 }
+                px: { md: 2, lg: 3 },
               }}
             >
               {item.label}
@@ -111,7 +133,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             onClick={() => navigate('/account')}
             sx={{
               fontSize: { xs: '0.7rem', md: '0.775rem', lg: '0.875rem' },
-              px: { xs: 1, md: 2, lg: 3 }
+              px: { xs: 1, md: 2, lg: 3 },
             }}
           >
             ACCOUNT
@@ -124,9 +146,9 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             edge="end"
             color="inherit"
             aria-label="menu"
-            sx={{ 
+            sx={{
               display: { xs: 'flex', md: 'none' },
-              color: theme.palette.primary.main
+              color: theme.palette.primary.main,
             }}
           >
             {/* Add menu icon here if needed */}
@@ -137,4 +159,4 @@ const DesktopNav = ({ activeTabs }: ITab) => {
   );
 };
 
-export default DesktopNav
+export default DesktopNav;
