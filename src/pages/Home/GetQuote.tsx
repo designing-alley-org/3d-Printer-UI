@@ -8,6 +8,7 @@ import MUIButton from '../../stories/MUIButton/Button';
 import { createOrder } from '../../store/actions/createOrder';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import WelcomePage from './WelcomePage';
 
 const QuoteCard = () => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -27,8 +28,8 @@ const QuoteCard = () => {
 
 
   return (
-    <Box sx={styles.innerBox}>
-      <Box sx={styles.content}>
+   <>
+      {/* <Box sx={styles.content}>
         <Typography sx={styles.instantQuoteText}>
           Get Instant live quotes from our merchants!
         </Typography>
@@ -59,8 +60,9 @@ const QuoteCard = () => {
             style={{ marginTop: '2rem' }}
           />
         </Box>
-      </Box>
-    </Box>
+      </Box> */}
+      <WelcomePage />
+    </>
   );
 };
 

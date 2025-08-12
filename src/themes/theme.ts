@@ -7,6 +7,7 @@ declare module "@mui/material/styles" {
     customColors: {
       primaryDark: string;
       primaryLight: string;
+      primarySecondary: string;
       textDark: string;
       textLight: string;
       lightTextOverDark: string;
@@ -21,6 +22,7 @@ declare module "@mui/material/styles" {
     customColors?: {
       primaryDark: string;
       primaryLight: string;
+      primarySecondary: string;
       textDark: string;
       textLight: string;
       lightTextOverDark: string;
@@ -65,6 +67,7 @@ const theme = createTheme({
     // Custom non-standard colors
     customColors: {
       primaryDark: "#060B35",
+      primarySecondary: "#242425",
       primaryLight: "#FFFFFF",
       textDark: "#2A2D2F",
       textLight: "#5F6368",

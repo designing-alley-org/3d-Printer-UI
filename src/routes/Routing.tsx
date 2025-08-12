@@ -6,7 +6,7 @@ import OrderSuccessful from '../pages/Order/OrderSuccessful.tsx';
 import Layout from '../components/Layout';
 import CardLayout from '../components/CardLayout/index';
 import UploadStlCard from '../pages/UploadStlTab/UploadStlTab.tsx';
-import QuoteCard from '../pages/GetQuote/GetQuote.tsx';
+import QuoteCard from '../pages/Home/GetQuote.tsx';
 import Customize from '../pages/CustomizeTab/index.tsx';
 import ShippingDetails from '../pages/CheckOut/Shipping/index.tsx';
 import DeliveryPlan from '../pages/CheckOut/DeliveryPlan/index.tsx';

@@ -76,10 +76,15 @@ const Index: React.FC = () => {
       <Box position="sticky" top={0} zIndex={1000}>
         <DesktopNav activeTabs={activeTabs} />
       </Box>
-      <Box  display="flex" justifyContent="center" alignItems="center" height="100%">
-        <Outlet />
-      </Box>
+      <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height={"calc(100vh - 64px)"}
+    >
+      <Outlet />
     </Box>
+  </Box>
   );
 };
 
