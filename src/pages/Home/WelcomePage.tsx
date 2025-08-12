@@ -113,6 +113,7 @@ const WelcomePage = () => {
                   fontWeight: 600,
                   color: theme.palette.customColors.primaryDark,
                 }}
+                variant='body1'
               >
                 {step}
               </Typography>

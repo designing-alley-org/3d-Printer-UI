@@ -14,7 +14,9 @@ export const login =
     try {
       const res = await api.post('login', { email, password });
       const token = res.data.token;
+      const isFirstTimeLogin = res.data.isFirstTimeLogin;
       localStorage.setItem('token', token);
+      localStorage.setItem('isFirstTimeLogin', isFirstTimeLogin);
       const user = res.data;
       dispatch({
         type: LOGIN_SUCCESS,
