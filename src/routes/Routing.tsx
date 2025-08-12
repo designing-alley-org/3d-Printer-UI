@@ -4,9 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../pages/Auth/login.tsx';
 import OrderSuccessful from '../pages/Order/OrderSuccessful.tsx';
 import Layout from '../components/Layout';
-import CardLayout from '../components/CardLayout/index';
 import UploadStlCard from '../pages/UploadStlTab/UploadStlTab.tsx';
-import QuoteCard from '../pages/GetQuote/GetQuote.tsx';
 import Customize from '../pages/CustomizeTab/index.tsx';
 import ShippingDetails from '../pages/CheckOut/Shipping/index.tsx';
 import DeliveryPlan from '../pages/CheckOut/DeliveryPlan/index.tsx';
@@ -15,7 +13,6 @@ import { ROUTES } from './routes-constants.ts';
 import Quote from '../pages/Quote/Card/index.tsx';
 import PaymentDetails from '../pages/CheckOut/PaymentDetails/index.tsx';
 import RegisterForm from '../pages/Auth/signup.tsx';
-import DashboardLayout from '../components/DashboardLayout/index.tsx';
 import Account from '../pages/YourAccount/index.tsx';
 import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
@@ -29,6 +26,7 @@ import PlaceOrder from '../pages/YourAccount/placeOrder/PlaceOrder.tsx';
 import Password from '../pages/YourAccount/Password.tsx';
 import Settings from '../pages/YourAccount/Settings.tsx';
 import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
+import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -44,17 +42,14 @@ const Routing: React.FC = () => {
       {/* Main Application Layout */}
       <Route path={ROUTES.HOME} element={<Layout />}>
         <Route index element={<Navigate to={ROUTES.DASHBOARD} replace />} />
-        
-        {/* Dashboard */}
-        <Route path={ROUTES.DASHBOARD} element={<DashboardLayout />} />
-        
-        {/* Services */}
+
+        {/* Dashboard Route - Shows Welcome or Dashboard based on first time login */}
+        <Route
+          path={ROUTES.DASHBOARD}
+          element={<ProtectedRoute component={<DashboardLayout />} />}
+        />
 
         {/* Quote Process Routes */}
-        <Route
-          path={ROUTES.GET_QUOTES}
-          element={<ProtectedRoute component={<QuoteCard />} />}
-        />
         
         <Route path={`${ROUTES.GET_QUOTES}/:orderId`}>
           <Route

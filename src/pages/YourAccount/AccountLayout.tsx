@@ -24,7 +24,7 @@ const AccountLayout = () => {
         success: 'Logged out successfully',
         error: 'Logout failed'
       });
-      localStorage.removeItem('token');
+      localStorage.clear();
       window.location.href = '/login';
     } catch (error) {
       toast.error('Logout failed');

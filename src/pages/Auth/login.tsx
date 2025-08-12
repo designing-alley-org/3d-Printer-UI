@@ -193,7 +193,7 @@ const Login: React.FC = () => {
                 variant="outlined"
                 onClick={handleGoogleLogin}
                 sx={{
-                  mb: 3,
+                  mb: 1,
                 }}
               >
                 <img

@@ -1,4 +1,4 @@
-import { Box, Paper, Skeleton, Typography, useMediaQuery } from '@mui/material';
+import { Box, Paper, Typography, useMediaQuery } from '@mui/material';
 import React from 'react';
 import MUIButton from '../../stories/MUIButton/Button';
 import StepLayoutSkleton from '../skeleton/StepLayoutSkleton';
