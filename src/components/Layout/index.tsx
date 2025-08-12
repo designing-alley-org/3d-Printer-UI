@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes-constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../../store/actions/getCurrentUser';
 import { Box } from '@mui/material';
-import {  useMediaQuery } from '@mui/system';
-import { Wrap } from './styles';
 import DesktopNav from '../NavBar/DesktopNav';
 
 const API_URL = import.meta.env.VITE_AWS_URL as string;
-
-
-
-
 
 const Index: React.FC = () => {
   const [socket, setSocket] = useState<Socket<
@@ -79,29 +73,12 @@ const Index: React.FC = () => {
 
   return (
     <Box width={'100%'} height="100%" display="flex" flexDirection="column">
-            {/* {!isSmallScreen && (
-              <Typography
-                variant="h4"
-                onClick={() => navigate('/')}
-                sx={{
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  color: 'white',
-                  textAlign: 'center',
-                  fontSize: '1.7rem',
-                  marginTop: '1rem',
-                  marginLeft: '3rem',
-                }}
-              >
-                3D PRINT YOUR FUTURE
-              </Typography>
-            )} */}
-            <Box position='sticky' top={0} zIndex={1000}>
-             <DesktopNav activeTabs={activeTabs} />
-            </Box>
-            <Wrap>
-              <Outlet />
-            </Wrap>
+      <Box position="sticky" top={0} zIndex={1000}>
+        <DesktopNav activeTabs={activeTabs} />
+      </Box>
+      <Box  display="flex" justifyContent="center" alignItems="center" height="100%">
+        <Outlet />
+      </Box>
     </Box>
   );
 };
