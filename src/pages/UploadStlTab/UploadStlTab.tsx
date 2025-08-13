@@ -264,7 +264,7 @@ const UploadStlCard = () => {
     <StepLayout
       stepNumber={1}
       stepText="Upload STL Files"
-      stepDescription="Set the required quantities for each file and if their sizes appear too small, change the unit of measurement to inches. Click on 3D Viewer for a 360° preview of your files."
+      stepDescription="Upload your 3D model file ( STL or OBJ format )"
       onClick={handleSave}
       orderId={orderId}
       isLoading={isSaving}

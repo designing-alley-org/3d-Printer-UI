@@ -77,14 +77,14 @@ const Index: React.FC = () => {
         <DesktopNav activeTabs={activeTabs} />
       </Box>
       <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height={"calc(100vh - 64px)"}
-    >
-      <Outlet />
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height={'calc(100vh - 64px)'}
+      >
+        <Outlet />
+      </Box>
     </Box>
-  </Box>
   );
 };
 
