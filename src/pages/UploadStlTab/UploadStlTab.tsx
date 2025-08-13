@@ -242,7 +242,7 @@ const UploadStlCard = () => {
       data-testid="file-upload-container"
       onClick={() => fileInputRef.current?.click()}
       border={1}
-      padding={1}
+      padding={3}
       borderRadius={0.5}
       bgcolor="background.paper"
       sx={{
@@ -281,7 +281,7 @@ const UploadStlCard = () => {
   );
 
   const renderFileCards = () => (
-    <Box sx={styles.fileCardContainer}>
+    <Box >
       {files.map((file) => (
         <UploadStlCardFile
           key={file._id}
@@ -311,21 +311,32 @@ const UploadStlCard = () => {
       isPageLoading={isPageLoading}
       isDisabled={files.length === 0}
     >
-      {files.length !== 0 ? (
-        <UploadInput
-          onFileChange={(file) => {
-            // mimic handleFileUpload logic for a single file
-            if (!file) return;
-            const isValid = isValidStlFile(file);
-            if (!isValid) {
-              alert('Please upload only STL or OBJ files');
-              return;
-            }
-            const newFileData = createFileData(file);
-            setFiles((prevFiles) => [...prevFiles, newFileData]);
-            setActiveFileId(newFileData._id);
-          }}
-        />
+      {files.length == 0 ? (
+        // <UploadInput
+        //   onFileChange={(file) => {
+        //     // mimic handleFileUpload logic for a single file
+        //     if (!file) return;
+        //     const isValid = isValidStlFile(file);
+        //     if (!isValid) {
+        //       alert('Please upload only STL or OBJ files');
+        //       return;
+        //     }
+        //     const newFileData = createFileData(file);
+        //     setFiles((prevFiles) => [...prevFiles, newFileData]);
+        //     setActiveFileId(newFileData._id);
+        //   }}
+        // />
+        <>
+          <Box sx={styles.unitContainer}>
+            {renderUnitButtons()}
+            {renderFileCounter()}
+          </Box>
+
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            {renderFileCards()}
+            {renderFileUpload()}
+          </Box>
+        </>
       ) : (
         <>
           <Box sx={styles.unitContainer}>
