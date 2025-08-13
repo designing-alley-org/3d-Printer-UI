@@ -290,9 +290,18 @@ const UploadStlCard = () => {
       isDisabled={files.length === 0}
     >
       {files.length === 0 ? (
-        <>
-          <UploadInput />
-        </>
+          <UploadInput onFileChange={(file) => {
+            // mimic handleFileUpload logic for a single file
+            if (!file) return;
+            const isValid = isValidStlFile(file);
+            if (!isValid) {
+              alert('Please upload only STL or OBJ files');
+              return;
+            }
+            const newFileData = createFileData(file);
+            setFiles((prevFiles) => [...prevFiles, newFileData]);
+            setActiveFileId(newFileData._id);
+          }} />
       ) : (
         <>
           <Box sx={styles.unitContainer}>
