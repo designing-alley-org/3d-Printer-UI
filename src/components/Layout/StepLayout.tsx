@@ -21,6 +21,7 @@ interface StepLayoutProps {
   children?: React.ReactNode;
   isPageLoading?: boolean;
   onClickBack?: () => void;
+  isButtonsHide?: boolean;
 }
 
 const StepLayout = ({
@@ -35,6 +36,7 @@ const StepLayout = ({
   children,
   isPageLoading = false,
   isBackDisabled = false,
+  isButtonsHide = false,
   onClickBack,
 }: StepLayoutProps) => {
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
@@ -88,7 +90,7 @@ const StepLayout = ({
         {isPageLoading ? <StepLayoutSkleton /> : children}
       </Box>
 
-      <Box
+     {!isButtonsHide && <Box
         sx={{
           textAlign: 'center',
           display: 'flex',
@@ -123,7 +125,7 @@ const StepLayout = ({
             padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 3rem',
           }}
         />
-      </Box>
+      </Box>}
     </Container>
   );
 };
