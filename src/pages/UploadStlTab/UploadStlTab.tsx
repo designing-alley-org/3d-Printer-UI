@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Upload } from 'lucide-react';
 
 import UploadStlCardFile from './UploadStlCardFile';
 import StepLayout from '../../components/Layout/StepLayout';
@@ -14,6 +13,7 @@ import { getFilesByOrderIdForUploadstl } from '../../store/actions/getFilesByOrd
 import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { FileData, ModelDimensions } from '../../types/uploadFiles';
 import UploadInput from './UploadInput';
+import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
 
 const INITIAL_DIMENSIONS: ModelDimensions = {
   height: 0,
@@ -238,14 +238,30 @@ const UploadStlCard = () => {
   );
 
   const renderFileUpload = () => (
-    <Box sx={styles.fileUploadContainer} data-testid="file-upload-container">
-      <MUIButton
-        btnVariant="icon-outline"
-        onClick={() => fileInputRef.current?.click()}
-        icon={<Upload color="#1E65F5" size={25} />}
-        data-testid="upload-stl-button"
-        style={styles.uploadIcon as React.CSSProperties}
-      />
+    <Box
+      data-testid="file-upload-container"
+      onClick={() => fileInputRef.current?.click()}
+      border={1}
+      padding={1}
+      borderRadius={0.5}
+      bgcolor="background.paper"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        boxShadow: '2px 2px 4px 0px #0000003D',
+        '&:hover': {
+          cursor: 'pointer',
+          backgroundColor: 'primary.main',
+          transition: 'background-color 0.6s',
+          '& *': {
+            color: 'white', // changes all child text/icons
+            stroke: 'white', // changes icon stroke color
+          },
+        },
+      }}
+    >
       <input
         ref={fileInputRef}
         type="file"
@@ -254,7 +270,13 @@ const UploadStlCard = () => {
         onChange={handleFileUpload}
         style={styles.hiddenInput as React.CSSProperties}
       />
-      <Typography sx={styles.uploadText}>Upload Stl</Typography>
+      <AnimatedUploadIcon />
+      <Typography variant="body1" fontWeight={600}>
+        Upload Another File
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 1 }}>
+        Supports STL files up to 50 MB.
+      </Typography>
     </Box>
   );
 
@@ -283,14 +305,15 @@ const UploadStlCard = () => {
       stepText="Upload STL Files"
       stepDescription="Upload your 3D model file ( STL or OBJ format )"
       onClick={handleSave}
-      isButtonsHide={files.length === 0 }
+      isButtonsHide={files.length === 0}
       orderId={orderId}
       isLoading={isSaving}
       isPageLoading={isPageLoading}
       isDisabled={files.length === 0}
     >
-      {files.length === 0 ? (
-          <UploadInput onFileChange={(file) => {
+      {files.length !== 0 ? (
+        <UploadInput
+          onFileChange={(file) => {
             // mimic handleFileUpload logic for a single file
             if (!file) return;
             const isValid = isValidStlFile(file);
@@ -301,7 +324,8 @@ const UploadStlCard = () => {
             const newFileData = createFileData(file);
             setFiles((prevFiles) => [...prevFiles, newFileData]);
             setActiveFileId(newFileData._id);
-          }} />
+          }}
+        />
       ) : (
         <>
           <Box sx={styles.unitContainer}>
@@ -309,9 +333,9 @@ const UploadStlCard = () => {
             {renderFileCounter()}
           </Box>
 
-          <Box>
-            {renderFileUpload()}
+          <Box sx={{ display: 'flex', gap: 2 }}>
             {renderFileCards()}
+            {renderFileUpload()}
           </Box>
         </>
       )}
