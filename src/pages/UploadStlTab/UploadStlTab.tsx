@@ -277,7 +277,7 @@ const UploadStlCard = () => {
   );
 
   const renderFileCards = () => (
-    <Grid container spacing={1}>
+    <Grid container spacing={2}>
       {files.map((file) => (
         <UploadStlCardFile
           key={file._id}
