@@ -281,16 +281,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               inputProps={{
                 'aria-label': 'Quantity',
               }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: '2.5rem',
-                  borderRadius: '4px',
-                  width: '4rem',
-                },
-                 "& .MuiOutlinedInput-input": {
-                    padding: '0.5rem 0.75rem',
-                  }
-              }}
+              inputStyle={1}
               />
               <CustomButton
                 children={<Plus color='#ffff' size={20} />}

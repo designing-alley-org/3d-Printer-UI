@@ -356,6 +356,7 @@ const CustomizeTab: React.FC = () => {
           <Box
             sx={{
               display: 'flex',
+              gap: 2,
             }}
           >
             <CustomButton
@@ -365,22 +366,12 @@ const CustomizeTab: React.FC = () => {
               loading={isLoading}
               variant='contained'
               borderRadius='4px'
-
-              // style={{
-              //   background:
-              //     isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
-              //   height: isSmallScreen ? '2.5rem' : '3rem',
-              //   width: isSmallScreen ? '100%' : '10rem',
-              //   marginRight: isSmallScreen ? '0' : '1rem',
-              //   marginBottom: isSmallScreen ? '1rem' : '0',
-              // }}
             />
             {!isApplyButtonDisabled && (
               <Box>
-                <MUIButton
-                  btnVariant="outlined"
-                  tooltip="If you scale file size, then for actual view please reload it"
-                  icon={<RotateCcw size={isSmallScreen ? 16 : 20} />}
+                <CustomButton
+                  variant="outlined"
+                  children={<RotateCcw size={isSmallScreen ? 16 : 20} />}
                   onClick={() => window.location.reload()}
                   disabled={isLoading}
                 />

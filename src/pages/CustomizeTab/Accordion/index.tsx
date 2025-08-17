@@ -252,7 +252,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <CustomTextField
               value={formData?.dimensions.height}
               onChange={handleChange('height')}
-              borderRadius='4px'              
+              inputStyle={2}              
             />
           </Grid>
 
@@ -264,9 +264,10 @@ const Accordion: React.FC<AccordionProps> = ({
             >
               Width
             </Typography>
-            <StyledNumberInput
+            <CustomTextField
               value={formData?.dimensions.width}
               onChange={handleChange('width')}
+              inputStyle={2}              
             />
           </Grid>
 
@@ -278,9 +279,10 @@ const Accordion: React.FC<AccordionProps> = ({
             >
               Length
             </Typography>
-            <StyledNumberInput
+            <CustomTextField
               value={formData?.dimensions.length}
               onChange={handleChange('length')}
+              inputStyle={2}              
             />
           </Grid>
 
@@ -473,15 +475,15 @@ const Accordion: React.FC<AccordionProps> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mt: 4,
           pt: 2,
-          borderTop: '1px solid #E0E0E0',
+          mb:1,
+          borderBottom: '1px solid #E0E0E0',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
           Current Weight
         </Typography>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
           {fileData?.dimensions?.weight || 0} gm
         </Typography>
       </Box>

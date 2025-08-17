@@ -25,6 +25,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         padding: "10px 16px",
         fontWeight: theme.typography.button.fontWeight,
         textTransform: "none",
+        '&:hover': {
+          backgroundColor: props.variant === "outlined" && theme.palette.primary.dark ,
+          color: props.variant === "outlined" && theme.palette.primary.contrastText,
+        },
         ...sx, // merge custom overrides last
       }}
     >
