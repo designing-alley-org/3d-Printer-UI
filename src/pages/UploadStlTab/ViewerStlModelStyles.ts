@@ -62,12 +62,3 @@ export const viewModel = {
   height: '100%',
 };
 
-export const navigationContainer = {
-  display: 'flex',
-  justifyContent: 'space-evenly',
-  alignItems: 'center',
-  width: '100%',
-  height: '10%',
-};
-
-export const fileName = { fontSize: '1.4rem', color: '#0066FF' };

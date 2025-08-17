@@ -5,7 +5,7 @@ import ViewModelStl from '../../components/ViewStlFile/index';
 import { arrow_left, arrow_right, cross } from '../../constants';
 import * as styles from './ViewerStlModelStyles';
 import MUIButton from '../../stories/MUIButton/Button';
-import { X } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRight, X } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 
 // Interface for the file data coming from CustomizeTab
@@ -65,6 +65,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
     const isFileData = (file: FileData | LocalFileData): file is FileData => {
       return '_id' in file && 'fileUrl' in file;
     };
+
 
     const theme = useTheme();
 
@@ -211,21 +212,30 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
               />
             </Box>
             {files.length > 1 && (
-              <Box sx={styles.navigationContainer}>
-                <ButtonIcon
-                  svgPath={arrow_left}
+              <Box 
+              display='flex' 
+              justifyContent='space-between' 
+              alignItems='center' sx={{
+                gap:{ xs: '0rem', sm: '2rem' },
+              }}>
+                <CustomButton
+                  children={<ArrowLeftIcon />}
                   onClick={() => handleNavigate('previous')}
                   disabled={false}
-                  width="3rem"
-                  height="3rem"
+                  sx={{ width: '3rem', height: '3rem' }}
                 />
-                <Typography sx={styles.fileName}>{fileToShow.name}</Typography>
-                <ButtonIcon
-                  svgPath={arrow_right}
+                <Typography variant='h5'
+                sx={{
+                    maxWidth: '7rem',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+                }}>{fileToShow.name}</Typography>
+                <CustomButton
+                  children={<ArrowRight />}
                   onClick={() => handleNavigate('next')}
                   disabled={false}
-                  width="3rem"
-                  height="3rem"
+                  sx={{ width: '3rem', height: '3rem' }}
                 />
               </Box>
             )}
