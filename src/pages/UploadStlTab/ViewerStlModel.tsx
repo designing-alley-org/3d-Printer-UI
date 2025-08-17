@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import { arrow_left, arrow_right, cross } from '../../constants';
 import * as styles from './ViewerStlModelStyles';
 import MUIButton from '../../stories/MUIButton/Button';
 import { X } from 'lucide-react';
+import CustomButton from '../../stories/button/CustomButton';
 
 // Interface for the file data coming from CustomizeTab
 interface FileData {
@@ -64,6 +65,8 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
     const isFileData = (file: FileData | LocalFileData): file is FileData => {
       return '_id' in file && 'fileUrl' in file;
     };
+
+    const theme = useTheme();
 
     useEffect(() => {
       if (isOpen && files.length > 0) {
@@ -137,16 +140,12 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
           <Box sx={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <Box sx={styles.closeButton}>
               {/* <ButtonIcon svgPath={cross} onClick={handleClose} imagePadding={isSmallScreen ? '2px' : '0px'}/> */}
-              <MUIButton
-                btnVariant='icon-rounded'
-                icon={<X  color='#1E65F5' strokeWidth={2} />}
+              <CustomButton
+                children={<X  color='#1E65F5' strokeWidth={2} />}
                 onClick={handleClose}
                 aria-label="Close 3D viewer"
                 style={{
                   marginTop: isSmallScreen ? '0.5rem' : '1rem',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  boxShadow: 'none',
                   padding: 0,
 
                 }}
@@ -186,9 +185,19 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
       <Box sx={styles.modalContainer}>
         <Box sx={styles.modalContent} onClick={(e) => e.stopPropagation()}>
           <Box sx={styles.closeButton}>
-            <ButtonIcon svgPath={cross} onClick={handleClose} />
+            {/* <ButtonIcon svgPath={cross} onClick={handleClose} /> */}
+            <CustomButton
+              children={<X  color={theme.palette.secondary.main} strokeWidth={2} />}
+              onClick={handleClose}
+              aria-label="Close 3D viewer"
+              sx={{
+                marginTop: isSmallScreen ? '0.5rem' : '1rem',
+                padding: 0,
+                backgroundColor: 'transparent',
+              }}
+            />
           </Box>
-          <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
+          <Typography variant='h6' color='text.primary'>3D VIEWER</Typography>
           <Box sx={styles.viewerContent}>
             <Box sx={styles.viewModel}>
               <ViewModelStl

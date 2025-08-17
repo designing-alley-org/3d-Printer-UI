@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Typography, TextField, CircularProgress, useMediaQuery, Card } from '@mui/material';
+import { Box, Typography,  CircularProgress,  Card } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
 import { getFile } from '../../utils/indexedDB';
-import MUIButton from '../../stories/MUIButton/Button';
-import { Box as BoxIcon, Minus, Plus, X } from 'lucide-react';
+import {  Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 
