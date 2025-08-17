@@ -209,10 +209,8 @@ export const CustomizeBox = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: red;
   border-radius: 37px;
   position: absolute;
-  background: #ffffff;
   bottom: 0.6rem;
   right: 0.4rem;
   height: 2rem;
@@ -260,7 +258,6 @@ export const Customize = styled.article`
       align-items: center;
       font-size: 20px;
       font-weight: 400;
-      color: #525e86;
       img {
         margin-right: 0.6rem;
       }
