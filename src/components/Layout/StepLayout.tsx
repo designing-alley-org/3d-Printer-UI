@@ -1,8 +1,12 @@
-import { Box, Paper, Typography, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import React from 'react';
-import MUIButton from '../../stories/MUIButton/Button';
 import StepLayoutSkleton from '../skeleton/StepLayoutSkleton';
-import { useNavigate } from 'react-router-dom';
+import CustomButton from '../../stories/button/CustomButton';
 
 interface StepLayoutProps {
   stepNumber: number;
@@ -17,6 +21,7 @@ interface StepLayoutProps {
   children?: React.ReactNode;
   isPageLoading?: boolean;
   onClickBack?: () => void;
+  isButtonsHide?: boolean;
 }
 
 const StepLayout = ({
@@ -31,56 +36,46 @@ const StepLayout = ({
   children,
   isPageLoading = false,
   isBackDisabled = false,
+  isButtonsHide = false,
   onClickBack,
 }: StepLayoutProps) => {
-  const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
-  // if (isPageLoading) {
-  //   return <StepLayoutSkleton />;
-  // }
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        padding: '1.5rem',
-        borderRadius: '30px',
-        backgroundColor: 'default',
-      }}
-      data-testid="step-layout"
+    <Container
+      maxWidth="lg"
+      sx={{ alignSelf: 'start', p: { xs: 2, sm: 3, md: 4 } }}
     >
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: isSmallScreen ? 'column' : 'row',
-          alignItems: isSmallScreen ? 'start' : 'center',
-          justifyContent: isSmallScreen ? 'start' : 'space-between',
-        }}
+      <Typography
+        variant={isSmallScreen ? 'h6' : 'h5'}
+        component="h3"
+        gutterBottom
+        sx={{ fontWeight: 600 }}
+        color="primary"
       >
-        <Typography
-          variant={isSmallScreen ? 'h6' : 'h4'}
-          component="h3"
-          gutterBottom
-          sx={{ fontWeight: 600 }}
-          color="primary"
-        >
-          Step {stepNumber}. {stepText || 'Default Step Text'}
-        </Typography>
-        <Typography
-          variant="body1"
-          gutterBottom
-          sx={{ fontWeight: 500 }}
-          color="secondary"
-        >
-          Order ID: {orderId || 'N/A'}
-        </Typography>
-      </Box>
+        Step {stepNumber}. {stepText || 'Default Step Text'}
+      </Typography>
 
       {stepDescription && (
-        <Box sx={{ textAlign: 'start', maxWidth: '900px' }}>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: isSmallScreen ? 'start' : 'center',
+            justifyContent: isSmallScreen ? 'start' : 'space-between',
+          }}
+        >
           <Typography variant="body2">{stepDescription}</Typography>
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ fontWeight: 600 }}
+            color="secondary"
+          >
+            Order ID: {orderId || 'N/A'}
+          </Typography>
         </Box>
       )}
 
@@ -95,7 +90,7 @@ const StepLayout = ({
         {isPageLoading ? <StepLayoutSkleton /> : children}
       </Box>
 
-      <Box
+     {!isButtonsHide && <Box
         sx={{
           textAlign: 'center',
           display: 'flex',
@@ -106,30 +101,32 @@ const StepLayout = ({
           mt: isSmallScreen ? 2 : 0,
         }}
       >
-        <MUIButton
-          btnVariant="outlined"
+        <CustomButton
+          variant="outlined"
           onClick={onClickBack}
           disabled={stepNumber === 1 ? true : isBackDisabled ? true : false}
-          label="Go Back"
-          style={{
-            width: isSmallScreen ? '100%' : 'fit-content',
-            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.7rem 2.5rem',
-            borderColor: stepNumber === 1 ? 'transparent' : 'primary.main',
+          children="Go Back"
+          sx={{
+            width: isSmallScreen ? '100%' : 'auto',
+            borderRadius: '4px',
+            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 2rem',
           }}
         />
-        <MUIButton
-          label={buttonLabel || 'Save & Proceed'}
+        <CustomButton
+          variant="contained"
+          size="large"
+          children={buttonLabel || 'Next'}
           onClick={onClick}
           disabled={isDisabled || isLoading}
           loading={isLoading}
-          style={{
-            width: isSmallScreen ? '100%' : 'fit-content',
-            height: isSmallScreen ? '2.5rem' : 'auto',
-            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.7rem 2rem',
+          sx={{
+            width: isSmallScreen ? '100%' : 'auto',
+            borderRadius: '4px',
+            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 3rem',
           }}
         />
-      </Box>
-    </Paper>
+      </Box>}
+    </Container>
   );
 };
 
