@@ -8,17 +8,7 @@ export const unitContainer: SxProps = {
   margin: '1rem 0rem',
 };
 
-export const unitSection: SxProps = {
-  display: 'flex',
-  justifyContent: 'space-between',
-};
 
-export const unitText: SxProps = {
-  marginRight: '1rem',
-  '@media (max-width: 768px)': {
-    fontSize: '0.7rem',
-  },
-};
 
 export const unitButton: SxProps = {
   height: '1.7rem',

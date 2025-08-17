@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import UploadStlCardFile from './UploadStlCardFile';
@@ -14,6 +14,7 @@ import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { FileData, ModelDimensions } from '../../types/uploadFiles';
 import UploadInput from './UploadInput';
 import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
+import CustomButton from '../../stories/button/CustomButton';
 
 const INITIAL_DIMENSIONS: ModelDimensions = {
   height: 0,
@@ -32,6 +33,7 @@ const UploadStlCard = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [files, setFiles] = useState<FileData[]>([]);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { orderId } = useParams();
@@ -210,32 +212,25 @@ const UploadStlCard = () => {
   };
 
   const renderUnitButtons = () => (
-    <Box sx={styles.unitSection}>
-      <Typography sx={styles.unitText}>Unit of Measurement</Typography>
+    <Box display='flex' alignItems='center' gap={1}>
+      <Typography>Unit of Measurement</Typography>
       {uploadDimBtnData.map((item) => (
-        <MUIButton
+        <CustomButton
           key={item.id}
           onClick={() => handleUnitClick(item.name)}
-          style={{
-            ...styles.unitButton,
-            ...(selectedUnit === item.name && styles.activeButton),
+          variant={selectedUnit === item.name ? 'contained' : 'outlined'}
+          children={item.name}
+          sx={{
+            borderRadius: '4px',
+            padding: 0
           }}
-          size="small"
-          label={item.name}
           data-testid={`unit-button-${item.name}`}
         />
       ))}
     </Box>
   );
 
-  const renderFileCounter = () => (
-    <Box sx={styles.fileCountSection}>
-      <Typography sx={styles.fileText}>Files</Typography>
-      <Box sx={styles.filesBox}>
-        <Typography sx={styles.fileBoxText}>{files.length}</Typography>
-      </Box>
-    </Box>
-  );
+
 
   const renderFileUpload = () => (
     <Box
@@ -243,6 +238,7 @@ const UploadStlCard = () => {
       onClick={() => fileInputRef.current?.click()}
       border={1}
       padding={3}
+      width={isMobile ? '100%' : 'auto'}
       borderRadius={0.5}
       bgcolor="background.paper"
       sx={{
@@ -281,7 +277,7 @@ const UploadStlCard = () => {
   );
 
   const renderFileCards = () => (
-    <Box >
+    <Grid container spacing={1}>
       {files.map((file) => (
         <UploadStlCardFile
           key={file._id}
@@ -296,7 +292,7 @@ const UploadStlCard = () => {
           convertDimensions={convertDimensions}
         />
       ))}
-    </Box>
+    </Grid>
   );
 
   return (
@@ -312,39 +308,28 @@ const UploadStlCard = () => {
       isDisabled={files.length === 0}
     >
       {files.length == 0 ? (
-        // <UploadInput
-        //   onFileChange={(file) => {
-        //     // mimic handleFileUpload logic for a single file
-        //     if (!file) return;
-        //     const isValid = isValidStlFile(file);
-        //     if (!isValid) {
-        //       alert('Please upload only STL or OBJ files');
-        //       return;
-        //     }
-        //     const newFileData = createFileData(file);
-        //     setFiles((prevFiles) => [...prevFiles, newFileData]);
-        //     setActiveFileId(newFileData._id);
-        //   }}
-        // />
-        <>
-          <Box sx={styles.unitContainer}>
-            {renderUnitButtons()}
-            {renderFileCounter()}
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            {renderFileCards()}
-            {renderFileUpload()}
-          </Box>
-        </>
+        <UploadInput
+          onFileChange={(file) => {
+            // mimic handleFileUpload logic for a single file
+            if (!file) return;
+            const isValid = isValidStlFile(file);
+            if (!isValid) {
+              alert('Please upload only STL or OBJ files');
+              return;
+            }
+            const newFileData = createFileData(file);
+            setFiles((prevFiles) => [...prevFiles, newFileData]);
+            setActiveFileId(newFileData._id);
+          }}
+        />
+       
       ) : (
         <>
           <Box sx={styles.unitContainer}>
             {renderUnitButtons()}
-            {renderFileCounter()}
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             {renderFileCards()}
             {renderFileUpload()}
           </Box>

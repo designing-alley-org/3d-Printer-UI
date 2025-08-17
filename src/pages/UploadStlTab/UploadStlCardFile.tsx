@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Typography, TextField, CircularProgress, useMediaQuery } from '@mui/material';
+import { Box, Typography, TextField, CircularProgress, useMediaQuery, Card } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
 import { getFile } from '../../utils/indexedDB';
 import MUIButton from '../../stories/MUIButton/Button';
 import { Box as BoxIcon, Minus, Plus, X } from 'lucide-react';
+import CustomButton from '../../stories/button/CustomButton';
+import CustomTextField from '../../stories/inputs/CustomTextField';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -118,14 +120,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     onSetActiveFile,
     onUpdateQuantity,
     onUpdateDimensions,
-    files,
     activeFileId,
     selectedUnit,
     convertDimensions,
   }) => {
     const [isViewerOpen, setViewerOpen] = useState(false);
     const { blobUrl, isLoading, error } = useFileBlob(file);
-    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
@@ -174,7 +174,6 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
     if (isLoading) {
       return (
         <Box
-          sx={styles.container}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -187,7 +186,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     if (error) {
       return (
-        <Box sx={styles.container}>
+        <Box sx={{ padding: '1rem', textAlign: 'center' }}>
           <Typography color="error" sx={styles.errorText}>
             Error: {error}
           </Typography>
@@ -197,11 +196,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     return (
       <>
-        <Box sx={styles.container}>
-          <Typography sx={styles.fileNumber}>
-            {files.indexOf(file) + 1}
-          </Typography>
-
+        <Card  sx={{borderRadius: '1rem' , padding: 2 , maxWidth:350}}>
           {/* STL Viewer Section */}
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
@@ -219,23 +214,23 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 </Typography>
               )}
              
-              <MUIButton
+              {/* <MUIButton
                 btnVariant='icon-rounded'
                 icon={<BoxIcon color='#ffffff' strokeWidth={1} />}
                 onClick={handleViewerOpen}
                 aria-label="Open 3D viewer"
                 style={styles.viewButton as React.CSSProperties}
-                />
+                /> */}
             </Box>
-          </Box>
-
-    
-          <Box sx={{ display: 'flex', flexDirection: isSmallScreen ? 'column ' : 'row', width: '80%' }}>
-          {/* File Info Section */}
-          <Box sx={styles.infoBox}>
-            <Typography sx={styles.fileName}>
+             <Typography  variant='h6'>
               {file.fileName.split('-')[0]}
             </Typography>
+          </Box>
+
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: '80%' }}>
+          {/* File Info Section */}
+           
             <Box
               sx={{
                 display: 'flex',
@@ -244,73 +239,68 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 padding: '1rem 0',
               }}
             >
-              <Typography sx={styles.dimensionLabel}>
-                Size: H x W x L
+              <Box display='flex' alignItems='center' gap='0.5rem'>
+              <Typography >
+                Size: 
               </Typography>
-              <Typography sx={styles.dimensionsValue}>
+              <Typography fontWeight='700' variant='body1'>
+                H x W x L
+              </Typography>
+              </Box>
+              <Typography variant='body1' fontWeight='700'>
                 {`${displayDimensions.height.toFixed(2)} × ${displayDimensions.width.toFixed(
                   2
                 )} × ${displayDimensions.length.toFixed(2)} `}
                 {selectedUnit}
               </Typography>
             </Box>
-          </Box>
           
           {/* Quantity Control Section */}
-          <Box sx={styles.quantityBox}>
-            <Box sx={styles.quantityHeader}>
-              <Typography sx={styles.fileName}>Quantity</Typography>
-            </Box>
-            <Box sx={styles.quantityValueBox}>
-              <MUIButton
-                icon={<Minus color='#1E65F5' size={15}/>}
+            <Box display='flex' alignItems='center' gap='0.5rem'>
+              <CustomButton
+               children={<Minus color='#ffff' size={20}/>}
                 onClick={() => handleQuantityChange('decrease')}
                 disabled={file.quantity <= QUANTITY_LIMITS.MIN}
                 aria-label="Decrease quantity"
-                btnVariant='icon-rounded'
+                variant='contained'
+                sx={{
+                     width: 'auto',
+            borderRadius: '4px',
+                }}
               />
-              <TextField
+              <CustomTextField
+              onlyNumber={true}
               value={file.quantity}
-              onChange={(e) => {
-                const value = e.target.value;
-                // Allow only numbers and ensure it's within the limits
-                if (/^\d*$/.test(value) && Number(value) <= QUANTITY_LIMITS.MAX && Number(value) >= QUANTITY_LIMITS.MIN) {
-                handleQuantityChange('set', Number(value));
-                }
-              }}
-              type="text" // Keep as 'text'
+              onChange={(e) => handleQuantityChange('set', parseInt(e.target.value))}
+              type="text" 
               inputProps={{
                 'aria-label': 'Quantity',
               }}
               sx={{
-                '& fieldset': {
-                border: '1px solid #66A3FF',
-                boxShadow: '0px 0px 4px 0px rgba(0, 71, 255, 1) inset',
-                borderRadius: '2rem',
+                "& .MuiOutlinedInput-root": {
+                  height: '2.5rem',
+                  borderRadius: '4px',
+                  width: '4rem',
                 },
-                '& input': {
-                textAlign: 'center',
-                padding: '0.5rem',
-                fontSize: isSmallScreen ? '.7rem' : '1rem',
-                height: isSmallScreen ? '1rem' : '1.4rem',
-                width: isSmallScreen ? '3rem' : '4rem',
-                '&:focus': {
-                  outline: 'none',
-                },
-                },
+                 "& .MuiOutlinedInput-input": {
+                    padding: '0.5rem 0.75rem',
+                  }
               }}
               />
-              <MUIButton
-                icon={<Plus color='#1E65F5' size={15} />}
+              <CustomButton
+                children={<Plus color='#ffff' size={20} />}
                 onClick={() => handleQuantityChange('increase')}
                 disabled={file.quantity >= QUANTITY_LIMITS.MAX}
                 aria-label="Increase quantity"
-                btnVariant='icon-rounded'
+                variant='contained'
+                sx={{
+                   width: 'auto',
+            borderRadius: '4px',
+                }}
               />
             </Box>
           </Box>
-          </Box>
-              <MUIButton
+              {/* <MUIButton
                 icon={<X size={30} strokeWidth={1} />}
                 onClick={handleRemove}
                 aria-label="Remove file"
@@ -321,8 +311,8 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                   boxShadow: 'none',
                   border: 'none'
                 }}
-              />
-        </Box>
+              /> */}
+        </Card>
 
         {/* 3D Viewer Modal */}
         <ViewerStlModel
