@@ -196,7 +196,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     return (
       <>
-        <Card  sx={{borderRadius: '1rem' , padding: 2 , maxWidth:350}}>
+        <Card  sx={{borderRadius: '1rem' , padding: 2 , minWidth: 300, display: 'flex', flexDirection: 'column', gap: 2}}>
           {/* STL Viewer Section */}
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
@@ -222,7 +222,8 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 style={styles.viewButton as React.CSSProperties}
                 /> */}
             </Box>
-             <Typography  variant='h6'>
+             <Typography  variant='h6' sx={{
+             }}>
               {file.fileName.split('-')[0]}
             </Typography>
           </Box>
