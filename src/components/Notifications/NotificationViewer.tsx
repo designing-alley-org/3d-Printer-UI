@@ -1,7 +1,16 @@
 import { FC } from 'react';
-import { Badge, Box, List, ListItem, Paper, Typography, useMediaQuery } from '@mui/material';
+import {
+  Badge,
+  Box,
+  List,
+  ListItem,
+  Paper,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MUIButton from '../../stories/MUIButton/Button';
+import CustomButton from '../../stories/button/CustomButton';
 
 interface INotification {
   notification: {
@@ -27,38 +36,38 @@ const Notifications: FC<INotification> = ({
 
   return (
     <Paper
-      elevation={1}
+      elevation={3}
       sx={{
+        marginTop: 1,
         width: 360,
         bgcolor: '#fff',
-        borderRadius: isMobile ? '20px' : '24px',
         maxWidth: '78%',
+        borderRadius: '4px',
         overflow: 'hidden',
         maxHeight: isMobile ? '65vh' : '80vh',
-        border: '1px solid #ccc',
       }}
     >
       {/* Header */}
       <Box
         sx={{
-          bgcolor: '#1E6FFF',
-          color: '#fff',
+          bgcolor: 'primary.main',
           p: isMobile ? 1 : 2,
           paddingRight: 4,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderRadius: isMobile ? '17px 17px 0 0' : '24px 24px 0 0',
         }}
       >
-        <Typography variant={isMobile ? 'h6' : 'h5'}>New Notifications</Typography>
+        <Typography variant={isMobile ? 'h6' : 'h5'} color="primary.contrastText">
+          New Notifications
+        </Typography>
         <Badge
           badgeContent={notification.length}
           color="error"
           sx={{
             '& .MuiBadge-badge': {
-              backgroundColor: '#fff',
-              color: '#1E6FFF',
+              backgroundColor: 'background.paper',
+              color: 'primary.main',
               fontWeight: 'bold',
               minWidth: 32,
               height: 24,
@@ -82,7 +91,7 @@ const Notifications: FC<INotification> = ({
             }}
           >
             <Box>
-              <Typography variant="body2" fontWeight={500} color="#1E6FFF">
+              <Typography variant="body2" fontWeight={500} >
                 {item.message}
               </Typography>
             </Box>
@@ -99,15 +108,20 @@ const Notifications: FC<INotification> = ({
           gap: 2,
         }}
       >
-        <MUIButton
-          label="Ignore"
-          btnVariant="outlined"
+        <CustomButton
+          children="Ignore"
+          variant="outlined"
           onClick={() => setShowNotification(false)}
-          size= {isMobile ? 'small' : 'medium'}
+          size={isMobile ? 'small' : 'medium'}
+          borderRadius="4px"
         />
-        <MUIButton label="View All" onClick={handleShow}  
-          size= {isMobile ? 'small' : 'medium'}
-         />
+        <CustomButton
+          variant="contained"
+          children="View All"
+          onClick={handleShow}
+          size={'small'}
+          borderRadius="4px"
+        />
       </Box>
     </Paper>
   );
