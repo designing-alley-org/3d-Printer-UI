@@ -20,6 +20,9 @@ export const SubHeader = styled.div`
 `;
 
 export const Wrapper = styled.section`
+  border: 1px solid #C5C5C5;
+  padding: 1rem;
+  border-radius: 1.3rem;
   .header {
     display: flex;
     justify-content: space-between;
@@ -42,16 +45,14 @@ export const Wrapper = styled.section`
   }
 
   .address-list {
-    display: grid;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
     max-height: 26rem;
     overflow-y: scroll;
-    grid-template-columns: repeat(3, 1fr);
-    color: #1e6fff;
 
     .address-card {
       display: flex;
-      justify-content: start;
+      justify-content: space-between;
       padding: 0.5rem;
       position: relative;
       &:hover {
