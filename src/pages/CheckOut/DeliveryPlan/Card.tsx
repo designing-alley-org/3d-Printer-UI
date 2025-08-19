@@ -4,7 +4,6 @@ import {
   Typography,
   Box,
 } from '@mui/material';
-import icon from '../../../assets/icons/avg_pace.svg';
 import { useDispatch } from 'react-redux';
 import { selectDeliveryData } from '../../../store/Address/deliveryDetails';
 

@@ -150,7 +150,7 @@ const ShippingDetails = () => {
     >
       <Wrapper>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1}>
+          <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1}>
            <LocationOnIcon fontSize="small" />
            Delivery Address
           </Typography>

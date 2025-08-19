@@ -32,7 +32,7 @@ export const Wrapper = styled.section`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    max-height: 26rem;
+    max-height: 23rem;
     overflow-y: scroll;
 
     .address-card {
