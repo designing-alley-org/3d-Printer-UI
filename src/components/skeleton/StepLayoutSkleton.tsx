@@ -7,8 +7,8 @@ const StepLayoutSkeleton = () => {
             elevation={0}
             sx={{
                 padding: '2rem',
-                borderRadius: '30px',
-                minHeight: '36rem',
+                borderRadius: { xs: '0.5rem', md: '1rem' },
+                minHeight: '30rem',
                 backgroundColor: 'background.paper',
             }}
             data-testid="step-layout-skeleton"

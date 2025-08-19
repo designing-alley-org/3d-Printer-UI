@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Box,  Typography } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -59,8 +59,6 @@ const DeliveryPlan: React.FC = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
-  const isMediumScreen = useMediaQuery('(max-width:960px)');
 
   // Hooks
   const navigate = useNavigate();
@@ -174,11 +172,10 @@ const DeliveryPlan: React.FC = () => {
   };
 
   const deliveryOptions = deliveryData?.rates || [];
-  const itemsPerSlide = isSmallScreen ? 1 : isMediumScreen ? 2 : 3;
 
   return (
     <StepLayout
-      stepNumber={5}
+      stepNumber={4}
       stepText="Shipping Delivery Plan"
       stepDescription="Please Select a delivery plan. Based on your order and address, we have provided the best delivery options."
       onClick={handleProceed}
@@ -189,7 +186,7 @@ const DeliveryPlan: React.FC = () => {
       isDisabled={selectedPlanIndex === -1 || isLoading}
     >
       {error ? (
-        <Box sx={{ padding: '2rem', textAlign: 'center' }}>
+        <Box sx={{ padding: '2rem', textAlign: 'center', border: '1px solid #C5C5C5', borderRadius: '1.3rem' }}>
           <Typography color="error" variant="h6">
             {error}
           </Typography>
@@ -203,9 +200,11 @@ const DeliveryPlan: React.FC = () => {
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'wrap',
+            flexDirection: 'column',
             justifyContent: 'center',
+            border: '1px solid #C5C5C5',
             gap: '16px',
+            borderRadius: { xs: '0.5rem', md: '1rem' },
             padding: '1rem',
           }}
         >

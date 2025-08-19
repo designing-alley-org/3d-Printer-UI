@@ -4,8 +4,6 @@ import {
   Typography,
   Box,
 } from '@mui/material';
-import icon from '../../../assets/icons/avg_pace.svg';
-import MUIButton from '../../../stories/MUIButton/Button';
 import { useDispatch } from 'react-redux';
 import { selectDeliveryData } from '../../../store/Address/deliveryDetails';
 
@@ -50,58 +48,41 @@ export default function Card({
     <MuiCard
       onClick={() => handleClick(index, deliveryName)}
       sx={{
-        backgroundColor: isSelected ? 'primary.main' : '#F0F8FF',
-        borderRadius: '1rem',
-        width: { xs: '100%' },
-        maxWidth: { xs: '100%', sm: '320px', md: '320px' },
-        minHeight: '24rem',
-        border: `1px solid ${isSelected ? 'primary.main' : '#e8eff9'}`,
+        backgroundColor: isSelected ? 'primary.main' : 'transparent',
+        borderRadius: '0.5rem',
+        padding: '0rem',
+        border: `1px solid ${isSelected ? 'primary.main' : '#C5C5C5'}`,
         boxShadow: isSelected ? '0px 4px 20px rgba(0, 71, 255, 0.2)' : 'none',
         transition: 'all 0.3s ease-in-out',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         cursor: 'pointer',
-        '@media (max-width: 600px)': {
-          minHeight: '20rem',
-        },
         color: isSelected ? '#FFFFFF' : 'primary.main',
       }}
     >
-      <CardContent sx={{ padding: { xs: '1rem', md: '1.5rem' } }}>
+      <CardContent>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: '1rem',
           }}
         >
           <Typography
-            variant="h5"
-            component="div"
-            sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main' }}
+            sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main', fontSize:{ xs: '1rem', md: '1.25rem' } }}
           >
             {deliveryName}
           </Typography>
-          <img
-            src={icon}
-            alt="delivery icon"
-            style={{
-              width: '2rem',
-              filter: isSelected ? 'brightness(0) invert(1)' : 'none',
-            }}
-          />
-        </Box>
-        <Typography
-          variant="h3"
-          component="div"
-          sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main' }}
+           <Typography
+          sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main', fontSize:{ xs: '1rem', md: '1.25rem' } }}
         >
           ${deliveryCost.toFixed(2)}
         </Typography>
+        </Box>
+      
       </CardContent>
-      <CardContent sx={{ padding: { xs: '1rem', md: '1.5rem' } }}>
+      {/* <CardContent>
         <Box
           sx={{
             color: isSelected ? '#FFFFFF' : 'primary.main',
@@ -109,7 +90,7 @@ export default function Card({
             '& > *': {
               display: 'flex',
               alignItems: 'center',
-              marginBottom: '0.5rem',
+              marginBottom: '0.5rem', 
             },
             '& svg': {
               marginRight: '0.5rem',
@@ -123,8 +104,8 @@ export default function Card({
             <CheckIcon /> Packaging: Done
           </Typography>
         </Box>
-      </CardContent>
-      <CardContent
+      </CardContent> */}
+      {/* <CardContent
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -143,10 +124,13 @@ export default function Card({
         >
          
         </MUIButton>
-      </CardContent>
+      </CardContent> */}
     </MuiCard>
   );
 }
+
+
+
 
 const CheckIcon = () => (
   <svg
