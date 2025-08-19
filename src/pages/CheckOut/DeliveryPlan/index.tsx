@@ -176,8 +176,8 @@ const DeliveryPlan: React.FC = () => {
   return (
     <StepLayout
       stepNumber={4}
-      stepText="Shipping Delivery Plan"
-      stepDescription="Please Select a delivery plan. Based on your order and address, we have provided the best delivery options."
+      stepText="Checkout"
+      stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={handleProceed}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/checkout`)}

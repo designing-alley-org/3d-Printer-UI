@@ -277,22 +277,23 @@ const UploadStlCard = () => {
   );
 
   const renderFileCards = () => (
-    <Grid container spacing={2}>
-      {files.map((file) => (
-        <UploadStlCardFile
-          key={file._id}
-          file={file}
-          onRemove={handleRemoveFile}
-          onSetActiveFile={setActiveFileId}
-          onUpdateQuantity={handleUpdateQuantity}
-          onUpdateDimensions={handleUpdateDimensions}
-          files={files}
-          activeFileId={activeFileId}
-          selectedUnit={selectedUnit}
-          convertDimensions={convertDimensions}
-        />
-      ))}
-    </Grid>
+  <Grid container spacing={2}>
+  {files.map((file) => (
+      <UploadStlCardFile
+        file={file}
+        key={file._id}
+        onRemove={handleRemoveFile}
+        onSetActiveFile={setActiveFileId}
+        onUpdateQuantity={handleUpdateQuantity}
+        onUpdateDimensions={handleUpdateDimensions}
+        files={files}
+        activeFileId={activeFileId}
+        selectedUnit={selectedUnit}
+        convertDimensions={convertDimensions}
+      />
+  ))}
+</Grid>
+
   );
 
   return (
@@ -329,7 +330,7 @@ const UploadStlCard = () => {
             {renderUnitButtons()}
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             {renderFileCards()}
             {renderFileUpload()}
           </Box>
