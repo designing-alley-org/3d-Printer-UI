@@ -189,7 +189,7 @@ const DeliveryPlan: React.FC = () => {
       isDisabled={selectedPlanIndex === -1 || isLoading}
     >
       {error ? (
-        <Box sx={{ padding: '2rem', textAlign: 'center' }}>
+        <Box sx={{ padding: '2rem', textAlign: 'center', border: '1px solid #C5C5C5', borderRadius: '1.3rem' }}>
           <Typography color="error" variant="h6">
             {error}
           </Typography>
@@ -203,9 +203,11 @@ const DeliveryPlan: React.FC = () => {
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'wrap',
+            flexDirection: 'column',
             justifyContent: 'center',
+            border: '1px solid #C5C5C5',
             gap: '16px',
+            borderRadius: { xs: '0.5rem', md: '1rem' },
             padding: '1rem',
           }}
         >
