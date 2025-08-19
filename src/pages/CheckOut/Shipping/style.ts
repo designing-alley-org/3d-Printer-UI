@@ -21,42 +21,30 @@ export const SubHeader = styled.div`
 
 export const Wrapper = styled.section`
   border: 1px solid #C5C5C5;
-  padding: 1rem;
+  padding: 1rem !important;
   border-radius: 1.3rem;
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
 
-    .create-new-add {
-      position: absolute;
-      right: 2rem;
-      width: content;
-      height: 2.5rem;
-      font-size: 0.9rem;
-    }
-
-    .cross-btn {
-      position: absolute;
-      top: -0.3rem;
-      right: -3rem;
-    }
+  @media (max-width: 600px) {
+    border-radius: 0.5rem;
   }
 
   .address-list {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
     max-height: 26rem;
     overflow-y: scroll;
 
     .address-card {
       display: flex;
       justify-content: space-between;
+      align-items: start;
+      border: 1px solid #C5C5C5;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
       padding: 0.5rem;
       position: relative;
       &:hover {
-        border-radius: 1rem;
         background: #f2f2f2;
         cursor: pointer;
       }
@@ -67,36 +55,7 @@ export const Wrapper = styled.section`
         top: 0.7rem;
         right: 1.8rem;
       }
-      .radio-btn {
-        margin-right: 1rem;
-        margin-top: 0.5rem;
-      }
-      .radio-btn input[type='radio'] {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        width: 1rem;
-        height: 1rem;
-        border: 2px solid #1e6fff;
-        border-radius: 50%;
-        outline: none;
-        background-color: #fff;
-        cursor: pointer;
-        position: relative;
-        transition:
-          background-color 0.3s ease,
-          box-shadow 0.3s ease;
-      }
-
-      .radio-btn input[type='radio']:checked {
-        background-color: #1e6fff; /* Inner circle when selected */
-        box-shadow: 0 0 0 4px rgba(30, 111, 255, 0.3); /* Glowing effect */
-      }
-
-      .radio-btn input[type='radio']:hover {
-        box-shadow: 0 0 0 3px rgba(30, 111, 255, 0.5); /* Hover effect */
-      }
-
+      
       .address {
         cursor: pointer;
         position: relative;
@@ -137,22 +96,44 @@ export const Wrapper = styled.section`
 
   @media (max-width: 600px) {
     padding: 0rem 0.3rem;
-    .header {
-      .create-new-add {
-        right: 1rem;
-        height: 1.7rem;
-        font-size: 0.6rem;
-        top: 0rem;
-      }
-
-      .cross-btn {
-        top: -1.7rem;
-        right: -2.5rem;
-      }
-    }
     .address-list {
       grid-template-columns: 1fr;
       max-height: 20rem;
+    }
+  }
+`;
+
+export const AddNewAddressButton = styled.div`
+  border: 2px dashed #C5C5C5;
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  
+  &:hover {
+    background: rgba(30, 113, 255, 0.02);
+    border-color: #2A2D2F;
+  }
+  
+  .add-text {
+    color: #666;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+
+  }
+  
+  @media (max-width: 600px) {
+    padding: 1rem;
+    
+    .add-text {
+      font-size: 0.9rem;
     }
   }
 `;
