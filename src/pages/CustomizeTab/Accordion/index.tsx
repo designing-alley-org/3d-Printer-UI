@@ -23,6 +23,8 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import StyledNumberInput from '../../../stories/Input/StyledNumberInput';
+import CustomButton from '../../../stories/button/CustomButton';
+import CustomTextField from '../../../stories/inputs/CustomTextField';
 
 interface AccordionProps {
   printerData: any[];
@@ -195,15 +197,14 @@ const Accordion: React.FC<AccordionProps> = ({
       <Box
         sx={{
           p: 1,
-          backgroundColor: '#FAFAFA',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <Ruler size={20} style={{ marginRight: '8px', color: '#1976d2' }} />
+          <Ruler size={20} style={{ marginRight: '8px' }} />
           <Typography
             variant="h6"
             sx={{ fontWeight: 600 }}
-            color="secondary.main"
+            color="text.dark"
           >
             Scale
           </Typography>
@@ -213,7 +214,7 @@ const Accordion: React.FC<AccordionProps> = ({
           container
           spacing={3}
           sx={{
-            border: '1px solid #66A3FF',
+            border: '1px solid #E4E4E4',
             boxShadow: '8px 8px 8px 0px #00000014',
             borderRadius: '12px',
             padding: '16px',
@@ -248,9 +249,10 @@ const Accordion: React.FC<AccordionProps> = ({
             >
               Height
             </Typography>
-            <StyledNumberInput
+            <CustomTextField
               value={formData?.dimensions.height}
               onChange={handleChange('height')}
+              inputStyle={2}              
             />
           </Grid>
 
@@ -262,9 +264,10 @@ const Accordion: React.FC<AccordionProps> = ({
             >
               Width
             </Typography>
-            <StyledNumberInput
+            <CustomTextField
               value={formData?.dimensions.width}
               onChange={handleChange('width')}
+              inputStyle={2}              
             />
           </Grid>
 
@@ -276,9 +279,10 @@ const Accordion: React.FC<AccordionProps> = ({
             >
               Length
             </Typography>
-            <StyledNumberInput
+            <CustomTextField
               value={formData?.dimensions.length}
               onChange={handleChange('length')}
+              inputStyle={2}              
             />
           </Grid>
 
@@ -290,19 +294,23 @@ const Accordion: React.FC<AccordionProps> = ({
                 alignItems: 'flex-end',
               }}
             >
-              <MUIButton
+              <CustomButton
                 onClick={handleRevert}
                 size="small"
-                label="Revert To Original"
-                btnVariant="icon-soft"
-                icon={<RotateCcw size={16} />}
-                iconPosition="start"
-                style={{ color: '#ffffffff',backgroundColor: '#66A3FF',border: 'none' }}
-              />
+                variant="contained"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '4px',
+                }}
+              >
+                <RotateCcw size={16} />  Revert To Original
+              </CustomButton>
               {oldDimensions && (
                 <Typography
                   variant="caption"
-                  sx={{ color: '#235ab0', textAlign: 'right' }}
+                  sx={{ color: 'text.secondary', textAlign: 'right', mt: 1 }}
                 >
                   {oldDimensions?.dimensions?.height.toFixed(2)}{' '}
                   {oldDimensions?.unit} x{' '}
@@ -324,8 +332,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Settings size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
-              sx={{ fontWeight: 500 }}
-              color="secondary.main"
+            color="text.dark"
             >
               Technology
             </Typography>
@@ -356,8 +363,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Circle size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
-              sx={{ fontWeight: 500 }}
-              color="secondary.main"
+              color="text.dark"
             >
               Material
             </Typography>
@@ -390,8 +396,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Palette size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
-              sx={{ fontWeight: 500 }}
-              color="secondary.main"
+             color="text.dark"
             >
               Colour
             </Typography>
@@ -422,8 +427,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Grid3X3 size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
-              sx={{ fontWeight: 500 }}
-              color="secondary.main"
+             color="text.dark"
             >
               Infill
             </Typography>
@@ -444,8 +448,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Printer size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
-              sx={{ fontWeight: 500 }}
-              color="secondary.main"
+             color="text.dark"
             >
               Printer
             </Typography>
@@ -472,15 +475,15 @@ const Accordion: React.FC<AccordionProps> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mt: 4,
           pt: 2,
-          borderTop: '1px solid #E0E0E0',
+          mb:1,
+          borderBottom: '1px solid #E0E0E0',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
           Current Weight
         </Typography>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: '#1976d2' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
           {fileData?.dimensions?.weight || 0} gm
         </Typography>
       </Box>

@@ -64,7 +64,7 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
         sx={{
           borderRadius: '10px',
           padding: '4px 12px',
-          borderColor: error ? 'error.main' : ' #66A3FF',
+          borderColor: error ? 'error.main' : '#E4E4E4',
           color: error ? 'error.main' : 'black',
           fontWeight: 400,
           fontSize: '1rem',
@@ -75,7 +75,7 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
           alignItems: 'center',
           gap: 1,
           '&:hover': {
-            borderColor: error ? 'error.main' : '#88A2F0',
+            borderColor: error ? 'error.main' : 'text.secondary',
           },
           ...style,
         }}
@@ -115,7 +115,8 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
               fontSize: '16px',
               paddingX: 3,
               '&.Mui-selected': {
-                backgroundColor: '#E7F0FF',
+                backgroundColor: 'primary.contrastText',
+                color: 'primary.main',
               },
               '&:hover': {
                 backgroundColor: '#F3F8FF',

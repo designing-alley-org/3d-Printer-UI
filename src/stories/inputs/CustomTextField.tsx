@@ -7,43 +7,74 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-
 interface CustomTextFieldProps extends Omit<TextFieldProps, "variant"> {
   variant?: TextFieldProps["variant"];
   borderRadius?: string;
-  onlyNumber?: boolean; 
+  onlyNumber?: boolean;
+  inputStyle?: number; // ✅ style preset selector
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { onlyNumber, onChange, ...rest } = props;
+  const { onlyNumber, onChange, inputStyle, ...rest } = props;
   const isPasswordField = props.type === "password";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onlyNumber) {
-      e.target.value = e.target.value.replace(/\D/g, ""); 
+      e.target.value = e.target.value.replace(/\D/g, "");
     }
 
-    // ✅ call your original onChange if passed
     if (onChange) {
       onChange(e);
     }
   };
+
+  // ✅ Define styles based on inputStyle
+  let styleOverrides: any = {};
+  switch (inputStyle) {
+    case 1:
+      styleOverrides = {
+        "& .MuiOutlinedInput-root": {
+          height: "2.5rem",
+          borderRadius: "4px",
+          width: "4rem",
+        },
+        "& .MuiOutlinedInput-input": {
+          padding: "0.5rem 0.75rem",
+        },
+      };
+      break;
+    case 2:
+      styleOverrides = {
+        "& .MuiOutlinedInput-root": {
+          height: "2.5rem",
+          borderRadius: "4px",
+        },
+        "& .MuiOutlinedInput-input": {
+          padding: "0.5rem 0.75rem",
+        },
+      };
+      break;
+    default:
+      styleOverrides = {
+        "& .MuiOutlinedInput-root": {
+          backgroundColor: "#FFFFFF",
+          borderRadius: props.borderRadius || "32px",
+        },
+      };
+      break;
+  }
 
   return (
     <TextField
       {...rest}
       type={isPasswordField && !showPassword ? "password" : "text"}
       sx={{
-        "& .MuiOutlinedInput-root": {
-          backgroundColor: "#FFFFFF",
-          borderRadius: props.borderRadius || "32px",
-        },
-         
-        ...props.sx,
+        ...styleOverrides,
+        ...props.sx, // allow consumer overrides
       }}
-      onChange={handleChange} // 🔥 use wrapped version
+      onChange={handleChange}
       InputProps={{
         ...props.InputProps,
         endAdornment: isPasswordField ? (

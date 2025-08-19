@@ -22,7 +22,7 @@ export const modalContent = {
   width: '60.2rem',
   height: '35.7rem',
   border: '1px solid #FFFFFF',
-  boxShadow: '0px 4px 4px 0px #0047FF',
+  boxShadow: '0px 4px 4px 0px #060B35',
 
   '@media (max-width: 768px)': {
     width: '90%',
@@ -38,13 +38,7 @@ export const closeButton = {
   '@media (max-width: 768px)': { top: '-.3rem', right: '0rem' },
 };
 
-export const modalTitle = {
-  fontSize: '1.2rem', // 24px
-  fontWeight: 400,
-  lineHeight: '2.6rem',
-  color: '#0066FF',
-  '@media (max-width: 768px)': { fontSize: '1rem' },
-};
+
 
 export const viewerContent = {
   width: '100%',
@@ -52,7 +46,7 @@ export const viewerContent = {
   padding: '1.5rem',
   border: ' 1px solid #C6C6C6',
   borderRadius: '30px',
-  boxShadow: ' 0px 1px 4px 0px #0047FF',
+  boxShadow: ' 0px 1px 4px 0px #2A2D2F',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -65,15 +59,6 @@ export const viewModel = {
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '85%',
+  height: '100%',
 };
 
-export const navigationContainer = {
-  display: 'flex',
-  justifyContent: 'space-evenly',
-  alignItems: 'center',
-  width: '100%',
-  height: '10%',
-};
-
-export const fileName = { fontSize: '1.4rem', color: '#0066FF' };

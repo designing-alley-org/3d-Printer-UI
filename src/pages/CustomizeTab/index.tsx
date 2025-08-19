@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import {
   Customize,
   Files,
@@ -34,6 +34,7 @@ import MUIButton from '../../stories/MUIButton/Button';
 import { RotateCcw } from 'lucide-react';
 import { FileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
+import CustomButton from '../../stories/button/CustomButton';
 
 const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
@@ -242,8 +243,7 @@ const CustomizeTab: React.FC = () => {
     <StepLayout
       stepNumber={2}
       stepText='Customize'
-      stepDescription="Set the required quantities for each file and if their sizes appear too small, change the unit of measurement to inches. 
-     Click on 3D Viewer for a 360° preview of your files."
+      stepDescription="Customize your design files by selecting materials, colors, and printers."
       onClick={() =>  navigate(`/get-quotes/${orderId}/quote`)}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
@@ -254,13 +254,14 @@ const CustomizeTab: React.FC = () => {
       <Box
         display='flex'
         border={1}
-        borderRadius={3}
-        borderColor={'#66A3FF'}
+        borderRadius={'24px'}
+        boxShadow='2px 2px 4px 0px #0000003D'
+
         >
         <Files isLoading={isLoading}>
           <span className="header">
-            <span className="file">Files</span>
-            <span className="count">{files.length}</span>
+            <Typography variant='h6' color='primary.contrastText'>Files</Typography>
+            {/* <span className="count">{files.length}</span> */}
           </span>
           <div className="file-list">
             <UploadedFile>
@@ -270,14 +271,14 @@ const CustomizeTab: React.FC = () => {
                   className="upload-file"
                   onClick={() => handleSetActiveFile(file._id)}
                   style={{
-                    boxShadow:
+                    background:
                       activeFileId === file._id
-                        ? '0px 0px 4.8px 0px #66A3FF'
-                        : 'none',
+                        ? '#FFFFFF'
+                        : 'transparent',
                     border:
                       activeFileId === file._id
-                        ? '1px solid #66A3FF'
-                        : 'none',
+                        ? '1px solid #1E6FFF'
+                        : '1px solid #FFFFFF',
                   }}
                 >
                   <Model>
@@ -297,7 +298,7 @@ const CustomizeTab: React.FC = () => {
                       <img src={vector_black} alt="View model" />
                     </span>
                   </Model>
-                  <ModelName>
+                  <ModelName isActive={activeFileId === file._id}>
                     {file?.fileName.split('_')[1] ||
                       file?.fileName.split('/').pop()}
                   </ModelName>
@@ -335,11 +336,11 @@ const CustomizeTab: React.FC = () => {
         <Customize>
           <div className="customize-container">
             {activeFileId === null ? (
-              <div className="no-file">
-                <h3 className="no-file-title">
+              <Box display="flex" justifyContent="center" alignItems="center" >
+                <Typography variant='h6' color='text.secondary'>
                   Please select a file to customize
-                </h3>
-              </div>
+                </Typography>
+              </Box>
             ) : null}
             {activeFileId && activeFile &&
                <AccordionMemo
@@ -355,28 +356,22 @@ const CustomizeTab: React.FC = () => {
           <Box
             sx={{
               display: 'flex',
+              gap: 2,
             }}
           >
-            <MUIButton
-              label="Apply Selection"
+            <CustomButton
+              children="Apply Selection"
               disabled={isApplyButtonDisabled || isLoading}
               onClick={handleApplySelection}
               loading={isLoading}
-              style={{
-                background:
-                  isApplyButtonDisabled || isLoading ? '#D8D8D8' : undefined,
-                height: isSmallScreen ? '2.5rem' : '3rem',
-                width: isSmallScreen ? '100%' : '10rem',
-                marginRight: isSmallScreen ? '0' : '1rem',
-                marginBottom: isSmallScreen ? '1rem' : '0',
-              }}
+              variant='contained'
+              borderRadius='4px'
             />
             {!isApplyButtonDisabled && (
               <Box>
-                <MUIButton
-                  btnVariant="outlined"
-                  tooltip="If you scale file size, then for actual view please reload it"
-                  icon={<RotateCcw size={isSmallScreen ? 16 : 20} />}
+                <CustomButton
+                  variant="outlined"
+                  children={<RotateCcw size={isSmallScreen ? 16 : 20} />}
                   onClick={() => window.location.reload()}
                   disabled={isLoading}
                 />

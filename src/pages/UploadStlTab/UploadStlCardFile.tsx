@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Typography, TextField, CircularProgress, useMediaQuery, Card } from '@mui/material';
+import { Box, Typography,  CircularProgress,  Card } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
 import { getFile } from '../../utils/indexedDB';
-import MUIButton from '../../stories/MUIButton/Button';
-import { Box as BoxIcon, Minus, Plus, X } from 'lucide-react';
+import {  Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 
@@ -196,7 +195,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     return (
       <>
-        <Card  sx={{borderRadius: '1rem' , padding: 2 , maxWidth:350}}>
+        <Card  sx={{borderRadius: '1rem' , padding: 2 , minWidth: {xs: 300, sm: 400, md: 350}, display: 'flex', flexDirection: 'column', gap: 2}}>
           {/* STL Viewer Section */}
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
@@ -222,7 +221,12 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 style={styles.viewButton as React.CSSProperties}
                 /> */}
             </Box>
-             <Typography  variant='h6'>
+             <Typography  variant='h6' sx={{
+              maxWidth: '9rem',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+             }}>
               {file.fileName.split('-')[0]}
             </Typography>
           </Box>
@@ -276,16 +280,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
               inputProps={{
                 'aria-label': 'Quantity',
               }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  height: '2.5rem',
-                  borderRadius: '4px',
-                  width: '4rem',
-                },
-                 "& .MuiOutlinedInput-input": {
-                    padding: '0.5rem 0.75rem',
-                  }
-              }}
+              inputStyle={1}
               />
               <CustomButton
                 children={<Plus color='#ffff' size={20} />}

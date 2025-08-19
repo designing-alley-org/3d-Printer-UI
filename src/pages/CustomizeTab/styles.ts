@@ -36,10 +36,9 @@ export const Files = styled.article<{ isLoading: boolean }>`
   pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
   opacity: ${props => (props.isLoading ? 0.6 : 1)};
   width: 35%;
-  border-right: 1px solid #66A3FF;
-  background: #F1F6FE;
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
+  background: #05123B;
+  border-top-left-radius: 23px;
+  border-bottom-left-radius: 23px;
 
   padding: 4px;
   margin-right: 20px;
@@ -48,13 +47,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
   .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-
-    .file {
-      font-size: 1.1rem;
-      color: #0047ff;
-      margin: 0 1rem;
-    }
+    padding: 0 1rem;
 
     .count {
       width: 2rem;
@@ -114,15 +107,17 @@ export const Files = styled.article<{ isLoading: boolean }>`
 export const UploadedFile = styled.section`
   display: flex;
   padding: 0 1rem;
+  
   flex-direction: column;
   .upload-file {
     height: 6rem;
     display: flex;
     cursor: pointer;
+    background: transparent;
     position: relative;
-    background: #dde9fc;
     border-radius: 13px;
     margin: 12px 1px;
+    border: 1px solid #FFFFFF
     &:hover {
       transform: scale(1.01);
       box-shadow: 0px 0px 4.8px 0px #66a3ff;
@@ -141,6 +136,8 @@ export const Model = styled.section`
   align-items: center;
   position: relative;
   border-radius: 20px;
+  border: 1px solid #F6F6F6;
+  box-shadow: 0px 4px 4px 0px #CDE1FF;
   background: #ffffff;
   width: 6rem;
   height: 5rem;
@@ -192,30 +189,19 @@ export const Model = styled.section`
   }
 `;
 
-export const ModelName = styled.section`
+export const ModelName = styled.section<{ isActive: boolean }>`
   display: flex;
   justify-content: center;
   margin-top: 0.8rem;
   margin-left: 0.4rem;
-  color: #0a2248;
+  color: ${props => props.isActive ? '#0a2248' : '#ffffff'};
   font-size: 1rem;
-  &::after {
-    content: 'Customization';
-    font-size: 0.8rem;
-    position: absolute;
-    bottom: 0.7rem;
-    left: 7.4rem;
-  }
+  font-weight: ${props => props.isActive ? 'bold' : 'normal'};
 
   @media (max-width: 768px) {
     margin-top: 0.4rem;
     margin-left: 0.2rem;
     font-size: 0.8rem;
-    &::after {
-      font-size: 0.5rem;
-      bottom: 0.4rem;
-      left: 5rem;
-    }
   }
 `;
 
@@ -223,10 +209,8 @@ export const CustomizeBox = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: red;
   border-radius: 37px;
   position: absolute;
-  background: #ffffff;
   bottom: 0.6rem;
   right: 0.4rem;
   height: 2rem;
@@ -274,7 +258,6 @@ export const Customize = styled.article`
       align-items: center;
       font-size: 20px;
       font-weight: 400;
-      color: #525e86;
       img {
         margin-right: 0.6rem;
       }
@@ -283,9 +266,7 @@ export const Customize = styled.article`
   .weight-section {
     display: flex;
     justify-content: space-between;
-    color: #1e6fff;
     font-size: 1rem;
-    border-top: 1px solid #1e6fff;
     margin-bottom: 0.5rem;
   }
 

@@ -118,8 +118,8 @@ const ShippingDetails = () => {
   return (
     <StepLayout
       stepNumber={4}
-      stepText='Shipping Details'
-      stepDescription="Please Select Your Delivery Address. If you don't have an address, create a new one."
+      stepText='Checkout'
+      stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={() =>  navigate(`/get-quotes/${orderId}/checkout/select-delivery`)}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/quote`)}
@@ -163,7 +163,16 @@ const ShippingDetails = () => {
               key={index} 
               className="address-card" 
               onClick={() => dispatch(setAddressId(address._id))}
-            >
+            >   
+              <span className='address'>
+                <Typography variant={isSmallScreen ? 'body1' : 'h6'} color='text.dark'>{address.personName}</Typography>
+                <Typography variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.phoneNumber}</Typography>
+                <Typography  variant='body2'sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>
+                  {address.city}, {address.countryCode}, {address.postalCode}
+                </Typography>
+                <Typography  variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.state}</Typography>
+                <Typography  variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.streetLines}</Typography>
+              </span>
               <div className="radio-btn">
                 <input
                   type="radio"
@@ -173,15 +182,6 @@ const ShippingDetails = () => {
                   onChange={(e) => dispatch(setAddressId(e.target.value))}
                 />
               </div>
-              <span className='address'>
-                <Typography variant={isSmallScreen ? 'body1' : 'h6'}>{address.personName}</Typography>
-                <Typography variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.phoneNumber}</Typography>
-                <Typography  variant='body2'sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>
-                  {address.city}, {address.countryCode}, {address.postalCode}
-                </Typography>
-                <Typography  variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.state}</Typography>
-                <Typography  variant='body2' sx={{ fontSize: isSmallScreen ? '0.6rem' : ''}}>{address.streetLines}</Typography>
-              </span>
             </div>
           ))}
         </div>

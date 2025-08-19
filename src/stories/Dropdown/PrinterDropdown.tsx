@@ -10,6 +10,7 @@ import {
   Radio,
 } from '@mui/material';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import CustomButton from '../button/CustomButton';
 
 export interface PrinterOption {
   id: string;
@@ -88,7 +89,7 @@ const PrinterDropdown: React.FC<PrinterDropdownProps> = ({
         sx={{
           borderRadius: '10px',
           padding: '4px 12px',
-          borderColor: error ? 'error.main' : ' #66A3FF',
+          borderColor: error ? 'error.main' : ' #E4E4E4',
           color: error ? 'error.main' : 'black',
           fontWeight: 400,
           width: '100%',
@@ -99,7 +100,7 @@ const PrinterDropdown: React.FC<PrinterDropdownProps> = ({
           alignItems: 'center',
           gap: 1,
           '&:hover': {
-            borderColor: error ? 'error.main' : '#88A2F0',
+            borderColor: error ? 'error.main' : 'text.secondary',
           },
         }}
       >
@@ -161,9 +162,9 @@ const PrinterDropdown: React.FC<PrinterDropdownProps> = ({
           </MenuItem>
         ))}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-          <Button onClick={handleConfirm} variant="contained">
+          <CustomButton onClick={handleConfirm} variant="contained" borderRadius={'4px'}>
             Confirm
-          </Button>
+          </CustomButton>
         </Box>
       </Menu>
     </Box>

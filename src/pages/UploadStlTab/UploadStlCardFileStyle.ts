@@ -22,7 +22,13 @@ export const fileNumber: SxProps = {
 };
 
 export const errorText: SxProps = { color: 'red' };
-export const viewBox: SxProps = { display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' };
+export const viewBox: SxProps = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+};
 
 export const viewContent: SxProps = {
   width: '7rem',
