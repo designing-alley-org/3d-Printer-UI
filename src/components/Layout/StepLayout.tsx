@@ -81,7 +81,7 @@ const StepLayout = ({
 
       <Box
         sx={{
-          padding: '1rem',
+          padding: { xs: '0rem', md: '1rem 0.5rem' },
           minHeight: '4rem',
           opacity: isLoading ? 0.5 : 1,
           pointerEvents: isLoading ? 'none' : 'auto',
