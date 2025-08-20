@@ -87,7 +87,7 @@ export default function Quote({ selectOrderIdProps: selectOrderIdProps }: any) {
       >
         <Typography
           sx={{ color: '#0C2850' }}
-          variant={isSmallScreen ? 'body2' : 'h1'}
+          variant={isSmallScreen ? 'body2' : 'h5'}
         >
           Connecting For {selectOrderIdProps ? 'Dispute' : 'Quote'}
         </Typography>
