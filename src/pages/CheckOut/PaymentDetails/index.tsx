@@ -19,6 +19,7 @@ import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import toast from 'react-hot-toast';
 import MUIButton from '../../../stories/MUIButton/Button';
 import api from '../../../axiosConfig';
+import CustomButton from '../../../stories/button/CustomButton';
 
 // Types
 interface QuoteProps {
@@ -134,9 +135,9 @@ const PaymentDetails: React.FC = () => {
 
   return (
     <StepLayout
-      stepNumber={6}
-      stepText="Payment Details"
-      stepDescription="Please check the details to proceed for payment"
+      stepNumber={4}
+      stepText="Order Summary"
+      stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={handlePayment}
       orderId={orderId}
       onClickBack={() =>
@@ -159,11 +160,10 @@ const PaymentDetails: React.FC = () => {
         <Paper
         elevation={0}
         sx={{
-          p: 2,
-          borderRadius: 2,
-          border: '1px solid',
-          borderColor: 'primary.main',
-          height: '20rem ',
+          padding: '2rem 1.5rem',
+          backgroundColor: 'transparent',
+          borderRadius: '24px',
+          border: '1px solid #C5C5C5',
         }}
       >
         <Box
@@ -181,7 +181,7 @@ const PaymentDetails: React.FC = () => {
           <Box
             sx={{
               borderRight: { md: '1px solid' },
-              borderColor: { md: 'primary.main' },
+              borderColor: { md: '#C5C5C5' },
               pr: { md: 2 },
             }}
           >
@@ -190,17 +190,15 @@ const PaymentDetails: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                mb: 1,
               }}
             >
-              <Typography variant="h6">Files</Typography>
-              <Chip label={quoteData.files.length} color="primary" />
+              <Typography variant="h6">Files Ordered</Typography>
             </Box>
             <List dense>
               {quoteData.files.map((file, index) => (
                 <ListItem key={file.fileId || index} disableGutters>
                   <ListItemIcon sx={{ minWidth: 'auto', mr: 1.5 }}>
-                    <Chip label={index + 1} size="small" />
+                    <Chip label={`${index + 1}.`} size="small" sx={{background: 'transparent'}} />
                   </ListItemIcon>
                   <ListItemText
                     primary={file.fileName.split('-')[0]}
@@ -218,7 +216,7 @@ const PaymentDetails: React.FC = () => {
           <Box
             sx={{
               borderRight: { md: '1px solid' },
-              borderColor: { md: 'primary.main' },
+              borderColor: { md: '#C5C5C5' },
               pr: { md: 2 },
               display: 'flex',
               flexDirection: 'column',
@@ -226,7 +224,7 @@ const PaymentDetails: React.FC = () => {
             }}
           >
             <Typography variant="h6" gutterBottom>
-              Shipping Address
+             Shipping & Delivery
             </Typography>
             {selectedAddress && (
               <Box
@@ -249,26 +247,14 @@ const PaymentDetails: React.FC = () => {
                   </Typography>
                 </Box>
 
-                <MUIButton
-                  icon={<Edit2 size={12} />}
-                  label="Edit"
+                <CustomButton
+                  children={<><Typography mr={1}>Edit</Typography><Edit2 size={12} /> </>}
                   onClick={() => navigate(`/get-quotes/${orderId}/checkout`)}
                   size="small"
-                  style={{
-                    color: '#000000ff',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    boxShadow: 'none',
-                  }}
                 />
               </Box>
             )}
             <Box>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h6" gutterBottom>
-                Delivery Details
-              </Typography>
-              <Box>
                 <Typography variant="body2" color="text.secondary">
                   <Typography
                     component="span"
@@ -279,7 +265,6 @@ const PaymentDetails: React.FC = () => {
                   </Typography>{' '}
                   {selectedServiceType}
                 </Typography>
-              </Box>
             </Box>
           </Box>
 
@@ -340,7 +325,6 @@ const PaymentDetails: React.FC = () => {
                 </Box>
               </Box>
             </Box>
-            <Divider sx={{ mt: 10, mb: 4 }} />
               <Box
                 sx={{
                   display: 'flex',

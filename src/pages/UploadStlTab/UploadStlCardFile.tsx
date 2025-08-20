@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Typography,  CircularProgress,  Card } from '@mui/material';
+import { Box, Typography,  CircularProgress,  Card, CardActions, IconButton } from '@mui/material';
 import ViewModelStl from '../../components/ViewStlFile/index';
 import * as styles from './UploadStlCardFileStyle';
 import ViewerStlModel from './ViewerStlModel';
@@ -7,6 +7,8 @@ import { getFile } from '../../utils/indexedDB';
 import {  Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
+
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -195,7 +197,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     return (
       <>
-        <Card  sx={{borderRadius: '1rem' , padding: 2 , minWidth: {xs: 300, sm: 400, md: 350}, display: 'flex', flexDirection: 'column', gap: 2}}>
+        <Card  sx={{borderRadius: '1rem' , padding: 2 , display: 'flex', flexDirection: 'column', gap: '1rem'}}>
           {/* STL Viewer Section */}
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
@@ -212,14 +214,6 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                   Error loading file preview
                 </Typography>
               )}
-             
-              {/* <MUIButton
-                btnVariant='icon-rounded'
-                icon={<BoxIcon color='#ffffff' strokeWidth={1} />}
-                onClick={handleViewerOpen}
-                aria-label="Open 3D viewer"
-                style={styles.viewButton as React.CSSProperties}
-                /> */}
             </Box>
              <Typography  variant='h6' sx={{
               maxWidth: '9rem',
@@ -260,7 +254,14 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
             </Box>
           
           {/* Quantity Control Section */}
-            <Box display='flex' alignItems='center' gap='0.5rem'>
+          
+          </Box>
+             <CardActions sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '0.5rem'
+             }}>
+                <Box display='flex' alignItems='center' gap='0.5rem'>
               <CustomButton
                children={<Minus color='#ffff' size={20}/>}
                 onClick={() => handleQuantityChange('decrease')}
@@ -294,19 +295,13 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 }}
               />
             </Box>
-          </Box>
-              {/* <MUIButton
-                icon={<X size={30} strokeWidth={1} />}
-                onClick={handleRemove}
-                aria-label="Remove file"
-                size='small'
-                btnVariant='icon-rounded'
-                style={{
-                  backgroundColor: 'transparent',
-                  boxShadow: 'none',
-                  border: 'none'
-                }}
-              /> */}
+               <IconButton
+                 aria-label="Remove file"
+                 onClick={handleRemove}
+               >
+                 <DeleteOutlineRoundedIcon  />
+               </IconButton>
+             </CardActions>
         </Card>
 
         {/* 3D Viewer Modal */}
