@@ -1,67 +1,7 @@
 import styled from 'styled-components';
 
-export const ProfileWrapper = styled.main`
-  width: 100%;
-  min-height: 40rem;
-  h1 {
-    color: black !important;
-    margin: unset;
-    padding-bottom: 1rem;
-    font-size: 1.4rem;
-  }
-  .prof {
-    border-bottom: 1px solid #1e6fff;
-  }
-  .placed {
-    margin: 2rem 0rem;
-  }
 
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-  }
 
-  @media (max-width: 768px) {
-    min-height: 30rem;
-    h1 {
-      padding-bottom: 0.5rem;
-      font-size: 1rem;
-    }
-  }
-`;
-export const MainWrap = styled.section`
-  p {
-    margin: unset;
-    color: #2359b0;
-    margin-top: 2rem;
-  }
-
-  .input {
-    background: #e6f0ff;
-    border: 1px solid #0066ff47;
-    color: black;
-    margin-top: 1rem;
-    padding: 0.7rem;
-    width: 50%;
-    border-radius: 2rem;
-    box-shadow: 0px 0px 4px 0px #66a3ff inset;
-  }
-  .input-disabled {
-    background: transparent;
-  }
-
-  @media (max-width: 768px) {
-    p {
-      font-size: 0.8rem;
-    }
-    .input {
-      margin-top: 0.4rem;
-      width: 100%;
-      height: 2.5rem;
-    }
-  }
-`;
 
 
 
