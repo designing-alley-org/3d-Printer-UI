@@ -7,7 +7,7 @@ import PhoneInput from '../../components/Account/PhoneNumber';
 import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
-import { Avatar, Box, Card, CardActions, CardContent, Chip, Container, Divider, Radio, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Avatar, Box, Card, CardActions, CardContent, Chip, CircularProgress, Container, Divider, Radio, Stack, Typography, useMediaQuery } from '@mui/material';
 import MUIButton from '../../stories/MUIButton/Button';
 import { EditIcon, LogOut } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
@@ -21,6 +21,7 @@ const MyProfile = () => {
   const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
   const dispatch = useDispatch();
   const [allAddresses, setAllAddresses] = useState([]);
+  const [addressLoading, setAddressLoading] = useState(true);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
   
 
@@ -30,7 +31,7 @@ const MyProfile = () => {
 
   useEffect(() => {
    const fetchAddresses = async () => {
-     const response = await getAddress();
+     const response = await getAddress({setAddressLoading});
      console.log('Fetched addresses:', response.data.data);
      setAllAddresses(response.data.data);
    };
@@ -123,22 +124,22 @@ const MyProfile = () => {
     // </>
     <Container sx={{ p: { xs: 2, sm: 3, md: 0 }}}>
       <Card sx={{ padding: 0, borderRadius: '8px', bgcolor: 'background.paper', display: 'flex', justifyContent: 'space-between' }}>
-        <CardContent sx={{display: 'flex', gap:2}}>
+        <CardContent sx={{display: 'flex', gap:2, flexDirection: { xs: 'column', sm: 'row' }}}>
           <Box>
            <Avatar alt={formData.name} src={formData.avatar} />
           </Box>
           <Box>
-            <Typography variant="h6">Welcome {formData.name}</Typography>
+            <Typography variant="h6" fontSize={{ xs: '1rem', sm: '1.5rem' }}>Welcome {formData.name}</Typography>
             <Typography variant="body1">Email: {formData.email}</Typography>
             <Typography variant="body1">Phone:  {formData.phone_no}</Typography>
           </Box>
         </CardContent>
-        <CardActions>
+        <CardActions >
          <CustomButton
            children={
             <>
               <EditIcon  size={15} style={{ marginRight: '4px' }} />
-              Edit Profile
+              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Profile</Typography>
             </>
            }
            onClick={()=>{}}
@@ -149,13 +150,18 @@ const MyProfile = () => {
        Address
       </Typography>
 
-        <Box>
+      <Box maxHeight={isSmallScreen ? "300px" : "400px"} overflow="auto">
       {allAddresses.length === 0 ? (
-        <>
-          <Typography variant="body2" color="text.secondary">
-            No addresses found.
-          </Typography>
-        </>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          {
+            addressLoading ?
+             <CircularProgress size={24} /> 
+             :
+              <Typography variant="body2" color="text.secondary">
+                No addresses found.
+              </Typography>
+          }
+        </Box>
       ) : (
         allAddresses.map((address: any, index: number) => (
           <Stack

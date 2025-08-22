@@ -1,6 +1,10 @@
 import { getAddressService } from "../../services/address";
 
-const getAddress = async () => {
+interface Props{
+   setAddressLoading: (loading: boolean) => void;
+}
+
+const getAddress = async ({setAddressLoading}: Props) => {
    try {
     const response = await getAddressService();
     return response;
@@ -8,6 +12,8 @@ const getAddress = async () => {
    } catch (error) {
     console.error('Error fetching address:', error);
     throw error;
+   } finally {
+      setAddressLoading(false);
    }
 };
 
