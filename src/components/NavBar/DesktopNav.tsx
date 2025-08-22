@@ -60,7 +60,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             display: { xs: 'none', sm: 'block' },
           }}
         >
-          3D PRINT YOUR FUTURE
+           3D Print Your Future
         </Typography>
 
         {/* Navigation Links */}
