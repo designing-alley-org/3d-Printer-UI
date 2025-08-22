@@ -1,18 +1,20 @@
+import { Container, Typography } from '@mui/material';
 import AccountLayout from './AccountLayout';
-import { MainWrapper } from './styles';
 
 const Account = () => {
   return (
-    <MainWrapper>
-      <h1 className="heading">MY ACCOUNT</h1>
+     <Container
+      maxWidth="lg"
+      sx={{ alignSelf: 'start', p: { xs: 2, sm: 3, md: 4 } }}
+    >
+      <Typography variant="h5" fontWeight={600} gutterBottom >
+        My Account
+      </Typography>
+     <Typography variant="body1">
+     Manage your profile, orders, and settings
+     </Typography>
       <AccountLayout />
-      <section className="bottom">
-        <span className="text">
-          we are dedicated to transforming your ideas into tangible realities
-          through the power of 3D printing. Our platform connects you
-        </span>
-      </section>
-    </MainWrapper>
+    </Container>
   );
 };
 
