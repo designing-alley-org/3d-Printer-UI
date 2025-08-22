@@ -1,28 +1,51 @@
-import { accTab, navtabSmallScreen } from '../../constants';
-import { AccWrapper, MainComp, SideTab } from './styles';
-import { Box, useMediaQuery } from '@mui/material';
+import { accTab } from '../../constants';
+import { Box, Tabs, Tab } from '@mui/material';
+import {
+  Person as PersonOutlinedIcon,
+  ShoppingBag as ShoppingBagIcon,
+  Warning as WarningIcon,
+  AddShoppingCart as AddShoppingCartIcon,
+  Settings as SettingsOutlinedIcon
+} from '@mui/icons-material';
+
 import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 import { useCallback } from 'react';
-import MUIButton from '../../stories/MUIButton/Button';
-import { LogOut } from 'lucide-react';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isSmallScreen = useMediaQuery('(max-width:768px)');
 
-  // Extract activeTab from the current pathname
-  const activeTab = accTab.find((tab) => location.pathname.includes(tab.path))?.id || 1;
+  // Extract activeTab from pathname
+  const activeTab =
+    accTab.find((tab) => location.pathname.includes(tab.path))?.id || 1;
+
+  // Helper function to get the appropriate icon
+  const getTabIcon = (iconName: string) => {
+    const iconProps = { sx: { mr: 1, fontSize: '20px' } };
+    switch (iconName) {
+      case 'Person':
+        return <PersonOutlinedIcon {...iconProps} />;
+      case 'ShoppingBag':
+        return <ShoppingBagIcon {...iconProps} />;
+      case 'Warning':
+        return <WarningIcon {...iconProps} />;
+      case 'AddShoppingCart':
+        return <AddShoppingCartIcon {...iconProps} />;
+      case 'Settings':
+        return <SettingsOutlinedIcon {...iconProps} />;
+      default:
+        return null;
+    }
+  };
 
   const handleLogout = useCallback(async () => {
     try {
       await toast.promise(api.get('/logout'), {
         loading: 'Logging out...',
         success: 'Logged out successfully',
-        error: 'Logout failed'
+        error: 'Logout failed',
       });
       localStorage.clear();
       window.location.href = '/login';
@@ -30,49 +53,71 @@ const AccountLayout = () => {
       toast.error('Logout failed');
       console.error('Logout failed', error);
     }
-  }, [api, toast]);
-
-  
+  }, []);
 
   const handlePath = (path: string) => {
     navigate(`${path}`);
   };
 
   return (
-    <AccWrapper>
-      <SideTab>
-        <section className="group">
-          {accTab.map((item) => (
-            <Box key={item.id} sx={{ display: 'flex', alignItems: 'center' }}>
-              <span
-                className={activeTab === item.id ? 'selected' : ''}
-                onClick={() => handlePath(item.path)}
-              >
+    <>
+      {/* Tabs for large screens */}
+
+      <Tabs
+        value={activeTab}
+        onChange={(_, newValue) => {
+          const tab = accTab.find((t) => t.id === newValue);
+          if (tab) handlePath(tab.path);
+        }}
+        sx={{
+          margin: '16px 0',
+          padding: '8px',
+          bgcolor: 'primary.main',
+          borderRadius: '8px',
+
+          '& .MuiTab-root': {
+            color: '#fff',
+            transition: 'all 0.3s ease',
+            padding: '12px 30px',
+          },
+          '& .Mui-selected': {
+            backgroundColor: '#fff !important',
+            color: '#05123B',
+            borderRadius: '8px',
+          },
+          '& .MuiTabs-indicator': {
+            display: 'none',
+          },
+        }}
+      >
+        {accTab.map((item) => (
+          <Tab
+            key={item.id}
+            label={
+              <Box display="flex" alignItems="center">
+                {getTabIcon(item.icon)}
                 {item.label}
-              </span>
-            </Box>
-          ))}
-        </section>
-        <MUIButton
-          label="Logout"
-          icon={<LogOut size={15} />}
-          btnVariant="dark"
-          onClick={handleLogout}
-          style={{ marginTop: 'auto', height: '40px', width: '60%', }}
+              </Box>
+            }
+            value={item.id}
+          />
+        ))}
+      </Tabs>
+
+      {/* Small screen tab component */}
+      {/* {isSmallScreen && (
+        <SmallScreenTab
+          activeTab={activeTab}
+          navtabSmallScreen={navtabSmallScreen}
+          data={accTab}
+          forAccount={true}
         />
-      </SideTab>
-      {isSmallScreen &&
-      <SmallScreenTab
-      activeTab={activeTab}
-      navtabSmallScreen={navtabSmallScreen}
-      data={accTab}
-      forAccount={true}
-      />
-       }
-      <MainComp>
-        <Outlet context={{ handleLogout }}/>
-      </MainComp>
-    </AccWrapper>
+      )} */}
+
+       <Box sx={{ padding: '1rem 0' }}>
+         <Outlet context={{ handleLogout }} />
+       </Box>
+    </>
   );
 };
 

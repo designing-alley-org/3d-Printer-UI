@@ -79,11 +79,11 @@ export const quoteTexts = [
 ];
 
 export const accTab = [
-  { id: 1, label: 'My Profile', path: ROUTES.MY_PROFILE },
-  { id: 2, label: 'My Orders', path: ROUTES.MY_ORDERS },
-  { id: 3, label: 'My Dispute', path: ROUTES.MY_DISPUTE },
-  { id: 4, label: 'Place Order', path: ROUTES.PLACE_ORDER },
-  { id: 5, label: 'Password', path: ROUTES.PASSWORD },
+  { id: 1, label: 'My Profile', path: ROUTES.MY_PROFILE, icon: 'Person' },
+  { id: 2, label: 'My Orders', path: ROUTES.MY_ORDERS, icon: 'ShoppingBag' },
+  { id: 3, label: 'My Dispute', path: ROUTES.MY_DISPUTE, icon: 'Warning' },
+  { id: 4, label: 'Place Order', path: ROUTES.PLACE_ORDER, icon: 'AddShoppingCart' },
+  { id: 5, label: 'Account Settings', path: ROUTES.PASSWORD, icon: 'Settings' },
 ];
 
 export const notificationTab = [

@@ -62,56 +62,9 @@ export const MainWrap = styled.section`
     }
   }
 `;
-export const AccWrapper = styled.section`
-  background: white;
-  padding: 2rem;
-  border-radius: 2rem;
-  display: flex;
-  @media (max-width: 768px) {
-    padding: 0.4rem;
-    margin-top: 2.5rem;
-    margin-left: 0rem;
-    width: 100%;
-    border-top-left-radius: 0rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-`;
-export const SideTab = styled.section`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 20%;
-  span {
-    padding: 1.3rem;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  .selected {
-    color: #0066ff;
-  }
-  .group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-export const MainComp = styled.section`
-  border: 1px solid #dde9fc;
-  width: 80%;
-  padding: 2rem;
-  border-radius: 2rem;
-  min-height: 30rem;
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 0 0.5rem;
-    border: none;
-  }
-`;
+
+
+
 export const MainWrapper = styled.main`
   margin: 0rem;
   .heading {
@@ -503,98 +456,6 @@ export const OrderWrapper = styled.main`
     min-height: 10rem !important;
     h1 {
       font-size: 1rem;
-    }
-  }
-`;
-export const PasswordWrapper = styled.main`
-  min-height: 40rem;
-  position: relative;
-  h1 {
-    color: black !important;
-    margin: unset;
-    padding-bottom: 1rem;
-    font-size: 1.2rem;
-  }
-
-  .header {
-    border-bottom: 1px solid #1e6fff;
-  }
-
-  .main {
-    margin-top: 2rem;
-    display: flex;
-
-    .form {
-      width: 60%;
-      display: flex;
-      .form-inputs {
-        width: 70%;
-      }
-    }
-
-    .error {
-      color: red;
-      font-size: 0.7rem;
-      margin: 0rem;
-      padding: 0rem;
-    }
-
-    .label {
-      color: #2359b0;
-    }
-
-    .form-inputs {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-
-      input {
-        background: #e6f0ff;
-        border: 1px solid #0066ff47;
-        color: black;
-        height: 2.5rem;
-        font-size: 0.8rem;
-        padding: 1rem;
-        width: 90%;
-        border-radius: 2rem;
-        box-shadow: 0px 0px 4px 0px #66a3ff inset;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    min-height: 20rem !important;
-    h1 {
-      font-size: 1rem;
-    }
-
-    .main {
-    margin-top: 1rem;
-    display: flex;
-
-    .form {
-    display: flex;
-    flex-direction: column;
-      width: 100%;
-      .form-inputs {
-        width: 100%;
-      }
-    }
-     .button-wrapper {
-      position: relative;
-      .button-save {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        width: 8rem;
-        height: 2rem;
-        left: 6rem;
-        bottom: -4rem;
-        &:hover {
-          background: #0047ff;
-        }
-      }
     }
   }
 `;
