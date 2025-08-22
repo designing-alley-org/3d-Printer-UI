@@ -8,14 +8,14 @@ import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 import { Avatar, Box, Card, CardActions, CardContent, Chip, CircularProgress, Container, Divider, Radio, Stack, Typography, useMediaQuery } from '@mui/material';
-import MUIButton from '../../stories/MUIButton/Button';
 import { EditIcon, LogOut } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import { getAddress } from '../../store/actions/getAddress';
 
 const MyProfile = () => {
   const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
-  const user = useSelector((state: any) => state.user);  
+  const user = useSelector((state: any) => state.user);
+  const [defaultAddress, setDefaultAddress] = useState<string | null>(useSelector((state: any) => state.user.defaultAddress));
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(user.user);  
   const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
