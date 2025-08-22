@@ -89,7 +89,6 @@ const ShippingDetails = () => {
   };
 
   const handleSubmitAddress = async (values: any, { resetForm }: any) => {
-    console.log('Form submission triggered with values:', values);
     try {
       const cleanedValues = {
         ...values,

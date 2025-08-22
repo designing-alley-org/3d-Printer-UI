@@ -7,10 +7,11 @@ import PhoneInput from '../../components/Account/PhoneNumber';
 import EditableInput from '../../components/Account/EditableInput';
 import { useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
-import { Avatar, Box, Card, CardActions, CardContent, Container, Divider, Typography, useMediaQuery } from '@mui/material';
+import { Avatar, Box, Card, CardActions, CardContent, Chip, Container, Divider, Radio, Stack, Typography, useMediaQuery } from '@mui/material';
 import MUIButton from '../../stories/MUIButton/Button';
 import { EditIcon, LogOut } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
+import { getAddress } from '../../store/actions/getAddress';
 
 const MyProfile = () => {
   const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
@@ -19,12 +20,23 @@ const MyProfile = () => {
   const [formData, setFormData] = useState(user.user);  
   const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
   const dispatch = useDispatch();
+  const [allAddresses, setAllAddresses] = useState([]);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
   
 
   const handleInputChange = (field: keyof User, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  useEffect(() => {
+   const fetchAddresses = async () => {
+     const response = await getAddress();
+     console.log('Fetched addresses:', response.data.data);
+     setAllAddresses(response.data.data);
+   };
+
+   fetchAddresses();
+  }, []);
 
   const handleSave = async (field: keyof User) => {
     if (!formData[field]) {
@@ -136,6 +148,82 @@ const MyProfile = () => {
       <Typography variant="h6" sx={{ marginTop: '1rem' }}>
        Address
       </Typography>
+
+        <Box>
+      {allAddresses.length === 0 ? (
+        <>
+          <Typography variant="body2" color="text.secondary">
+            No addresses found.
+          </Typography>
+        </>
+      ) : (
+        allAddresses.map((address: any, index: number) => (
+          <Stack
+            key={index}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+            sx={{
+              border: "1px solid",
+              borderColor: "grey.300",
+              borderRadius: "0.5rem",
+              padding: 2,
+              mb: 2,
+              boxShadow: 1,
+            }}
+          >
+            <Stack spacing={0.5}>
+              <Typography
+                variant={isSmallScreen ? "body1" : "h6"}
+                color="text.primary"
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+              >
+                {address.personName}
+                {index === 0 && (
+                  <Chip
+                    label="Default Selected"
+                    size="small"
+                    sx={{
+                      borderRadius: "0.3rem",
+                      fontSize: "0.6rem",
+                      height: "1.5rem",
+                    }}
+                  />
+                )}
+              </Typography>
+
+              <Typography
+                variant="body2"
+                sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
+              >
+                {address.phoneNumber}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
+              >
+                {address.city}, {address.countryCode}, {address.postalCode}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
+              >
+                {address.streetLines}
+              </Typography>
+            </Stack>
+
+            <Radio
+              // checked={addressId === address._id}
+              // onChange={() => setAddressId(address._id)}
+              value={address._id}
+              name="address"
+              color="primary"
+            />
+          </Stack>
+        ))
+      )}
+    </Box>
     </Container>
   );
 };
