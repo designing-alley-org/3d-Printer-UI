@@ -45,19 +45,23 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            cursor: 'pointer',
           }}
+          onClick={() => navigate('/dashboard')}
         >
           <PrintOutlinedIcon
             sx={{ fontSize: '1.8rem', color: 'primary.main' }}
           />
         </Box>
         <Typography
+          onClick={() => navigate('/dashboard')}
           variant="h6"
           sx={{
             fontWeight: 700,
             color: theme.palette.primary.contrastText,
             fontSize: { xs: '1rem', md: '1.25rem' },
             display: { xs: 'none', sm: 'block' },
+            cursor: 'pointer',
           }}
         >
            3D Print Your Future

@@ -1,32 +1,54 @@
 import { useEffect, useState } from 'react';
-import { updateUser, User } from '../../store/actions/updateUser';
-import toast from 'react-hot-toast';
-import { addUserDetails } from '../../store/user/reducer';
-import { useDispatch } from 'react-redux';
-import PhoneInput from '../../components/Account/PhoneNumber';
-import EditableInput from '../../components/Account/EditableInput';
-import { useSelector } from 'react-redux';
-import { useOutletContext } from 'react-router-dom';
-import { Avatar, Box, Card, CardActions, CardContent, Chip, CircularProgress, Container, Divider, Radio, Stack, Typography, useMediaQuery } from '@mui/material';
-import { EditIcon, LogOut } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Avatar, Box, Card, CardActions, CardContent, CircularProgress, Container, Typography, useMediaQuery } from '@mui/material';
+import { EditIcon } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import { getAddress } from '../../store/actions/getAddress';
+import { updateUser, User } from '../../store/actions/updateUser';
+import { addUserDetails } from '../../store/user/reducer';
+import NoDataFound from '../../components/NoDataFound';
+import ListAddress from '../../components/ListAddress/ListAddress';
+import EditProfileModal from '../../components/Model/EditProfileModal';
+import toast from 'react-hot-toast';
 
 const MyProfile = () => {
-  const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
   const user = useSelector((state: any) => state.user);
-  const [defaultAddress, setDefaultAddress] = useState<string | null>(useSelector((state: any) => state.user.defaultAddress));
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState(user.user);  
-  const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
   const dispatch = useDispatch();
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.defaultAddress));
   const [allAddresses, setAllAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
-  
 
-  const handleInputChange = (field: keyof User, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleAddressSelect = (addressId: string) => {
+    setSelectedAddressId(addressId);
+  };
+
+  const handleEditProfile = () => {
+    setEditModalOpen(true);
+  };
+
+  const handleSaveProfile = async (updatedUser: User) => {
+    try {
+      setSaveLoading(true);
+      
+      const res = await toast.promise(
+        updateUser(updatedUser),
+        {
+          loading: 'Updating profile...',
+          success: 'Profile updated successfully',
+          error: 'Failed to update profile'
+        }
+      );
+      
+      dispatch(addUserDetails(res.data.data));
+      setEditModalOpen(false);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Error updating profile');
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -38,42 +60,6 @@ const MyProfile = () => {
 
    fetchAddresses();
   }, []);
-
-  const handleSave = async (field: keyof User) => {
-    if (!formData[field]) {
-      toast.error(`${field.charAt(0).toUpperCase() + field.slice(1)} cannot be empty`);
-      return;
-    }
-    
-    try {
-      setIsLoading(true);
-      
-      // Special case for phone_no to include extension
-      const updateData = field === 'phone_no' 
-        ? { phone_no: formData.phone_no, phone_ext: formData.phone_ext }
-        : { [field]: formData[field] };
-
-      const res = await toast.promise(
-        updateUser(updateData),
-        {
-          loading: 'Updating...',
-          success: `${field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')} updated successfully`,
-          error: 'Failed to update profile'
-        },
-      );
-      
-      dispatch(addUserDetails(res.data.data));
-      setEditState(prev => ({ ...prev, [field]: false }));
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Error updating profile');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    setFormData(user.user);
-  }, [user.user]);
 
   return (
     // <>
@@ -126,12 +112,12 @@ const MyProfile = () => {
       <Card sx={{ padding: 0, borderRadius: '8px', bgcolor: 'background.paper', display: 'flex', justifyContent: 'space-between' }}>
         <CardContent sx={{display: 'flex', gap:2, flexDirection: { xs: 'column', sm: 'row' }}}>
           <Box>
-           <Avatar alt={formData.name} src={formData.avatar} />
+           <Avatar alt={user.user.name} src={user.user.avatar} />
           </Box>
           <Box>
-            <Typography variant="h6" fontSize={{ xs: '1rem', sm: '1.5rem' }}>Welcome {formData.name}</Typography>
-            <Typography variant="body1">Email: {formData.email}</Typography>
-            <Typography variant="body1">Phone:  {formData.phone_no}</Typography>
+            <Typography variant="h6" fontSize={{ xs: '1rem', sm: '1.5rem' }}>Welcome {user.user.name}</Typography>
+            <Typography variant="body1">Email: {user.user.email}</Typography>
+            <Typography variant="body1">Phone:  {user.user.phone_no}</Typography>
           </Box>
         </CardContent>
         <CardActions >
@@ -142,7 +128,7 @@ const MyProfile = () => {
               <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Profile</Typography>
             </>
            }
-           onClick={()=>{}}
+           onClick={handleEditProfile}
          />
         </CardActions>
       </Card>
@@ -157,79 +143,32 @@ const MyProfile = () => {
             addressLoading ?
              <CircularProgress size={24} /> 
              :
-              <Typography variant="body2" color="text.secondary">
-                No addresses found.
-              </Typography>
+              <NoDataFound  text="No addresses found."  description='Currently, there are no addresses available.'/>
           }
         </Box>
       ) : (
         allAddresses.map((address: any, index: number) => (
-          <Stack
-            key={index}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={2}
-            sx={{
-              border: "1px solid",
-              borderColor: "grey.300",
-              borderRadius: "0.5rem",
-              padding: 2,
-              mb: 2,
-              boxShadow: 1,
-            }}
-          >
-            <Stack spacing={0.5}>
-              <Typography
-                variant={isSmallScreen ? "body1" : "h6"}
-                color="text.primary"
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                {address.personName}
-                {index === 0 && (
-                  <Chip
-                    label="Default Selected"
-                    size="small"
-                    sx={{
-                      borderRadius: "0.3rem",
-                      fontSize: "0.6rem",
-                      height: "1.5rem",
-                    }}
-                  />
-                )}
-              </Typography>
-
-              <Typography
-                variant="body2"
-                sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
-              >
-                {address.phoneNumber}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
-              >
-                {address.city}, {address.countryCode}, {address.postalCode}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
-              >
-                {address.streetLines}
-              </Typography>
-            </Stack>
-
-            <Radio
-              // checked={addressId === address._id}
-              // onChange={() => setAddressId(address._id)}
-              value={address._id}
-              name="address"
-              color="primary"
-            />
-          </Stack>
+          <ListAddress
+            key={address._id}
+            address={address}
+            index={index}
+            selectedAddressId={selectedAddressId || undefined}
+            onAddressSelect={handleAddressSelect}
+            showRadio={true}
+            showEdit={false}
+          />
         ))
       )}
     </Box>
+
+    {/* Edit Profile Modal */}
+    <EditProfileModal
+      open={editModalOpen}
+      onClose={() => setEditModalOpen(false)}
+      user={user.user}
+      onSave={handleSaveProfile}
+      loading={saveLoading}
+    />
     </Container>
   );
 };
