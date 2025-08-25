@@ -72,10 +72,16 @@ const DesktopNav = ({ activeTabs }: ITab) => {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: { xs: 1, md: 2 },
+            gap: { xs: 1 },
             ml: 'auto',
           }}
         >
+
+          {/* Notification Section */}
+          <Box sx={{ mx: { xs: 1, md: 2 } }}>
+            <NotificationBox />
+          </Box>
+
           {DesktoptabData.map((item) => (
             <NavButton
               key={item.id}
@@ -90,23 +96,6 @@ const DesktopNav = ({ activeTabs }: ITab) => {
               {item.label}
             </NavButton>
           ))}
-
-          {/* Notification Section */}
-          <Box sx={{ mx: { xs: 1, md: 2 } }}>
-            <NotificationBox />
-          </Box>
-
-          {/* Account Section */}
-          <NavButton
-            active={activeTabs === 3}
-            onClick={() => navigate('/account')}
-            sx={{
-              fontSize: { xs: '0.7rem', md: '0.775rem', lg: '0.875rem' },
-              px: { xs: 1, md: 2, lg: 3 },
-            }}
-          >
-            ACCOUNT
-          </NavButton>
         </Box>
 
         {/* Mobile Menu Button (if needed for future mobile nav) */}

@@ -58,7 +58,7 @@ const WelcomePage = () => {
             variant="h5"
             sx={{
               color: theme.palette.customColors.primaryDark,
-              fontWeight: 600,
+              fontWeight: 500,
               mb: 3,
               fontSize: { xs: '1.25rem', sm: '1.5rem' },
             }}
@@ -71,7 +71,7 @@ const WelcomePage = () => {
             variant="body1"
             sx={{
               color: theme.palette.text.secondary,
-              maxWidth: 600,
+              maxWidth: 700,
               mx: 'auto',
               mb: 4,
               lineHeight: 1.6,
@@ -94,7 +94,8 @@ const WelcomePage = () => {
                   orientation="vertical"
                   flexItem
                   sx={{
-                    borderColor: theme.palette.divider,
+                    borderColor: 'primary.main',
+
                   }}
                 />
               ) : null

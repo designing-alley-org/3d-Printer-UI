@@ -113,20 +113,17 @@ const DashboardPage = () => {
                 height: '100%',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease-in-out',
-                backgroundColor: card.isPrimary
-                  ? theme.palette.customColors.primaryDark
-                  : theme.palette.background.paper,
-                color: card.isPrimary
-                  ? theme.palette.customColors.primaryLight
-                  : theme.palette.text.primary,
-                boxShadow: card.isPrimary
-                  ? '0px 8px 24px rgba(6, 11, 53, 0.3)'
-                  : '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                backgroundColor:  theme.palette.background.paper,
+                color:  theme.palette.text.primary,
+                boxShadow:  '0px 4px 12px rgba(0, 0, 0, 0.1)',
                 '&:hover': {
                   transform: 'translateY(-4px)',
-                  boxShadow: card.isPrimary
-                    ? '0px 12px 32px rgba(6, 11, 53, 0.4)'
-                    : '0px 8px 24px rgba(0, 0, 0, 0.15)',
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.primary.contrastText,
+                  boxShadow: '0px 8px 20px rgba(6, 11, 53, 0.3)',
+                  '& .MuiSvgIcon-root': {
+                    color: theme.palette.primary.contrastText,
+                  },
                 },
                 overflow: 'hidden',
               }}
@@ -142,9 +139,6 @@ const DashboardPage = () => {
                 <Box
                   sx={{
                     mb: 3,
-                    color: card.isPrimary
-                      ? theme.palette.customColors.primaryLight
-                      : theme.palette.customColors.primaryDark,
                     opacity: card.isPrimary ? 1 : 0.8,
                   }}
                 >
@@ -166,10 +160,6 @@ const DashboardPage = () => {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: card.isPrimary
-                      ? theme.palette.customColors.lightTextOverDark
-                      : theme.palette.text.secondary,
-                    lineHeight: 1.5,
                     fontSize: { xs: '0.8rem', sm: '1rem' },
                   }}
                 >
