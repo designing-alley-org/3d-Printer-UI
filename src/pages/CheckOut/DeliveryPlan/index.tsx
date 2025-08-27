@@ -12,11 +12,10 @@ import {
   selectDeliveryPlan,
 } from '../../../store/Address/deliveryDetails';
 import toast from 'react-hot-toast';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import MUIButton from '../../../stories/MUIButton/Button';
 import StepLayout from '../../../components/Layout/StepLayout';
+import CustomButton from '../../../stories/button/CustomButton';
+// Icon
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 // Types
 export interface Rate {
   serviceName: string;
@@ -186,14 +185,15 @@ const DeliveryPlan: React.FC = () => {
       isDisabled={selectedPlanIndex === -1 || isLoading}
     >
       {error ? (
-        <Box sx={{ padding: '2rem', textAlign: 'center', border: '1px solid #C5C5C5', borderRadius: '1.3rem' }}>
+        <Box sx={{ padding: '2rem', textAlign: 'center' }}>
           <Typography color="error" variant="h6">
             {error}
           </Typography>
-          <MUIButton
-            label="Try Again"
+          <CustomButton
+            children="Try Again"
             onClick={() => window.location.reload()}
-            style={{ marginTop: '1rem' }}
+            style={{ marginTop: '1rem', borderRadius: '4px' }}
+            variant='contained'
           />
         </Box>
       ) : (
@@ -203,11 +203,18 @@ const DeliveryPlan: React.FC = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             border: '1px solid #C5C5C5',
+            backgroundColor: '#FFFFFF',
             gap: '16px',
             borderRadius: { xs: '0.5rem', md: '1rem' },
             padding: '1rem',
           }}
         >
+           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
+          <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1}>
+           <LocationOnIcon fontSize="small" />
+          Select Delivery Plan
+          </Typography>
+        </Box>
           {deliveryOptions.map((plan, index) => (
             <Card
               key={index}

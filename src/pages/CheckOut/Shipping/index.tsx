@@ -44,7 +44,7 @@ const ShippingDetails = () => {
     const fetchAddress = async () => {
       if (!isCreateAddress) {
         try {
-          const response = await getAddress();
+          const response = await getAddress({ setAddressLoading: setIsPageLoading });
 
           if (response?.data?.data) {
             dispatch(addAddress(response.data.data));
@@ -57,9 +57,10 @@ const ShippingDetails = () => {
           // if (error?.response?.data?.message) {
           //   toast.info(error?.response?.data?.message);
           // }
-        } finally {
           setIsPageLoading(false);
         }
+      } else {
+        setIsPageLoading(false);
       }
     };
     fetchAddress();
@@ -89,7 +90,6 @@ const ShippingDetails = () => {
   };
 
   const handleSubmitAddress = async (values: any, { resetForm }: any) => {
-    console.log('Form submission triggered with values:', values);
     try {
       const cleanedValues = {
         ...values,
@@ -116,7 +116,7 @@ const ShippingDetails = () => {
       resetForm();
 
       // Refresh address list
-      const response = await getAddress();
+      const response = await getAddress({ setAddressLoading: () => {} });
       if (response?.data?.data) {
         dispatch(addAddress(response.data.data));
       }

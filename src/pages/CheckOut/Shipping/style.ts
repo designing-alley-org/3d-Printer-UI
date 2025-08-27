@@ -23,6 +23,7 @@ export const Wrapper = styled.section`
   border: 1px solid #C5C5C5;
   padding: 1rem !important;
   border-radius: 1.3rem;
+  background-color: #FFFFFF;
 
   @media (max-width: 600px) {
     border-radius: 0.5rem;

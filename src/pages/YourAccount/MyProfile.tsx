@@ -1,66 +1,65 @@
 import { useEffect, useState } from 'react';
-import { updateUser, User } from '../../store/actions/updateUser';
-import toast from 'react-hot-toast';
-import { addUserDetails } from '../../store/user/reducer';
-import { useDispatch } from 'react-redux';
-import PhoneInput from '../../components/Account/PhoneNumber';
-import EditableInput from '../../components/Account/EditableInput';
-import { useSelector } from 'react-redux';
-import { useOutletContext } from 'react-router-dom';
-import { Avatar, Box, Card, CardActions, CardContent, Container, Divider, Typography, useMediaQuery } from '@mui/material';
-import MUIButton from '../../stories/MUIButton/Button';
-import { EditIcon, LogOut } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Avatar, Box, Card, CardActions, CardContent, CircularProgress, Container, Typography, useMediaQuery } from '@mui/material';
+import { EditIcon } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
+import { getAddress } from '../../store/actions/getAddress';
+import { updateUser, User } from '../../store/actions/updateUser';
+import { addUserDetails } from '../../store/user/reducer';
+import NoDataFound from '../../components/NoDataFound';
+import ListAddress from '../../components/ListAddress/ListAddress';
+import EditProfileModal from '../../components/Model/EditProfileModal';
+import toast from 'react-hot-toast';
 
 const MyProfile = () => {
-  const { handleLogout = () => {} } = useOutletContext() as { handleLogout: () => void };
-  const user = useSelector((state: any) => state.user);  
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState(user.user);  
-  const [editState, setEditState] = useState<{ [key in keyof User]?: boolean }>({});
+  const user = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.defaultAddress));
+  const [allAddresses, setAllAddresses] = useState([]);
+  const [addressLoading, setAddressLoading] = useState(true);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
-  
 
-  const handleInputChange = (field: keyof User, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleAddressSelect = (addressId: string) => {
+    setSelectedAddressId(addressId);
   };
 
-  const handleSave = async (field: keyof User) => {
-    if (!formData[field]) {
-      toast.error(`${field.charAt(0).toUpperCase() + field.slice(1)} cannot be empty`);
-      return;
-    }
-    
-    try {
-      setIsLoading(true);
-      
-      // Special case for phone_no to include extension
-      const updateData = field === 'phone_no' 
-        ? { phone_no: formData.phone_no, phone_ext: formData.phone_ext }
-        : { [field]: formData[field] };
+  const handleEditProfile = () => {
+    setEditModalOpen(true);
+  };
 
+  const handleSaveProfile = async (updatedUser: User) => {
+    try {
+      setSaveLoading(true);
+      
       const res = await toast.promise(
-        updateUser(updateData),
+        updateUser(updatedUser),
         {
-          loading: 'Updating...',
-          success: `${field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ')} updated successfully`,
+          loading: 'Updating profile...',
+          success: 'Profile updated successfully',
           error: 'Failed to update profile'
-        },
+        }
       );
       
       dispatch(addUserDetails(res.data.data));
-      setEditState(prev => ({ ...prev, [field]: false }));
+      setEditModalOpen(false);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error updating profile');
     } finally {
-      setIsLoading(false);
+      setSaveLoading(false);
     }
   };
 
   useEffect(() => {
-    setFormData(user.user);
-  }, [user.user]);
+   const fetchAddresses = async () => {
+     const response = await getAddress({setAddressLoading});
+     console.log('Fetched addresses:', response.data.data);
+     setAllAddresses(response.data.data);
+   };
+
+   fetchAddresses();
+  }, []);
 
   return (
     // <>
@@ -111,31 +110,65 @@ const MyProfile = () => {
     // </>
     <Container sx={{ p: { xs: 2, sm: 3, md: 0 }}}>
       <Card sx={{ padding: 0, borderRadius: '8px', bgcolor: 'background.paper', display: 'flex', justifyContent: 'space-between' }}>
-        <CardContent sx={{display: 'flex', gap:2}}>
+        <CardContent sx={{display: 'flex', gap:2, flexDirection: { xs: 'column', sm: 'row' }}}>
           <Box>
-           <Avatar alt={formData.name} src={formData.avatar} />
+           <Avatar alt={user.user.name} src={user.user.avatar} />
           </Box>
           <Box>
-            <Typography variant="h6">Welcome {formData.name}</Typography>
-            <Typography variant="body1">Email: {formData.email}</Typography>
-            <Typography variant="body1">Phone:  {formData.phone_no}</Typography>
+            <Typography variant="h6" fontSize={{ xs: '1rem', sm: '1.5rem' }}>Welcome {user.user.name}</Typography>
+            <Typography variant="body1">Email: {user.user.email}</Typography>
+            <Typography variant="body1">Phone:  {user.user.phone_no}</Typography>
           </Box>
         </CardContent>
-        <CardActions>
+        <CardActions >
          <CustomButton
            children={
             <>
               <EditIcon  size={15} style={{ marginRight: '4px' }} />
-              Edit Profile
+              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Profile</Typography>
             </>
            }
-           onClick={()=>{}}
+           onClick={handleEditProfile}
          />
         </CardActions>
       </Card>
       <Typography variant="h6" sx={{ marginTop: '1rem' }}>
        Address
       </Typography>
+
+      <Box maxHeight={isSmallScreen ? "300px" : "400px"} overflow="auto">
+      {allAddresses.length === 0 ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          {
+            addressLoading ?
+             <CircularProgress size={24} /> 
+             :
+              <NoDataFound  text="No addresses found."  description='Currently, there are no addresses available.'/>
+          }
+        </Box>
+      ) : (
+        allAddresses.map((address: any, index: number) => (
+          <ListAddress
+            key={address._id}
+            address={address}
+            index={index}
+            selectedAddressId={selectedAddressId || undefined}
+            onAddressSelect={handleAddressSelect}
+            showRadio={true}
+            showEdit={false}
+          />
+        ))
+      )}
+    </Box>
+
+    {/* Edit Profile Modal */}
+    <EditProfileModal
+      open={editModalOpen}
+      onClose={() => setEditModalOpen(false)}
+      user={user.user}
+      onSave={handleSaveProfile}
+      loading={saveLoading}
+    />
     </Container>
   );
 };

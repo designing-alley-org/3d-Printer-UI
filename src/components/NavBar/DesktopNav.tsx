@@ -45,19 +45,23 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            cursor: 'pointer',
           }}
+          onClick={() => navigate('/dashboard')}
         >
           <PrintOutlinedIcon
             sx={{ fontSize: '1.8rem', color: 'primary.main' }}
           />
         </Box>
         <Typography
+          onClick={() => navigate('/dashboard')}
           variant="h6"
           sx={{
             fontWeight: 700,
             color: theme.palette.primary.contrastText,
             fontSize: { xs: '1rem', md: '1.25rem' },
             display: { xs: 'none', sm: 'block' },
+            cursor: 'pointer',
           }}
         >
            3D Print Your Future
@@ -68,10 +72,16 @@ const DesktopNav = ({ activeTabs }: ITab) => {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: { xs: 1, md: 2 },
+            gap: { xs: 1 },
             ml: 'auto',
           }}
         >
+
+          {/* Notification Section */}
+          <Box sx={{ mx: { xs: 1, md: 2 } }}>
+            <NotificationBox />
+          </Box>
+
           {DesktoptabData.map((item) => (
             <NavButton
               key={item.id}
@@ -86,23 +96,6 @@ const DesktopNav = ({ activeTabs }: ITab) => {
               {item.label}
             </NavButton>
           ))}
-
-          {/* Notification Section */}
-          <Box sx={{ mx: { xs: 1, md: 2 } }}>
-            <NotificationBox />
-          </Box>
-
-          {/* Account Section */}
-          <NavButton
-            active={activeTabs === 3}
-            onClick={() => navigate('/account')}
-            sx={{
-              fontSize: { xs: '0.7rem', md: '0.775rem', lg: '0.875rem' },
-              px: { xs: 1, md: 2, lg: 3 },
-            }}
-          >
-            ACCOUNT
-          </NavButton>
         </Box>
 
         {/* Mobile Menu Button (if needed for future mobile nav) */}

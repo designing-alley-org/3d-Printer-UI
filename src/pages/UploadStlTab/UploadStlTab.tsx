@@ -238,7 +238,8 @@ const UploadStlCard = () => {
       onClick={() => fileInputRef.current?.click()}
       border={1}
       padding={3}
-      width={isMobile ? '100%' : 'auto'}
+      width={isMobile ? '100%' : '268px'}
+      height={isMobile ? '150px' : '235px'}
       borderRadius={0.5}
       bgcolor="background.paper"
       sx={{
@@ -277,7 +278,7 @@ const UploadStlCard = () => {
   );
 
   const renderFileCards = () => (
-  <Grid container spacing={2}>
+  <>
   {files.map((file) => (
       <UploadStlCardFile
         file={file}
@@ -292,7 +293,7 @@ const UploadStlCard = () => {
         convertDimensions={convertDimensions}
       />
   ))}
-</Grid>
+  </>
 
   );
 
@@ -330,7 +331,7 @@ const UploadStlCard = () => {
             {renderUnitButtons()}
           </Box>
 
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
             {renderFileCards()}
             {renderFileUpload()}
           </Box>

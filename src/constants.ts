@@ -61,7 +61,8 @@ export const tabData = [
 ];
 
 export const DesktoptabData = [
-  { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
+  { id: 1, label: 'Get Quote', path: ROUTES.GET_QUOTES },
+  { id: 2, label: 'Account', path: ROUTES.ACCOUNT },
 ];
 
 export const MobiltabData = [

@@ -31,8 +31,8 @@ export const viewBox: SxProps = {
 };
 
 export const viewContent: SxProps = {
-  width: '7rem',
-  height: '7rem',
+  width: '5.5rem',
+  height: '5.5rem',
   borderRadius: '1rem',
   border: '1px solid #E4E4E4',
   display: 'flex',

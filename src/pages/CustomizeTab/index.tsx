@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Typography, useMediaQuery } from '@mui/material';
 import {
   Customize,
   Files,
@@ -11,12 +11,12 @@ import {
   ModelName,
   CustomizeBox,
 } from './styles';
-import {  vector_black } from '../../constants';
+import { vector_black } from '../../constants';
 import { AccordionMemo } from './Accordion';
-import materialIcon from '../../assets/icons/materialIcon.svg';
-import colorIcon from '../../assets/icons/colorIcon.svg';
-import printerIcon from '../../assets/icons/printerIcon.svg';
-import infil from '../../assets/icons/infillIcon.svg';
+
+// Icon Custom Icon 
+import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../public/Icon/MUI_Coustom_icon/index'; 
+
 import {
   FileDetail,
   setActiveFile,
@@ -30,7 +30,6 @@ import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import MUIButton from '../../stories/MUIButton/Button';
 import { RotateCcw } from 'lucide-react';
 import { FileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
@@ -48,13 +47,19 @@ const CustomizeTab: React.FC = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
-  
+
   const {
     updateFiles: fileDetails,
     activeFileId,
     files: orderFiles,
   } = useSelector((state: any) => state.fileDetails);
 
+  // Set default active file to index 0 if not set
+  useEffect(() => {
+    if (fileDetails && fileDetails.length > 0 && !activeFileId) {
+      dispatch(setActiveFile(fileDetails[0]._id));
+    }
+  }, [fileDetails, activeFileId, dispatch]);
 
   // Extract the active file from the files
   const activeFile = useMemo(() => {
@@ -64,8 +69,7 @@ const CustomizeTab: React.FC = () => {
     );
   }, [fileDetails, activeFileId]);
 
-
-    // Check if all files have been customized
+  // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
       (file: any) => file?.dimensions?.weight
@@ -238,13 +242,12 @@ const CustomizeTab: React.FC = () => {
     }
   };
 
-
   return (
     <StepLayout
       stepNumber={2}
-      stepText='Customize'
+      stepText="Customize"
       stepDescription="Customize your design files by selecting materials, colors, and printers."
-      onClick={() =>  navigate(`/get-quotes/${orderId}/quote`)}
+      onClick={() => navigate(`/get-quotes/${orderId}/quote`)}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
       isLoading={false}
@@ -252,15 +255,15 @@ const CustomizeTab: React.FC = () => {
       isDisabled={!allFilesCustomized}
     >
       <Box
-        display='flex'
-        border={1}
+        display="flex"
         borderRadius={'24px'}
-        boxShadow='2px 2px 4px 0px #0000003D'
-
-        >
+        boxShadow="2px 2px 4px 0px #0000003D"
+      >
         <Files isLoading={isLoading}>
           <span className="header">
-            <Typography variant='h6' color='primary.contrastText'>Files</Typography>
+            <Typography variant="h6" color="primary.contrastText">
+              Files
+            </Typography>
             {/* <span className="count">{files.length}</span> */}
           </span>
           <div className="file-list">
@@ -272,9 +275,7 @@ const CustomizeTab: React.FC = () => {
                   onClick={() => handleSetActiveFile(file._id)}
                   style={{
                     background:
-                      activeFileId === file._id
-                        ? '#FFFFFF'
-                        : 'transparent',
+                      activeFileId === file._id ? '#FFFFFF' : 'transparent',
                     border:
                       activeFileId === file._id
                         ? '1px solid #1E6FFF'
@@ -304,29 +305,38 @@ const CustomizeTab: React.FC = () => {
                   </ModelName>
                   <CustomizeBox>
                     {[
-                      { icon: materialIcon, key: 'material' },
-                      { icon: colorIcon, key: 'color' },
-                      { icon: printerIcon, key: 'printer' },
-                      {
-                        icon: infil,
-                        key: 'infill',
-                        additionalStyle: { width: '1rem' },
-                      },
-                    ].map(({ icon, key, additionalStyle }) => (
-                      <img
-                        src={icon}
-                        alt={key}
-                        style={{
-                          filter: fileDetails.some(
-                            (f: any) => f._id === file._id && f[key]
-                          )
-                            ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                            : 'none',
-                          ...additionalStyle,
-                        }}
-                        key={key}
-                      />
-                    ))}
+                      { key: 'technology', Icon: TechnologyIcon },
+                      { key: 'material', Icon: MaterialIcon },
+                      { key: 'color', Icon: ColorIcon },
+                      { key: 'printer', Icon: PrinterIcon },
+                      { key: 'infill', Icon: InfillIcon },
+                    ].map(({ key, Icon }) => {
+                      const isSelected = activeFileId === file._id;
+                      const isFilled = !!file[key];
+                      let iconColor = '#FFFFFF66'; // default: not selected, not filled, 40% opacity
+                      if (isSelected && isFilled) iconColor = '#05123B';
+                      else if (isSelected && !isFilled) iconColor = '#999999';
+                      else if (!isSelected && isFilled) iconColor = '#FFFFFF';
+                      else if (!isSelected && !isFilled) iconColor = '#FFFFFF66';
+                      return (
+                        <React.Fragment key={key}>
+                          <Icon style={{ color: iconColor, fontSize: 20 }} />
+                          {key !== 'infill' && (
+                            <Divider
+                              orientation="vertical"
+                              variant="middle"
+                              flexItem
+                              sx={{
+                                height: '17px',
+                                mx: 0.5,
+                                borderColor: isFilled ? 'primary.main' : 'none',
+                                borderWidth: 1,
+                              }}
+                            />
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
                   </CustomizeBox>
                 </span>
               ))}
@@ -336,23 +346,23 @@ const CustomizeTab: React.FC = () => {
         <Customize>
           <div className="customize-container">
             {activeFileId === null ? (
-              <Box display="flex" justifyContent="center" alignItems="center" >
-                <Typography variant='h6' color='text.secondary'>
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Typography variant="h6" color="text.secondary">
                   Please select a file to customize
                 </Typography>
               </Box>
             ) : null}
-            {activeFileId && activeFile &&
-               <AccordionMemo
+            {activeFileId && activeFile && (
+              <AccordionMemo
                 key={activeFileId} // Fixed: Using activeFileId as key instead of undefined item.id
                 printerData={printerData}
                 fileData={activeFile}
                 oldDimensions={activeFileIndexDimensions}
                 printerMessage={printerMessage}
               />
-              }
+            )}
           </div>
-         
+
           <Box
             sx={{
               display: 'flex',
@@ -364,8 +374,8 @@ const CustomizeTab: React.FC = () => {
               disabled={isApplyButtonDisabled || isLoading}
               onClick={handleApplySelection}
               loading={isLoading}
-              variant='contained'
-              borderRadius='4px'
+              variant="contained"
+              borderRadius="4px"
             />
             {!isApplyButtonDisabled && (
               <Box>
