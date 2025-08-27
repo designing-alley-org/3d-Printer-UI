@@ -36,6 +36,9 @@ const ShippingDetails = () => {
   const { addressData, addressId, isCreateAddress } = useSelector(
     (state: any) => state.address
   );
+  const { defaultAddress } = useSelector((state: any) => state.user.user);
+  console.log('Default address:', defaultAddress);
+
   const [editingAddress, setEditingAddress] = useState<any>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ const ShippingDetails = () => {
             dispatch(addAddress(response.data.data));
             // Auto-select first address if available
             if (response.data.data.length > 0 && !addressId) {
-              dispatch(setAddressId(response.data.data[0]._id));
+              dispatch(setAddressId(defaultAddress || response.data.data[0]._id));
             }
           }
         } catch (error: any) {
@@ -64,7 +67,7 @@ const ShippingDetails = () => {
       }
     };
     fetchAddress();
-  }, [dispatch, isCreateAddress, addressId]);
+  }, [dispatch, isCreateAddress, addressId, defaultAddress]);
 
   const getInitialValues = () => {
     if (editingAddress) {
@@ -174,7 +177,7 @@ const ShippingDetails = () => {
                     color="text.primary"
                   >
                     {address.personName}{' '}
-                    {index === 0 && (
+                    {defaultAddress === address._id && (
                       <Chip
                         label="Default Selected"
                         sx={{
