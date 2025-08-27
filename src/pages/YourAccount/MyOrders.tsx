@@ -151,6 +151,7 @@ export const MyOrders = () => {
               console.log('Order clicked:', mockOrder);
               handleViewDetails(mockOrder._id);
             }} 
+            isExpanded={selectedOrderId === mockOrder._id}
           />
         </Box>
       );
