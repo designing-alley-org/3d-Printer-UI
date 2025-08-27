@@ -9,22 +9,19 @@ import {
 import SingleSelectDropdown, {
   Option,
 } from '../../../stories/Dropdown/SingleSelectDropdown';
-import MUIButton from '../../../stories/MUIButton/Button';
 import { sizeOption } from '../../../constants';
 import ColorDropdown from '../../../stories/Dropdown/ColorDropdown';
 import PrinterDropdown from '../../../stories/Dropdown/PrinterDropdown';
 import {
   Ruler,
-  Settings,
-  Circle,
-  Palette,
-  Grid3X3,
   Printer,
   RotateCcw,
 } from 'lucide-react';
-import StyledNumberInput from '../../../stories/Input/StyledNumberInput';
 import CustomButton from '../../../stories/button/CustomButton';
 import CustomTextField from '../../../stories/inputs/CustomTextField';
+
+// Icon Custom Icon 
+import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../../public/Icon/MUI_Coustom_icon/index';
 
 interface AccordionProps {
   printerData: any[];
@@ -199,8 +196,8 @@ const Accordion: React.FC<AccordionProps> = ({
           p: 1,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-          <Ruler size={20} style={{ marginRight: '8px' }} />
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 0.5 }}>
+          <Ruler size={20} style={{ marginBottom: '8px', transform: 'rotate(100deg)' }} />
           <Typography
             variant="h6"
             sx={{ fontWeight: 600 }}
@@ -330,7 +327,7 @@ const Accordion: React.FC<AccordionProps> = ({
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Settings size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <TechnologyIcon  style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
             color="text.dark"
@@ -361,7 +358,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Circle size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <MaterialIcon  style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
               color="text.dark"
@@ -394,7 +391,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Palette size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <ColorIcon size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
              color="text.dark"
@@ -425,7 +422,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Grid3X3 size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <InfillIcon style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
              color="text.dark"
@@ -446,7 +443,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Printer size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <PrinterIcon style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
              color="text.dark"

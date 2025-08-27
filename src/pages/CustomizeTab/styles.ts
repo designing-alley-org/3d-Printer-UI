@@ -211,8 +211,8 @@ export const CustomizeBox = styled.section`
   align-items: center;
   border-radius: 37px;
   position: absolute;
-  bottom: 0.6rem;
-  right: 0.4rem;
+  bottom: 0rem;
+  right: 1.5rem;
   height: 2rem;
   width: 6rem;
   img {
