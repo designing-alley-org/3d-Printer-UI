@@ -212,7 +212,7 @@ export const CustomizeBox = styled.section`
   border-radius: 37px;
   position: absolute;
   bottom: 0rem;
-  right: 1.5rem;
+  right: 2rem;
   height: 2rem;
   width: 6rem;
   img {

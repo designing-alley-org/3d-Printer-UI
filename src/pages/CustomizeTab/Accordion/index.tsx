@@ -9,19 +9,21 @@ import {
 import SingleSelectDropdown, {
   Option,
 } from '../../../stories/Dropdown/SingleSelectDropdown';
+
 import { sizeOption } from '../../../constants';
-import ColorDropdown from '../../../stories/Dropdown/ColorDropdown';
-import PrinterDropdown from '../../../stories/Dropdown/PrinterDropdown';
-import {
-  Ruler,
-  Printer,
-  RotateCcw,
-} from 'lucide-react';
+
+
 import CustomButton from '../../../stories/button/CustomButton';
 import CustomTextField from '../../../stories/inputs/CustomTextField';
+import ColorDropdown from '../../../stories/Dropdown/ColorDropdown';
+import PrinterDropdown from '../../../stories/Dropdown/PrinterDropdown';
 
 // Icon Custom Icon 
 import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../../public/Icon/MUI_Coustom_icon/index';
+import {
+  Ruler,
+  RotateCcw,
+} from 'lucide-react';
 
 interface AccordionProps {
   printerData: any[];
@@ -96,7 +98,6 @@ const Accordion: React.FC<AccordionProps> = ({
     [printerData]
   );
 
-  console.log('mappedPrinters', mappedPrinters);
 
   const handleUnitChange = (option: Option) => {
     const newUnit = option.value as 'mm' | 'inch';
@@ -196,8 +197,8 @@ const Accordion: React.FC<AccordionProps> = ({
           p: 1,
         }}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 0.5 }}>
-          <Ruler size={20} style={{ marginBottom: '8px', transform: 'rotate(100deg)' }} />
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 0.5, gap: '8px' }}>
+          <Ruler size={25} style={{ transform: 'rotate(100deg)' }} />
           <Typography
             variant="h6"
             sx={{ fontWeight: 600 }}

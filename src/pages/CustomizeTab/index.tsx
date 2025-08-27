@@ -13,7 +13,10 @@ import {
 } from './styles';
 import { vector_black } from '../../constants';
 import { AccordionMemo } from './Accordion';
-import infil from '../../assets/icons/infillIcon.svg';
+
+// Icon Custom Icon 
+import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../public/Icon/MUI_Coustom_icon/index'; 
+
 import {
   FileDetail,
   setActiveFile,
@@ -302,54 +305,38 @@ const CustomizeTab: React.FC = () => {
                   </ModelName>
                   <CustomizeBox>
                     {[
-                      {
-                        key: 'technology',
-                        path: '/Icon/customization/technology.svg',
-                      },
-                      {
-                        key: 'material',
-                        path: '/Icon/customization/material.svg',
-                      },
-                      { key: 'color', path: '/Icon/customization/color.svg' },
-                      {
-                        key: 'printer',
-                        path: '/Icon/customization/printer.svg',
-                      },
-                      { key: 'infill', path: '/Icon/customization/infill.svg' },
-                    ].map(({ key, path }) => (
-                      <>
-                        <img
-                          src={path}
-                          alt={key}
-                          style={{
-                            filter: fileDetails.some(
-                              (f: any) => f._id === file._id && f[key]
-                            )
-                              ? 'sepia(100%) saturate(370%) hue-rotate(181deg) brightness(114%) contrast(200%)'
-                              : '#FFFFFF66',
-                          }}
-                          key={key}
-                        />
-                        {key !== 'infill' && (
-                          <Divider
-                            orientation="vertical"
-                            variant="middle"
-                            flexItem
-                            key={key}
-                            sx={{
-                              height: '17px',
-                              mx: 0.2,
-                              borderColor: fileDetails.some(
-                                (f: any) => f._id === file._id && f[key]
-                              )
-                                ? 'primary.main'
-                                : 'none', // <- use theme color
-                              borderWidth: 1, // <- thickness
-                            }}
-                          />
-                        )}
-                      </>
-                    ))}
+                      { key: 'technology', Icon: TechnologyIcon },
+                      { key: 'material', Icon: MaterialIcon },
+                      { key: 'color', Icon: ColorIcon },
+                      { key: 'printer', Icon: PrinterIcon },
+                      { key: 'infill', Icon: InfillIcon },
+                    ].map(({ key, Icon }) => {
+                      const isSelected = activeFileId === file._id;
+                      const isFilled = !!file[key];
+                      let iconColor = '#FFFFFF66'; // default: not selected, not filled, 40% opacity
+                      if (isSelected && isFilled) iconColor = '#05123B';
+                      else if (isSelected && !isFilled) iconColor = '#999999';
+                      else if (!isSelected && isFilled) iconColor = '#FFFFFF';
+                      else if (!isSelected && !isFilled) iconColor = '#FFFFFF66';
+                      return (
+                        <React.Fragment key={key}>
+                          <Icon style={{ color: iconColor, fontSize: 20 }} />
+                          {key !== 'infill' && (
+                            <Divider
+                              orientation="vertical"
+                              variant="middle"
+                              flexItem
+                              sx={{
+                                height: '17px',
+                                mx: 0.5,
+                                borderColor: isFilled ? 'primary.main' : 'none',
+                                borderWidth: 1,
+                              }}
+                            />
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
                   </CustomizeBox>
                 </span>
               ))}
