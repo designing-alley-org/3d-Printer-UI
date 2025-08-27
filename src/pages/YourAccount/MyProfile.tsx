@@ -10,11 +10,13 @@ import NoDataFound from '../../components/NoDataFound';
 import ListAddress from '../../components/ListAddress/ListAddress';
 import EditProfileModal from '../../components/Model/EditProfileModal';
 import toast from 'react-hot-toast';
+import { setDefaultAddressService } from '../../services/address';
 
 const MyProfile = () => {
   const user = useSelector((state: any) => state.user);
+;
   const dispatch = useDispatch();
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.defaultAddress));
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.user.defaultAddress));
   const [allAddresses, setAllAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -22,7 +24,8 @@ const MyProfile = () => {
   const isSmallScreen = useMediaQuery('(max-width:768px)');
 
   const handleAddressSelect = (addressId: string) => {
-    setSelectedAddressId(addressId);
+    setDefaultAddressService(addressId, setSelectedAddressId);
+
   };
 
   const handleEditProfile = () => {

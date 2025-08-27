@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import api from "../axiosConfig";
 
 // Dummy data for development
@@ -92,3 +93,17 @@ export const deleteAddressService = async (addressId: string): Promise<any> => {
     throw error;
   }
 }
+
+
+export const setDefaultAddressService = async (addressId: string, setSelectedAddressId: (id: string | null) => void): Promise<any> => {
+  try {
+    const response = await api.put(`/set/default/address/${addressId}`);
+    toast.success("Default address set successfully");
+    setSelectedAddressId(addressId);
+    return response;
+  } catch (error) {
+    console.error("Error setting default address:", error);
+    toast.error("Failed to set default address");
+    throw error;
+  }
+};
