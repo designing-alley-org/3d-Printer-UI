@@ -84,7 +84,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
               edge="end"
               tabIndex={-1}
             >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
+              {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
         ) : (
