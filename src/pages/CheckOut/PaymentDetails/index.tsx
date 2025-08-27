@@ -155,13 +155,13 @@ const PaymentDetails: React.FC = () => {
           Error
         </Typography>
         <Typography paragraph>{error}</Typography>
-        <MUIButton label="Try Again" onClick={() => window.location.reload()} />
+        <CustomButton children="Try Again" onClick={() => window.location.reload()} sx={{ marginTop: '1rem', borderRadius: '4px' }} variant="contained" />
       </Box> :
         <Paper
         elevation={0}
         sx={{
           padding: '2rem 1.5rem',
-          backgroundColor: 'transparent',
+          backgroundColor: '#FFFFFF',
           borderRadius: '24px',
           border: '1px solid #C5C5C5',
         }}

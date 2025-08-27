@@ -30,7 +30,6 @@ import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import MUIButton from '../../stories/MUIButton/Button';
 import { RotateCcw } from 'lucide-react';
 import { FileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
@@ -48,12 +47,19 @@ const CustomizeTab: React.FC = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
-  
+
   const {
     updateFiles: fileDetails,
     activeFileId,
     files: orderFiles,
   } = useSelector((state: any) => state.fileDetails);
+
+  // Set default active file to index 0 if not set
+  useEffect(() => {
+    if (fileDetails && fileDetails.length > 0 && !activeFileId) {
+      dispatch(setActiveFile(fileDetails[0]._id));
+    }
+  }, [fileDetails, activeFileId, dispatch]);
 
 
   // Extract the active file from the files
@@ -253,10 +259,8 @@ const CustomizeTab: React.FC = () => {
     >
       <Box
         display='flex'
-        border={1}
         borderRadius={'24px'}
         boxShadow='2px 2px 4px 0px #0000003D'
-
         >
         <Files isLoading={isLoading}>
           <span className="header">

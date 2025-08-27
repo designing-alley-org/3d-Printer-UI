@@ -173,7 +173,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           ))}
         </Box>
       </Box>
-      <Typography variant={isSmallScreen ? 'body2' : 'h1'} sx={{ color: '#2359B0', mb: 1 }}>
+      <Typography variant={isSmallScreen ? 'body2' : 'h5'} sx={{ color: '#2359B0', mb: 1 }}>
         Quote
       </Typography>
 
@@ -516,7 +516,7 @@ const QuoteTemplate: React.FC<QuoteTemplateProps> = ({
           </Box>
         </>
       ) : (
-        <Typography variant={isSmallScreen ? 'body1' : 'h1'} sx={{ color: '#2359B0', mb: 2 }}>
+        <Typography variant={isSmallScreen ? 'body1' : 'h6'} sx={{ color: '#2359B0', mb: 2 }}>
           Please wait, the quote will be created shortly.
         </Typography>
       )}

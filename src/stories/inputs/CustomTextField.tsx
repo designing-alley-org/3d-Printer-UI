@@ -49,7 +49,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
       styleOverrides = {
         "& .MuiOutlinedInput-root": {
           height: "2.5rem",
-          borderRadius: "4px",
+          borderRadius: "8px",
         },
         "& .MuiOutlinedInput-input": {
           padding: "0.5rem 0.75rem",

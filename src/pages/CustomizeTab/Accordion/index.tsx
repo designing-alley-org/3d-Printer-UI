@@ -199,7 +199,7 @@ const Accordion: React.FC<AccordionProps> = ({
           p: 1,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
           <Ruler size={20} style={{ marginRight: '8px' }} />
           <Typography
             variant="h6"
@@ -310,6 +310,7 @@ const Accordion: React.FC<AccordionProps> = ({
               {oldDimensions && (
                 <Typography
                   variant="caption"
+                  fontWeight={600}
                   sx={{ color: 'text.secondary', textAlign: 'right', mt: 1 }}
                 >
                   {oldDimensions?.dimensions?.height.toFixed(2)}{' '}
@@ -328,7 +329,7 @@ const Accordion: React.FC<AccordionProps> = ({
       {/* Configuration Options */}
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid size={6}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <Settings size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
@@ -359,7 +360,7 @@ const Accordion: React.FC<AccordionProps> = ({
         </Grid>
 
         <Grid size={6}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <Circle size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
@@ -392,7 +393,7 @@ const Accordion: React.FC<AccordionProps> = ({
         </Grid>
 
         <Grid size={6}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <Palette size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
@@ -423,7 +424,7 @@ const Accordion: React.FC<AccordionProps> = ({
         </Grid>
 
         <Grid size={6}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <Grid3X3 size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
@@ -444,7 +445,7 @@ const Accordion: React.FC<AccordionProps> = ({
         </Grid>
 
         <Grid size={12}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <Printer size={16} style={{ marginRight: '8px', color: '#666' }} />
             <Typography
               variant="h6"
@@ -476,7 +477,6 @@ const Accordion: React.FC<AccordionProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           pt: 2,
-          mb:1,
           borderBottom: '1px solid #E0E0E0',
         }}
       >
