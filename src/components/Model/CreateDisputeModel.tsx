@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import ResponsiveModal from './ResponsiveModal';
 import CustomButton from '../../stories/button/CustomButton';
@@ -9,8 +9,6 @@ import {
   DisputeFormValues,
 } from '../../validation/disputeValidation';
 import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { Height } from '@mui/icons-material';
 
 const disputeTypes = [
   { id: 1, value: 'payment', label: 'Payment' },
@@ -18,7 +16,6 @@ const disputeTypes = [
   { id: 3, value: 'quality', label: 'Quality' },
   { id: 4, value: 'others', label: 'Others' },
 ];
-
 
 interface CreateDisputeModelProps {
   open: boolean;
@@ -126,15 +123,24 @@ const CreateDisputeModel: React.FC<CreateDisputeModelProps> = ({
 
         {/* Dispute Reason Textarea */}
         <Box mb={3}>
-          <CustomInputLabelField
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 500,
+              color: '#333',
+              fontSize: '0.9rem',
+              mb: 1,
+            }}
+          >
+            Dispute Reason <span style={{ color: '#d32f2f' }}>*</span>
+          </Typography>
+          <TextField
             fullWidth
-            label="Dispute Reason"
-            required
             name="disputeReason"
             value={formik.values.disputeReason}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            placeholder="Please provide detailed information about your dispute..."
+            placeholder="Any other information you want to provide..."
             error={
               !!(formik.touched.disputeReason && formik.errors.disputeReason)
             }
@@ -143,6 +149,13 @@ const CreateDisputeModel: React.FC<CreateDisputeModelProps> = ({
                 ? String(formik.errors.disputeReason)
                 : ''
             }
+            multiline
+            rows={4}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+              },
+            }}
           />
         </Box>
       </Box>

@@ -66,13 +66,11 @@ const ViewDetails = ({ myOrders = 'no', item }: ViewDetailsProps) => {
          justifyContent='space-between'
          marginTop={2}
         >
-          {item.order_status === 'Delivered' && (
             <MUIButton
               btnVariant="outlined"
               label="Return Request"
               onClick={handleOpen}
             />
-          )}
           <RequestReturnModal
             open={open}
             onClose={handleClose}

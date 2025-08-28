@@ -23,10 +23,11 @@ interface Props {
   };
   onClick: (id: string) => void;
   onDispute?: (id: string) => void;
+  onReturn?: (id: string) => void;
   isExpanded?: boolean;
 }
 
-const OrderFileItem = ({ order, onClick, onDispute, isExpanded = false }: Props) => {
+const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false }: Props) => {
   const theme = useTheme();
   return (
     <>
@@ -137,6 +138,10 @@ const OrderFileItem = ({ order, onClick, onDispute, isExpanded = false }: Props)
                     padding: '8px 36px',
                   }}
                   children="Return"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReturn?.(order._id);
+                  }}
                 />
                }
                 {

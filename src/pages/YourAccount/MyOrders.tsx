@@ -12,7 +12,9 @@ import CustomTextField from '../../stories/inputs/CustomTextField';
 import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
 import OrderFileItem from '../../components/OrderFileItem';
 import CreateDisputeModel from '../../components/Model/CreateDisputeModel';
+import CreateReturnModel from '../../components/Model/CreateReturnModel';
 import { DisputeFormValues } from '../../validation/disputeValidation';
+import { ReturnFormValues } from '../../validation/returnValidation';
 import { createDisputeByOrderService } from '../../services/disputes';
 
 // Define interfaces for type safety
@@ -45,6 +47,11 @@ export const MyOrders = () => {
   const [isDisputeModalOpen, setIsDisputeModalOpen] = useState(false);
   const [disputeOrderId, setDisputeOrderId] = useState<string>('');
   const [isSubmittingDispute, setIsSubmittingDispute] = useState(false);
+
+  // Return modal state
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [returnOrderId, setReturnOrderId] = useState<string>('');
+  const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -100,6 +107,47 @@ export const MyOrders = () => {
       // TODO: Show error message to user
     } finally {
       setIsSubmittingDispute(false);
+    }
+  };
+
+  const handleOpenReturn = (orderId: string) => {
+    setReturnOrderId(orderId);
+    setIsReturnModalOpen(true);
+  };
+
+  const handleCloseReturn = () => {
+    setIsReturnModalOpen(false);
+    setReturnOrderId('');
+  };
+
+  const handleSubmitReturn = async (returnData: ReturnFormValues & { imageFiles: File[] }) => {
+    try {
+      setIsSubmittingReturn(true);
+      console.log('Submitting return for order:', returnOrderId, returnData);
+      
+      // Create FormData for API
+      const formData = new FormData();
+      formData.append('returnReason', returnData.returnReason);
+      formData.append('orderId', returnOrderId);
+      
+      // Add images to FormData
+      returnData.imageFiles.forEach((file) => {
+        formData.append(`images`, file);
+      });
+      
+      // TODO: Call API service when available
+      // await createReturnByOrderService(formData, returnOrderId);
+      
+      // Close modal on success
+      handleCloseReturn();
+      
+      // TODO: Show success message to user
+      console.log('Return submitted successfully!');
+    } catch (error) {
+      console.error('Failed to submit return:', error);
+      // TODO: Show error message to user
+    } finally {
+      setIsSubmittingReturn(false);
     }
   };
 
@@ -212,6 +260,7 @@ export const MyOrders = () => {
                       handleViewDetails(mockOrder._id);
                     }}
                     onDispute={handleOpenDispute}
+                    onReturn={handleOpenReturn}
                     isExpanded={selectedOrderId === mockOrder._id}
                   />
                 </Box>
@@ -227,6 +276,16 @@ export const MyOrders = () => {
         onSave={handleSubmitDispute}
         loading={isSubmittingDispute}
         orderId={disputeOrderId}
+      />
+
+      {/* Return Modal */}
+      <CreateReturnModel
+        open={isReturnModalOpen}
+        onClose={handleCloseReturn}
+        onSave={handleSubmitReturn}
+        loading={isSubmittingReturn}
+        orderId={returnOrderId}
+        shipmentId="6877aaca7023d2df41f1bf44" // Mock shipment ID as requested
       />
     </>
   );
