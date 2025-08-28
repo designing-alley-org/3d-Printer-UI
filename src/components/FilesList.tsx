@@ -19,6 +19,12 @@ import CustomButton from '../stories/button/CustomButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Download } from 'lucide-react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../public/Icon/MUI_Coustom_icon/index';
+import {
+  Ruler
+} from 'lucide-react';
+import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 
 const FilesList = () => {
   const [isTableExpanded, setIsTableExpanded] = useState(false);
@@ -104,19 +110,51 @@ const FilesList = () => {
             style={{ overflow: 'hidden' }}
           >
             <TableContainer
-              sx={{ mt: 2, backgroundColor: 'background.paper', borderRadius: '8px' }}
+              sx={{
+                mt: 2,
+                backgroundColor: 'background.paper',
+                borderRadius: '8px',
+              }}
             >
               <Table aria-label="files table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>File Name</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell>Customisation</TableCell>
+                    <TableCell align="right">Selection</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{}}>
                   <TableRow>
-                    <TableCell>File_Name.stl</TableCell>
-                    <TableCell align="right">Table Cell Content</TableCell>
+                    <TableCell> <Ruler size={15} style={{ transform: 'rotate(100deg)' }} /> Scale</TableCell>
+                    <TableCell align="right">98.550 x 151.420 x 32.250 mm</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell> <TechnologyIcon sx={{ fontSize: 15 }} /> Technology</TableCell>
+                    <TableCell align="right">SLA</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell> <MaterialIcon sx={{ fontSize: 15 }} /> Material</TableCell>
+                    <TableCell align="right">ABS</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell> <ColorIcon sx={{ fontSize: 15 }} /> Colors</TableCell>
+                    <TableCell align="right">Black</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell> <PrinterIcon sx={{ fontSize: 15 }} /> Printers</TableCell>
+                    <TableCell align="right">Bambulab</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell> <InfillIcon sx={{ fontSize: 15 }} /> Infill</TableCell>
+                    <TableCell align="right">80%</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell> <ScaleOutlinedIcon sx={{ fontSize: 15 }} /> Weight</TableCell>
+                    <TableCell align="right">6.89 gm</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell><AddShoppingCartOutlinedIcon sx={{ fontSize: 15 }} /> Quantity</TableCell>
+                    <TableCell align="right">4</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
