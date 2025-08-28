@@ -13,12 +13,13 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, "variant"> {
   onlyNumber?: boolean;
   inputStyle?: number; // ✅ style preset selector
   isSearch?: boolean;
+  disable?: boolean;
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { onlyNumber, onChange, isSearch = false , inputStyle, ...rest} = props;
+  const { onlyNumber, onChange,isSearch = false , inputStyle, disable = false , ...rest} = props;
   const isPasswordField = props.type === "password";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,6 +77,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
         ...props.sx, // allow consumer overrides
       }}
       onChange={handleChange}
+      disabled={disable}
       InputProps={{
         ...props.InputProps,
         endAdornment: isPasswordField ? (

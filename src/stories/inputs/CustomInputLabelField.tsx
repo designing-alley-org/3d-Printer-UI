@@ -18,6 +18,8 @@ interface CustomInputLabelFieldProps {
   isSelect?: boolean;
   selectOptions?: { value: string; label: string }[];
   sx?: any;
+  disable?: boolean;
+  inputSx?: any;
 }
 
 const CustomInputLabelField: React.FC<CustomInputLabelFieldProps> = ({
@@ -35,6 +37,8 @@ const CustomInputLabelField: React.FC<CustomInputLabelFieldProps> = ({
   fullWidth = true,
   isSelect = false,
   selectOptions = [],
+  disable = false,
+  inputSx,
   sx,
 }) => {
   const countries = [
@@ -110,6 +114,8 @@ const CustomInputLabelField: React.FC<CustomInputLabelFieldProps> = ({
           type={type}
           onlyNumber={onlyNumber}
           inputStyle={2}
+          disable={disable}
+          sx={{ ...inputSx }}
         />
       )}
     </Box>

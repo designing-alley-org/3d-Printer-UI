@@ -22,10 +22,11 @@ interface Props {
     createdAt: string;
   };
   onClick: (id: string) => void;
+  onDispute?: (id: string) => void;
   isExpanded?: boolean;
 }
 
-const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
+const OrderFileItem = ({ order, onClick, onDispute, isExpanded = false }: Props) => {
   const theme = useTheme();
   return (
     <>
@@ -128,7 +129,8 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
               &&  
               <Box display="flex" gap={1} justifyContent="end" mt={2}>
                {
-                true && <CustomButton
+                true && 
+                <CustomButton
                   variant="outlined"
                   sx={{
                     borderRadius: '4px',
@@ -147,6 +149,10 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
                      padding: '8px 36px',
                   }}
                   children="Dispute"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDispute?.(order._id);
+                  }}
                 />
                 }
               </Box>

@@ -11,6 +11,9 @@ import { Box, Card, CardContent, CardHeader, Typography } from '@mui/material';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
 import OrderFileItem from '../../components/OrderFileItem';
+import CreateDisputeModel from '../../components/Model/CreateDisputeModel';
+import { DisputeFormValues } from '../../validation/disputeValidation';
+import { createDisputeByOrderService } from '../../services/disputes';
 
 // Define interfaces for type safety
 interface Order {
@@ -38,6 +41,11 @@ export const MyOrders = () => {
     label: string;
   }>({ id: 1, value: 'all', label: 'All' });
 
+  // Dispute modal state
+  const [isDisputeModalOpen, setIsDisputeModalOpen] = useState(false);
+  const [disputeOrderId, setDisputeOrderId] = useState<string>('');
+  const [isSubmittingDispute, setIsSubmittingDispute] = useState(false);
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -56,6 +64,43 @@ export const MyOrders = () => {
 
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
+  };
+
+  const handleOpenDispute = (orderId: string) => {
+    setDisputeOrderId(orderId);
+    setIsDisputeModalOpen(true);
+  };
+
+  const handleCloseDispute = () => {
+    setIsDisputeModalOpen(false);
+    setDisputeOrderId('');
+  };
+
+  const handleSubmitDispute = async (disputeData: DisputeFormValues) => {
+    try {
+      setIsSubmittingDispute(true);
+      console.log('Submitting dispute for order:', disputeOrderId, disputeData);
+      
+      // Prepare data for API
+      const apiData = {
+        disputeType: disputeData.disputeType.value,
+        disputeReason: disputeData.disputeReason,
+      };
+      
+      // Call API service
+      await createDisputeByOrderService(apiData, disputeOrderId);
+      
+      // Close modal on success
+      handleCloseDispute();
+      
+      // TODO: Show success message to user
+      console.log('Dispute submitted successfully!');
+    } catch (error) {
+      console.error('Failed to submit dispute:', error);
+      // TODO: Show error message to user
+    } finally {
+      setIsSubmittingDispute(false);
+    }
   };
 
   if (error) {
@@ -166,6 +211,7 @@ export const MyOrders = () => {
                       console.log('Order clicked:', mockOrder);
                       handleViewDetails(mockOrder._id);
                     }}
+                    onDispute={handleOpenDispute}
                     isExpanded={selectedOrderId === mockOrder._id}
                   />
                 </Box>
@@ -173,6 +219,15 @@ export const MyOrders = () => {
             })}
         </Box>
       )}
+
+      {/* Dispute Modal */}
+      <CreateDisputeModel
+        open={isDisputeModalOpen}
+        onClose={handleCloseDispute}
+        onSave={handleSubmitDispute}
+        loading={isSubmittingDispute}
+        orderId={disputeOrderId}
+      />
     </>
   );
 };
