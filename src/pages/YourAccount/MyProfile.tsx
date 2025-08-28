@@ -11,6 +11,7 @@ import ListAddress from '../../components/ListAddress/ListAddress';
 import EditProfileModal from '../../components/Model/EditProfileModal';
 import toast from 'react-hot-toast';
 import { setDefaultAddressService } from '../../services/address';
+import { EditEmailModal } from '../../components/Model';
 
 const MyProfile = () => {
   const user = useSelector((state: any) => state.user);
@@ -20,12 +21,17 @@ const MyProfile = () => {
   const [allAddresses, setAllAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editEmailModalOpen, setEditEmailModalOpen] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
 
   const handleAddressSelect = (addressId: string) => {
     setDefaultAddressService(addressId, setSelectedAddressId);
+  };
 
+  const handleSaveEmail = (email: string) => {
+    // Dispatch an action to update the email in the user profile
+    // dispatch(updateUser({ ...user.user, email }));
   };
 
   const handleEditProfile = () => {
@@ -133,6 +139,15 @@ const MyProfile = () => {
            }
            onClick={handleEditProfile}
          />
+          <CustomButton
+           children={
+            <>
+              <EditIcon  size={15} style={{ marginRight: '4px' }} />
+              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Email</Typography>
+            </>
+           }
+           onClick={() => setEditEmailModalOpen(true)}
+         />
         </CardActions>
       </Card>
       <Typography variant="h6" sx={{ marginTop: '1rem' }}>
@@ -170,6 +185,13 @@ const MyProfile = () => {
       onClose={() => setEditModalOpen(false)}
       user={user.user}
       onSave={handleSaveProfile}
+      loading={saveLoading}
+    />
+    <EditEmailModal
+      open={editEmailModalOpen}
+      onClose={() => setEditEmailModalOpen(false)}
+      email={user.user.email}
+      onSave={handleSaveEmail}
       loading={saveLoading}
     />
     </Container>
