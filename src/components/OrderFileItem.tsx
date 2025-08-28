@@ -122,9 +122,10 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
 
               <Box display="flex" gap={1} justifyContent="end" mt={2}>
                 <CustomButton
-                  variant="contained"
+                  variant="outlined"
                   sx={{
                     borderRadius: '4px',
+                    padding: '8px 36px',
                   }}
                   onClick={() => onClick(order._id)}
                   children="Return"
@@ -133,6 +134,7 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
                   variant="contained"
                   sx={{
                     borderRadius: '4px',
+                     padding: '8px 36px',
                   }}
                   onClick={() => onClick(order._id)}
                   children="Dispute"
