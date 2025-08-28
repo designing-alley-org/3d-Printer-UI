@@ -12,6 +12,7 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import DeliveryDetail from './DeliveryDetail';
 import FilesList from './FilesList';
+import NoDataFound from './NoDataFound';
 
 interface Props {
   order: {
@@ -118,28 +119,38 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
               {/* DeliveryDetail */}
               <DeliveryDetail />
 
-              <FilesList />
+              {
+                true ? <NoDataFound text="No Files Found" description='No files have been uploaded for this order.' /> : <FilesList />
+              }
 
+             {
+              true 
+              &&  
               <Box display="flex" gap={1} justifyContent="end" mt={2}>
-                <CustomButton
+               {
+                true && <CustomButton
                   variant="outlined"
                   sx={{
                     borderRadius: '4px',
                     padding: '8px 36px',
                   }}
-                  onClick={() => onClick(order._id)}
                   children="Return"
                 />
-                <CustomButton
+               }
+                {
+                  true
+                  && 
+                 <CustomButton
                   variant="contained"
                   sx={{
                     borderRadius: '4px',
                      padding: '8px 36px',
                   }}
-                  onClick={() => onClick(order._id)}
                   children="Dispute"
                 />
+                }
               </Box>
+             }
             </Box>
           </motion.div>
         )}
