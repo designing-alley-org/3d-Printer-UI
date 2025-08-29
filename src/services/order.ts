@@ -246,11 +246,13 @@ const getAllOrdersService = async ({ page, limit, orderId }: { page?: number, li
 };
 
 
-const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: number) => void, setIsDownloading: (isDownloading: boolean) => void): Promise<Blob> => {
+const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: number) => void, setIsDownloading: (isDownloading: boolean) => void): Promise<void> => {
     try {
+        setIsDownloading(true);
+        setProgress(0);
+
         // Start fetch request to S3
         const response = await fetch(s3Url);
-        setIsDownloading(true);
 
         if (!response.ok) {
             throw new Error(`Failed to download from S3. Status: ${response.status}`);
@@ -283,7 +285,8 @@ const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: 
             
             // Update progress
             if (total > 0) {
-                setProgress(Math.round((receivedBytes / total) * 100));
+                const progress = Math.round((receivedBytes / total) * 100);
+                setProgress(progress);
             }
         }
         
@@ -296,13 +299,53 @@ const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: 
         }
         
         // Create a blob from the data
-        return new Blob([allChunks]);
+        const blob = new Blob([allChunks]);
+        
+        // Extract filename from S3 URL and clean it
+        const extractFilenameFromS3Url = (url: string): string => {
+            try {
+                const urlObj = new URL(url);
+                const pathname = urlObj.pathname;
+                // Get the last part of the path (filename)
+                let filename = pathname.split('/').pop() || 'download';
+                
+                // Remove AWS-specific prefixes and suffixes, keep only the meaningful part
+                // Remove timestamps, UUIDs, and other AWS artifacts
+                filename = filename.replace(/^\d+-/, ''); // Remove leading timestamp
+                filename = filename.replace(/-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/gi, ''); // Remove UUIDs
+                filename = filename.replace(/^[a-f0-9]{32}-/, ''); // Remove MD5 hashes
+                filename = filename.replace(/\.[^.]+$/, ''); // Remove current extension
+                
+                // Ensure .stl extension
+                return `${filename}.stl`;
+            } catch (error) {
+                console.error('Error extracting filename from URL:', error);
+                return 'download.stl';
+            }
+        };
+        
+        const filename = extractFilenameFromS3Url(s3Url);
+        
+        // Create download link and trigger download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        toast.success(`File "${filename}" downloaded successfully!`);
     } catch (error) {
         toast.error('Something went wrong while downloading the file.');
         console.error('Error downloading file from S3:', error);
         throw error;
     } finally {
         setIsDownloading(false);
+        setProgress(0);
     }
 };
 

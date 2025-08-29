@@ -84,7 +84,7 @@ const FilesList = ({ file }: Props) => {
                   gap: '4px',
                 }}
               >
-             {isDownloading ? fileDownloadProgress : <>
+             {isDownloading ? `${fileDownloadProgress}%` : <>
              Download <Download />
              </>
              }
