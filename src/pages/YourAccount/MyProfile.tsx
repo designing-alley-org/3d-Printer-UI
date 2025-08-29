@@ -12,6 +12,7 @@ import EditProfileModal from '../../components/Model/EditProfileModal';
 import toast from 'react-hot-toast';
 import { setDefaultAddressService } from '../../services/address';
 import { EditEmailModal } from '../../components/Model';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const MyProfile = () => {
   const user = useSelector((state: any) => state.user);
@@ -63,7 +64,6 @@ const MyProfile = () => {
   useEffect(() => {
    const fetchAddresses = async () => {
      const response = await getAddress({setAddressLoading});
-     console.log('Fetched addresses:', response.data.data);
      setAllAddresses(response.data.data);
    };
 
@@ -156,10 +156,10 @@ const MyProfile = () => {
 
       <Box maxHeight={isSmallScreen ? "300px" : "400px"} overflow="auto">
       {allAddresses.length === 0 ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {
             addressLoading ?
-             <CircularProgress size={24} /> 
+             <LoadingScreen />
              :
               <NoDataFound  text="No addresses found."  description='Currently, there are no addresses available.'/>
           }

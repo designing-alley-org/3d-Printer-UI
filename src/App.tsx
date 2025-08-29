@@ -6,7 +6,7 @@ function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <Toaster />
+      <Toaster position="bottom-right" />
       <Routing />
     </BrowserRouter>
   );

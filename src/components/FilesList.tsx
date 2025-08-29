@@ -26,7 +26,11 @@ import {
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 
-const FilesList = () => {
+interface Props {
+  file: any;
+}
+
+const FilesList = ({ file }: Props) => {
   const [isTableExpanded, setIsTableExpanded] = useState(false);
 
   const handleViewClick = () => {
@@ -59,7 +63,7 @@ const FilesList = () => {
             />
             <Typography variant="h6" color="primary.main" gutterBottom>
               {' '}
-              File_Name.stl
+              {file.fileName.split(' ')[0]}.stl
             </Typography>
           </Box>
           {/* Right */}
@@ -126,35 +130,37 @@ const FilesList = () => {
                 <TableBody sx={{}}>
                   <TableRow>
                     <TableCell> <Ruler size={15} style={{ transform: 'rotate(100deg)' }} /> Scale</TableCell>
-                    <TableCell align="right">98.550 x 151.420 x 32.250 mm</TableCell>
+                    <TableCell align="right">{
+                      file?.dimensions?.height + ' x ' + file?.dimensions?.width + ' x ' + file?.dimensions?.height + ' ' + (file.unit || 'N/A')
+                      }</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell> <TechnologyIcon sx={{ fontSize: 15 }} /> Technology</TableCell>
-                    <TableCell align="right">SLA</TableCell>
+                    <TableCell align="right">{file.technology || 'N/A'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell> <MaterialIcon sx={{ fontSize: 15 }} /> Material</TableCell>
-                    <TableCell align="right">ABS</TableCell>
+                    <TableCell align="right">{file.material || 'N/A'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell> <ColorIcon sx={{ fontSize: 15 }} /> Colors</TableCell>
-                    <TableCell align="right">Black</TableCell>
+                    <TableCell align="right">{file.color || 'N/A'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell> <PrinterIcon sx={{ fontSize: 15 }} /> Printers</TableCell>
-                    <TableCell align="right">Bambulab</TableCell>
+                    <TableCell align="right">{file.printer || 'N/A'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell> <InfillIcon sx={{ fontSize: 15 }} /> Infill</TableCell>
-                    <TableCell align="right">80%</TableCell>
+                    <TableCell align="right">{file.infill || 'N/A'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell> <ScaleOutlinedIcon sx={{ fontSize: 15 }} /> Weight</TableCell>
-                    <TableCell align="right">6.89 gm</TableCell>
+                    <TableCell align="right">{(file?.dimensions?.weight + ' ' + ('g.m.')) || 'N/A'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell><AddShoppingCartOutlinedIcon sx={{ fontSize: 15 }} /> Quantity</TableCell>
-                    <TableCell align="right">4</TableCell>
+                    <TableCell align="right">{file.quantity || 'N/A'}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

@@ -13,14 +13,10 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import DeliveryDetail from './DeliveryDetail';
 import FilesList from './FilesList';
 import NoDataFound from './NoDataFound';
+import { formatDate } from '../utils/function';
 
 interface Props {
-  order: {
-    _id: string;
-    files: number;
-    status: string;
-    createdAt: string;
-  };
+  order: any;
   onClick: (id: string) => void;
   onDispute?: (id: string) => void;
   onReturn?: (id: string) => void;
@@ -28,6 +24,7 @@ interface Props {
 }
 
 const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false }: Props) => {
+  console.log(order);
   const theme = useTheme();
   return (
     <>
@@ -71,7 +68,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                 variant="body2"
                 color={theme.palette.customColors.lightTextOverDark}
               >
-                Created On: {order.createdAt}
+                Created On: {formatDate(order.createdAt)}
               </Typography>
             </Box>
             <Box ml={4}>
@@ -81,7 +78,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                 gutterBottom
               >
                 {' '}
-                {order.files} File
+                {order.numberOfFiles} File
               </Typography>
               <Typography
                 variant="body2"
@@ -122,7 +119,9 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
               <DeliveryDetail />
 
               {
-                true ? <NoDataFound text="No Files Found" description='No files have been uploaded for this order.' /> : <FilesList />
+                order.numberOfFiles === 0 ? <NoDataFound text="No Files Found" description='No files have been uploaded for this order.' /> :  order.files.map((file: any) => (
+                    <FilesList key={file.id} file={file} />
+                  ))
               }
 
              {

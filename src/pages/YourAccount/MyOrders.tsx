@@ -1,12 +1,6 @@
-import { useEffect, useState } from 'react';
-import { getUserOrder } from '../../store/actions/getUserOrder';
-import Pagin from '../../components/Paging/Pagin';
-import { OrderWrapper } from './styles';
-import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
-import ViewDetails from './placeOrder/ViewDetails';
-import NotificationCard from '../Notification/NotificationCard';
+import { useEffect, useState, useCallback } from 'react';
+import CustomPagination from '../../components/CustomPagination';
 import NoDataFound from '../../components/NoDataFound';
-import OldNotificationCardSkeletonList from '../../components/Notifications/OldNotificationCardSkeletonList';
 import { Box, Card, CardContent, CardHeader, Typography } from '@mui/material';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
@@ -16,28 +10,45 @@ import CreateReturnModel from '../../components/Model/CreateReturnModel';
 import { DisputeFormValues } from '../../validation/disputeValidation';
 import { ReturnFormValues } from '../../validation/returnValidation';
 import { createDisputeByOrderService } from '../../services/disputes';
+import { getAllOrdersService } from '../../services/order';
+import { debounce } from '../../utils/function';
+import LoadingScreen from '../../components/LoadingScreen';
 
 // Define interfaces for type safety
 interface Order {
   _id: string;
+  numberOfFiles: number;
   order_status: string;
   files: string[];
   updatedAt: string;
-  totalPages: number; // Optional, in case the API does not return this
+  name?: string;
+  createdAt: string;
   // Add other order properties as needed
+}
+
+interface PaginationData {
+  currentPage: number;
+  totalPages: number;
+  totalOrders: number;
+  ordersPerPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
 }
 
 interface OrderResponse {
   orders: Order[];
+  pagination: PaginationData;
 }
 
 export const MyOrders = () => {
-  const [orders, setOrders] = useState<OrderResponse | null>(null);
+  const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [pagination, setPagination] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const [defaultFilter, setDefaultFilter] = useState<{
+  const [statusFilter, setStatusFilter] = useState<{
     id: number;
     value: string;
     label: string;
@@ -53,21 +64,78 @@ export const MyOrders = () => {
   const [returnOrderId, setReturnOrderId] = useState<string>('');
   const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        await getUserOrder(setOrders, pagination);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch orders');
-      } finally {
-        setIsLoading(false);
+  // Fetch orders function
+  const fetchOrders = async (page: number = currentPage, limit: number = pageSize, orderId?: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const params: { page: number; limit: number; orderId?: string } = { 
+        page, 
+        limit 
+      };
+      
+      if (orderId && orderId.trim()) {
+        params.orderId = orderId.trim();
       }
-    };
+      
+      const response = await getAllOrdersService(params);
+      
+      if (response?.data) {
+        setOrdersData({
+          orders: response.data.data.orders || [],
+          pagination: response.data.data.pagination
+        });
+      } else {
+        throw new Error('Failed to fetch orders');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch orders');
+      setOrdersData(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      setCurrentPage(1); // Reset to first page on search
+      fetchOrders(1, pageSize, query);
+    }, 500),
+    [pageSize] // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchQuery(value);
+    debouncedSearch(value);
+  };
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchOrders(page, pageSize, searchQuery);
+  };
+
+  // Handle page size change
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1);
+    fetchOrders(1, newPageSize, searchQuery);
+  };
+
+  // Handle status filter change
+  const handleStatusFilterChange = (value: any) => {
+    setStatusFilter(value);
+    // You can implement status filtering here if needed
+    // For now, we'll just update the state
+  };
+
+  useEffect(() => {
     fetchOrders();
-  }, [pagination]); // Added pagination as dependency
+  }, []); // Only run on component mount
 
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
@@ -155,50 +223,6 @@ export const MyOrders = () => {
     return <div>Error: {error}</div>;
   }
 
-  // return (
-  //   <OrderWrapper>
-  //     <div className="orders-container">
-  //       <h1 className="orders-title">TOTAL ORDERS</h1>
-
-  //       {isLoading ? (
-  //         <OldNotificationCardSkeletonList />
-  //       ) : !orders?.orders?.length ? (
-  //         <NoDataFound
-  //           text="No Orders Found"
-  //           description="Check back later."
-  //         />
-  //       ) : (
-  //         <div className="orders-list">
-  //           {orders.orders.map((item: Order) => (
-  //             <div key={item._id} className="order-item">
-  //               <NotificationCard
-  //                 title={formatOrderStatus(item.order_status)}
-  //                 orderNumber={item._id}
-  //                 dateTime={formatDateTime(item.updatedAt)}
-  //                 buttonLabel={selectedOrderId === item._id ? "Hide Details" : "View Details"}
-  //                 onButtonClick={() => handleViewDetails(item._id)}
-  //                 myOrders={item.order_status}
-  //               />
-
-  //               {selectedOrderId === item._id && (
-  //                 <div className="view-details-container">
-  //                   <ViewDetails item={item} myOrders="yes"/>
-  //                 </div>
-  //               )}
-  //             </div>
-  //           ))}
-  //         </div>
-  //       )}
-  //      {orders?.totalPages > 1 && <div className="pagination">
-  //         <Pagin
-  //           setPagination={setPagination}
-  //           totalPages={orders?.totalPages ?? 1}
-  //         />
-  //       </div>}
-  //     </div>
-  //   </OrderWrapper>
-  // );
-
   return (
     <>
       <Card sx={{ borderRadius: '8px', padding: '3px' }}>
@@ -219,53 +243,72 @@ export const MyOrders = () => {
             variant="outlined"
             isSearch={true}
             inputStyle={2}
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
           <SingleSelectDropdown
             options={[
               { id: 1, value: 'all', label: 'All' },
               { id: 2, value: 'pending', label: 'Pending' },
               { id: 3, value: 'completed', label: 'Completed' },
+              { id: 4, value: 'processing', label: 'Processing' },
+              { id: 5, value: 'shipped', label: 'Shipped' },
+              { id: 6, value: 'delivered', label: 'Delivered' },
             ]}
-            defaultValue={defaultFilter}
+            defaultValue={statusFilter}
             sx={{
               width: '200px',
             }}
-            onChange={(value) => console.log(value)}
+            onChange={handleStatusFilterChange}
           />
         </CardContent>
       </Card>
 
       {/* Order File Start  */}
-      {false ? (
+      {isLoading ? (
+        <LoadingScreen />
+      ) : error ? (
+        <Box mt={3}>
+          <Typography color="error" variant="h6" textAlign="center">
+            Error: {error}
+          </Typography>
+        </Box>
+      ) : !ordersData?.orders?.length ? (
         <NoDataFound text="No Orders Found" description="No orders available." />
       ) : (
         <Box mt={3}>
-          {Array(5)
-            .fill(null)
-            .map((_, index) => {
-              const mockOrder = {
-                _id: `order-${index + 1}`,
-                name: `Order ${index + 1}`,
-                files: Math.floor(Math.random() * 10) + 1,
-                status: index % 2 === 0 ? 'pending' : 'completed',
-                createdAt: new Date().toISOString(),
-              };
+          {ordersData.orders.map((order: Order) => {
+            return (
+              <Box key={order._id} mb={2}>
+                <OrderFileItem
+                  order={order}
+                  onClick={() => {
+                    console.log('Order clicked:', order);
+                    handleViewDetails(order._id);
+                  }}
+                  onDispute={handleOpenDispute}
+                  onReturn={handleOpenReturn}
+                  isExpanded={selectedOrderId === order._id}
+                />
+              </Box>
+            );
+          })}
+        </Box>
+      )}
 
-              return (
-                <Box key={mockOrder._id} mb={2}>
-                  <OrderFileItem
-                    order={mockOrder}
-                    onClick={() => {
-                      console.log('Order clicked:', mockOrder);
-                      handleViewDetails(mockOrder._id);
-                    }}
-                    onDispute={handleOpenDispute}
-                    onReturn={handleOpenReturn}
-                    isExpanded={selectedOrderId === mockOrder._id}
-                  />
-                </Box>
-              );
-            })}
+      {/* Pagination */}
+      {ordersData?.pagination && ordersData.pagination.totalPages > 1 && (
+        <Box mt={3}>
+          <CustomPagination
+            pagination={ordersData.pagination}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            showPageSizeSelector={true}
+            pageSizeOptions={[5, 10, 20, 50]}
+            showItemsInfo={true}
+            itemName="orders"
+            disabled={isLoading}
+          />
         </Box>
       )}
 
