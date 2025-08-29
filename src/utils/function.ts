@@ -55,3 +55,19 @@ export function formatDate(date: Date | number | string, includeTime: boolean = 
         return 'Invalid date';
     }
 }
+
+/**
+ * Converts text by replacing underscores with spaces and capitalizing the first letter
+ * 
+ * @param text The text to convert (with underscores)
+ * @returns Formatted text with spaces instead of underscores and first letter capitalized
+ */
+export function formatText(text: string): string {
+    if (!text) return '';
+    
+    // Replace underscores with spaces
+    const withSpaces = text.replace(/_/g, ' ');
+    
+    // Capitalize the first letter
+    return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
+}

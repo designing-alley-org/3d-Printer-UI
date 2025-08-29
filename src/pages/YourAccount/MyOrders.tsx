@@ -283,7 +283,6 @@ export const MyOrders = () => {
                 <OrderFileItem
                   order={order}
                   onClick={() => {
-                    console.log('Order clicked:', order);
                     handleViewDetails(order._id);
                   }}
                   onDispute={handleOpenDispute}

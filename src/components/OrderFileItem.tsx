@@ -24,7 +24,6 @@ interface Props {
 }
 
 const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false }: Props) => {
-  console.log(order);
   const theme = useTheme();
   return (
     <>
@@ -84,7 +83,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                 variant="body2"
                 color={theme.palette.customColors.lightTextOverDark}
               >
-                Status:
+                Status:{order.order_status || 'N/A'}
               </Typography>
             </Box>
           </Box>
@@ -112,11 +111,13 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
+            style={{ overflow: 'hidden' }} 
           >
             <Box mt={2}>
               {/* DeliveryDetail */}
-              <DeliveryDetail />
+             {order?.shipmentCreated?.created &&
+               <DeliveryDetail shipment={order?.shipmentCreated} return={order?.returnCreated} />
+             }
 
               {
                 order.numberOfFiles === 0 ? <NoDataFound text="No Files Found" description='No files have been uploaded for this order.' /> :  order.files.map((file: any) => (
@@ -129,7 +130,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
               &&  
               <Box display="flex" gap={1} justifyContent="end" mt={2}>
                {
-                true && 
+                order?.shipmentCreated?.status === 'Delivered' && 
                 <CustomButton
                   variant="outlined"
                   sx={{

@@ -1,32 +1,58 @@
 import { Box, Card, CardContent, CardHeader, Typography } from '@mui/material';
 import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutlined';
 import TrackingStepper from './TrackingStepper';
+import { useEffect, useState } from 'react';
+import { trackByTrackingNumberService } from '../services/fedex';
+import { formatText } from '../utils/function';
 
-const trackingSteps = [
-  { label: "Collected", location: "London, Depot", time: "Mon 01 Apr, 09:00 am" },
-  { label: "Left", location: "Watford, Hub", time: "Mon 01 Apr, 01:30 pm" },
-  { label: "Reached", location: "Milton Keynes, Sorting Centre", time: "Mon 01 Apr, 04:15 pm" },
-  { label: "Departed", location: "Northampton, Depot", time: "Mon 01 Apr, 07:45 pm" },
-  { label: "Arrived", location: "Birmingham, Warehouse", time: "Tue 02 Apr, 06:20 am" },
-  { label: "Left", location: "Coventry, Distribution Hub", time: "Tue 02 Apr, 10:00 am" },
-  { label: "Reached", location: "Leicester, Hub", time: "Tue 02 Apr, 01:30 pm" },
-  { label: "Departed", location: "Nottingham, Depot", time: "Tue 02 Apr, 04:50 pm" },
-  { label: "Arrived", location: "Sheffield, Warehouse", time: "Tue 02 Apr, 09:15 pm" },
-  { label: "Left", location: "Leeds, Hub", time: "Wed 03 Apr, 07:30 am" },
-  { label: "Reached", location: "Manchester, Sorting Centre", time: "Wed 03 Apr, 10:45 am" },
-  { label: "Departed", location: "Liverpool, Depot", time: "Wed 03 Apr, 01:20 pm" },
-  { label: "Arrived", location: "Preston, Hub", time: "Wed 03 Apr, 05:40 pm" },
-  { label: "Left", location: "Lancaster, Warehouse", time: "Wed 03 Apr, 08:10 pm" },
-  { label: "Reached", location: "Carlisle, Depot", time: "Thu 04 Apr, 06:30 am" },
-  { label: "Departed", location: "Glasgow, Hub", time: "Thu 04 Apr, 11:00 am" },
-  { label: "Arrived", location: "Edinburgh, Distribution Centre", time: "Thu 04 Apr, 02:45 pm" },
-  { label: "Left", location: "Dundee, Depot", time: "Thu 04 Apr, 06:15 pm" },
-  { label: "Reached", location: "Aberdeen, Hub", time: "Thu 04 Apr, 09:00 pm" },
-  { label: "Delivered", location: "Inverness, Final Destination", time: "Fri 05 Apr, 10:30 am" },
-];
+// const trackingSteps = [
+//   { label: "Collected", location: "London, Depot", time: "Mon 01 Apr, 09:00 am" },
+//   { label: "Left", location: "Watford, Hub", time: "Mon 01 Apr, 01:30 pm" },
+//   { label: "Reached", location: "Milton Keynes, Sorting Centre", time: "Mon 01 Apr, 04:15 pm" },
+//   { label: "Departed", location: "Northampton, Depot", time: "Mon 01 Apr, 07:45 pm" },
+//   { label: "Arrived", location: "Birmingham, Warehouse", time: "Tue 02 Apr, 06:20 am" },
+//   { label: "Left", location: "Coventry, Distribution Hub", time: "Tue 02 Apr, 10:00 am" },
+//   { label: "Reached", location: "Leicester, Hub", time: "Tue 02 Apr, 01:30 pm" },
+//   { label: "Departed", location: "Nottingham, Depot", time: "Tue 02 Apr, 04:50 pm" },
+//   { label: "Arrived", location: "Sheffield, Warehouse", time: "Tue 02 Apr, 09:15 pm" },
+//   { label: "Left", location: "Leeds, Hub", time: "Wed 03 Apr, 07:30 am" },
+//   { label: "Reached", location: "Manchester, Sorting Centre", time: "Wed 03 Apr, 10:45 am" },
+//   { label: "Departed", location: "Liverpool, Depot", time: "Wed 03 Apr, 01:20 pm" },
+//   { label: "Arrived", location: "Preston, Hub", time: "Wed 03 Apr, 05:40 pm" },
+//   { label: "Left", location: "Lancaster, Warehouse", time: "Wed 03 Apr, 08:10 pm" },
+//   { label: "Reached", location: "Carlisle, Depot", time: "Thu 04 Apr, 06:30 am" },
+//   { label: "Departed", location: "Glasgow, Hub", time: "Thu 04 Apr, 11:00 am" },
+//   { label: "Arrived", location: "Edinburgh, Distribution Centre", time: "Thu 04 Apr, 02:45 pm" },
+//   { label: "Left", location: "Dundee, Depot", time: "Thu 04 Apr, 06:15 pm" },
+//   { label: "Reached", location: "Aberdeen, Hub", time: "Thu 04 Apr, 09:00 pm" },
+//   { label: "Delivered", location: "Inverness, Final Destination", time: "Fri 05 Apr, 10:30 am" },
+// ];
 
 
-const DeliveryDetail = () => {
+interface DeliveryDetailProps {
+  shipment: any;
+  return: any;
+}
+
+const DeliveryDetail = ({ shipment, return: returnInfo }: DeliveryDetailProps) => {
+
+    const [trackingDetails, setTrackingDetails] = useState([]);
+    const [trackingError, setTrackingError] = useState(null);
+
+    useEffect(() => {
+    const fetchTrackingDetails = async () => {
+      try {
+        const response = await trackByTrackingNumberService(shipment?.trackingId, setTrackingError);
+        setTrackingDetails(response?.data?.scanEvents);
+      } catch (error) {
+        console.error('Error fetching tracking details:', error);
+      }
+    };
+    if (shipment?.trackingId) {
+      fetchTrackingDetails();
+    }
+  }, [shipment?.trackingId]);
+
   return (
     <Card
       sx={{
@@ -67,7 +93,7 @@ const DeliveryDetail = () => {
               <Typography
                 sx={{ color: 'secondary.main', ml: '4px', fontWeight: '500' }}
               >
-                In Transit
+                {shipment?.status || 'N/A'}
               </Typography>
             </Typography>
             <Typography
@@ -83,7 +109,7 @@ const DeliveryDetail = () => {
               <Typography
                 sx={{ color: 'secondary.main', ml: '4px', fontWeight: '500' }}
               >
-                12345678
+                {shipment?.trackingId || 'N/A'}
               </Typography>
             </Typography>
           </Box>
@@ -99,16 +125,16 @@ const DeliveryDetail = () => {
             '&::-webkit-scrollbar-thumb': {
               backgroundColor: '#888',
               borderRadius: '4px',
-            },
+            }, 
             '&::-webkit-scrollbar-thumb:hover': {
               backgroundColor: '#555',
             },
           }}>
-          <TrackingStepper steps={trackingSteps}  />
+          <TrackingStepper steps={trackingDetails}  trackingError={trackingError} />
         </Box>
         {/* Footer */}
 
-        <Box
+       {returnInfo?.created && <Box
           display="flex"
           justifyContent="space-between"
           mt={2}
@@ -135,7 +161,7 @@ const DeliveryDetail = () => {
               <Typography
                 sx={{ color: 'secondary.main', ml: '4px', fontWeight: '500' }}
               >
-                In Transit
+                {formatText(returnInfo?.status) || 'N/A'}
               </Typography>
             </Typography>
           </Box>
@@ -150,10 +176,10 @@ const DeliveryDetail = () => {
             <Typography
               sx={{ color: 'secondary.main', ml: '4px', fontWeight: '500', display: 'flex', alignItems: 'center', justifyContent: 'end' }}
             >
-              <a href="" target='_blank'><SimCardDownloadOutlinedIcon fontSize="small" sx={{ transform: 'translateY(5px)' }} /> Download Return Label</a>
+              <a href={returnInfo?.labelUrl} target='_blank'><SimCardDownloadOutlinedIcon fontSize="small" sx={{ transform: 'translateY(5px)' }} /> Download Return Label</a>
             </Typography>
           </Box>
-        </Box>
+        </Box>}
       </CardContent>
     </Card>
   );

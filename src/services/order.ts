@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import api from "../axiosConfig";
 
 // Upload files
@@ -245,8 +246,68 @@ const getAllOrdersService = async ({ page, limit, orderId }: { page?: number, li
 };
 
 
+const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: number) => void, setIsDownloading: (isDownloading: boolean) => void): Promise<Blob> => {
+    try {
+        // Start fetch request to S3
+        const response = await fetch(s3Url);
+        setIsDownloading(true);
+
+        if (!response.ok) {
+            throw new Error(`Failed to download from S3. Status: ${response.status}`);
+        }
+        
+        // Get the total size of the file
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
+        
+        // Create a reader from the response body
+        const reader = response.body?.getReader();
+        if (!reader) {
+            throw new Error('Failed to get response reader from S3');
+        }
+        
+        // Track downloaded bytes
+        let receivedBytes = 0;
+        const chunks: Uint8Array[] = [];
+        
+        // Read the data chunks and track progress
+        while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) {
+                break;
+            }
+            
+            chunks.push(value);
+            receivedBytes += value.length;
+            
+            // Update progress
+            if (total > 0) {
+                setProgress(Math.round((receivedBytes / total) * 100));
+            }
+        }
+        
+        // Concatenate the chunks into a single Uint8Array
+        const allChunks = new Uint8Array(receivedBytes);
+        let position = 0;
+        for (const chunk of chunks) {
+            allChunks.set(chunk, position);
+            position += chunk.length;
+        }
+        
+        // Create a blob from the data
+        return new Blob([allChunks]);
+    } catch (error) {
+        toast.error('Something went wrong while downloading the file.');
+        console.error('Error downloading file from S3:', error);
+        throw error;
+    } finally {
+        setIsDownloading(false);
+    }
+};
 
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService};
+
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service};
 
 

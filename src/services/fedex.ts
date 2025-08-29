@@ -1,11 +1,12 @@
 import api from "../axiosConfig"
 
-const trackByTrackingNumberService = async (trackingNumber: string) => {
+const trackByTrackingNumberService = async (trackingNumber: string, setTrackingError: (error: any) => void) => {
     try {
         const response = await api.get(`/track-shipment/${trackingNumber}`);
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error tracking by tracking number:", error);
+        setTrackingError(error.response.data.message);
         throw error;
     }
 }

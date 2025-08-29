@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
+import { downloadFileFromS3Service } from '../services/order';
 
 interface Props {
   file: any;
@@ -32,6 +33,8 @@ interface Props {
 
 const FilesList = ({ file }: Props) => {
   const [isTableExpanded, setIsTableExpanded] = useState(false);
+  const [fileDownloadProgress, setFileDownloadProgress] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleViewClick = () => {
     setIsTableExpanded(!isTableExpanded);
@@ -72,6 +75,8 @@ const FilesList = ({ file }: Props) => {
               {/* Add your file actions here */}
               <CustomButton
                 variant="contained"
+                onClick={() => downloadFileFromS3Service(file.fileUrl, setFileDownloadProgress, setIsDownloading)}
+                disabled={isDownloading}
                 sx={{
                   borderRadius: '4px',
                   display: 'flex',
@@ -79,7 +84,10 @@ const FilesList = ({ file }: Props) => {
                   gap: '4px',
                 }}
               >
-                Download <Download />
+             {isDownloading ? fileDownloadProgress : <>
+             Download <Download />
+             </>
+             }
               </CustomButton>
               <CustomButton
                 variant="contained"

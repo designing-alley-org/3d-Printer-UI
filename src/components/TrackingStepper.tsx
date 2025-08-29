@@ -5,6 +5,9 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
+import LoadingScreen from "./LoadingScreen";
+import { formatDate } from "../utils/function";
+import { Box, Typography } from "@mui/material";
 
 // --- Connector Style ---
 const CustomConnector = styled(StepConnector)(({ theme }) => ({
@@ -53,21 +56,42 @@ function CustomStepIcon(props: StepIconProps) {
 
 // --- Types ---
 type StepData = {
-  label: string;
-  location: string;
-  time: string;
+  derivedStatus: string;
+  postalCode: string; 
+  city: string;
+  date: string;
 };
 
 type TrackingStepperProps = {
   steps: StepData[];
+  trackingError: string | null;
   activeStep?: number; // default: last step
 };
 
 // --- Component ---
 export default function TrackingStepper({
   steps,
+  trackingError,
   activeStep = steps.length - 1,
 }: TrackingStepperProps) {
+
+  if (trackingError) {
+    return <>
+    <Box>
+      <Typography variant="h6" color="error">
+        Error Fetching Tracking Details
+      </Typography>
+      <Typography variant="body2" color="error">
+        {trackingError}
+      </Typography>
+    </Box>
+    </>
+  }
+
+  if (!steps || steps.length === 0) {
+    return <LoadingScreen title="Loading Tracking Details..." description="Please wait while we fetch the latest tracking information." />;
+  }
+
   return (
     <Stack sx={{ width: "100%", mt: 2 }} >
       <Stepper
@@ -75,14 +99,14 @@ export default function TrackingStepper({
         activeStep={activeStep}
         connector={<CustomConnector />}
       >
-        {steps.map((step, index) => (
+        {steps?.map((step, index) => (
           <Step key={index} sx={{ minWidth: 180 }}>
             <StepLabel StepIconComponent={CustomStepIcon}>
               <div style={{ textAlign: "center" }}>
-                <strong>{step.label}</strong>
-                <div>{step.location}</div>
+                <strong>{step.derivedStatus}</strong>
+                <div>{step.city},{step.postalCode}</div>
                 <div style={{ fontSize: "0.8rem", color: "gray" }}>
-                  {step.time}
+                  {formatDate(step.date)}
                 </div>
               </div>
             </StepLabel>

@@ -1,10 +1,10 @@
 import { Box, Typography, CircularProgress } from '@mui/material';
 
 const LoadingScreen = ({
-  text = 'Please wait...',
+  title = 'Please wait...',
   description,
 }: {
-  text?: string;
+  title?: string;
   description?: string;
 }) => {
   return (
@@ -18,7 +18,7 @@ const LoadingScreen = ({
     >
       <CircularProgress size={50} color="primary" />
       <Typography variant="h6" mt={2} color="text.secondary">
-        {text}
+        {title}
       </Typography>
       {description && (
         <Typography variant="body2" color="text.disabled" mt={1}>
