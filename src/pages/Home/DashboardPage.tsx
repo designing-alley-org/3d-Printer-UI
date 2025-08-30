@@ -39,14 +39,14 @@ const DashboardPage = () => {
       isPrimary: false,
       path: '/track-orders',
     },
-    {
-      id: 3,
-      title: 'Order History',
-      description: 'View past orders and details',
-      icon: <HistoryIcon sx={{ fontSize: 40 }} />,
-      isPrimary: false,
-      path: '/order-history',
-    },
+    // {
+    //   id: 3,
+    //   title: 'Order History',
+    //   description: 'View past orders and details',
+    //   icon: <HistoryIcon sx={{ fontSize: 40 }} />,
+    //   isPrimary: false,
+    //   path: '/order-history',
+    // },
   ];
 
   const handleClick = async (path: string) => {

@@ -45,10 +45,10 @@ const Password = () => {
     
     return (
         <Container sx={{ bgcolor: 'background.paper', p: { xs: 2, sm: 3, md: 4 }, borderRadius:'8px' }}>
-            <Typography variant="h5" fontWeight={600} gutterBottom>
+            <Typography variant="h5" fontWeight={600} >
                 Security Settings
             </Typography>
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="body1" gutterBottom sx={{ mb: 3, color: 'text.secondary' }}>
                 Manage your account security and authentication
             </Typography>
 
@@ -71,7 +71,7 @@ const Password = () => {
                             helperText={touched.old_password ? errors.old_password : undefined}
                             placeholder="Enter your current password"
                             required
-                            sx={{ mb: 3 }}
+                            sx={{ mb: 2 }}
                         />
 
                         <CustomInputLabelField
@@ -85,7 +85,7 @@ const Password = () => {
                             helperText={touched.new_password ? errors.new_password : undefined}
                             placeholder="Enter your new password"
                             required
-                            sx={{ mb: 3 }}
+                            sx={{ mb: 2 }}
                         />
 
                         <CustomInputLabelField
@@ -99,7 +99,7 @@ const Password = () => {
                             helperText={touched.confirmPassword ? errors.confirmPassword : undefined}
                             placeholder="Confirm your new password"
                             required
-                            sx={{ mb: 3 }}
+                            sx={{ mb: 2 }}
                         />
 
                         <CustomButton

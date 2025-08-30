@@ -5,19 +5,21 @@ import {
   InputAdornment,
   TextFieldProps,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Search, Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface CustomTextFieldProps extends Omit<TextFieldProps, "variant"> {
   variant?: TextFieldProps["variant"];
   borderRadius?: string;
   onlyNumber?: boolean;
   inputStyle?: number; // ✅ style preset selector
+  isSearch?: boolean;
+  disable?: boolean;
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { onlyNumber, onChange, inputStyle, ...rest } = props;
+  const { onlyNumber, onChange,isSearch = false , inputStyle, disable = false , ...rest} = props;
   const isPasswordField = props.type === "password";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +77,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
         ...props.sx, // allow consumer overrides
       }}
       onChange={handleChange}
+      disabled={disable}
       InputProps={{
         ...props.InputProps,
         endAdornment: isPasswordField ? (
@@ -84,11 +87,19 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
               edge="end"
               tabIndex={-1}
             >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
+              {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
         ) : (
-          props.InputProps?.endAdornment
+          // props.InputProps?.endAdornment
+         isSearch ?  <InputAdornment position="end">
+            {isSearch && (
+              <IconButton edge="end" tabIndex={-1}>
+                <Search />
+              </IconButton>
+            )}
+          </InputAdornment> :
+            props.InputProps?.endAdornment
         ),
       }}
     />

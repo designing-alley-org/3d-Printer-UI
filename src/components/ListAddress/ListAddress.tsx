@@ -31,7 +31,6 @@ interface ListAddressProps {
 
 const ListAddress: React.FC<ListAddressProps> = ({
   address,
-  index,
   selectedAddressId,
   onAddressSelect,
   onEditClick,
@@ -39,7 +38,6 @@ const ListAddress: React.FC<ListAddressProps> = ({
   showEdit = true,
 }) => {
   const isSmallScreen = useMediaQuery('(max-width:768px)');
-  const isDefault = index === 0;
 
   const handleRadioChange = () => {
     if (onAddressSelect) {
@@ -78,7 +76,7 @@ const ListAddress: React.FC<ListAddressProps> = ({
           sx={{ display: "flex", alignItems: "center", gap: 1 }}
         >
           {address.personName}
-          {isDefault && (
+          {selectedAddressId === address._id && (
             <Chip
               label="Default Selected"
               size="small"

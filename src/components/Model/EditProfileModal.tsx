@@ -4,9 +4,9 @@ import ResponsiveModal from './ResponsiveModal';
 import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
 import CustomButton from '../../stories/button/CustomButton';
 
-interface User {
+export interface User {
   name: string;
-  email: string;
+  email?: string;
   phone_no: string;
   phone_ext?: string;
 }
@@ -28,7 +28,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<User>({
     name: '',
-    email: '',
     phone_no: '',
     phone_ext: '',
   });
@@ -39,7 +38,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
     if (user && open) {
       setFormData({
         name: user.name || '',
-        email: user.email || '',
         phone_no: user.phone_no || '',
         phone_ext: user.phone_ext || '',
       });
@@ -68,12 +66,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
     }
 
     if (!formData.phone_no.trim()) {
@@ -128,6 +120,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       disableBackdropClick={loading}
     >
       <Box sx={{ width: '100%' }}>
+
         <CustomInputLabelField
           label="Full Name"
           name="name"
@@ -139,19 +132,17 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           required
         />
 
-        <CustomInputLabelField
-          label="Email Address"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          placeholder="Enter your email address"
-          type="email"
-          error={!!errors.email}
-          helperText={errors.email}
-          required
-        />
 
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 2 }} spacing={1}>
+           <CustomInputLabelField
+            label="Extension (Optional)"
+            name="phone_ext"
+            value={formData.phone_ext || ''}
+            onChange={handleInputChange}
+            placeholder="e.g. +44"
+            onlyNumber
+            fullWidth
+          />
           <CustomInputLabelField
             label="Phone Number"
             name="phone_no"
@@ -165,15 +156,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             sx={{ flex: 1 }}
           />
 
-          <CustomInputLabelField
-            label="Extension (Optional)"
-            name="phone_ext"
-            value={formData.phone_ext || ''}
-            onChange={handleInputChange}
-            placeholder="Ext."
-            onlyNumber
-            sx={{ flex: 0.3, minWidth: '120px' }}
-          />
+         
         </Stack>
       </Box>
     </ResponsiveModal>

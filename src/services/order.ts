@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import api from "../axiosConfig";
 
 // Upload files
@@ -228,8 +229,128 @@ const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => 
 }
 
 
+const getAllOrdersService = async ({ page, limit, orderId }: { page?: number, limit?: number, orderId?: string } = {}) => {
+    try {
+        const params: any = {};
+        
+        if (page !== undefined) params.page = page;
+        if (limit !== undefined) params.limit = limit;
+        if (orderId) params.orderId = orderId;
+        
+        const response = await api.get('/get-all-orders', { params });
+        return response;
+    } catch (error) {
+        console.error('Error fetching all orders:', error);
+        throw error;
+    }
+};
 
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService };
+const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: number) => void, setIsDownloading: (isDownloading: boolean) => void): Promise<void> => {
+    try {
+        setIsDownloading(true);
+        setProgress(0);
+
+        // Start fetch request to S3
+        const response = await fetch(s3Url);
+
+        if (!response.ok) {
+            throw new Error(`Failed to download from S3. Status: ${response.status}`);
+        }
+        
+        // Get the total size of the file
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
+        
+        // Create a reader from the response body
+        const reader = response.body?.getReader();
+        if (!reader) {
+            throw new Error('Failed to get response reader from S3');
+        }
+        
+        // Track downloaded bytes
+        let receivedBytes = 0;
+        const chunks: Uint8Array[] = [];
+        
+        // Read the data chunks and track progress
+        while (true) {
+            const { done, value } = await reader.read();
+            
+            if (done) {
+                break;
+            }
+            
+            chunks.push(value);
+            receivedBytes += value.length;
+            
+            // Update progress
+            if (total > 0) {
+                const progress = Math.round((receivedBytes / total) * 100);
+                setProgress(progress);
+            }
+        }
+        
+        // Concatenate the chunks into a single Uint8Array
+        const allChunks = new Uint8Array(receivedBytes);
+        let position = 0;
+        for (const chunk of chunks) {
+            allChunks.set(chunk, position);
+            position += chunk.length;
+        }
+        
+        // Create a blob from the data
+        const blob = new Blob([allChunks]);
+        
+        // Extract filename from S3 URL and clean it
+        const extractFilenameFromS3Url = (url: string): string => {
+            try {
+                const urlObj = new URL(url);
+                const pathname = urlObj.pathname;
+                // Get the last part of the path (filename)
+                let filename = pathname.split('/').pop() || 'download';
+                
+                // Remove AWS-specific prefixes and suffixes, keep only the meaningful part
+                // Remove timestamps, UUIDs, and other AWS artifacts
+                filename = filename.replace(/^\d+-/, ''); // Remove leading timestamp
+                filename = filename.replace(/-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/gi, ''); // Remove UUIDs
+                filename = filename.replace(/^[a-f0-9]{32}-/, ''); // Remove MD5 hashes
+                filename = filename.replace(/\.[^.]+$/, ''); // Remove current extension
+                
+                // Ensure .stl extension
+                return `${filename}.stl`;
+            } catch (error) {
+                console.error('Error extracting filename from URL:', error);
+                return 'download.stl';
+            }
+        };
+        
+        const filename = extractFilenameFromS3Url(s3Url);
+        
+        // Create download link and trigger download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        toast.success(`File "${filename}" downloaded successfully!`);
+    } catch (error) {
+        toast.error('Something went wrong while downloading the file.');
+        console.error('Error downloading file from S3:', error);
+        throw error;
+    } finally {
+        setIsDownloading(false);
+        setProgress(0);
+    }
+};
+
+
+
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service};
 
 

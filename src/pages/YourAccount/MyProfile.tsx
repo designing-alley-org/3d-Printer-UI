@@ -10,19 +10,29 @@ import NoDataFound from '../../components/NoDataFound';
 import ListAddress from '../../components/ListAddress/ListAddress';
 import EditProfileModal from '../../components/Model/EditProfileModal';
 import toast from 'react-hot-toast';
+import { setDefaultAddressService } from '../../services/address';
+import { EditEmailModal } from '../../components/Model';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const MyProfile = () => {
   const user = useSelector((state: any) => state.user);
+;
   const dispatch = useDispatch();
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.defaultAddress));
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.user.defaultAddress));
   const [allAddresses, setAllAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editEmailModalOpen, setEditEmailModalOpen] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
 
   const handleAddressSelect = (addressId: string) => {
-    setSelectedAddressId(addressId);
+    setDefaultAddressService(addressId, setSelectedAddressId);
+  };
+
+  const handleSaveEmail = (email: string) => {
+    // Dispatch an action to update the email in the user profile
+    // dispatch(updateUser({ ...user.user, email }));
   };
 
   const handleEditProfile = () => {
@@ -54,7 +64,6 @@ const MyProfile = () => {
   useEffect(() => {
    const fetchAddresses = async () => {
      const response = await getAddress({setAddressLoading});
-     console.log('Fetched addresses:', response.data.data);
      setAllAddresses(response.data.data);
    };
 
@@ -130,6 +139,15 @@ const MyProfile = () => {
            }
            onClick={handleEditProfile}
          />
+          <CustomButton
+           children={
+            <>
+              <EditIcon  size={15} style={{ marginRight: '4px' }} />
+              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Email</Typography>
+            </>
+           }
+           onClick={() => setEditEmailModalOpen(true)}
+         />
         </CardActions>
       </Card>
       <Typography variant="h6" sx={{ marginTop: '1rem' }}>
@@ -138,10 +156,10 @@ const MyProfile = () => {
 
       <Box maxHeight={isSmallScreen ? "300px" : "400px"} overflow="auto">
       {allAddresses.length === 0 ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {
             addressLoading ?
-             <CircularProgress size={24} /> 
+             <LoadingScreen  title=' Addresses...' description='Please wait while we fetch your addresses.'/>
              :
               <NoDataFound  text="No addresses found."  description='Currently, there are no addresses available.'/>
           }
@@ -167,6 +185,13 @@ const MyProfile = () => {
       onClose={() => setEditModalOpen(false)}
       user={user.user}
       onSave={handleSaveProfile}
+      loading={saveLoading}
+    />
+    <EditEmailModal
+      open={editEmailModalOpen}
+      onClose={() => setEditEmailModalOpen(false)}
+      email={user.user.email}
+      onSave={handleSaveEmail}
       loading={saveLoading}
     />
     </Container>
