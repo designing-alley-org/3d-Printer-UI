@@ -5,28 +5,6 @@ import { useEffect, useState } from 'react';
 import { trackByTrackingNumberService } from '../services/fedex';
 import { formatText } from '../utils/function';
 
-// const trackingSteps = [
-//   { label: "Collected", location: "London, Depot", time: "Mon 01 Apr, 09:00 am" },
-//   { label: "Left", location: "Watford, Hub", time: "Mon 01 Apr, 01:30 pm" },
-//   { label: "Reached", location: "Milton Keynes, Sorting Centre", time: "Mon 01 Apr, 04:15 pm" },
-//   { label: "Departed", location: "Northampton, Depot", time: "Mon 01 Apr, 07:45 pm" },
-//   { label: "Arrived", location: "Birmingham, Warehouse", time: "Tue 02 Apr, 06:20 am" },
-//   { label: "Left", location: "Coventry, Distribution Hub", time: "Tue 02 Apr, 10:00 am" },
-//   { label: "Reached", location: "Leicester, Hub", time: "Tue 02 Apr, 01:30 pm" },
-//   { label: "Departed", location: "Nottingham, Depot", time: "Tue 02 Apr, 04:50 pm" },
-//   { label: "Arrived", location: "Sheffield, Warehouse", time: "Tue 02 Apr, 09:15 pm" },
-//   { label: "Left", location: "Leeds, Hub", time: "Wed 03 Apr, 07:30 am" },
-//   { label: "Reached", location: "Manchester, Sorting Centre", time: "Wed 03 Apr, 10:45 am" },
-//   { label: "Departed", location: "Liverpool, Depot", time: "Wed 03 Apr, 01:20 pm" },
-//   { label: "Arrived", location: "Preston, Hub", time: "Wed 03 Apr, 05:40 pm" },
-//   { label: "Left", location: "Lancaster, Warehouse", time: "Wed 03 Apr, 08:10 pm" },
-//   { label: "Reached", location: "Carlisle, Depot", time: "Thu 04 Apr, 06:30 am" },
-//   { label: "Departed", location: "Glasgow, Hub", time: "Thu 04 Apr, 11:00 am" },
-//   { label: "Arrived", location: "Edinburgh, Distribution Centre", time: "Thu 04 Apr, 02:45 pm" },
-//   { label: "Left", location: "Dundee, Depot", time: "Thu 04 Apr, 06:15 pm" },
-//   { label: "Reached", location: "Aberdeen, Hub", time: "Thu 04 Apr, 09:00 pm" },
-//   { label: "Delivered", location: "Inverness, Final Destination", time: "Fri 05 Apr, 10:30 am" },
-// ];
 
 interface DeliveryDetailProps {
   shipment: any;
@@ -175,7 +153,7 @@ const DeliveryDetail = ({
                 </Typography>
               </Typography>
             </Box>
-            
+
             {/* If pickupConfirmationCode exists */}
             {returnInfo?.pickup?.pickupConfirmationCode && (
               <Box display="flex" flexDirection="column" justifyContent="end">
