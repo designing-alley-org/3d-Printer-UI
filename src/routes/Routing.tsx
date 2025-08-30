@@ -22,7 +22,6 @@ import VerifyEmail from '../pages/Auth/VerifyEmail.tsx';
 import ChangePassword from '../pages/Auth/ChangePassword.tsx';
 import MyProfile from '../pages/YourAccount/MyProfile.tsx';
 import MyDisputes from '../pages/YourAccount/myDispute/index.tsx';
-import PlaceOrder from '../pages/YourAccount/placeOrder/PlaceOrder.tsx';
 import Password from '../pages/YourAccount/Password.tsx';
 import Settings from '../pages/YourAccount/Settings.tsx';
 import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
@@ -123,17 +122,7 @@ const Routing: React.FC = () => {
             />
           </Route>
           
-          {/* Place Order Routes */}
-          <Route path={ROUTES.PLACE_ORDER}>
-            <Route
-              index
-              element={<ProtectedRoute component={<PlaceOrder />} />}
-            />
-            <Route
-              path=":orderId"
-              element={<ProtectedRoute component={<PlaceOrder />} />}
-            />
-          </Route>
+         
         </Route>
 
         {/* Notifications */}

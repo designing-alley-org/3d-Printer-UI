@@ -159,7 +159,7 @@ const MyProfile = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {
             addressLoading ?
-             <LoadingScreen />
+             <LoadingScreen  title=' Addresses...' description='Please wait while we fetch your addresses.'/>
              :
               <NoDataFound  text="No addresses found."  description='Currently, there are no addresses available.'/>
           }

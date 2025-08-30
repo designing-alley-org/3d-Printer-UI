@@ -13,7 +13,7 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import DeliveryDetail from './DeliveryDetail';
 import FilesList from './FilesList';
 import NoDataFound from './NoDataFound';
-import { formatDate } from '../utils/function';
+import { formatDate, formatText } from '../utils/function';
 
 interface Props {
   order: any;
@@ -83,7 +83,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                 variant="body2"
                 color={theme.palette.customColors.lightTextOverDark}
               >
-                Status:{order.order_status || 'N/A'}
+                Status:  {formatText(order.order_status) || 'N/A'}
               </Typography>
             </Box>
           </Box>

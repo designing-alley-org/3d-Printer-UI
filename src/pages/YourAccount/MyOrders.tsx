@@ -264,7 +264,7 @@ export const MyOrders = () => {
 
       {/* Order File Start  */}
       {isLoading ? (
-        <LoadingScreen />
+        <LoadingScreen  title='Loading Orders...' description='Please wait while we fetch your orders.'/>
       ) : error ? (
         <Box mt={3}>
           <Typography color="error" variant="h6" textAlign="center">

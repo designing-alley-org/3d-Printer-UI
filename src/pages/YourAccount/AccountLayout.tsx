@@ -4,7 +4,6 @@ import {
   Person as PersonOutlinedIcon,
   ShoppingBag as ShoppingBagIcon,
   Warning as WarningIcon,
-  AddShoppingCart as AddShoppingCartIcon,
   Settings as SettingsOutlinedIcon
 } from '@mui/icons-material';
 
@@ -31,8 +30,6 @@ const AccountLayout = () => {
         return <ShoppingBagIcon {...iconProps} />;
       case 'Warning':
         return <WarningIcon {...iconProps} />;
-      case 'AddShoppingCart':
-        return <AddShoppingCartIcon {...iconProps} />;
       case 'Settings':
         return <SettingsOutlinedIcon {...iconProps} />;
       default:
@@ -63,56 +60,54 @@ const AccountLayout = () => {
     <>
       {/* Tabs for large screens */}
 
-      <Tabs
-        value={activeTab}
-        onChange={(_, newValue) => {
-          const tab = accTab.find((t) => t.id === newValue);
-          if (tab) handlePath(tab.path);
-        }}
-        sx={{
-          margin: '16px 0',
-          padding: '8px',
-          bgcolor: 'primary.main',
-          borderRadius: '8px',
+    <Tabs
+  value={activeTab}
+  onChange={(_, newValue) => {
+    const tab = accTab.find((t) => t.id === newValue);
+    if (tab) handlePath(tab.path);
+  }}
+  variant="scrollable"
+  scrollButtons="auto"
+  sx={{
+    margin: '16px 0',
+    width: '100%',
+    padding: '8px',
+    bgcolor: 'primary.main',
+    borderRadius: '8px',
+    overflowX: 'auto',
 
-          '& .MuiTab-root': {
-            color: '#fff',
-            transition: 'all 0.3s ease',
-            padding: '12px 30px',
-          },
-          '& .Mui-selected': {
-            backgroundColor: '#fff !important',
-            color: '#05123B',
-            borderRadius: '8px',
-          },
-          '& .MuiTabs-indicator': {
-            display: 'none',
-          },
-        }}
-      >
-        {accTab.map((item) => (
-          <Tab
-            key={item.id}
-            label={
-              <Box display="flex" alignItems="center">
-                {getTabIcon(item.icon)}
-                {item.label}
-              </Box>
-            }
-            value={item.id}
-          />
-        ))}
-      </Tabs>
+    '& .MuiTab-root': {
+      color: '#fff',
+      transition: 'all 0.3s ease',
+    },
+    '& .Mui-selected': {
+      backgroundColor: '#fff !important',
+      color: '#05123B',
+      borderRadius: '8px',
+    },
+    '& .MuiTabs-indicator': {
+      display: 'none',
+    },
+  }}
+>
+  {accTab.map((item) => (
+    <Tab
+      key={item.id}
+      sx={{
+        minWidth: 'auto',
+        flexGrow: 1,
+      }}
+      label={
+        <Box display="flex" alignItems="center" gap={1}>
+          {getTabIcon(item.icon)}
+          {item.label}
+        </Box>
+      }
+      value={item.id}
+    />
+  ))}
+</Tabs>
 
-      {/* Small screen tab component */}
-      {/* {isSmallScreen && (
-        <SmallScreenTab
-          activeTab={activeTab}
-          navtabSmallScreen={navtabSmallScreen}
-          data={accTab}
-          forAccount={true}
-        />
-      )} */}
 
        <Box sx={{ padding: '1rem 0' }}>
          <Outlet context={{ handleLogout }} />
