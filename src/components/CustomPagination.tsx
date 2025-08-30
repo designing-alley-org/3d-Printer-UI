@@ -169,7 +169,7 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
         gap: 2,
         padding: 2,
         backgroundColor: theme.palette.background.paper,
-        borderRadius: '12px',
+        borderRadius: '8px',
         border: `1px solid ${theme.palette.divider}`,
       }}
     >

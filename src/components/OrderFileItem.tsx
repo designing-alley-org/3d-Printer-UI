@@ -19,7 +19,7 @@ interface Props {
   order: any;
   onClick: (id: string) => void;
   onDispute?: (id: string) => void;
-  onReturn?: (id: string) => void;
+  onReturn?: (id: string, shipmentId: string) => void;
   isExpanded?: boolean;
 }
 
@@ -131,6 +131,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
               <Box display="flex" gap={1} justifyContent="end" mt={2}>
                {
                 order?.shipmentCreated?.status === 'Delivered' && 
+                order?.returnCreated?.created !== true  &&
                 <CustomButton
                   variant="outlined"
                   sx={{
@@ -140,7 +141,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                   children="Return"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onReturn?.(order._id);
+                    onReturn?.(order._id, order?.shipmentCreated?._id);
                   }}
                 />
                }

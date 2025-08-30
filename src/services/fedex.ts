@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import api from "../axiosConfig"
 
 const trackByTrackingNumberService = async (trackingNumber: string, setTrackingError: (error: any) => void) => {
@@ -11,12 +12,27 @@ const trackByTrackingNumberService = async (trackingNumber: string, setTrackingE
     }
 }
 
-const returnRequestService = async (shipmentId: string, formData: FormData) => {
+const returnRequestService = async (shipmentId: string, formData: FormData, setOrdersData: (data: any) => void, returnOrderId: string) => {
     try {
         const response = await api.post(`/return-request/${shipmentId}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
+        });
+        toast.success("Return request submitted successfully!");
+        setOrdersData((prevData: any) => {
+            if (prevData) {
+                return {
+                    ...prevData,
+                    orders: prevData.orders.map((order: any) =>
+                        order._id === returnOrderId ? { ...order, returnCreated: {
+                            created: true,
+                            status:'return_requested'
+                        } } : order
+                    ),
+                };
+            }
+            return prevData;
         });
         return response.data;
     } catch (error) {

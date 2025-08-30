@@ -14,6 +14,7 @@ import { getAllOrdersService } from '../../services/order';
 import { debounce } from '../../utils/function';
 import LoadingScreen from '../../components/LoadingScreen';
 import toast from 'react-hot-toast';
+import { returnRequestService } from '../../services/fedex';
 
 // Define interfaces for type safety
 interface Order {
@@ -63,6 +64,7 @@ export const MyOrders = () => {
   // Return modal state
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   const [returnOrderId, setReturnOrderId] = useState<string>('');
+  const [returnShipmentId, setReturnShipmentId] = useState<string>('');
   const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
   // Fetch orders function
@@ -175,8 +177,9 @@ export const MyOrders = () => {
     }
   };
 
-  const handleOpenReturn = (orderId: string) => {
+  const handleOpenReturn = (orderId: string, shipmentId: string) => {
     setReturnOrderId(orderId);
+    setReturnShipmentId(shipmentId);
     setIsReturnModalOpen(true);
   };
 
@@ -188,28 +191,26 @@ export const MyOrders = () => {
   const handleSubmitReturn = async (returnData: ReturnFormValues & { imageFiles: File[] }) => {
     try {
       setIsSubmittingReturn(true);
-      console.log('Submitting return for order:', returnOrderId, returnData);
-      
+
       // Create FormData for API
       const formData = new FormData();
-      formData.append('returnReason', returnData.returnReason);
-      formData.append('orderId', returnOrderId);
-      
+      formData.append('reason', JSON.stringify(returnData.returnReason));
+      formData.append('orderId', JSON.stringify(returnOrderId));
+
       // Add images to FormData
       returnData.imageFiles.forEach((file) => {
-        formData.append(`images`, file);
+        formData.append(`files`, file);
       });
-      
-      // TODO: Call API service when available
-      // await createReturnByOrderService(formData, returnOrderId);
-      
+
+      await returnRequestService(returnShipmentId, formData, setOrdersData, returnOrderId);
+
       // Close modal on success
       handleCloseReturn();
       
       // TODO: Show success message to user
       console.log('Return submitted successfully!');
-    } catch (error) {
-      console.error('Failed to submit return:', error);
+    } catch (error: any) {
+      toast.error(error.response.data.message || 'Failed to submit return');
       // TODO: Show error message to user
     } finally {
       setIsSubmittingReturn(false);
@@ -324,7 +325,7 @@ export const MyOrders = () => {
         onSave={handleSubmitReturn}
         loading={isSubmittingReturn}
         orderId={returnOrderId}
-        shipmentId="6877aaca7023d2df41f1bf44" // Mock shipment ID as requested
+        shipmentId={returnShipmentId}// Mock shipment ID as requested
       />
     </>
   );
