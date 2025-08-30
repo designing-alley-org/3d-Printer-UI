@@ -40,6 +40,7 @@ const CreateDisputeModel: React.FC<CreateDisputeModelProps> = ({
     validationSchema: disputeValidationSchema,
     onSubmit: (values) => {
       onSave(values);
+      formik.resetForm();
     },
   });
 

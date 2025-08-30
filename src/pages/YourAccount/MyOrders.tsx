@@ -13,6 +13,7 @@ import { createDisputeByOrderService } from '../../services/disputes';
 import { getAllOrdersService } from '../../services/order';
 import { debounce } from '../../utils/function';
 import LoadingScreen from '../../components/LoadingScreen';
+import toast from 'react-hot-toast';
 
 // Define interfaces for type safety
 interface Order {
@@ -154,25 +155,21 @@ export const MyOrders = () => {
   const handleSubmitDispute = async (disputeData: DisputeFormValues) => {
     try {
       setIsSubmittingDispute(true);
-      console.log('Submitting dispute for order:', disputeOrderId, disputeData);
       
       // Prepare data for API
       const apiData = {
-        disputeType: disputeData.disputeType.value,
-        disputeReason: disputeData.disputeReason,
+        reason: disputeData.disputeReason,
+        dispute_type: disputeData.disputeType.value,
       };
-      
+
       // Call API service
       await createDisputeByOrderService(apiData, disputeOrderId);
       
       // Close modal on success
       handleCloseDispute();
-      
-      // TODO: Show success message to user
-      console.log('Dispute submitted successfully!');
-    } catch (error) {
-      console.error('Failed to submit dispute:', error);
-      // TODO: Show error message to user
+
+    } catch (error: any) {
+      toast.error(error.response.data.message || 'Failed to submit dispute');
     } finally {
       setIsSubmittingDispute(false);
     }
