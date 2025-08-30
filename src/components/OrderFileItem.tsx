@@ -126,7 +126,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
               }
 
              {
-              true 
+              order.paymentStatus.status === 'success' 
               &&  
               <Box display="flex" gap={1} justifyContent="end" mt={2}>
                {
