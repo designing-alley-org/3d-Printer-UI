@@ -55,7 +55,6 @@ const Password = () => {
       sx={{
         bgcolor: 'background.paper',
         p: { xs: 2, sm: 3, md: 4 },
-        borderRadius: '8px',
       }}
     >
       <Card>
