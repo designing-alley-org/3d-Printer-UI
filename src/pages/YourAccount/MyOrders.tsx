@@ -224,10 +224,6 @@ export const MyOrders = () => {
   return (
     <>
       <Card>
-        <CardHeader
-          title="My Orders"
-          subheader="Manage your profile, orders, and settings"
-        />
         <CardContent
           sx={{
             display: 'flex',

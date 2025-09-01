@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Divider, Typography, useMediaQuery } from '@mui/material';
+import { Box, Divider, Typography, useMediaQuery, useTheme } from '@mui/material';
 import {
   Customize,
   Files,
@@ -34,6 +34,7 @@ import { RotateCcw } from 'lucide-react';
 import { FileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
+import { formatText } from '../../utils/function';
 
 const CustomizeTab: React.FC = () => {
   const [files, setFetchFiles] = useState<FileData[]>([]);
@@ -47,6 +48,7 @@ const CustomizeTab: React.FC = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const {
     updateFiles: fileDetails,
@@ -257,7 +259,8 @@ const CustomizeTab: React.FC = () => {
       <Box
         display="flex"
         borderRadius={'24px'}
-        boxShadow="2px 2px 4px 0px #0000003D"
+        boxShadow = '2px 2px 4px 0px #2A3F7F29'
+
       >
         <Files isLoading={isLoading}>
           <span className="header">
@@ -299,9 +302,8 @@ const CustomizeTab: React.FC = () => {
                       <img src={vector_black} alt="View model" />
                     </span>
                   </Model>
-                  <ModelName isActive={activeFileId === file._id}>
-                    {file?.fileName.split('_')[1] ||
-                      file?.fileName.split('/').pop()}
+                  <ModelName isActive={activeFileId === file._id} textColor={theme.palette.primary.main}>
+                   {formatText(file?.fileName)}
                   </ModelName>
                   <CustomizeBox>
                     {[
@@ -314,7 +316,7 @@ const CustomizeTab: React.FC = () => {
                       const isSelected = activeFileId === file._id;
                       const isFilled = !!file[key];
                       let iconColor = '#FFFFFF66'; // default: not selected, not filled, 40% opacity
-                      if (isSelected && isFilled) iconColor = '#05123B';
+                      if (isSelected && isFilled) iconColor = theme.palette.primary.main;
                       else if (isSelected && !isFilled) iconColor = '#999999';
                       else if (!isSelected && isFilled) iconColor = '#FFFFFF';
                       else if (!isSelected && !isFilled) iconColor = '#FFFFFF66';
@@ -374,7 +376,7 @@ const CustomizeTab: React.FC = () => {
               disabled={isApplyButtonDisabled || isLoading}
               onClick={handleApplySelection}
               loading={isLoading}
-              variant="contained"
+              variant="outlined"
             />
             {!isApplyButtonDisabled && (
               <Box>

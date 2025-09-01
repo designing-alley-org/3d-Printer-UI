@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Typography, Grid, Box } from '@mui/material';
+import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Dimensions,
@@ -71,8 +71,8 @@ const Accordion: React.FC<AccordionProps> = ({
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FileDetail | undefined>(fileData);
   const dataspec = useSelector((state: any) => state.specification);
+  const theme = useTheme();
 
-  console.log('printerMessage', printerMessage);
 
   useEffect(() => {
     setFormData(fileData);
@@ -190,19 +190,15 @@ const Accordion: React.FC<AccordionProps> = ({
   }
 
   return (
-    <Box p={1}>
+    <Box p={2}>
       {/* Scale Section */}
-      <Box
-        sx={{
-          p: 1,
-        }}
-      >
+      <Box>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 0.5, gap: '8px' }}>
-          <Ruler size={25} style={{ transform: 'rotate(100deg)' }} />
+          <Ruler size={25} style={{ transform: 'rotate(100deg)' }} color={theme.palette.primary.main} />
           <Typography
             variant="h6"
             sx={{ fontWeight: 600 }}
-            color="text.dark"
+            color="primary.main"
           >
             Scale
           </Typography>
@@ -213,7 +209,6 @@ const Accordion: React.FC<AccordionProps> = ({
           spacing={3}
           sx={{
             border: '1px solid #E4E4E4',
-            boxShadow: '8px 8px 8px 0px #00000014',
             borderRadius: '12px',
             padding: '16px',
             margin: 0,
@@ -223,7 +218,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-              color="secondary.main"
+               color="primary.main"
             >
               Scale In
             </Typography>
@@ -243,7 +238,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-              color="secondary.main"
+              color="primary.main"
             >
               Height
             </Typography>
@@ -258,7 +253,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-              color="secondary.main"
+               color="primary.main"
             >
               Width
             </Typography>
@@ -273,7 +268,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-              color="secondary.main"
+               color="primary.main"
             >
               Length
             </Typography>
@@ -301,6 +296,7 @@ const Accordion: React.FC<AccordionProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '4px',
+                  padding: '6px 10px'
                 }}
               >
                 <RotateCcw size={16} />  Revert To Original
@@ -328,10 +324,10 @@ const Accordion: React.FC<AccordionProps> = ({
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <TechnologyIcon  style={{ marginRight: '8px', color: '#666' }} />
+            <TechnologyIcon  style={{ marginRight: '8px', color: theme.palette.primary.main }} />
             <Typography
               variant="h6"
-            color="text.dark"
+              color="primary.main"
             >
               Technology
             </Typography>
@@ -359,10 +355,10 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <MaterialIcon  style={{ marginRight: '8px', color: '#666' }} />
+            <MaterialIcon  style={{ marginRight: '8px', color: theme.palette.primary.main }} />
             <Typography
               variant="h6"
-              color="text.dark"
+              color="primary.main"
             >
               Material
             </Typography>
@@ -392,10 +388,10 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <ColorIcon size={16} style={{ marginRight: '8px', color: '#666' }} />
+            <ColorIcon size={16} style={{ marginRight: '8px', color: theme.palette.primary.main }} />
             <Typography
               variant="h6"
-             color="text.dark"
+              color='primary.main'
             >
               Colour
             </Typography>
@@ -423,10 +419,10 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <InfillIcon style={{ marginRight: '8px', color: '#666' }} />
+            <InfillIcon style={{ marginRight: '8px', color: theme.palette.primary.main }} />
             <Typography
               variant="h6"
-             color="text.dark"
+              color='primary.main'
             >
               Infill
             </Typography>
@@ -444,10 +440,10 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <PrinterIcon style={{ marginRight: '8px', color: '#666' }} />
+            <PrinterIcon style={{ marginRight: '8px', color: theme.palette.primary.main }} />
             <Typography
               variant="h6"
-             color="text.dark"
+              color="primary.main"
             >
               Printer
             </Typography>
@@ -478,10 +474,10 @@ const Accordion: React.FC<AccordionProps> = ({
           borderBottom: '1px solid #E0E0E0',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
           Current Weight
         </Typography>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
           {fileData?.dimensions?.weight || 0} gm
         </Typography>
       </Box>

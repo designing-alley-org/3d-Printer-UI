@@ -1,10 +1,9 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import UploadStlCardFile from './UploadStlCardFile';
 import StepLayout from '../../components/Layout/StepLayout';
-import MUIButton from '../../stories/MUIButton/Button';
 import * as styles from './styles';
 import { uploadDimBtnData } from '../../constants';
 import { saveFile } from '../../utils/indexedDB';
@@ -208,7 +207,6 @@ const UploadStlCard = () => {
       navigate, // This should be passed from props or context
       setIsSaving,
     });
-    console.log('Files saved:', files);
   };
 
   const renderUnitButtons = () => (
@@ -221,7 +219,8 @@ const UploadStlCard = () => {
           variant={selectedUnit === item.name ? 'contained' : 'outlined'}
           children={item.name}
           sx={{
-            padding: 0
+            padding: 0,
+            borderRadius: '4px',
           }}
           data-testid={`unit-button-${item.name}`}
         />
@@ -232,21 +231,14 @@ const UploadStlCard = () => {
 
 
   const renderFileUpload = () => (
-    <Box
-      data-testid="file-upload-container"
+    <Card
       onClick={() => fileInputRef.current?.click()}
-      border={1}
-      padding={3}
-      width={isMobile ? '100%' : '268px'}
-      height={isMobile ? '150px' : '235px'}
-      borderRadius={0.5}
-      bgcolor="background.paper"
       sx={{
+        width: isMobile ? '100%' : '268px',
+        height: isMobile ? '150px' : '235px',
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
         alignItems: 'center',
-        boxShadow: '2px 2px 4px 0px #0000003D',
+        justifyContent: 'center',
         '&:hover': {
           cursor: 'pointer',
           backgroundColor: 'primary.main',
@@ -258,7 +250,13 @@ const UploadStlCard = () => {
         },
       }}
     >
-      <input
+     <CardContent sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+     }}>
+       <input
         ref={fileInputRef}
         type="file"
         accept=".stl"
@@ -273,7 +271,8 @@ const UploadStlCard = () => {
       <Typography variant="body2" sx={{ mt: 1 }}>
         Supports STL files up to 50 MB.
       </Typography>
-    </Box>
+     </CardContent>
+    </Card>
   );
 
   const renderFileCards = () => (
