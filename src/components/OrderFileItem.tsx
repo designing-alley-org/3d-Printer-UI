@@ -135,7 +135,6 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                 <CustomButton
                   variant="outlined"
                   sx={{
-                    borderRadius: '4px',
                     padding: '8px 36px',
                   }}
                   children="Return"

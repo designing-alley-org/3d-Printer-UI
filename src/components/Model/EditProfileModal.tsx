@@ -95,7 +95,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
         variant="outlined"
         onClick={handleClose}
         disabled={loading}
-        borderRadius={0.2}
       >
         Cancel
       </CustomButton>
@@ -103,7 +102,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
         variant="contained"
         onClick={handleSave}
         loading={loading}
-        borderRadius={0.2}
       >
         Save Changes
       </CustomButton>

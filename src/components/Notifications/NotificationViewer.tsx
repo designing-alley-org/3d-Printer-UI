@@ -113,14 +113,12 @@ const Notifications: FC<INotification> = ({
           variant="outlined"
           onClick={() => setShowNotification(false)}
           size={isMobile ? 'small' : 'medium'}
-          borderRadius="4px"
         />
         <CustomButton
           variant="contained"
           children="View All"
           onClick={handleShow}
           size={'small'}
-          borderRadius="4px"
         />
       </Box>
     </Paper>

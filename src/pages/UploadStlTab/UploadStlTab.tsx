@@ -221,7 +221,6 @@ const UploadStlCard = () => {
           variant={selectedUnit === item.name ? 'contained' : 'outlined'}
           children={item.name}
           sx={{
-            borderRadius: '4px',
             padding: 0
           }}
           data-testid={`unit-button-${item.name}`}

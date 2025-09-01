@@ -375,7 +375,6 @@ const CustomizeTab: React.FC = () => {
               onClick={handleApplySelection}
               loading={isLoading}
               variant="contained"
-              borderRadius="4px"
             />
             {!isApplyButtonDisabled && (
               <Box>

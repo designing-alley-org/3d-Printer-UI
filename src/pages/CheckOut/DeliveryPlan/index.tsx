@@ -192,7 +192,7 @@ const DeliveryPlan: React.FC = () => {
           <CustomButton
             children="Try Again"
             onClick={() => window.location.reload()}
-            style={{ marginTop: '1rem', borderRadius: '4px' }}
+            style={{ marginTop: '1rem' }}
             variant='contained'
           />
         </Box>

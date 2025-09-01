@@ -1,5 +1,5 @@
 import { DesktoptabData } from '../../constants';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NotificationBox from './NotificationBox';
 import {
   Box,
@@ -13,6 +13,7 @@ import {
 // Importing icons
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 import { NavButton, StyledAppBar } from './style';
+import { ROUTES } from '../../routes/routes-constants';
 
 interface ITab {
   activeTabs: number;
@@ -24,9 +25,11 @@ const DesktopNav = ({ activeTabs }: ITab) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const { pathname } = useLocation();
+     const isDashboard = pathname.includes(ROUTES.DASHBOARD);
 
   return (
-    <StyledAppBar position="static" elevation={0}>
+    <StyledAppBar position="static" elevation={0} isDashboard={isDashboard}>
       <Toolbar
         sx={{
           justifyContent: 'space-between',
@@ -37,7 +40,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
         {/* Logo/Brand Section */}
         <Box
           sx={{
-            backgroundColor: 'background.paper',
+            backgroundColor: 'primary.contrastText',
             borderRadius: '50%',
             mr: 2,
             width: '40px',
@@ -58,7 +61,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
           variant="h6"
           sx={{
             fontWeight: 700,
-            color: theme.palette.primary.contrastText,
+            color: 'primary.contrastText',
             fontSize: { xs: '1rem', md: '1.25rem' },
             display: { xs: 'none', sm: 'block' },
             cursor: 'pointer',
@@ -85,6 +88,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
           {DesktoptabData.map((item) => (
             <NavButton
               key={item.id}
+              isDashboard={isDashboard}
               active={activeTabs === item.id}
               onClick={() => navigate(item.path)}
               sx={{

@@ -108,7 +108,6 @@ const Password = () => {
                             loading={loading}
                             type="submit"
                             variant='contained'
-                            borderRadius={'4px'}
                         />
                        </Box>
                     </Form>

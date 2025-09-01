@@ -39,7 +39,7 @@ declare module "@mui/material/styles" {
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#060B35", // Primary Dark
+      main: "#2A3F7F", // Primary Dark
       contrastText: "#FFFFFF",
     },
     secondary: {
@@ -66,7 +66,7 @@ const theme = createTheme({
 
     // Custom non-standard colors
     customColors: {
-      primaryDark: "#060B35",
+      primaryDark: "#2A3F7F",
       primarySecondary: "#242425",
       primaryLight: "#FFFFFF",
       textDark: "#2A2D2F",
@@ -105,27 +105,27 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: "2px 2px 4px 0px #0000003D",
-          border: "1px solid #EDEDED",
-          borderRadius: "24px",
-          padding: "40px",
-          gap: "24px",
+          boxShadow: "2px 2px 4px 0px #3B3E4929",
+          border: "1px solid #F0F4FF",
+          borderRadius: "12px",
+          padding: "3px",
         },
+
       },
     },
     MuiTextField: {
       styleOverrides: {
         root: {
           "& .MuiOutlinedInput-root": {
-            borderRadius: "32px",
+            borderRadius: "8px",
             "& fieldset": {
               borderColor: "#D7D7D7",
             },
             "&:hover fieldset": {
-              borderColor: "#060B35",
+              borderColor: "#2A3F7F",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#060B35",
+              borderColor: "#2A3F7F",
               borderWidth: "2px",
             },
           },

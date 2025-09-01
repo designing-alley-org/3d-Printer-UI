@@ -108,7 +108,6 @@ const StepLayout = ({
           children="Go Back"
           sx={{
             width: isSmallScreen ? '100%' : 'auto',
-            borderRadius: '4px',
             padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 2rem',
           }}
         />
@@ -121,7 +120,6 @@ const StepLayout = ({
           loading={isLoading}
           sx={{
             width: isSmallScreen ? '100%' : 'auto',
-            borderRadius: '4px',
             padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 3rem',
           }}
         />

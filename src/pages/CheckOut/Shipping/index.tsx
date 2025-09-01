@@ -393,9 +393,7 @@ const ShippingDetails = () => {
                               console.error('Direct submission error:', error);
                             }
                           }}
-                          sx={{
-                            borderRadius:'4px'
-                          }}
+                    
                         >
                           {editingAddress ? 'Update Address' : 'Add Now'}
                         </CustomButton>

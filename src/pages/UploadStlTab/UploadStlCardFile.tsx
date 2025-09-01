@@ -267,7 +267,6 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 variant='contained'
                 sx={{
                     minWidth: '0rem !important',
-                    borderRadius: '4px',
                 }}
               />
               <CustomTextField

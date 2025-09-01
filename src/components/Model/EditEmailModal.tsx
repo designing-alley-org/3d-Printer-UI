@@ -83,7 +83,6 @@ const EditEmailModal: React.FC<EditEmailModalProps> = ({
         variant="outlined"
         onClick={handleClose}
         disabled={loading}
-        borderRadius={0.2}
       >
         Cancel
       </CustomButton>
@@ -91,7 +90,6 @@ const EditEmailModal: React.FC<EditEmailModalProps> = ({
         variant="contained"
         onClick={handleSave}
         loading={loading}
-        borderRadius={0.2}
       >
         Save Changes
       </CustomButton>

@@ -162,7 +162,7 @@ const PrinterDropdown: React.FC<PrinterDropdownProps> = ({
           </MenuItem>
         ))}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-          <CustomButton onClick={handleConfirm} variant="contained" borderRadius={'4px'}>
+          <CustomButton onClick={handleConfirm} variant="contained" >
             Confirm
           </CustomButton>
         </Box>

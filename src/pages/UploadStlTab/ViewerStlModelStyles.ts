@@ -22,7 +22,7 @@ export const modalContent = {
   width: '60.2rem',
   height: '35.7rem',
   border: '1px solid #FFFFFF',
-  boxShadow: '0px 4px 4px 0px #060B35',
+  boxShadow: '0px 4px 4px 0px #2A3F7F',
 
   '@media (max-width: 768px)': {
     width: '90%',

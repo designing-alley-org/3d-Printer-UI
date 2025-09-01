@@ -111,7 +111,6 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
         variant="outlined"
         onClick={handleClose}
         disabled={loading}
-        borderRadius={0.2}
       >
         Cancel
       </CustomButton>
@@ -119,7 +118,6 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
         variant="contained"
         onClick={() => formik.handleSubmit()}
         loading={loading}
-        borderRadius={0.2}
         disabled={
           formik.values.imageFiles.length < 2 || 
           getWordCount(formik.values.returnReason) < 10 ||

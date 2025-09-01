@@ -78,7 +78,6 @@ const FilesList = ({ file }: Props) => {
                 onClick={() => downloadFileFromS3Service(file.fileUrl, setFileDownloadProgress, setIsDownloading)}
                 disabled={isDownloading}
                 sx={{
-                  borderRadius: '4px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
@@ -92,7 +91,6 @@ const FilesList = ({ file }: Props) => {
               <CustomButton
                 variant="contained"
                 sx={{
-                  borderRadius: '4px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
