@@ -1,39 +1,32 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Box, Card, CardContent, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CardContent, Typography, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import UploadStlCardFile from './UploadStlCardFile';
 import StepLayout from '../../components/Layout/StepLayout';
 import * as styles from './styles';
 import { uploadDimBtnData } from '../../constants';
-import { saveFile } from '../../utils/indexedDB';
 import { deleteStlFileByFileId } from '../../store/actions/deleteStlFileByFileId';
 import { getFilesByOrderIdForUploadstl } from '../../store/actions/getFilesByOrderId';
-import { uploadFilesByOrderId } from '../../store/actions/uploadFilesByOrderId';
 import { FileData, ModelDimensions } from '../../types/uploadFiles';
+import { stlParser, STLUtils, STLParser } from '../../utils/stlUtils';
+import { uploadFilesService } from '../../services/order';
 import UploadInput from './UploadInput';
 import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
 import CustomButton from '../../stories/button/CustomButton';
 
-const INITIAL_DIMENSIONS: ModelDimensions = {
-  height: 0,
-  width: 0,
-  length: 0,
-};
-
-const STL_FILE_TYPES = ['application/vnd.ms-pki.stl'];
-const MM_TO_INCH_RATIO = 0.0393701;
+const INITIAL_DIMENSIONS: ModelDimensions = { height: 0, width: 0, length: 0 };
 const MONGO_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
 const UploadStlCard = () => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
-  const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [files, setFiles] = useState<FileData[]>([]);
+  const [isProcessingFiles, setIsProcessingFiles] = useState(false);
+  
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 600px)');
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { orderId } = useParams();
 
@@ -44,6 +37,7 @@ const UploadStlCard = () => {
         setIsPageLoading(false);
         return;
       }
+      
       try {
         setIsPageLoading(true);
         const response = await getFilesByOrderIdForUploadstl(orderId);
@@ -58,44 +52,18 @@ const UploadStlCard = () => {
     fetchOrderFiles();
   }, [orderId]);
 
-  // Store fetched files in IndexedDB
-  useEffect(() => {
-    const storeFileInIndexedDB = async (file: FileData) => {
-      if (!file.fileUrl || file.file) return;
-
-      try {
-        const response = await fetch(file.fileUrl);
-        const blob = await response.blob();
-        await saveFile(file.fileUrl, blob);
-        console.log(`File ${file.fileName} saved to IndexedDB`);
-      } catch (error) {
-        console.error(
-          `Error saving file ${file.fileName} to IndexedDB:`,
-          error
-        );
-      }
-    };
-
-    const storeAllFiles = async () => {
-      const backendFiles = files.filter((file) => !file.file);
-      await Promise.all(backendFiles.map(storeFileInIndexedDB));
-    };
-
-    if (files.some((file) => !file.file)) {
-      storeAllFiles();
+  // Utility functions
+  const validateAndShowError = (file: File): boolean => {
+    const validation = STLUtils.validateSTLFile(file);
+    if (!validation.isValid) {
+      alert(`Invalid file: ${validation.error}`);
+      return false;
     }
-  }, [files]);
-
-  const isValidStlFile = (file: File): boolean => {
-    return (
-      STL_FILE_TYPES.includes(file.type) ||
-      file.name.toLowerCase().endsWith('.stl')
-    );
+    return true;
   };
 
-  const generateFileId = (fileName: string): string => {
-    return `${fileName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  };
+  const generateFileId = (fileName: string): string => 
+    `${fileName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
   const createFileData = (file: File): FileData => ({
     _id: generateFileId(file.name),
@@ -104,111 +72,189 @@ const UploadStlCard = () => {
     fileUrl: URL.createObjectURL(file),
     file,
     quantity: 1,
-    unit: 'mm',
+    unit: selectedUnit.toLowerCase(),
+    uploadProgress: 0,
+    isUploading: false,
+    isUploaded: false,
   });
 
-  const handleFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const fileList = event.target.files;
-      if (!fileList?.length) return;
+  const updateFileStatus = useCallback((fileId: string, updates: Partial<FileData>) => {
+    setFiles(prev => prev.map(f => 
+      f._id === fileId ? { ...f, ...updates } : f
+    ));
+  }, []);
 
-      const validFiles = Array.from(fileList).filter(isValidStlFile);
+  
+  // Extract STL dimensions and convert to ModelDimensions interface
+  const extractSTLDimensions = async (file: File): Promise<ModelDimensions> => {
+    try {
+      const stlInfo = await stlParser.parseSTL(file);
+      return {
+        length: stlInfo.dimensions.length,
+        width: stlInfo.dimensions.width,
+        height: stlInfo.dimensions.height
+      };
+    } catch (error) {
+      console.error('Error extracting STL dimensions:', error);
+      return { ...INITIAL_DIMENSIONS };
+    }
+  };
 
-      if (!validFiles.length) {
-        alert('Please upload only STL files');
-        return;
-      }
+  // Process single file with immediate upload
+  const processSingleFile = async (file: File) => {
+    if (!validateAndShowError(file)) return;
 
-      const newFilesData = validFiles.map(createFileData);
+    const baseFileData = createFileData(file);
+    setFiles(prev => [...prev, baseFileData]);
 
-      setFiles((prevFiles) => [...prevFiles, ...newFilesData]);
-      setActiveFileId(newFilesData[0]._id);
+    try {
+      const dimensions = await extractSTLDimensions(file);
+      updateFileStatus(baseFileData._id, { dimensions });
+      await uploadFileSequentially({ ...baseFileData, dimensions });
+    } catch (error) {
+      console.error('Error processing file:', error);
+      updateFileStatus(baseFileData._id, { isUploading: false });
+    }
+  };
 
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    },
-    []
-  );
+  const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files;
+    if (!fileList?.length) return;
+
+    const validFiles = Array.from(fileList).filter(validateAndShowError);
+    if (!validFiles.length) return;
+
+    setIsProcessingFiles(true);
+
+    for (const file of validFiles) {
+      await processSingleFile(file);
+    }
+
+    setIsProcessingFiles(false);
+    
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [selectedUnit]);
 
   const handleUnitClick = useCallback((unit: string) => {
     setSelectedUnit(unit);
-    setFiles((prevFiles) => prevFiles.map((file) => ({ ...file, unit })));
+    setFiles(prev => prev.map(file => ({ ...file, unit: unit.toLowerCase() })));
   }, []);
 
-  const handleRemoveFile = useCallback(
-    async (fileId: string) => {
-      const isValidMongoId = MONGO_ID_REGEX.test(fileId);
-
-      try {
-        if (isValidMongoId) {
-          await deleteStlFileByFileId(orderId as string, fileId);
-        }
-
-        setFiles((prevFiles) => {
-          const fileToRemove = prevFiles.find((file) => file._id === fileId);
-          if (fileToRemove?.fileUrl) {
-            URL.revokeObjectURL(fileToRemove.fileUrl);
-          }
-          return prevFiles.filter((file) => file._id !== fileId);
-        });
-
-        setActiveFileId((prevId) => (prevId === fileId ? null : prevId));
-      } catch (error) {
-        console.error('Error removing file:', error);
+  const handleRemoveFile = useCallback(async (fileId: string) => {
+    try {
+      if (MONGO_ID_REGEX.test(fileId)) {
+        await deleteStlFileByFileId(orderId as string, fileId);
       }
-    },
-    [orderId]
-  );
 
-  const handleUpdateQuantity = useCallback(
-    (fileId: string, newQuantity: number) => {
-      if (newQuantity < 1) return;
+      setFiles(prev => {
+        const fileToRemove = prev.find(file => file._id === fileId);
+        if (fileToRemove?.fileUrl) {
+          URL.revokeObjectURL(fileToRemove.fileUrl);
+        }
+        return prev.filter(file => file._id !== fileId);
+      });
+    } catch (error) {
+      console.error('Error removing file:', error);
+    }
+  }, [orderId]);
 
-      setFiles((prevFiles) =>
-        prevFiles.map((file) =>
-          file._id === fileId ? { ...file, quantity: newQuantity } : file
-        )
+  const handleUpdateQuantity = useCallback((fileId: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+    updateFileStatus(fileId, { quantity: newQuantity });
+  }, [updateFileStatus]);
+
+  const convertDimensions = useCallback((dimensions: ModelDimensions, unit: string): ModelDimensions => {
+    // Use the STLParser's built-in conversion method
+    const stlDimensions = { ...dimensions, unit: 'mm' as const };
+    const targetUnit = unit === 'IN' ? 'inches' as const : 'mm' as const;
+    const converted = STLParser.convertDimensions(stlDimensions, targetUnit);
+    
+    return {
+      height: converted.height,
+      width: converted.width,
+      length: converted.length,
+    };
+  }, []);
+
+  const uploadFileSequentially = async (fileData: FileData) => {
+    if (!fileData.file) {
+      console.error('Missing file for upload');
+      return null;
+    }
+
+    try {
+      updateFileStatus(fileData._id, { isUploading: true, uploadProgress: 0 });
+
+      // Generate thumbnail using utility
+      const stlInfo = await stlParser.parseSTL(fileData.file);
+      const thumbnailDataUrl = await stlParser.generateThumbnail(stlInfo.geometry, {
+        size: 200,
+        color: '#ff6b35',
+        backgroundColor: 'transparent'
+      });
+
+      const thumbnailFile = STLUtils.dataUrlToFile(
+        thumbnailDataUrl,
+        `${fileData.fileName}_thumbnail.png`
       );
-    },
-    []
-  );
 
-  const handleUpdateDimensions = useCallback(
-    (fileId: string, dimensions: ModelDimensions) => {
-      setFiles((prevFiles) =>
-        prevFiles.map((file) =>
-          file._id === fileId ? { ...file, dimensions } : file
-        )
+      const response = await uploadFilesService(
+        orderId as string,
+        fileData.file,
+        thumbnailFile,
+        fileData.dimensions,
+        fileData.quantity,
+        (progress: number) => updateFileStatus(fileData._id, { uploadProgress: progress }),
+        fileData.unit
       );
-    },
-    []
-  );
 
-  const convertDimensions = useCallback(
-    (dimensions: ModelDimensions, unit: string): ModelDimensions => {
-      if (unit !== 'IN') return dimensions;
+      updateFileStatus(fileData._id, {
+        isUploading: false,
+        isUploaded: true,
+        uploadProgress: 100,
+        file: undefined,
+        fileUrl: response?.data?.fileUrl || fileData.fileUrl,
+        thumbnailUrl: response?.data?.imageUrl || thumbnailDataUrl,
+      });
 
-      return {
-        height: +(dimensions.height * MM_TO_INCH_RATIO).toFixed(2),
-        width: +(dimensions.width * MM_TO_INCH_RATIO).toFixed(2),
-        length: +(dimensions.length * MM_TO_INCH_RATIO).toFixed(2),
-      };
-    },
-    []
-  );
+      if (fileData.fileUrl) {
+        URL.revokeObjectURL(fileData.fileUrl);
+      }
 
-  const handleSave = async () => {
-    await uploadFilesByOrderId({
-      orderId: orderId as string,
-      files,
-      setFiles,
-      navigate, // This should be passed from props or context
-      setIsSaving,
-    });
+      return response;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      updateFileStatus(fileData._id, { isUploading: false, uploadProgress: 0 });
+      throw error;
+    }
   };
 
+  const handleSave = async () => {
+    if (!orderId) return;
+
+    setIsSaving(true);
+
+    try {
+      const allUploaded = files.every(f => f.isUploaded);
+      
+      if (allUploaded && files.length > 0) {
+        console.log('All files uploaded successfully, ready for next step');
+        navigate('/next-step');
+      } else if (files.length === 0) {
+        console.warn('No files to upload');
+      } else {
+        console.warn('Some files are still uploading or failed');
+      }
+    } catch (error) {
+      console.error('Error during save process:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Render functions
   const renderUnitButtons = () => (
     <Box display='flex' alignItems='center' gap={1}>
       <Typography>Unit of Measurement</Typography>
@@ -218,17 +264,12 @@ const UploadStlCard = () => {
           onClick={() => handleUnitClick(item.name)}
           variant={selectedUnit === item.name ? 'contained' : 'outlined'}
           children={item.name}
-          sx={{
-            padding: 0,
-            borderRadius: '4px',
-          }}
+          sx={{ padding: 0, borderRadius: '4px' }}
           data-testid={`unit-button-${item.name}`}
         />
       ))}
     </Box>
   );
-
-
 
   const renderFileUpload = () => (
     <Card
@@ -243,57 +284,49 @@ const UploadStlCard = () => {
           cursor: 'pointer',
           backgroundColor: 'primary.main',
           transition: 'background-color 0.6s',
-          '& *': {
-            color: 'white', // changes all child text/icons
-            stroke: 'white', // changes icon stroke color
-          },
+          '& *': { color: 'white', stroke: 'white' },
         },
       }}
     >
-     <CardContent sx={{
+      <CardContent sx={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-     }}>
-       <input
-        ref={fileInputRef}
-        type="file"
-        accept=".stl"
-        multiple
-        onChange={handleFileUpload}
-        style={styles.hiddenInput as React.CSSProperties}
-      />
-      <AnimatedUploadIcon />
-      <Typography variant="body1" fontWeight={600}>
-        Upload Another File
-      </Typography>
-      <Typography variant="body2" sx={{ mt: 1 }}>
-        Supports STL files up to 50 MB.
-      </Typography>
-     </CardContent>
+      }}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".stl"
+          multiple
+          onChange={handleFileUpload}
+          style={styles.hiddenInput as React.CSSProperties}
+        />
+        <AnimatedUploadIcon />
+        <Typography variant="body1" fontWeight={600}>
+          Upload Another File
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Supports STL files up to 100 MB.
+        </Typography>
+      </CardContent>
     </Card>
   );
 
-  const renderFileCards = () => (
-  <>
-  {files.map((file) => (
+  const renderFileCards = () => 
+    files.map((file) => (
       <UploadStlCardFile
         file={file}
         key={file._id}
         onRemove={handleRemoveFile}
-        onSetActiveFile={setActiveFileId}
         onUpdateQuantity={handleUpdateQuantity}
-        onUpdateDimensions={handleUpdateDimensions}
-        files={files}
-        activeFileId={activeFileId}
         selectedUnit={selectedUnit}
         convertDimensions={convertDimensions}
       />
-  ))}
-  </>
+    ));
 
-  );
+  const isLoading = isSaving || isProcessingFiles || files.some(f => f.isUploading);
+  const isDisabled = files.length === 0 || files.some(f => f.isUploading);
 
   return (
     <StepLayout
@@ -303,32 +336,17 @@ const UploadStlCard = () => {
       onClick={handleSave}
       isButtonsHide={files.length === 0}
       orderId={orderId}
-      isLoading={isSaving}
+      isLoading={isLoading}
       isPageLoading={isPageLoading}
-      isDisabled={files.length === 0}
+      isDisabled={isDisabled}
     >
-      {files.length == 0 ? (
-        <UploadInput
-          onFileChange={(file) => {
-            // mimic handleFileUpload logic for a single file
-            if (!file) return;
-            const isValid = isValidStlFile(file);
-            if (!isValid) {
-              alert('Please upload only STL or OBJ files');
-              return;
-            }
-            const newFileData = createFileData(file);
-            setFiles((prevFiles) => [...prevFiles, newFileData]);
-            setActiveFileId(newFileData._id);
-          }}
-        />
-       
+      {files.length === 0 ? (
+        <UploadInput onFileChange={processSingleFile} />
       ) : (
         <>
           <Box sx={styles.unitContainer}>
             {renderUnitButtons()}
           </Box>
-
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
             {renderFileCards()}
             {renderFileUpload()}

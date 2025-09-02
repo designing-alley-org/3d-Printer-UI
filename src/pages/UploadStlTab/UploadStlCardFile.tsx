@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Box, Typography,  CircularProgress,  Card, CardActions, IconButton } from '@mui/material';
-import ViewModelStl from '../../components/ViewStlFile/index';
+import React, { useCallback, useMemo } from 'react';
+import { Box, Typography, Card, CardActions, IconButton, CircularProgress } from '@mui/material';
 import * as styles from './UploadStlCardFileStyle';
-import ViewerStlModel from './ViewerStlModel';
-import { getFile } from '../../utils/indexedDB';
-import {  Minus, Plus } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import { FileData, ModelDimensions } from '../../types/uploadFiles';
 
 // Constants
 const QUANTITY_LIMITS = {
@@ -16,32 +13,10 @@ const QUANTITY_LIMITS = {
   MAX: 1000000000,
 } as const;
 
-// Types
-interface ModelDimensions {
-  height: number;
-  width: number;
-  length: number;
-}
-
-interface FileData {
-  _id: string;
-  fileName: string;
-  dimensions: ModelDimensions;
-  fileUrl?: string;
-  fileBlob?: Blob;
-  file?: File;
-  unit?: string;
-  quantity: number;
-}
-
 interface UploadStlCardFileProps {
   file: FileData;
   onRemove: (fileId: string) => void;
-  onSetActiveFile: (fileId: string) => void;
   onUpdateQuantity: (fileId: string, quantity: number) => void;
-  onUpdateDimensions: (fileId: string, dimensions: ModelDimensions) => void;
-  files: FileData[];
-  activeFileId: string | null;
   selectedUnit: string;
   convertDimensions: (
     dimensions: ModelDimensions,
@@ -49,84 +24,14 @@ interface UploadStlCardFileProps {
   ) => ModelDimensions;
 }
 
-// Custom hooks
-const useFileBlob = (file: FileData) => {
-  const [state, setState] = useState<{
-    blobUrl: string;
-    isLoading: boolean;
-    error: string | null;
-  }>({
-    blobUrl: '',
-    isLoading: true,
-    error: null,
-  });
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const setupFileUrl = async () => {
-      try {
-        let blob: Blob | null = null;
-
-        if (file.file) {
-          blob = file.file;
-        } else if (file.fileBlob) {
-          blob = file.fileBlob;
-        } else if (file.fileUrl) {
-          const storedBlob = await getFile(file.fileUrl);
-          blob = storedBlob || (await (await fetch(file.fileUrl)).blob());
-        }
-
-        if (!blob) {
-          throw new Error('No valid file source found');
-        }
-
-        if (isMounted) {
-          const url = URL.createObjectURL(blob);
-          setState({
-            blobUrl: url,
-            isLoading: false,
-            error: null,
-          });
-        }
-      } catch (error) {
-        if (isMounted) {
-          setState((prev) => ({
-            ...prev,
-            isLoading: false,
-            error:
-              error instanceof Error ? error.message : 'Failed to load file',
-          }));
-        }
-      }
-    };
-
-    setupFileUrl();
-
-    return () => {
-      isMounted = false;
-      if (state.blobUrl) {
-        URL.revokeObjectURL(state.blobUrl);
-      }
-    };
-  }, [file]);
-
-  return state;
-};
-
 const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
   ({
     file,
     onRemove,
-    onSetActiveFile,
     onUpdateQuantity,
-    onUpdateDimensions,
-    activeFileId,
     selectedUnit,
     convertDimensions,
   }) => {
-    const [isViewerOpen, setViewerOpen] = useState(false);
-    const { blobUrl, isLoading, error } = useFileBlob(file);
 
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
@@ -154,15 +59,6 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
       [file.quantity, file._id, onUpdateQuantity]
     );
 
-    const handleViewerOpen = useCallback(() => {
-      setViewerOpen(true);
-      onSetActiveFile(file._id);
-    }, [onSetActiveFile, file._id]);
-
-    const handleViewerClose = useCallback(() => {
-      setViewerOpen(false);
-    }, []);
-
     const handleRemove = useCallback(() => {
       onRemove(file._id);
     }, [onRemove, file._id]);
@@ -172,49 +68,79 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
       [file.dimensions, selectedUnit, convertDimensions]
     );
 
-    if (isLoading) {
-      return (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <CircularProgress size={24} />
-          <Typography sx={{ ml: 2 }}>Loading file...</Typography>
-        </Box>
-      );
-    }
-
-    if (error) {
-      return (
-        <Box sx={{ padding: '1rem', textAlign: 'center' }}>
-          <Typography color="error" sx={styles.errorText}>
-            Error: {error}
-          </Typography>
-        </Box>
-      );
-    }
-
     return (
       <>
         <Card  sx={{ padding: 2 , display: 'flex', flexDirection: 'column', gap: '1rem', width: {xs: '100%', sm: '268px'} }}>
-          {/* STL Viewer Section */}
+          {/* Thumbnail Section */}
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
-              {blobUrl ? (
-                <ViewModelStl
-                  localBlobUrl={blobUrl}
-                  onDimensionsCalculated={(dimensions) =>
-                    onUpdateDimensions(file._id, dimensions)
-                  }
-                  modelColor={activeFileId === file._id ? '#808080' : '#808080'}
+              {file.thumbnailUrl ? (
+                <img 
+                  src={file.thumbnailUrl} 
+                  alt={`${file.fileName} thumbnail`}
+                  style={{
+                    width: '100%',
+                    height: '150px',
+                    objectFit: 'contain',
+                    borderRadius: '8px',
+                    backgroundColor: '#f5f5f5'
+                  }}
                 />
+              ) : file.isUploading ? (
+                <Box 
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '150px',
+                    gap: 1
+                  }}
+                >
+                  <CircularProgress size={30} />
+                  <Typography variant="body2">
+                    Processing STL...
+                  </Typography>
+                </Box>
               ) : (
-                <Typography sx={styles.errorText}>
-                  Error loading file preview
-                </Typography>
+                <Box 
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '150px',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <Typography sx={styles.errorText}>
+                    No preview available
+                  </Typography>
+                </Box>
               )}
             </Box>
+            {/* Upload Progress Bar */}
+            {file.isUploading && file.uploadProgress !== undefined && (
+              <Box sx={{ width: '100%', mt: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ width: '100%', bgcolor: 'grey.300', borderRadius: 1 }}>
+                    <Box
+                      sx={{
+                        bgcolor: 'primary.main',
+                        height: 4,
+                        borderRadius: 1,
+                        width: `${file.uploadProgress}%`,
+                        transition: 'width 0.3s ease-in-out'
+                      }}
+                    />
+                  </Box>
+                  <Typography variant="caption" sx={{ minWidth: '40px' }}>
+                    {file.uploadProgress}%
+                  </Typography>
+                </Box>
+              </Box>
+            )}
+            
              <Typography  variant='h6' sx={{
               maxWidth: '9rem',
              }}>
@@ -307,16 +233,6 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                </IconButton>
              </CardActions>
         </Card>
-
-        {/* 3D Viewer Modal */}
-        <ViewerStlModel
-          localBlobUrl={blobUrl}
-          isOpen={isViewerOpen}
-          onClose={handleViewerClose}
-          files={[{ ...file }]}
-          activeFileId={activeFileId}
-          onSetActiveFile={onSetActiveFile}
-        />
       </>
     );
   }

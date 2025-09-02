@@ -293,11 +293,16 @@ export class STLParser {
       unit: targetUnit
     };
   }
+}
 
+/**
+ * Utility functions for STL processing
+ */
+export const STLUtils = {
   /**
    * Validate STL file before processing
    */
-  static validateSTLFile(file: File): { isValid: boolean; error?: string } {
+  validateSTLFile(file: File): { isValid: boolean; error?: string } {
     if (!file) {
       return { isValid: false, error: 'No file provided' };
     }
@@ -316,13 +321,8 @@ export class STLParser {
     }
 
     return { isValid: true };
-  }
-}
+  },
 
-/**
- * Utility functions for STL processing
- */
-export const STLUtils = {
   /**
    * Format file size in human readable format
    */
@@ -373,6 +373,21 @@ export const STLUtils = {
   generateProcessedFilename(originalName: string, suffix: string = 'processed'): string {
     const name = originalName.replace(/\.stl$/i, '');
     return `${name}_${suffix}.stl`;
+  },
+
+  /**
+   * Convert data URL to File
+   */
+  dataUrlToFile(dataUrl: string, filename: string): File {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   }
 };
 

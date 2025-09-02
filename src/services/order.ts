@@ -354,7 +354,7 @@ const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: 
 
 
  
-const uploadFiles = async (
+const uploadFilesService = async (
     orderId: string,
     stlFile: File,
     stlImage: File,
@@ -464,6 +464,6 @@ const uploadFiles = async (
     }
 };
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service, uploadFiles};
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service, uploadFilesService};
 
 
