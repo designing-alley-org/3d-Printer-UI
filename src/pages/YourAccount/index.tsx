@@ -1,19 +1,79 @@
-import { Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import AccountLayout from './AccountLayout';
+import CustomButton from '../../stories/button/CustomButton';
+import { EditIcon } from 'lucide-react';
+import { EditProfileModal } from '../../components/Model';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser, User } from '../../store/actions/updateUser';
+import toast from 'react-hot-toast';
+import { addUserDetails } from '../../store/user/reducer';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
 const Account = () => {
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const user = useSelector((state: any) => state.user);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleEditProfile = () => {
+    setEditModalOpen(true);
+  };
+
+  const handleSaveProfile = async (updatedUser: User) => {
+    try {
+      setSaveLoading(true);
+      const res = await toast.promise(
+        updateUser(updatedUser),
+        {
+          loading: 'Updating profile...',
+          success: 'Profile updated successfully',
+          error: 'Failed to update profile'
+        }
+      );
+      dispatch(addUserDetails(res.data.data));
+      setEditModalOpen(false);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Error updating profile');
+    } finally {
+      setSaveLoading(false);
+    }
+  };
+
   return (
-     <Container
+    <Container
       maxWidth="lg"
       sx={{ alignSelf: 'start', p: { xs: 2, sm: 3, md: 4 } }}
     >
-      <Typography variant="h5" fontWeight={600} gutterBottom >
+      <Typography variant="h5" fontWeight={600} gutterBottom>
         My Account
       </Typography>
-     <Typography variant="body1">
-     Manage your profile, orders, and settings
-     </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="body1">
+          Manage your profile, orders, and settings
+        </Typography>
+        <CustomButton
+          children={
+            <>
+              <CreateOutlinedIcon fontSize="small" sx={{ marginRight: '4px' }} />
+              {/* <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
+                Edit Profile
+              </Typography> */}
+            </>
+          }
+          onClick={handleEditProfile}
+        />
+      </Box>
+
       <AccountLayout />
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        user={user.user}
+        onSave={handleSaveProfile}
+        loading={saveLoading}
+      />
     </Container>
   );
 };

@@ -21,7 +21,7 @@ const MyProfile = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.user.defaultAddress));
   const [allAddresses, setAllAddresses] = useState([]);
   const [addressLoading, setAddressLoading] = useState(true);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+
   const [editEmailModalOpen, setEditEmailModalOpen] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
@@ -33,10 +33,6 @@ const MyProfile = () => {
   const handleSaveEmail = (email: string) => {
     // Dispatch an action to update the email in the user profile
     // dispatch(updateUser({ ...user.user, email }));
-  };
-
-  const handleEditProfile = () => {
-    setEditModalOpen(true);
   };
 
   const handleSaveProfile = async (updatedUser: User) => {
@@ -53,7 +49,7 @@ const MyProfile = () => {
       );
       
       dispatch(addUserDetails(res.data.data));
-      setEditModalOpen(false);
+      // setEditModalOpen(false);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error updating profile');
     } finally {
@@ -118,27 +114,15 @@ const MyProfile = () => {
     //   </form>
     // </>
     <Container sx={{ p: { xs: 2, sm: 3, md: 0 }}}>
-      <Card sx={{ padding: 0, borderRadius: '8px', bgcolor: 'background.paper', display: 'flex', justifyContent: 'space-between' }}>
+      <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <CardContent sx={{display: 'flex', gap:2, flexDirection: { xs: 'column', sm: 'row' }}}>
           <Box>
-           <Avatar alt={user.user.name} src={user.user.avatar} />
-          </Box>
-          <Box>
-            <Typography variant="h6" fontSize={{ xs: '1rem', sm: '1.5rem' }}>Welcome {user.user.name}</Typography>
+            <Typography variant="h6" color='primary.main'>Welcome {user.user.name}</Typography>
             <Typography variant="body1">Email: {user.user.email}</Typography>
-            <Typography variant="body1">Phone:  {user.user.phone_no}</Typography>
           </Box>
         </CardContent>
         <CardActions >
-         <CustomButton
-           children={
-            <>
-              <EditIcon  size={15} style={{ marginRight: '4px' }} />
-              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Profile</Typography>
-            </>
-           }
-           onClick={handleEditProfile}
-         />
+       
           <CustomButton
            children={
             <>
@@ -150,7 +134,7 @@ const MyProfile = () => {
          />
         </CardActions>
       </Card>
-      <Typography variant="h6" sx={{ marginTop: '1rem' }}>
+      <Typography variant="h6" sx={{ marginTop: '1rem' }} color='primary.main'>
        Address
       </Typography>
 
@@ -179,14 +163,7 @@ const MyProfile = () => {
       )}
     </Box>
 
-    {/* Edit Profile Modal */}
-    <EditProfileModal
-      open={editModalOpen}
-      onClose={() => setEditModalOpen(false)}
-      user={user.user}
-      onSave={handleSaveProfile}
-      loading={saveLoading}
-    />
+   
     <EditEmailModal
       open={editEmailModalOpen}
       onClose={() => setEditEmailModalOpen(false)}
