@@ -59,7 +59,6 @@ const CreateDisputeModel: React.FC<CreateDisputeModelProps> = ({
         variant="outlined"
         onClick={handleClose}
         disabled={loading}
-        borderRadius={0.2}
       >
         Cancel
       </CustomButton>
@@ -67,7 +66,6 @@ const CreateDisputeModel: React.FC<CreateDisputeModelProps> = ({
         variant="contained"
         onClick={() => formik.handleSubmit()}
         loading={loading}
-        borderRadius={0.2}
       >
         Submit Dispute
       </CustomButton>

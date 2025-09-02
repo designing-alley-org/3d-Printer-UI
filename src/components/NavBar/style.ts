@@ -4,39 +4,26 @@ import {
   Button,
 } from '@mui/material';
 
-const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
+interface StyledAppBarProps {
+  isDashboard?: boolean;
+}
 
-const NavButton = styled(Button)<{ active?: boolean }>(({ theme, active }) => ({
+const StyledAppBar = styled(AppBar, {
+  shouldForwardProp: (prop) => prop !== 'isDashboard',
+})<StyledAppBarProps>(({ theme, isDashboard = false }) => ({
+  backgroundColor:  theme.palette.primary.main,
+  boxShadow:isDashboard ? "" :  '0px 1px 2px 0px #00000014' ,
+  
+  // borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+const NavButton = styled(Button)<{ active?: boolean, isDashboard?: boolean }>(({ theme, active }) => ({
   position: 'relative',
-  color: active
-    ? theme.palette.primary.contrastText
-    : theme.palette.primary.contrastText,
+  color:   theme.palette.primary.contrastText,
   fontWeight: active ? 700 : 500,
   fontSize: '0.875rem',
-  textTransform: 'uppercase',
   padding: '12px 24px',
   minHeight: '60px',
   borderRadius: 0,
-  '&:hover': {
-    color: theme.palette.primary.contrastText,
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '3px',
-    backgroundColor: active
-      ? theme.palette.primary.contrastText
-      : 'transparent',
-    borderRadius: '2px 2px 0 0',
-    transition: 'background-color 0.3s ease',
-  },
 }));
 
 

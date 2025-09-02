@@ -36,7 +36,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
   pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
   opacity: ${props => (props.isLoading ? 0.6 : 1)};
   width: 35%;
-  background: #05123B;
+  background: #2A3F7F;
   border-top-left-radius: 23px;
   border-bottom-left-radius: 23px;
 
@@ -189,12 +189,12 @@ export const Model = styled.section`
   }
 `;
 
-export const ModelName = styled.section<{ isActive: boolean }>`
+export const ModelName = styled.section<{ isActive: boolean, textColor: string }>`
   display: flex;
   justify-content: center;
   margin-top: 0.8rem;
   margin-left: 0.4rem;
-  color: ${props => props.isActive ? '#0a2248' : '#ffffff'};
+  color: ${props => props.isActive ? props.textColor : '#ffffff'};
   font-size: 1rem;
   font-weight: ${props => props.isActive ? 'bold' : 'normal'};
 

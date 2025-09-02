@@ -59,12 +59,12 @@ const ListAddress: React.FC<ListAddressProps> = ({
       alignItems="center"
       spacing={2}
       sx={{
-        border: "1px solid",
-        borderColor: "grey.300",
+        border: '1px solid #F0F4FF',
         borderRadius: "0.5rem",
-        padding: 2,
-        mb: 2,
-        boxShadow: 1,
+        padding: '12px',
+        mr: 1,
+        my: 1,
+        boxShadow: '2px 2px 4px 0px #3B3E4929',
         cursor: showRadio ? 'pointer' : 'default',
       }}
       onClick={showRadio ? handleRadioChange : undefined}

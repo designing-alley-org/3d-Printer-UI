@@ -197,7 +197,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
 
     return (
       <>
-        <Card  sx={{borderRadius: '1rem' , padding: 2 , display: 'flex', flexDirection: 'column', gap: '1rem', width: {xs: '100%', sm: '268px'} }}>
+        <Card  sx={{ padding: 2 , display: 'flex', flexDirection: 'column', gap: '1rem', width: {xs: '100%', sm: '268px'} }}>
           {/* STL Viewer Section */}
           <Box sx={styles.viewBox}>
             <Box sx={styles.viewContent}>
@@ -266,8 +266,9 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 aria-label="Decrease quantity"
                 variant='contained'
                 sx={{
-                    minWidth: '0rem !important',
                     borderRadius: '4px',
+                    padding: '6px 10px',
+                    minWidth: '0rem !important',
                 }}
               />
               <CustomTextField
@@ -293,6 +294,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                 variant='contained'
                 sx={{
                      borderRadius: '4px',
+                     padding: '9px 13px',
                      minWidth: '0rem !important',
                 }}
               />

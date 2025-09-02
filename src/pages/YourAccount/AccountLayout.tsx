@@ -73,7 +73,7 @@ const AccountLayout = () => {
     width: '100%',
     padding: '8px',
     bgcolor: 'primary.main',
-    borderRadius: '8px',
+    borderRadius: '50px',
     overflowX: 'auto',
 
     '& .MuiTab-root': {
@@ -83,7 +83,7 @@ const AccountLayout = () => {
     '& .Mui-selected': {
       backgroundColor: '#fff !important',
       color: '#05123B',
-      borderRadius: '8px',
+      borderRadius: '50px',
     },
     '& .MuiTabs-indicator': {
       display: 'none',

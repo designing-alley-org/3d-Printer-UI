@@ -89,14 +89,13 @@ const NotificationBox = () => {
           e.stopPropagation();
           setShowNotification((prev) => !prev);
         }}
-        color="primary"
       >
         <Badge
           badgeContent={notification.length}
           color="error"
           invisible={notification.length === 0}
         >
-          <Bell size={22} color={theme.palette.background.paper} />
+          <Bell size={22} color={theme.palette.primary.contrastText} />
         </Badge>
       </IconButton>
 

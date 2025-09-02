@@ -223,11 +223,7 @@ export const MyOrders = () => {
 
   return (
     <>
-      <Card sx={{ borderRadius: '8px', padding: '3px' }}>
-        <CardHeader
-          title="My Orders"
-          subheader="Manage your profile, orders, and settings"
-        />
+      <Card>
         <CardContent
           sx={{
             display: 'flex',

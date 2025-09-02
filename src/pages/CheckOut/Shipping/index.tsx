@@ -153,7 +153,7 @@ const ShippingDetails = () => {
     >
       <Wrapper>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
-          <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1}>
+          <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1} color='primary.main'>
            <LocationOnIcon fontSize="small" />
            Delivery Address
           </Typography>
@@ -393,9 +393,7 @@ const ShippingDetails = () => {
                               console.error('Direct submission error:', error);
                             }
                           }}
-                          sx={{
-                            borderRadius:'4px'
-                          }}
+                    
                         >
                           {editingAddress ? 'Update Address' : 'Add Now'}
                         </CustomButton>

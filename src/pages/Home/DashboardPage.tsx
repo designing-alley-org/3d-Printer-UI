@@ -74,7 +74,7 @@ const DashboardPage = () => {
         <Typography
           variant="h4"
           sx={{
-            color: theme.palette.text.primary,
+            color: theme.palette.primary.contrastText,
             fontWeight: 700,
             mb: 1,
             fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' },
@@ -85,7 +85,7 @@ const DashboardPage = () => {
         <Typography
           variant="body1"
           sx={{
-            color: theme.palette.text.secondary,
+            color: theme.palette.primary.contrastText,
             fontSize: { xs: '0.875rem', sm: '1rem' },
           }}
         >

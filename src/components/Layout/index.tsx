@@ -20,10 +20,11 @@ const Index: React.FC = () => {
   const user = useSelector((state: any) => state.user);
   const userId = user?.user?._id;
   const dispatch = useDispatch();
+  const isDashboard = pathname.includes(ROUTES.DASHBOARD);
 
   // Set active tab based on path
   useEffect(() => {
-    if (pathname.includes(ROUTES.DASHBOARD)) {
+    if (isDashboard) {
       setActiveTabs(0);
     } else if (pathname.includes(ROUTES.GET_QUOTES)) {
       setActiveTabs(1);
@@ -81,6 +82,9 @@ const Index: React.FC = () => {
         justifyContent="center"
         alignItems="center"
         height={'calc(100vh - 64px)'}
+        sx={{
+          backgroundColor: isDashboard ? 'primary.main' : 'background.paper',
+        }}
       >
         <Outlet />
       </Box>

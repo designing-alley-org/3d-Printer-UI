@@ -155,7 +155,7 @@ const PaymentDetails: React.FC = () => {
           Error
         </Typography>
         <Typography paragraph>{error}</Typography>
-        <CustomButton children="Try Again" onClick={() => window.location.reload()} sx={{ marginTop: '1rem', borderRadius: '4px' }} variant="contained" />
+        <CustomButton children="Try Again" onClick={() => window.location.reload()} sx={{ marginTop: '1rem' }} variant="contained" />
       </Box> :
         <Paper
         elevation={0}

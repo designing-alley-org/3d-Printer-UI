@@ -23,6 +23,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       sx={{
         borderRadius: borderRadius ?? (theme.shape.borderRadius as number) * 1.33, // 24px from theme (multiplier in case)
         padding: "10px 16px",
+        border: props.variant === "outlined" ? `1px solid #F0F4FF` : "none",
+        boxShadow: props.variant === "outlined" ? "2px 2px 4px 0px #3B3E4929" : "none",
         fontWeight: theme.typography.button.fontWeight,
         textTransform: "none",
         '&:hover': {
