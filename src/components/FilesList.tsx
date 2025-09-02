@@ -84,7 +84,7 @@ const FilesList = ({ file }: Props) => {
                 }}
               >
              {isDownloading ? `${fileDownloadProgress}%` : <>
-             Download <Download />
+             Download <Download  size={20}/>
              </>
              }
               </CustomButton>
@@ -94,6 +94,7 @@ const FilesList = ({ file }: Props) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
+                  padding: '8px 16px',
                 }}
                 onClick={handleViewClick}
               >
@@ -102,7 +103,7 @@ const FilesList = ({ file }: Props) => {
                   animate={{ rotate: isTableExpanded ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <KeyboardArrowDownIcon />
+                  <KeyboardArrowDownIcon fontSize='medium' />
                 </motion.div>
               </CustomButton>
             </Stack>

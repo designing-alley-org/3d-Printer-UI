@@ -29,21 +29,22 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
     <>
       <Card
         sx={{
-          borderRadius: '8px',
           backgroundColor: 'primary.main',
-          padding: '1px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           cursor: 'pointer',
+          boxShadow: '2px 2px 4px 0px #0000003D',
+          maxHeight: '85px',
+          overflow: 'hidden',
         }}
         onClick={() => onClick(order._id)}
       >
         <CardContent>
           <Box display="flex" alignItems="center">
             <Box
-              width={'46px'}
-              height={'46px'}
+              width={'40px'}
+              height={'40px'}
               borderRadius={'50%  '}
               overflow={'hidden'}
               sx={{
@@ -98,7 +99,7 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
               animate={{ rotate: isExpanded ? 90 : 0 }}
               transition={{ duration: 0.3 }}
             >
-              <ArrowForwardIosOutlinedIcon fontSize="large" />
+              <ArrowForwardIosOutlinedIcon fontSize="medium" />
             </motion.div>
           </CustomButton>
         </CardActions>
