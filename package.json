@@ -21,6 +21,8 @@
     "@mui/material": "^7.0.2",
     "@mui/styles": "^6.1.8",
     "@react-three/cannon": "^6.6.0",
+    "@react-three/drei": "^10.7.4",
+    "@react-three/fiber": "^9.3.0",
     "@reduxjs/toolkit": "^2.3.0",
     "@storybook/builder-webpack5": "^8.3.5",
     "@storybook/manager-webpack5": "^6.5.16",
