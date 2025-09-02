@@ -2,7 +2,6 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Box, Card, CardContent, Typography, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import UploadStlCardFile from './UploadStlCardFile';
 import StepLayout from '../../components/Layout/StepLayout';
 import * as styles from './styles';
 import { uploadDimBtnData } from '../../constants';
@@ -14,11 +13,12 @@ import { uploadFilesService } from '../../services/order';
 import UploadInput from './UploadInput';
 import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
 import CustomButton from '../../stories/button/CustomButton';
+import STlFileList from './STlFileList';
 
 const INITIAL_DIMENSIONS: ModelDimensions = { height: 0, width: 0, length: 0 };
 const MONGO_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
-const UploadStlCard = () => {
+const UploadStl = () => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -315,7 +315,7 @@ const UploadStlCard = () => {
 
   const renderFileCards = () => 
     files.map((file) => (
-      <UploadStlCardFile
+      <STlFileList
         file={file}
         key={file._id}
         onRemove={handleRemoveFile}
@@ -357,4 +357,4 @@ const UploadStlCard = () => {
   );
 };
 
-export default UploadStlCard;
+export default UploadStl;

@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../pages/Auth/login.tsx';
 import OrderSuccessful from '../pages/Order/OrderSuccessful.tsx';
 import Layout from '../components/Layout';
-import UploadStlCard from '../pages/UploadStlTab/UploadStlTab.tsx';
 import Customize from '../pages/CustomizeTab/index.tsx';
 import ShippingDetails from '../pages/CheckOut/Shipping/index.tsx';
 import DeliveryPlan from '../pages/CheckOut/DeliveryPlan/index.tsx';
@@ -26,6 +25,7 @@ import Password from '../pages/YourAccount/Password.tsx';
 import Settings from '../pages/YourAccount/Settings.tsx';
 import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
 import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
+import UploadStl from '../pages/UploadStlTab/index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -53,7 +53,7 @@ const Routing: React.FC = () => {
         <Route path={`${ROUTES.GET_QUOTES}/:orderId`}>
           <Route
             path={ROUTES.UPLOAD_STL}
-            element={<ProtectedRoute component={<UploadStlCard />} />}
+            element={<ProtectedRoute component={<UploadStl />} />}
           />
           <Route
             path={ROUTES.CUSTOMIZE}

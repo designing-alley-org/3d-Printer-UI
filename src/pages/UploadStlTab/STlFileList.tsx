@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Box, Typography, Card, CardActions, IconButton, CircularProgress } from '@mui/material';
-import * as styles from './UploadStlCardFileStyle';
+import * as styles from './styles';
 import { Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
@@ -13,7 +13,7 @@ const QUANTITY_LIMITS = {
   MAX: 1000000000,
 } as const;
 
-interface UploadStlCardFileProps {
+interface Props {
   file: FileData;
   onRemove: (fileId: string) => void;
   onUpdateQuantity: (fileId: string, quantity: number) => void;
@@ -24,7 +24,7 @@ interface UploadStlCardFileProps {
   ) => ModelDimensions;
 }
 
-const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
+const STlFileList: React.FC<Props> = React.memo(
   ({
     file,
     onRemove,
@@ -113,7 +113,7 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
                     borderRadius: '8px'
                   }}
                 >
-                  <Typography sx={styles.errorText}>
+                  <Typography color='error'>
                     No preview available
                   </Typography>
                 </Box>
@@ -238,6 +238,6 @@ const UploadStlCardFile: React.FC<UploadStlCardFileProps> = React.memo(
   }
 );
 
-UploadStlCardFile.displayName = 'UploadStlCardFile';
+STlFileList.displayName = 'STlFileList';
 
-export default UploadStlCardFile;
+export default STlFileList;
