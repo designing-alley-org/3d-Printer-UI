@@ -20,10 +20,13 @@ export const SubHeader = styled.div`
 `;
 
 export const Wrapper = styled.section`
-  border: 1px solid #C5C5C5;
+  border: 1px solid #F0F4FF;
   padding: 1rem !important;
   border-radius: 1.3rem;
   background-color: #FFFFFF;
+  padding: 24px;
+  box-shadow: 2px 2px 4px 0px #3B3E4929;
+
 
   @media (max-width: 600px) {
     border-radius: 0.5rem;

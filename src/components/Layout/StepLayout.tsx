@@ -72,7 +72,7 @@ const StepLayout = ({
             variant="body1"
             gutterBottom
             sx={{ fontWeight: 600 }}
-            color="secondary"
+            color="primary.main"
           >
             Order ID: {orderId || 'N/A'}
           </Typography>
