@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import api from "../axiosConfig";
+import { getSignedUrl, uploadFromS3, deleteFromS3 } from "./s3";
 
 // Upload files
 const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
@@ -228,6 +229,8 @@ const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => 
     }
 }
 
+// New Api 
+
 
 const getAllOrdersService = async ({ page, limit, orderId }: { page?: number, limit?: number, orderId?: string } = {}) => {
     try {
@@ -350,7 +353,117 @@ const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: 
 };
 
 
+ 
+const uploadFiles = async (
+    orderId: string,
+    stlFile: File,
+    stlImage: File,
+    dimensions: { length: number; width: number; height: number },
+    quantity: number,
+    setProgress: (progress: number) => void,
+    unit: string
+) => {
+    let stlFileUrl: string | null = null;
+    let imageUrl: string | null = null;
+    let stlFileKey: string | null = null;
+    let imageFileKey: string | null = null;
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service};
+    try {
+        // Set initial progress
+        setProgress(0);
+
+        // Get signed URLs for both STL file and image
+        const [stlSignedUrl, imageSignedUrl] = await Promise.all([
+            getSignedUrl(stlFile.name, stlFile.type),
+            getSignedUrl(stlImage.name, stlImage.type)
+        ]);
+
+        setProgress(10);
+
+        // Extract file keys from signed URLs for potential cleanup
+        stlFileKey = new URL(stlSignedUrl).pathname.substring(1); // Remove leading slash
+        imageFileKey = new URL(imageSignedUrl).pathname.substring(1); // Remove leading slash
+
+        // Upload both files to S3 with progress tracking
+        let stlProgress = 0;
+        let imageProgress = 0;
+
+        const updateCombinedProgress = () => {
+            const combinedProgress = 10 + ((stlProgress + imageProgress) / 2) * 0.7; // 70% for uploads
+            setProgress(Math.round(combinedProgress));
+        };
+
+        await Promise.all([
+            uploadFromS3(stlFile, stlSignedUrl, (progress) => {
+                stlProgress = progress;
+                updateCombinedProgress();
+            }),
+            uploadFromS3(stlImage, imageSignedUrl, (progress) => {
+                imageProgress = progress;
+                updateCombinedProgress();
+            })
+        ]);
+
+        setProgress(80);
+
+        // Extract file URLs from signed URLs (remove query parameters)
+        stlFileUrl = stlSignedUrl.split('?')[0];
+        imageUrl = imageSignedUrl.split('?')[0];
+
+        // Prepare file data for order update
+        const fileData = {
+            fileName: stlFile.name,
+            fileUrl: stlFileUrl,
+            imageUrl: imageUrl,
+            dimensions: dimensions,
+            quantity: quantity,
+            unit: unit
+        };
+
+        // Update order with file data
+        const response = await uploadFilesByOrderIdService(orderId, fileData);
+
+        setProgress(100);
+        toast.success('Files uploaded successfully!');
+        
+        return response;
+    } catch (error) {
+        console.error('Error uploading files:', error);
+        
+        // Cleanup S3 files if they were uploaded but DB update failed
+        const cleanupPromises: Promise<any>[] = [];
+        
+        if (stlFileKey) {
+            cleanupPromises.push(
+                deleteFromS3(stlFileKey).catch(deleteError => 
+                    console.error('Error deleting STL file from S3:', deleteError)
+                )
+            );
+        }
+        
+        if (imageFileKey) {
+            cleanupPromises.push(
+                deleteFromS3(imageFileKey).catch(deleteError => 
+                    console.error('Error deleting image file from S3:', deleteError)
+                )
+            );
+        }
+        
+        // Wait for cleanup to complete (but don't throw if cleanup fails)
+        if (cleanupPromises.length > 0) {
+            try {
+                await Promise.all(cleanupPromises);
+                console.log('S3 cleanup completed successfully');
+            } catch (cleanupError) {
+                console.error('Some S3 cleanup operations failed:', cleanupError);
+            }
+        }
+        
+        toast.error('Failed to upload files. Please try again.');
+        throw error;
+    }
+};
+
+export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service, uploadFiles};
 
 
