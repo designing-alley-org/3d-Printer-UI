@@ -2,6 +2,8 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Box, Card, CardContent, Typography, useMediaQuery } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { nanoid } from 'nanoid';
+
 import StepLayout from '../../components/Layout/StepLayout';
 import * as styles from './styles';
 import { uploadDimBtnData } from '../../constants';
@@ -62,11 +64,10 @@ const UploadStl = () => {
     return true;
   };
 
-  const generateFileId = (fileName: string): string => 
-    `${fileName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
 
   const createFileData = (file: File): FileData => ({
-    _id: generateFileId(file.name),
+    _id: `${file.name}_${nanoid(10)}`,
     fileName: file.name,
     dimensions: { ...INITIAL_DIMENSIONS },
     fileUrl: URL.createObjectURL(file),
@@ -165,6 +166,8 @@ const UploadStl = () => {
     updateFileStatus(fileId, { quantity: newQuantity });
   }, [updateFileStatus]);
 
+
+  /// Convert dimensions to the specified unit
   const convertDimensions = useCallback((dimensions: ModelDimensions, unit: string): ModelDimensions => {
     // Use the STLParser's built-in conversion method
     const stlDimensions = { ...dimensions, unit: 'mm' as const };
@@ -178,6 +181,7 @@ const UploadStl = () => {
     };
   }, []);
 
+  /// Upload a single file sequentially
   const uploadFileSequentially = async (fileData: FileData) => {
     if (!fileData.file) {
       console.error('Missing file for upload');
