@@ -1,6 +1,8 @@
 import toast from "react-hot-toast";
 import api from "../axiosConfig";
 import { getSignedUrl, uploadFromS3, deleteFromS3 } from "./s3";
+import { createFile } from "./filesService";
+import { FileData } from "../types/uploadFiles";
 
 // Upload files
 const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
@@ -361,17 +363,16 @@ const uploadFilesService = async (
     dimensions: { length: number; width: number; height: number },
     quantity: number,
     setProgress: (progress: number) => void,
-    unit: string
+    unit: string,
+    setFiles: React.Dispatch<React.SetStateAction<FileData[]>>,
+    localFileId: string
 ) => {
-    let stlFileUrl: string | null = null;
-    let imageUrl: string | null = null;
     let stlFileKey: string | null = null;
     let imageFileKey: string | null = null;
 
     try {
         // Set initial progress
         setProgress(0);
-//@returns { success: boolean, key: string, url: string }
         // Get signed URLs for both STL file and image
         const [stlSignedUrl, imageSignedUrl] = await Promise.all([
 
@@ -381,6 +382,7 @@ const uploadFilesService = async (
         ]);
 
         setProgress(10);
+
 
         // Extract URLs and keys from the returned objects
         // getSignedUrl returns { success: boolean, key: string, url: string }
@@ -418,18 +420,22 @@ const uploadFilesService = async (
         // Prepare file data for order update
         const fileData = {
             fileName: stlFile.name,
-            fileUrl: stlFileUrl,
-            imageUrl: imageUrl,
+            fileUrl: stlSignedUrl.storeUrl,
+            thumbnailUrl: imageSignedUrl.storeUrl,
             dimensions: dimensions,
             quantity: quantity,
             unit: unit
         };
 
         // Update order with file data
-        const response = await uploadFilesByOrderIdService(orderId, fileData);
+        const response = await createFile(orderId, fileData as any);
+        setFiles(prev => 
+            prev.map(file =>
+                file._id === localFileId ? { ...file, _id: response._id, fileUrl: response.fileUrl, thumbnailUrl: response.thumbnailUrl } : file
+            )
+        );
 
         setProgress(100);
-        toast.success('Files uploaded successfully!');
         
         return response;
     } catch (error) {

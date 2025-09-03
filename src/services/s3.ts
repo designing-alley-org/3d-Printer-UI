@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "../axiosConfig"
 /**
  * Uploads a file to a specified URL with progress tracking
@@ -11,7 +12,7 @@ export const uploadFromS3 = async (
     setProgress: (progress: number) => void
 ): Promise<void> => {
     try {
-        await api.put(url, file, {
+        await axios.put(url, file, {
             headers: {
                 'Content-Type': file.type,
             },
@@ -55,17 +56,19 @@ export const getSignedUrl = async (
     filename: string,
     folder: 'stl' | 'stlImage' | 'image',
     contentType: string
-): Promise<{ success: boolean, key: string, url: string }> => {
+): Promise<{ success: boolean, key: string, url: string, storeUrl: string }> => {
     try {
         const response = await api.post('/api/v1/s3/get-put-object-url', {
             filename,
             folder,
             contentType
         });
+
         return {
             success: true,
-            key: response.data.key,
-            url: response.data.url
+            key: response.data.data.key,
+            url: response.data.data.url,
+            storeUrl: response.data.data.storeUrl
         };
     } catch (error) {
         console.error('Error getting signed URL:', error);

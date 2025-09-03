@@ -26,5 +26,5 @@ export interface UploadFileProgress {
 }
 
 
-
+export type UploadFile  = Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'> 
 

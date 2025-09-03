@@ -71,3 +71,30 @@ export function formatText(text: string): string {
     // Capitalize the first letter
     return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
 }
+
+
+
+// // Error Handle Utility
+// const sendErrorResponse = (res, statusCode, message) => {
+//     return res.status(statusCode).json({ status: 0, message });
+// };
+
+// // Utility for success response
+// const sendSuccessResponse = (res, statusCode, message, data) => {
+//     return res.status(statusCode).json({ status: 1, message, data: data });
+// // };
+//    return {
+//             success: true,
+//             key: response.data.data.key,
+//             url: response.data.data.url
+//         };
+
+
+
+export const returnResponse = (response: any) => {
+  if (response?.data?.data) {
+    return response.data.data;
+  } else {
+    return response?.data;
+  }
+};

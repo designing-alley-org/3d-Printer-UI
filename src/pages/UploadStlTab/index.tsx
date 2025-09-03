@@ -7,8 +7,6 @@ import { nanoid } from 'nanoid';
 import StepLayout from '../../components/Layout/StepLayout';
 import * as styles from './styles';
 import { uploadDimBtnData } from '../../constants';
-import { deleteStlFileByFileId } from '../../store/actions/deleteStlFileByFileId';
-import { getFilesByOrderIdForUploadstl } from '../../store/actions/getFilesByOrderId';
 import { FileData, ModelDimensions } from '../../types/uploadFiles';
 import { stlParser, STLUtils, STLParser } from '../../utils/stlUtils';
 import { uploadFilesService } from '../../services/order';
@@ -16,15 +14,16 @@ import UploadInput from './UploadInput';
 import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
 import CustomButton from '../../stories/button/CustomButton';
 import STlFileList from './STlFileList';
+import { deleteFile, getAllFilesByOrderId } from '../../services/filesService';
 
 const INITIAL_DIMENSIONS: ModelDimensions = { height: 0, width: 0, length: 0 };
-const MONGO_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
 const UploadStl = () => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [files, setFiles] = useState<FileData[]>([]);
+  console.log('Current files:', files);
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
   
   const navigate = useNavigate();
@@ -42,7 +41,8 @@ const UploadStl = () => {
       
       try {
         setIsPageLoading(true);
-        const response = await getFilesByOrderIdForUploadstl(orderId);
+        const response = await getAllFilesByOrderId(orderId);
+        console.log('Fetched files:', response);
         setFiles(response || []);
       } catch (error) {
         console.error('Error fetching order files:', error);
@@ -145,9 +145,8 @@ const UploadStl = () => {
 
   const handleRemoveFile = useCallback(async (fileId: string) => {
     try {
-      if (MONGO_ID_REGEX.test(fileId)) {
-        await deleteStlFileByFileId(orderId as string, fileId);
-      }
+      
+      await deleteFile(fileId,orderId);
 
       setFiles(prev => {
         const fileToRemove = prev.find(file => file._id === fileId);
@@ -211,7 +210,9 @@ const UploadStl = () => {
         fileData.dimensions,
         fileData.quantity,
         (progress: number) => updateFileStatus(fileData._id, { uploadProgress: progress }),
-        fileData.unit
+        fileData.unit,
+        setFiles,
+        fileData._id,
       );
 
       updateFileStatus(fileData._id, {
@@ -329,7 +330,7 @@ const UploadStl = () => {
       />
     ));
 
-  const isLoading = isSaving || isProcessingFiles || files.some(f => f.isUploading);
+  const isLoading = isSaving || isProcessingFiles || files?.some(f => f.isUploading);
   const isDisabled = files.length === 0 || files.some(f => f.isUploading);
 
   return (
