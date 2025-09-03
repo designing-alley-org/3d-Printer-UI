@@ -46,10 +46,20 @@ const updateFile = async (fileId: string, orderId: string, status: string, fileD
     }
 };
 
+const updateFilesQuantity = async (files: { id: string; quantity: number }[], orderId:string) => {
+    try {
+        const response = await api.patch(`/api/v1/files/quantity`, { files });
+        return returnResponse(response);
+    } catch (error) {
+        console.error('Error updating files quantity:', error);
+        throw error;
+    }
+};
 
 export {
     createFile,
     deleteFile,
     getAllFilesByOrderId,
-    updateFile
+    updateFile,
+    updateFilesQuantity 
 }

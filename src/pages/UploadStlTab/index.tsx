@@ -14,7 +14,8 @@ import UploadInput from './UploadInput';
 import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
 import CustomButton from '../../stories/button/CustomButton';
 import STlFileList from './STlFileList';
-import { deleteFile, getAllFilesByOrderId } from '../../services/filesService';
+import { deleteFile, getAllFilesByOrderId, updateFilesQuantity } from '../../services/filesService';
+import toast from 'react-hot-toast';
 
 const INITIAL_DIMENSIONS: ModelDimensions = { height: 0, width: 0, length: 0 };
 
@@ -23,7 +24,6 @@ const UploadStl = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [files, setFiles] = useState<FileData[]>([]);
-  console.log('Current files:', files);
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
   
   const navigate = useNavigate();
@@ -42,7 +42,6 @@ const UploadStl = () => {
       try {
         setIsPageLoading(true);
         const response = await getAllFilesByOrderId(orderId);
-        console.log('Fetched files:', response);
         setFiles(response || []);
       } catch (error) {
         console.error('Error fetching order files:', error);
@@ -155,6 +154,8 @@ const UploadStl = () => {
         }
         return prev.filter(file => file._id !== fileId);
       });
+
+      toast.success('File removed successfully');
     } catch (error) {
       console.error('Error removing file:', error);
     }
@@ -238,15 +239,17 @@ const UploadStl = () => {
 
   const handleSave = async () => {
     if (!orderId) return;
-
     setIsSaving(true);
 
     try {
-      const allUploaded = files.every(f => f.isUploaded);
-      
-      if (allUploaded && files.length > 0) {
-        console.log('All files uploaded successfully, ready for next step');
-        navigate('/next-step');
+
+      if (files.length > 0) {
+        // Prepare files for upload quantity
+        const filesToUpload = files.filter(f => f.quantity > 1).map(f => ({ id: f._id, quantity: f.quantity }));
+
+        await updateFilesQuantity(filesToUpload, orderId);
+
+        navigate(`/get-quotes/${orderId}/customize`);
       } else if (files.length === 0) {
         console.warn('No files to upload');
       } else {
