@@ -371,18 +371,26 @@ const uploadFilesService = async (
     try {
         // Set initial progress
         setProgress(0);
-
+//@returns { success: boolean, key: string, url: string }
         // Get signed URLs for both STL file and image
         const [stlSignedUrl, imageSignedUrl] = await Promise.all([
-            getSignedUrl(stlFile.name, stlFile.type),
-            getSignedUrl(stlImage.name, stlImage.type)
+
+            // content type
+            getSignedUrl(stlFile.name , 'stl', stlFile.type),
+            getSignedUrl(stlImage.name, 'stlImage', stlImage.type)
         ]);
 
         setProgress(10);
 
-        // Extract file keys from signed URLs for potential cleanup
-        stlFileKey = new URL(stlSignedUrl).pathname.substring(1); // Remove leading slash
-        imageFileKey = new URL(imageSignedUrl).pathname.substring(1); // Remove leading slash
+        // Extract URLs and keys from the returned objects
+        // getSignedUrl returns { success: boolean, key: string, url: string }
+        stlFileKey = stlSignedUrl.key;
+        imageFileKey = imageSignedUrl.key;
+        
+        // Get the actual URLs from the returned objects
+        const stlUploadUrl = stlSignedUrl.url;
+        const imageUploadUrl = imageSignedUrl.url;
+
 
         // Upload both files to S3 with progress tracking
         let stlProgress = 0;
@@ -394,11 +402,11 @@ const uploadFilesService = async (
         };
 
         await Promise.all([
-            uploadFromS3(stlFile, stlSignedUrl, (progress) => {
+            uploadFromS3(stlFile, stlUploadUrl, (progress) => {
                 stlProgress = progress;
                 updateCombinedProgress();
             }),
-            uploadFromS3(stlImage, imageSignedUrl, (progress) => {
+            uploadFromS3(stlImage, imageUploadUrl, (progress) => {
                 imageProgress = progress;
                 updateCombinedProgress();
             })
@@ -406,10 +414,7 @@ const uploadFilesService = async (
 
         setProgress(80);
 
-        // Extract file URLs from signed URLs (remove query parameters)
-        stlFileUrl = stlSignedUrl.split('?')[0];
-        imageUrl = imageSignedUrl.split('?')[0];
-
+       
         // Prepare file data for order update
         const fileData = {
             fileName: stlFile.name,

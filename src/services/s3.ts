@@ -34,7 +34,7 @@ export const uploadFromS3 = async (
  */
 export const deleteFromS3 = async (key: string) => {
     try {
-        const response = await api.delete('/api/s3/delete', { 
+        const response = await api.delete('/api/v1/s3/delete-object', { 
             data: { key } 
         });
         return response.data;
@@ -48,18 +48,25 @@ export const deleteFromS3 = async (key: string) => {
  * Gets a signed URL from S3 for file upload
  * @param filename The name of the file to be uploaded
  * @param fileType The MIME type of the file
- * @returns The signed URL for uploading
+ * @param folder The folder in which to upload the file
+ * @returns { success: boolean, key: string, url: string }
  */
 export const getSignedUrl = async (
     filename: string,
-    fileType: string
-): Promise<string> => {
+    folder: 'stl' | 'stlImage' | 'image',
+    contentType: string
+): Promise<{ success: boolean, key: string, url: string }> => {
     try {
-        const response = await api.post('/api/s3/signedUrl', {
+        const response = await api.post('/api/v1/s3/get-put-object-url', {
             filename,
-            fileType
+            folder,
+            contentType
         });
-        return response.data.url;
+        return {
+            success: true,
+            key: response.data.key,
+            url: response.data.url
+        };
     } catch (error) {
         console.error('Error getting signed URL:', error);
         throw error;

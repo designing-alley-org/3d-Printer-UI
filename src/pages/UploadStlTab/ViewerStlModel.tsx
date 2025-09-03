@@ -149,7 +149,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
                 }}
               />
             </Box>
-            <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
+            <Typography >3D VIEWER</Typography>
             <Box sx={styles.viewerContent}>
               <Box sx={styles.viewModel}>
                 <ViewModelStl
