@@ -1,29 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-export interface Dimensions {
-  height: number;
-  length: number;
-  width: number;
-  weight?: number;
-}
-
-export interface FileDetail {
-  _id: string;
-  fileName: string;
-  fileUrl: string;
-  quantity: number;
-  color: string;
-  material: string;
-  technology: string;
-  printer: string;
-  unit: string;
-  dimensions: any;
-  infill: number;
-}
+import { FileData } from '../../types/uploadFiles';
 
 export interface FileDetailsState {
-  files: FileDetail[];
-  updateFiles: FileDetail[] ;
+  files: FileData[];
+  updateFiles: FileData[] ;
   activeFileId: string | null;
 }
 
@@ -42,12 +22,12 @@ export const fileDetailsSlice = createSlice({
       state.activeFileId = action.payload || null;
     },
 
-    addAllFiles: (state, action: PayloadAction<FileDetail[]>) => {
+    addAllFiles: (state, action: PayloadAction<FileData[]>) => {
       state.files = action.payload;
       state.updateFiles = action.payload;
     },
 
-    UpdateValueById: (state, action: PayloadAction<{ id: string; data:FileDetail }>) => {
+    UpdateValueById: (state, action: PayloadAction<{ id: string; data:FileData }>) => {
       if (state.updateFiles) {
         const file = state.updateFiles.find((file) => file._id === action.payload.id);
         if (file) {
