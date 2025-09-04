@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Typography, CircularProgress, LinearProgress } from '@mui/material';
+import { Box, Typography, CircularProgress, LinearProgress, Switch } from '@mui/material';
 import ResponsiveModal from './ResponsiveModal';
 import STLViewer from '../STLViewer';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
@@ -22,6 +22,7 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showWireframe, setShowWireframe] = useState(false);
 
   const downloadAndParseSTL = useCallback(async (url: string) => {
     try {
@@ -103,7 +104,7 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
       open={open}
       onClose={handleClose}
       title={`3D Model Viewer - ${fileName}`}
-      maxWidth="lg"
+      maxWidth="md"
     >
       <Box sx={{ minHeight: '500px', display: 'flex', flexDirection: 'column' }}>
         {error && (
@@ -129,12 +130,30 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
         )}
         
         {stlGeometry && !isDownloading && !error && (
-          <Box sx={{ flex: 1, minHeight: '500px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Box sx={{ flex: 1, minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <Box 
+            display="flex" 
+            alignItems="center" 
+            justifyContent="flex-start" 
+            alignSelf="flex-start"
+            mb={2}
+            width="100%"
+          >
+            <Typography variant="body2">Show wireframe</Typography>
+
+            <Switch
+              checked={showWireframe}
+              onChange={(e) => setShowWireframe(e.target.checked)}
+              color="primary"
+              inputProps={{ 'aria-label': 'Show wireframe' }}
+            />
+          </Box>
             <STLViewer 
               geometry={stlGeometry}
-              size={500}
+              size={600}
+              showWireframe={showWireframe}
               enableControls={true}
-              autoRotate={false}
+              autoRotate={true}
             />
           </Box>
         )}

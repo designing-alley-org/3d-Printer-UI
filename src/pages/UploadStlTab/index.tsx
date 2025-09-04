@@ -333,8 +333,8 @@ const UploadStl = () => {
       />
     ));
 
-  const isLoading = isSaving || isProcessingFiles || files?.some(f => f.isUploading);
-  const isDisabled = files.length === 0 || files.some(f => f.isUploading);
+  const isLoading = isSaving 
+  const isDisabled = files.length === 0 || isProcessingFiles
 
   return (
     <StepLayout

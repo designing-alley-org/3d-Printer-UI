@@ -3,7 +3,6 @@ import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Dimensions,
-  FileDetail,
   UpdateValueById,
 } from '../../../store/customizeFilesDetails/reducer';
 import SingleSelectDropdown, {
@@ -24,6 +23,7 @@ import {
   Ruler,
   RotateCcw,
 } from 'lucide-react';
+import { FileData } from '../../../types/uploadFiles';
 
 interface AccordionProps {
   printerData: any[];
@@ -69,7 +69,7 @@ const Accordion: React.FC<AccordionProps> = ({
   printerMessage,
 }) => {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState<FileDetail | undefined>(fileData);
+  const [formData, setFormData] = useState<FileData | undefined>(fileData);
   const dataspec = useSelector((state: any) => state.specification);
   const theme = useTheme();
 
@@ -142,7 +142,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 ...prev?.dimensions,
                 [field]: value,
               },
-            }) as FileDetail
+            }) as FileData
         );
       }
     };
@@ -165,7 +165,7 @@ const Accordion: React.FC<AccordionProps> = ({
             width: oldDimensions?.dimensions?.width || 0,
             length: oldDimensions?.dimensions?.length || 0,
           },
-        }) as FileDetail
+        }) as FileData
     );
   };
 
