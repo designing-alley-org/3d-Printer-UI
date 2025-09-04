@@ -1,11 +1,14 @@
+import toast from "react-hot-toast";
 import api from "../axiosConfig";
-import { User } from "../store/actions/updateUser";
+import { editUser } from "../types";
+import { returnResponse } from "../utils/function";
 
 
-export const updateUserService = async (userData: User): Promise<any> => {
+export const updateUserService = async (userData: editUser): Promise<any> => {
     try {
       const response = await api.put(`/update-user-profile`, userData);
-      return response;
+      toast.success('Profile updated successfully');
+      return returnResponse(response);
     } catch (error) {
       throw error;
     }

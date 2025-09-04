@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import ButtonIcon from '../../stories/BottonIcon/ButtonIcon';
 import ViewModelStl from '../../components/ViewStlFile/index';
-import { arrow_left, arrow_right, cross } from '../../constants';
 import * as styles from './ViewerStlModelStyles';
-import MUIButton from '../../stories/MUIButton/Button';
 import { ArrowLeftIcon, ArrowRight, X } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 
@@ -152,7 +149,7 @@ const ViewerStlModel: React.FC<ViewerStlModelProps> = React.memo(
                 }}
               />
             </Box>
-            <Typography sx={styles.modalTitle}>3D VIEWER</Typography>
+            <Typography >3D VIEWER</Typography>
             <Box sx={styles.viewerContent}>
               <Box sx={styles.viewModel}>
                 <ViewModelStl

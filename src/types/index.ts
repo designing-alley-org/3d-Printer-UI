@@ -25,3 +25,17 @@ export interface OrderFileType {
     pricing: number;
     file:any;
   }
+
+
+export interface User {
+    _id: string;
+    email: string;
+    name: string;
+    phone_no: string;
+    phone_ext: string;
+    token?: string;
+}
+
+export type editUser = Omit<User,'email' | '_id' | 'token'>;
+
+export type EditMail = Partial<Pick<User, 'email'>>;

@@ -13,8 +13,18 @@ export interface FileData {
   file?: File;
   quantity: number;
   unit: string;
+  thumbnailUrl?: string;
+  uploadProgress?: number;
+  isUploading?: boolean;
+  isUploaded?: boolean;
+}
+
+export interface UploadFileProgress {
+  fileId: string;
+  progress: number;
+  isUploading: boolean;
 }
 
 
-
+export type UploadFile  = Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'> 
 

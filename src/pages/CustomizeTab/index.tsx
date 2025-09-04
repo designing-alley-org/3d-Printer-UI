@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Divider, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Divider, Typography, useTheme } from '@mui/material';
 import {
   Customize,
   Files,
@@ -11,34 +11,28 @@ import {
   ModelName,
   CustomizeBox,
 } from './styles';
-import { vector_black } from '../../constants';
+import { STLViewerModal } from '../../components/Model';
 import { AccordionMemo } from './Accordion';
 
 // Icon Custom Icon 
 import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../public/Icon/MUI_Coustom_icon/index'; 
 
 import {
-  FileDetail,
+  addAllFiles,
   setActiveFile,
 } from '../../store/customizeFilesDetails/reducer';
-import ViewerStlModel from '../UploadStlTab/ViewerStlModel';
-import { saveFile } from '../../utils/indexedDB';
-import ViewModelStl from '../../components/ViewStlFile';
-import { getFilesByOrderId } from '../../store/actions/getFilesByOrderId';
 import { getWeightByFileId } from '../../store/actions/getWeightByFileId';
 import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import { RotateCcw } from 'lucide-react';
 import { FileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
+import { getAllFilesByOrderId } from '../../services/filesService';
 
 const CustomizeTab: React.FC = () => {
-  const [files, setFetchFiles] = useState<FileData[]>([]);
-  const [isViewerOpen, setViewerOpen] = useState(false);
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +40,8 @@ const CustomizeTab: React.FC = () => {
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedFileForViewer, setSelectedFileForViewer] = useState<{ url: string; name: string } | null>(null);
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -55,6 +50,7 @@ const CustomizeTab: React.FC = () => {
     activeFileId,
     files: orderFiles,
   } = useSelector((state: any) => state.fileDetails);
+
 
   // Set default active file to index 0 if not set
   useEffect(() => {
@@ -67,7 +63,7 @@ const CustomizeTab: React.FC = () => {
   const activeFile = useMemo(() => {
     if (!fileDetails) return null;
     return (
-      fileDetails.find((file: FileDetail) => file._id === activeFileId) || null
+      fileDetails.find((file: FileData) => file._id === activeFileId) || null
     );
   }, [fileDetails, activeFileId]);
 
@@ -83,14 +79,15 @@ const CustomizeTab: React.FC = () => {
   const activeFileIndexDimensions = useMemo(() => {
     if (!orderFiles || !activeFileId) return null;
     const activeFileObj = orderFiles.find(
-      (file: FileDetail) => file._id === activeFileId
+      (file: FileData) => file._id === activeFileId
     );
+
     return activeFileObj
       ? { unit: activeFileObj.unit || '', dimensions: activeFileObj.dimensions }
       : null;
   }, [activeFileId, orderFiles]);
 
-  const { color, material, technology, printer, infill, dimensions, unit } =
+  const { material, technology, dimensions, unit } =
     activeFile || {};
 
   const materialCompatibility = useSelector(
@@ -100,45 +97,28 @@ const CustomizeTab: React.FC = () => {
     (mat: any) => mat.material_name === material
   )?.material_mass;
 
-  // Fetch files from the server
-  useEffect(() => {
-    const fetchOrder = async () => {
-      getFilesByOrderId({
-        orderId: orderId as string,
-        setFetchFiles,
-        dispatch,
-        setIsPageLoading,
-      });
-    };
-    if (orderId) fetchOrder();
-  }, [orderId, dispatch]);
-
-  // Store files in IndexedDB
-  useEffect(() => {
-    const storeFileInIndexedDB = async (file: FileData) => {
+   useEffect(() => {
+    const fetchOrderFiles = async () => {
+      if (!orderId) {
+        setIsPageLoading(false);
+        return;
+      }
+      
       try {
-        const response = await fetch(file.fileUrl);
-        const blob = await response.blob();
-        await saveFile(file.fileUrl, blob);
+        setIsPageLoading(true);
+        const response = await getAllFilesByOrderId(orderId);
+        if (response.length === 0) navigate(`/get-quotes/${orderId}/upload-stl`);
+        dispatch(addAllFiles(response as FileData[]));
       } catch (error) {
-        console.error(
-          `Error saving file ${file.fileName} to IndexedDB:`,
-          error
-        );
+        console.error('Error fetching order files:', error);
+      } finally {
+        setIsPageLoading(false);
       }
     };
 
-    const storeAllFiles = async () => {
-      await Promise.all(
-        files.map((file) => (file.fileUrl ? storeFileInIndexedDB(file) : null))
-      );
-      setIsPageLoading(false);
-    };
+    fetchOrderFiles();
+  }, [orderId, dispatch]);
 
-    if (files.length > 0) {
-      storeAllFiles();
-    }
-  }, [files]);
 
   // Get specifications
   const fetchSpec = useCallback(async () => {
@@ -162,16 +142,20 @@ const CustomizeTab: React.FC = () => {
     dispatch(setActiveFile(fileId));
   }, []);
 
-  const handleOpenViewer = useCallback(
-    (fileId: string) => {
-      setViewerOpen(true);
-    },
-    [handleSetActiveFile]
-  );
-
-  const handleViewerClose = useCallback(() => {
-    setViewerOpen(false);
+  // Handle opening STL viewer modal
+  const handleOpenSTLViewer = useCallback((fileUrl: string, fileName: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedFileForViewer({ url: fileUrl, name: fileName });
+    setModalOpen(true);
   }, []);
+
+  // Handle closing STL viewer modal
+  const handleCloseSTLViewer = useCallback(() => {
+    setModalOpen(false);
+    setSelectedFileForViewer(null);
+  }, []);
+
+
 
   // Clear printer data when selectedId changes
   useEffect(() => {
@@ -286,13 +270,23 @@ const CustomizeTab: React.FC = () => {
                   }}
                 >
                   <Model>
-                    <span className="model-preview">
-                      <ViewModelStl
-                        fileUrl={file.fileUrl}
-                        modelColor={file.color}
-                      />
-                    </span>
-                    <span
+                    <Box 
+                      sx={{
+                        ":hover": { 
+                          transform: 'scale(1.05)',
+                          transition: 'transform 0.3s ease-in-out',
+                         },
+                         cursor: 'pointer'
+                      }}
+                      onClick={(e) => handleOpenSTLViewer(file.fileUrl, file.fileName, e)}
+                    >
+                      <img src={file.thumbnailUrl} alt={file.fileName} style={{
+                        height: '15rem',
+                        objectFit: 'contain',
+                        pointerEvents: 'none'
+                      }} />
+                    </Box>
+                    {/* <span
                       className="view-model"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -300,7 +294,7 @@ const CustomizeTab: React.FC = () => {
                       }}
                     >
                       <img src={vector_black} alt="View model" />
-                    </span>
+                    </span> */}
                   </Model>
                   <ModelName isActive={activeFileId === file._id} textColor={theme.palette.primary.main}>
                    {formatText(file?.fileName)}
@@ -356,7 +350,7 @@ const CustomizeTab: React.FC = () => {
             ) : null}
             {activeFileId && activeFile && (
               <AccordionMemo
-                key={activeFileId} // Fixed: Using activeFileId as key instead of undefined item.id
+                key={activeFileId} 
                 printerData={printerData}
                 fileData={activeFile}
                 oldDimensions={activeFileIndexDimensions}
@@ -378,28 +372,19 @@ const CustomizeTab: React.FC = () => {
               loading={isLoading}
               variant="outlined"
             />
-            {!isApplyButtonDisabled && (
-              <Box>
-                <CustomButton
-                  variant="outlined"
-                  children={<RotateCcw size={isSmallScreen ? 16 : 20} />}
-                  onClick={() => window.location.reload()}
-                  disabled={isLoading}
-                />
-              </Box>
-            )}
           </Box>
         </Customize>
       </Box>
-      <ViewerStlModel
-        fileUrl={activeFile?.fileUrl}
-        isOpen={isViewerOpen}
-        onClose={handleViewerClose}
-        activeFileId={activeFileId}
-        files={files as any}
-        onSetActiveFile={handleSetActiveFile}
-        color={activeFile?.color}
-      />
+      
+      {/* STL Viewer Modal */}
+      {selectedFileForViewer && (
+        <STLViewerModal
+          open={modalOpen}
+          onClose={handleCloseSTLViewer}
+          fileUrl={selectedFileForViewer.url}
+          fileName={selectedFileForViewer.name}
+        />
+      )}
     </StepLayout>
   );
 };
