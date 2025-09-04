@@ -16,7 +16,6 @@ import LoadingScreen from '../../components/LoadingScreen';
 
 const MyProfile = () => {
   const user = useSelector((state: any) => state.user);
-;
   const dispatch = useDispatch();
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(useSelector((state: any) => state.user.user.defaultAddress));
   const [allAddresses, setAllAddresses] = useState([]);

@@ -3,9 +3,6 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Import type declarations
-import '../types/react-three-fiber';
-
 // TypeScript interfaces for props
 interface STLViewerProps {
   geometry: THREE.BufferGeometry;
@@ -38,7 +35,6 @@ const STLViewer: React.FC<STLViewerProps> = ({
   enableControls = true
 }) => {
   if (!geometry) {
-    console.warn('STLViewer: No geometry provided');
     return (
       <div 
         style={{ 
