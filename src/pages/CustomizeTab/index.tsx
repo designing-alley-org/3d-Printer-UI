@@ -353,7 +353,7 @@ const CustomizeTab: React.FC = () => {
             ) : null}
             {activeFileId && activeFile && (
               <AccordionMemo
-                key={activeFileId} // Fixed: Using activeFileId as key instead of undefined item.id
+                key={activeFileId} 
                 printerData={printerData}
                 fileData={activeFile}
                 oldDimensions={activeFileIndexDimensions}
@@ -375,16 +375,6 @@ const CustomizeTab: React.FC = () => {
               loading={isLoading}
               variant="outlined"
             />
-            {!isApplyButtonDisabled && (
-              <Box>
-                <CustomButton
-                  variant="outlined"
-                  children={<RotateCcw size={isSmallScreen ? 16 : 20} />}
-                  onClick={() => window.location.reload()}
-                  disabled={isLoading}
-                />
-              </Box>
-            )}
           </Box>
         </Customize>
       </Box>
