@@ -148,7 +148,7 @@ export class STLParser {
   ): Promise<string> {
     const {
       color = '#ff6b35',
-      size = 200,
+      size = 400,
       backgroundColor = 'transparent',
       lightIntensity = 0.8,
       cameraDistance = 1.5

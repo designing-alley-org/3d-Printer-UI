@@ -194,7 +194,7 @@ const UploadStl = () => {
       // Generate thumbnail using utility
       const stlInfo = await stlParser.parseSTL(fileData.file);
       const thumbnailDataUrl = await stlParser.generateThumbnail(stlInfo.geometry, {
-        size: 200,
+        size: 400,
         color: '#ff6b35',
         backgroundColor: 'transparent'
       });
@@ -247,7 +247,7 @@ const UploadStl = () => {
         // Prepare files for upload quantity
         const filesToUpload = files.filter(f => f.quantity > 1).map(f => ({ id: f._id, quantity: f.quantity }));
 
-        await updateFilesQuantity(filesToUpload, orderId);
+        if (filesToUpload.length > 0) await updateFilesQuantity(filesToUpload, orderId);
 
         navigate(`/get-quotes/${orderId}/customize`);
       } else if (files.length === 0) {

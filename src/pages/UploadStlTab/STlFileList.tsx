@@ -1,6 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import { Box, Typography, Card, CardActions, IconButton, CircularProgress } from '@mui/material';
-import * as styles from './styles';
+import {
+  Box,
+  Typography,
+  Card,
+  CardActions,
+  IconButton,
+  CircularProgress,
+} from '@mui/material';
 import { Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
@@ -25,14 +31,7 @@ interface Props {
 }
 
 const STlFileList: React.FC<Props> = React.memo(
-  ({
-    file,
-    onRemove,
-    onUpdateQuantity,
-    selectedUnit,
-    convertDimensions,
-  }) => {
-
+  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions }) => {
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
         let newQuantity = file.quantity;
@@ -69,139 +68,127 @@ const STlFileList: React.FC<Props> = React.memo(
     );
 
     return (
-      <>
-        <Card  sx={{ padding: 2 , display: 'flex', flexDirection: 'column', gap: '1rem', width: {xs: '100%', sm: '268px'} }}>
-          {/* Thumbnail Section */}
-          <Box sx={styles.viewBox}>
-            <Box sx={styles.viewContent}>
-              {file.thumbnailUrl ? (
-                <img 
-                  src={file.thumbnailUrl} 
-                  alt={`${file.fileName} thumbnail`}
-                  style={{
-                    width: '100%',
-                    height: '150px',
-                    objectFit: 'contain',
-                    borderRadius: '8px',
-                    backgroundColor: '#f5f5f5'
-                  }}
-                />
-              ) : file.isUploading ? (
-                <Box 
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '150px',
-                    gap: 1
-                  }}
-                >
-                  <CircularProgress size={30} />
-                  <Typography variant="body2">
-                    Processing STL...
-                  </Typography>
-                </Box>
-              ) : (
-                <Box 
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '150px',
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: '8px'
-                  }}
-                >
-                  <Typography color='error'>
-                    No preview available
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-            {/* Upload Progress Bar */}
-            {file.isUploading && file.uploadProgress !== undefined && (
-              <Box sx={{ width: '100%', mt: 1 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: '100%', bgcolor: 'grey.300', borderRadius: 1 }}>
-                    <Box
-                      sx={{
-                        bgcolor: 'primary.main',
-                        height: 4,
-                        borderRadius: 1,
-                        width: `${file.uploadProgress}%`,
-                        transition: 'width 0.3s ease-in-out'
-                      }}
-                    />
-                  </Box>
-                  <Typography variant="caption" sx={{ minWidth: '40px' }}>
-                    {file.uploadProgress}%
-                  </Typography>
-                </Box>
-              </Box>
+      <Card
+        sx={{
+          padding: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          width: { xs: '100%', sm: '268px' },
+        }}
+      >
+        {/* Thumbnail Section */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.5,
+          }}
+        >
+          <Box
+            sx={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '8px',
+              border: '1px solid #3E424733',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {file.thumbnailUrl ? (
+              <img
+                src={file.thumbnailUrl}
+                alt={`${file.fileName} thumbnail`}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  transform: 'scale(4)',
+                }}
+              />
+            ) : file.isUploading ? (
+              <Typography>{file.uploadProgress}%</Typography>
+            ) : (
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ textAlign: 'center' }}
+              >
+                No Preview
+              </Typography>
             )}
-            
-             <Typography  variant='h6' sx={{
-              maxWidth: '9rem',
-             }}>
-              {file.fileName.split('-')[0]}
+          </Box>
+
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: 600,
+              flexShrink: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: '150px',
+            }}
+          >
+            {file.fileName.split('-')[0]}
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '80%' }}>
+          {/* File Info Section */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.1rem',
+            }}
+          >
+            <Box display="flex" alignItems="center" gap="0.5rem">
+              <Typography>Size:</Typography>
+              <Typography fontWeight="700" variant="body1">
+                H x W x L
+              </Typography>
+            </Box>
+            <Typography variant="body1" fontWeight="700">
+              {`${displayDimensions.height.toFixed(2)} × ${displayDimensions.width.toFixed(
+                2
+              )} × ${displayDimensions.length.toFixed(2)} `}
+              {selectedUnit}
             </Typography>
           </Box>
 
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', width: '80%' }}>
-          {/* File Info Section */}
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.1rem',
-              }}
-            >
-              <Box display='flex' alignItems='center' gap='0.5rem'>
-              <Typography >
-                Size: 
-              </Typography>
-              <Typography fontWeight='700' variant='body1'>
-                H x W x L
-              </Typography>
-              </Box>
-              <Typography variant='body1' fontWeight='700'>
-                {`${displayDimensions.height.toFixed(2)} × ${displayDimensions.width.toFixed(
-                  2
-                )} × ${displayDimensions.length.toFixed(2)} `}
-                {selectedUnit}
-              </Typography>
-            </Box>
-          
           {/* Quantity Control Section */}
-          
-          </Box>
-             <CardActions sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              padding: '0em',
-              width: '100%',
-
-             }}>
-              <Box display='flex' alignItems='center' gap='0.5rem'>
-              <CustomButton
-               children={<Minus color='#ffff' size={20}/>}
-                onClick={() => handleQuantityChange('decrease')}
-                disabled={file.quantity <= QUANTITY_LIMITS.MIN}
-                aria-label="Decrease quantity"
-                variant='contained'
-                sx={{
-                    borderRadius: '4px',
-                    padding: '6px 10px',
-                    minWidth: '0rem !important',
-                }}
-              />
-              <CustomTextField
+        </Box>
+        <CardActions
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: '0em',
+            width: '100%',
+          }}
+        >
+          <Box display="flex" alignItems="center" gap="0.5rem">
+            <CustomButton
+              children={<Minus color="#ffff" size={20} />}
+              onClick={() => handleQuantityChange('decrease')}
+              disabled={file.quantity <= QUANTITY_LIMITS.MIN}
+              aria-label="Decrease quantity"
+              variant="contained"
+              sx={{
+                borderRadius: '4px',
+                padding: '6px 10px',
+                minWidth: '0rem !important',
+              }}
+            />
+            <CustomTextField
               onlyNumber={true}
               value={file.quantity}
-              onChange={(e) => handleQuantityChange('set', parseInt(e.target.value))}
-              type="text" 
+              onChange={(e) =>
+                handleQuantityChange('set', parseInt(e.target.value))
+              }
+              type="text"
               inputProps={{
                 'aria-label': 'Quantity',
               }}
@@ -211,29 +198,25 @@ const STlFileList: React.FC<Props> = React.memo(
                   textAlign: 'center',
                 },
               }}
-              />
-              <CustomButton
-                children={<Plus color='#ffff' size={15} />}
-                onClick={() => handleQuantityChange('increase')}
-                disabled={file.quantity >= QUANTITY_LIMITS.MAX}
-                aria-label="Increase quantity"
-                variant='contained'
-                sx={{
-                     borderRadius: '4px',
-                     padding: '9px 13px',
-                     minWidth: '0rem !important',
-                }}
-              />
-            </Box>
-               <IconButton
-                 aria-label="Remove file"
-                 onClick={handleRemove}
-               >
-                 <DeleteOutlineRoundedIcon  />
-               </IconButton>
-             </CardActions>
-        </Card>
-      </>
+            />
+            <CustomButton
+              children={<Plus color="#ffff" size={15} />}
+              onClick={() => handleQuantityChange('increase')}
+              disabled={file.quantity >= QUANTITY_LIMITS.MAX}
+              aria-label="Increase quantity"
+              variant="contained"
+              sx={{
+                borderRadius: '4px',
+                padding: '9px 13px',
+                minWidth: '0rem !important',
+              }}
+            />
+          </Box>
+          <IconButton aria-label="Remove file" onClick={handleRemove}>
+            <DeleteOutlineRoundedIcon />
+          </IconButton>
+        </CardActions>
+      </Card>
     );
   }
 );
