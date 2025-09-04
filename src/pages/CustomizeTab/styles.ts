@@ -137,7 +137,7 @@ export const Model = styled.section`
   position: relative;
   border-radius: 20px;
   border: 1px solid #F6F6F6;
-  box-shadow: 0px 4px 4px 0px #CDE1FF;
+  box-shadow: 0px 2px 2px 0px #CDE1FF;
   background: #ffffff;
   width: 6rem;
   height: 5rem;

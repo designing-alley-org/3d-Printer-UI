@@ -105,7 +105,7 @@ const STlFileList: React.FC<Props> = React.memo(
                   width: '100%',
                   height: '100%',
                   objectFit: 'contain',
-                  transform: 'scale(4)',
+                  transform: 'scale(3)',
                 }}
               />
             ) : file.isUploading ? (

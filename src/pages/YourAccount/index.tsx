@@ -1,14 +1,14 @@
 import { Box, Container, Typography } from '@mui/material';
 import AccountLayout from './AccountLayout';
 import CustomButton from '../../stories/button/CustomButton';
-import { EditIcon } from 'lucide-react';
 import { EditProfileModal } from '../../components/Model';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUser, User } from '../../store/actions/updateUser';
 import toast from 'react-hot-toast';
 import { addUserDetails } from '../../store/user/reducer';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import { updateUserService } from '../../services/user';
+import { editUser } from '../../types';
 
 const Account = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -20,18 +20,11 @@ const Account = () => {
     setEditModalOpen(true);
   };
 
-  const handleSaveProfile = async (updatedUser: User) => {
+  const handleSaveProfile = async (updatedUser: editUser) => {
     try {
       setSaveLoading(true);
-      const res = await toast.promise(
-        updateUser(updatedUser),
-        {
-          loading: 'Updating profile...',
-          success: 'Profile updated successfully',
-          error: 'Failed to update profile'
-        }
-      );
-      dispatch(addUserDetails(res.data.data));
+      const res = await updateUserService(updatedUser);
+      dispatch(addUserDetails(res));
       setEditModalOpen(false);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error updating profile');

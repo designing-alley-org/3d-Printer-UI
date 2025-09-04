@@ -1,3 +1,4 @@
+import { User } from '../types';
 import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -11,7 +12,6 @@ import {
 import {
   ADD_FILE,REMOVE_FILE,UPDATE_FILE_PROGRESS,SET_ACTIVE_FILE
 } from './stlFile/action_types';
-import { ADD_USER } from './user/action_types';
 
 export interface RootState {
   auth: AuthState;
@@ -28,11 +28,7 @@ export interface AuthState {
   error: string | null;
 }
 
-export interface User {
-  id: string;
-  username: string;
-  token: string;
-}
+
 
 export interface user{
   id: string;

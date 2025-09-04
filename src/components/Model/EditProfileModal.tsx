@@ -3,19 +3,15 @@ import { Box, Stack } from '@mui/material';
 import ResponsiveModal from './ResponsiveModal';
 import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
 import CustomButton from '../../stories/button/CustomButton';
+import { editUser, User } from '../../types';
 
-export interface User {
-  name: string;
-  email?: string;
-  phone_no: string;
-  phone_ext?: string;
-}
+
 
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
-  user: User;
-  onSave: (user: User) => void;
+  user: editUser;
+  onSave: (formData: editUser) => void;
   loading?: boolean;
 }
 
@@ -26,13 +22,14 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   onSave,
   loading = false,
 }) => {
-  const [formData, setFormData] = useState<User>({
+
+  const [formData, setFormData] = useState<editUser>({
     name: '',
     phone_no: '',
     phone_ext: '',
   });
 
-  const [errors, setErrors] = useState<Partial<User>>({});
+  const [errors, setErrors] = useState<Partial<editUser>>({});
 
   useEffect(() => {
     if (user && open) {
@@ -53,7 +50,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
     }));
     
     // Clear error when user starts typing
-    if (errors[name as keyof User]) {
+    if (errors[name as keyof editUser]) {
       setErrors(prev => ({
         ...prev,
         [name]: undefined,
@@ -68,7 +65,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       newErrors.name = 'Name is required';
     }
 
-    if (!formData.phone_no.trim()) {
+    if (!formData?.phone_no) {
       newErrors.phone_no = 'Phone number is required';
     } else if (!/^\+?[\d\s-()]+$/.test(formData.phone_no)) {
       newErrors.phone_no = 'Please enter a valid phone number';
@@ -138,7 +135,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             value={formData.phone_ext || ''}
             onChange={handleInputChange}
             placeholder="e.g. +44"
-            onlyNumber
             fullWidth
           />
           <CustomInputLabelField
@@ -153,8 +149,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
             required
             sx={{ flex: 1 }}
           />
-
-         
         </Stack>
       </Box>
     </ResponsiveModal>
