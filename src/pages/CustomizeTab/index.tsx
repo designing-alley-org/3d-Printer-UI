@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Divider, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Divider, Typography, useTheme } from '@mui/material';
 import {
   Customize,
   Files,
@@ -26,7 +26,6 @@ import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
 import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import { RotateCcw } from 'lucide-react';
 import { FileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
@@ -43,8 +42,6 @@ const CustomizeTab: React.FC = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedFileForViewer, setSelectedFileForViewer] = useState<{ url: string; name: string } | null>(null);
-  console.log(selectedFileForViewer);
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
   const theme = useTheme();
 

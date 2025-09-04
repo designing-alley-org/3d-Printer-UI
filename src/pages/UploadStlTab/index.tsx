@@ -195,7 +195,7 @@ const UploadStl = () => {
       const stlInfo = await stlParser.parseSTL(fileData.file);
       const thumbnailDataUrl = await stlParser.generateThumbnail(stlInfo.geometry, {
         size: 400,
-        color: '#ff6b35',
+        color: '#c0c0c0',
         backgroundColor: 'transparent'
       });
 

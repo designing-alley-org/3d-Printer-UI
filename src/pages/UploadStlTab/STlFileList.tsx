@@ -5,7 +5,6 @@ import {
   Card,
   CardActions,
   IconButton,
-  CircularProgress,
 } from '@mui/material';
 import { Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';

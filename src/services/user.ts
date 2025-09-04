@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import api from "../axiosConfig";
-import { editUser, User } from "../types";
+import { editUser } from "../types";
 import { returnResponse } from "../utils/function";
 
 

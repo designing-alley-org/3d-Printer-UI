@@ -1,5 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Typography, CircularProgress, LinearProgress, Switch } from '@mui/material';
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  LinearProgress,
+  Switch,
+} from '@mui/material';
 import ResponsiveModal from './ResponsiveModal';
 import STLViewer from '../STLViewer';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
@@ -16,13 +22,16 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
   open,
   onClose,
   fileUrl,
-  fileName
+  fileName,
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(null);
+  const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
+    null
+  );
   const [error, setError] = useState<string | null>(null);
   const [showWireframe, setShowWireframe] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
 
   const downloadAndParseSTL = useCallback(async (url: string) => {
     try {
@@ -72,12 +81,14 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
       // Parse the STL data
       const stlLoader = new STLLoader();
       const geometry = stlLoader.parse(arrayBuffer);
-      
+
       setStlGeometry(geometry);
       setIsDownloading(false);
     } catch (error) {
       console.error('Error downloading/parsing STL file:', error);
-      setError(error instanceof Error ? error.message : 'Unknown error occurred');
+      setError(
+        error instanceof Error ? error.message : 'Unknown error occurred'
+      );
       setIsDownloading(false);
     }
   }, []);
@@ -106,7 +117,9 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
       title={`3D Model Viewer - ${fileName}`}
       maxWidth="md"
     >
-      <Box sx={{ minHeight: '500px', display: 'flex', flexDirection: 'column' }}>
+      <Box
+        sx={{ minHeight: '500px', display: 'flex', flexDirection: 'column' }}
+      >
         {error && (
           <Box sx={{ p: 2, textAlign: 'center' }}>
             <Typography color="error" variant="body1">
@@ -114,55 +127,71 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
             </Typography>
           </Box>
         )}
-        
+
         {isDownloading && (
           <Box sx={{ p: 4, textAlign: 'center' }}>
             <CircularProgress sx={{ mb: 2 }} />
             <Typography variant="body1" sx={{ mb: 2 }}>
               Downloading STL file... {downloadProgress}%
             </Typography>
-            <LinearProgress 
-              variant="determinate" 
-              value={downloadProgress} 
+            <LinearProgress
+              variant="determinate"
+              value={downloadProgress}
               sx={{ width: '100%', maxWidth: '400px', mx: 'auto' }}
             />
           </Box>
         )}
-        
-        {stlGeometry && !isDownloading && !error && (
-          <Box sx={{ flex: 1, minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          <Box 
-            display="flex" 
-            alignItems="center" 
-            justifyContent="flex-start" 
-            alignSelf="flex-start"
-            mb={2}
-            width="100%"
-          >
-            <Typography variant="body2">Show wireframe</Typography>
 
-            <Switch
-              checked={showWireframe}
-              onChange={(e) => setShowWireframe(e.target.checked)}
-              color="primary"
-              inputProps={{ 'aria-label': 'Show wireframe' }}
-            />
-          </Box>
-            <STLViewer 
+        {stlGeometry && !isDownloading && !error && (
+          <Box
+            sx={{
+              flex: 1,
+              minHeight: '500px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
+              mb={2}
+              px={2}
+            >
+              <Box display="flex" alignItems="center" width="100%">
+                <Typography variant="body2">Show wireframe</Typography>
+                <Switch
+                  checked={showWireframe}
+                  onChange={(e) => setShowWireframe(e.target.checked)}
+                  color="primary"
+                  inputProps={{ 'aria-label': 'Show wireframe' }}
+                />
+              </Box>
+              <Switch
+                checked={autoRotate}
+                onChange={(e) => setAutoRotate(e.target.checked)}
+                color="primary"
+                inputProps={{ 'aria-label': 'Auto Rotate' }}
+              />
+              <Typography variant="body2"> Rotate</Typography>
+            </Box>
+            <STLViewer
+              color="#c0c0c0 "
               geometry={stlGeometry}
               size={600}
               showWireframe={showWireframe}
               enableControls={true}
-              autoRotate={true}
+              autoRotate={autoRotate}
             />
           </Box>
         )}
-        
+
         {!isDownloading && !stlGeometry && !error && (
           <Box sx={{ p: 4, textAlign: 'center' }}>
-            <Typography variant="body1">
-              Ready to load 3D model...
-            </Typography>
+            <Typography variant="body1">Ready to load 3D model...</Typography>
           </Box>
         )}
       </Box>
