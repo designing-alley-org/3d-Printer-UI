@@ -7,7 +7,7 @@ import Quote from './Quote/Card';
 import { formatDateTime } from '../../../utils/Validation';
 import { Typography, useMediaQuery } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import NotificationCard from '../../Notification/NotificationCard';
+import NotificationCard from '../../NotificationOld/NotificationCard';
 import NoDataFound from '../../../components/NoDataFound';
 import OldNotificationCardSkeletonList from '../../../components/Notifications/OldNotificationCardSkeletonList';
 

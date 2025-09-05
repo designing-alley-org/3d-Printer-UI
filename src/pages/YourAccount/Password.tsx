@@ -53,8 +53,7 @@ const Password = () => {
   return (
     <Container
       sx={{
-        bgcolor: 'background.paper',
-        p: { xs: 2, sm: 3, md: 4 },
+        p:0,
       }}
     >
       <Card>
