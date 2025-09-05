@@ -9,6 +9,7 @@ import {
 import StackCard from './StackCard';
 import { useState } from 'react';
 import ViewNotification from './ViewNotification';
+import CustomPagination from '../../components/CustomPagination';
 
 const stackData = [
   {
@@ -38,7 +39,6 @@ const stackData = [
 ];
 
 const Notification = () => {
-
   const [selectedTag, setSelectedTag] = useState('');
 
   return (
@@ -46,7 +46,7 @@ const Notification = () => {
       maxWidth="lg"
       sx={{ alignSelf: 'start', p: { xs: 2, sm: 3, md: 4 } }}
     >
-      <Card >
+      <Card>
         <CardHeader
           title={
             <Typography variant="h5" color="primary">
@@ -59,24 +59,58 @@ const Notification = () => {
             </Typography>
           }
         />
-        <CardContent sx={{ display: 'flex', gap: 2, }} >
+        <CardContent sx={{ display: 'flex', gap: 2 }}>
           {stackData.map((item) => (
-            <StackCard key={item.id} {...item} onClick={() => setSelectedTag(item.tag)} isOpen={selectedTag === item.tag} />
+            <StackCard
+              key={item.id}
+              {...item}
+              onClick={() => setSelectedTag(pre => pre === item.tag ? '' : item.tag)}
+              isOpen={selectedTag === item.tag}
+            />
           ))}
         </CardContent>
-        <CardContent >
-        {!selectedTag ?  
-        <Box display="flex" justifyContent="center" alignItems={"center"} minHeight={{ xs: 'auto', sm: '5rem', md: '30rem' }}>
-           <Typography variant="body2" color="primary" sx={{ cursor: 'pointer' }}>
-             Click on any category card above to view detailed notifications
-           </Typography>
-         </Box> : (
-          <Box minHeight={{ xs: 'auto', sm: '5rem', md: '30rem' }}>
+        <CardContent>
+          {!selectedTag ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems={'center'}
+              minHeight={{ xs: 'auto', sm: '5rem', md: '30rem' }}
+            >
+              <Typography
+                variant="body2"
+                color="primary"
+                sx={{ cursor: 'pointer' }}
+              >
+                Click on any category card above to view detailed notifications
+              </Typography>
+            </Box>
+          ) : (
+            <Box minHeight={{ xs: 'auto', sm: '5rem', md: '30rem' }}>
               <ViewNotification tag={selectedTag} />
-          </Box>
-         )}
+            </Box>
+          )}
         </CardContent>
       </Card>
+     {selectedTag && <Box mt={3}>
+        <CustomPagination
+          pagination={{
+            currentPage: 1,
+            totalPages: 4,
+            totalOrders: 20,
+            ordersPerPage: 5,
+            hasNextPage: true,
+            hasPrevPage: false,
+          }}
+          onPageChange={() => {}}
+          onPageSizeChange={() => {}}
+          showPageSizeSelector={true}
+          pageSizeOptions={[5, 10, 20, 50]}
+          showItemsInfo={true}
+          itemName="orders"
+          disabled={false}
+        />
+      </Box>}
     </Container>
   );
 };
