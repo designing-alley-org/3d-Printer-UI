@@ -5,7 +5,9 @@ import {
   Chip, 
   Radio, 
   IconButton, 
-  useMediaQuery 
+  useMediaQuery, 
+  Card,
+  CardContent
 } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
@@ -53,20 +55,12 @@ const ListAddress: React.FC<ListAddressProps> = ({
   };
 
   return (
-    <Stack
+  <Card  sx={{ mb: 1.5, mr:1, cursor: showRadio ? 'pointer' : 'default' }} onClick={showRadio ? handleRadioChange : undefined}>
+    <CardContent sx={{ padding: isSmallScreen ? '8px' : '12px' }}>
+      <Stack
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      spacing={2}
-      sx={{
-        border: '1px solid #F0F4FF',
-        borderRadius: "0.5rem",
-        padding: '12px',
-        mr: 1,
-        my: 1,
-        boxShadow: '2px 2px 4px 0px #3B3E4929',
-        cursor: showRadio ? 'pointer' : 'default',
-      }}
       onClick={showRadio ? handleRadioChange : undefined}
     >
       <Stack spacing={0.5} sx={{ flex: 1 }}>
@@ -137,6 +131,8 @@ const ListAddress: React.FC<ListAddressProps> = ({
         )}
       </Stack>
     </Stack>
+    </CardContent>
+  </Card>
   );
 };
 
