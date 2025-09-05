@@ -10,6 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import CustomButton from '../../stories/button/CustomButton';
 import { motion } from 'framer-motion';
+import { formatText } from '../../utils/function';
 
 interface Props {
   tag?: string;
@@ -111,7 +112,7 @@ const ViewNotification = ({ tag }: Props) => {
   return (
     <Container>
       <Typography variant="h6" color="primary" mt={2} mb={3}>
-        Notifications For {tag} Orders
+        Notifications For {formatText(tag || '')} Orders
       </Typography>
       <motion.div
         initial="hidden"
@@ -126,7 +127,7 @@ const ViewNotification = ({ tag }: Props) => {
           },
         }}
       >
-        {Array(10)
+        {Array(5)
           .fill(null)
           .map((_, index) => (
             <motion.div
