@@ -60,7 +60,16 @@ const Notification = () => {
             </Typography>
           }
         />
-        <CardContent sx={{ display: 'flex', gap: 2 }}>
+        <CardContent 
+          sx={{ 
+            display: 'flex', 
+            gap: 2,
+            flexDirection: { xs: 'column', md: 'row' },
+            overflowX: 'auto',
+            '&::-webkit-scrollbar': { height: '8px' },
+            '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '4px' }
+          }}
+        >
           {stackData.map((item) => (
             <StackCard
               key={item.id}
