@@ -11,6 +11,7 @@ import { useState } from 'react';
 import ViewNotification from './ViewNotification';
 import CustomPagination from '../../components/CustomPagination';
 
+
 const stackData = [
   {
     id: 1,
@@ -92,7 +93,8 @@ const Notification = () => {
           )}
         </CardContent>
       </Card>
-     {selectedTag && <Box mt={3}>
+     {selectedTag &&
+      <Box mt={3}>
         <CustomPagination
           pagination={{
             currentPage: 1,
