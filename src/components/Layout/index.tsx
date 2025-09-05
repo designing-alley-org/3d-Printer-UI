@@ -73,7 +73,9 @@ const Index: React.FC = () => {
   }, []);
 
   return (
-    <Box width={'100%'} height="100%" display="flex" flexDirection="column">
+    <Box width={'100%'} height="100vh" display="flex" flexDirection="column" sx={{
+      backgroundColor: isDashboard ? 'primary.main' : 'background.default',
+    }}>
       <Box position="sticky" top={0} zIndex={1000}>
         <DesktopNav activeTabs={activeTabs} />
       </Box>
@@ -83,7 +85,7 @@ const Index: React.FC = () => {
         alignItems="center"
         height={'calc(100vh - 64px)'}
         sx={{
-          backgroundColor: isDashboard ? 'primary.main' : 'background.paper',
+          backgroundColor: isDashboard ? 'primary.main' : '',
         }}
       >
         <Outlet />

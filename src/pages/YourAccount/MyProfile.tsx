@@ -47,11 +47,11 @@ const MyProfile = () => {
   }, []);
 
   return (
-    <Container sx={{ p: { xs: 2, sm: 3, md: 0 }}}>
+    <Container sx={{ p: { xs: 0.5, sm: 3, md: 0 }}}>
       <Card sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <CardContent sx={{display: 'flex', gap:2, flexDirection: { xs: 'column', sm: 'row' }}}>
           <Box>
-            <Typography variant="h6" color='primary.main'>Welcome {user.user.name}</Typography>
+            <Typography variant={"h6"} color='primary.main' fontSize={{ xs: '1rem', sm: '1.2rem' }}>Welcome {user.user.name}</Typography>
             <Typography variant="body1">Email: {user.user.email}</Typography>
           </Box>
         </CardContent>
@@ -59,10 +59,10 @@ const MyProfile = () => {
        
           <CustomButton
            children={
-            <>
+            <Box display='flex' flexDirection={{ xs: 'column', sm: 'row' }} alignItems='center'>
               <EditIcon  size={15} style={{ marginRight: '4px' }} />
               <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Edit Email</Typography>
-            </>
+            </Box>
            }
            onClick={() => setEditEmailModalOpen(true)}
          />

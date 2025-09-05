@@ -15,17 +15,17 @@ import RegisterForm from '../pages/Auth/signup.tsx';
 import Account from '../pages/YourAccount/index.tsx';
 import GoogleAuthHandler from '../store/auth/GoogleAuthHandler.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
-import Notifications from '../pages/Notification/index.tsx';
+import Notifications from '../pages/NotificationOld/index.tsx';
 import ForgetPassword from '../pages/Auth/forgetPassword.tsx';
 import VerifyEmail from '../pages/Auth/VerifyEmail.tsx';
 import ChangePassword from '../pages/Auth/ChangePassword.tsx';
 import MyProfile from '../pages/YourAccount/MyProfile.tsx';
 import MyDisputes from '../pages/YourAccount/myDispute/index.tsx';
 import Password from '../pages/YourAccount/Password.tsx';
-import Settings from '../pages/YourAccount/Settings.tsx';
 import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
 import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
 import UploadStl from '../pages/UploadStlTab/index.tsx';
+import Notification from '../pages/Notifications/index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -84,6 +84,11 @@ const Routing: React.FC = () => {
           </Route>
         </Route>
 
+        {/* TODO: AFTER IMPLEMENTATION REMOVE OLD NOTIFICATION AND USE NEW ONE */}
+        <Route
+            path='/test'
+            element={<ProtectedRoute component={<Notification />} />}
+          />
         {/* Account Routes */}
         <Route
           path={ROUTES.ACCOUNT}
@@ -104,10 +109,6 @@ const Routing: React.FC = () => {
           <Route
             path={ROUTES.PASSWORD}
             element={<ProtectedRoute component={<Password />} />}
-          />
-          <Route
-            path={ROUTES.ACCOUNT_SETTINGS}
-            element={<ProtectedRoute component={<Settings />} />}
           />
           
           {/* Dispute Routes */}
