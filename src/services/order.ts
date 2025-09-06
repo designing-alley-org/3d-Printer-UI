@@ -472,6 +472,18 @@ const updateOrderService = async (orderId: string, data: object) => {
     }
 }
 
+const getOrderSummaryService = async (orderId: string, setIsLoading: (loading: boolean) => void) => {
+    try {
+        const response = await api.get(`/order-summary/${orderId}`);
+        return returnResponse(response);
+    } catch (error) {
+        toast.error(returnError(error));
+        throw error;
+    } finally {
+        setIsLoading(false);
+    }
+}
+
 export { 
     createOrderService, 
     getFilesByOrderIdService, 
@@ -492,5 +504,6 @@ export {
     downloadFileFromS3Service, 
     uploadFilesService, 
     updateTotalWeightService,
-    updateOrderService
+    updateOrderService,
+    getOrderSummaryService
 };

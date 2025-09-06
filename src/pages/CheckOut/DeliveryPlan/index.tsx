@@ -43,7 +43,6 @@ const DeliveryPlan: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedDeliveryPlan, setSelectedDeliveryPlan] = useState(null as unknown as DeliveryData);
 
-  console.log("Delivery Data:", selectedDeliveryPlan);
 
   // Hooks
   const navigate = useNavigate();

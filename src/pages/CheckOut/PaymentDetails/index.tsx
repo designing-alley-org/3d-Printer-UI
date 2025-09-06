@@ -10,16 +10,16 @@ import {
   ListItemText,
   ListItemIcon,
   Radio,
-  Divider,
   Chip,
 } from '@mui/material';
 import { Edit2, } from 'lucide-react';
 import StepLayout from '../../../components/Layout/StepLayout';
 import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import toast from 'react-hot-toast';
-import MUIButton from '../../../stories/MUIButton/Button';
 import api from '../../../axiosConfig';
 import CustomButton from '../../../stories/button/CustomButton';
+import { getOrderSummaryService } from '../../../services/order';
+import { formatText } from '../../../utils/function';
 
 // Types
 interface QuoteProps {
@@ -52,61 +52,30 @@ const PaymentDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [files, setFiles] = useState<any[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<AddressData>();
+  const [deliveryService, setDeliveryService] = useState<string | null>(null);
 
   // Hooks
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
 
-  // Redux state
-  const { deliveryData, selectedServiceType, selectedDeliveryData } = useSelector(
-    (state: any) => state.delivery
-  );
-  const { addressData, addressId } = useSelector(
-    (state: {
-      address: {
-        addressData: AddressData[];
-        addressId: string;
-      };
-    }) => state.address
-  );
-
-
-
-
-  // Filter delivery data
-  useEffect(() => {
-    if (!deliveryData || !selectedServiceType) {
-      toast.error('Please select a delivery plan');
-      navigate(`/get-quotes/${orderId}/checkout`);
-      return;
-    }
-  
-  }, [deliveryData, selectedServiceType, navigate, orderId]);
-
   // Effects
   useEffect(() => {
     const fetchQuoteData = async () => {
-      if (!orderId) return;
-      try {
-        setIsLoading(true);
-        setError(null);
-        await getAllQuotes(setQuoteData, orderId);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to fetch quote data'
-        );
-        console.error('Error fetching quote data:', err);
-      } finally {
-        setIsLoading(false);
+      const summary = await getOrderSummaryService(orderId as string, setIsLoading);
+      console.log("Order Summary:", summary);
+      if (summary) {
+        setFiles(summary.files);
+        setQuoteData(summary);
+        setSelectedAddress(summary.order.address);
+        setDeliveryService(summary.order.delivery_service);
       }
     };
 
     void fetchQuoteData();
   }, [orderId]);
 
-  const selectedAddress = addressData.find(
-    (address) => address._id === addressId
-  );
 
 
   const handlePayment = async () => {
@@ -195,7 +164,7 @@ const PaymentDetails: React.FC = () => {
               <Typography variant="h6">Files Ordered</Typography>
             </Box>
             <List dense>
-              {quoteData.files.map((file, index) => (
+              {files?.map((file, index) => (
                 <ListItem key={file.fileId || index} disableGutters>
                   <ListItemIcon sx={{ minWidth: 'auto', mr: 1.5 }}>
                     <Chip label={`${index + 1}.`} size="small" sx={{background: 'transparent'}} />
@@ -237,7 +206,7 @@ const PaymentDetails: React.FC = () => {
                   {/*  Radio buttonselected */}
                   <Radio checked={true} color="primary" sx={{ padding: 0 }} />
                   <Typography variant="body2" color="primary.main">
-                    {`${selectedAddress.personName}, ${selectedAddress.companyName}`}
+                    {`${selectedAddress.personName}`}
                     <br />
                     {`${selectedAddress.streetLines.join(', ')}`}
                     <br />
@@ -263,7 +232,7 @@ const PaymentDetails: React.FC = () => {
                   >
                     Delivery plan :
                   </Typography>{' '}
-                  {selectedServiceType}
+                  {formatText(deliveryService?.service_type)}
                 </Typography>
             </Box>
           </Box>
@@ -291,7 +260,7 @@ const PaymentDetails: React.FC = () => {
                     Price
                   </Typography>
                   <Typography variant="body2">
-                    ${quoteData.totalPrice.toFixed(2)}
+                    ${quoteData.totalPrice?.toFixed(2)}
                   </Typography>
                 </Box>
                 <Box
@@ -305,7 +274,7 @@ const PaymentDetails: React.FC = () => {
                     Delivery Price
                   </Typography>
                   <Typography variant="body2">
-                    ${selectedDeliveryData?.ratedShipmentDetails?.[0].totalNetCharge ?? 'N/A'}
+                    ${deliveryService?.service_price ?? 'N/A'}
                   </Typography>
                 </Box>
                 <Box
@@ -320,7 +289,7 @@ const PaymentDetails: React.FC = () => {
                   </Typography>
                   <Typography variant="body2">
                     $
-                    {((quoteData?.tax / 100) * quoteData.totalPrice).toFixed(2)}
+                    {((quoteData?.tax / 100) * quoteData.totalPrice)?.toFixed(2)}
                   </Typography>
                 </Box>
               </Box>
@@ -339,9 +308,9 @@ const PaymentDetails: React.FC = () => {
                   $
                   {(
                     Number(quoteData.totalPrice) +
-                    Number(selectedDeliveryData?.ratedShipmentDetails?.[0].totalNetCharge || 0) +
+                    Number(deliveryService?.service_price || 0) +
                     (Number(quoteData?.tax) * quoteData.totalPrice) / 100
-                  ).toFixed(2)}
+                  )?.toFixed(2)}
                 </Typography>
               </Box>
           </Box>
