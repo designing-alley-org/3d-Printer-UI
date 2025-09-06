@@ -79,36 +79,8 @@ const getFileByOrderIdUploadstlService = async (orderId: string) => {
     }
 };
 
-const getWeightByFileIdService = async (
-    orderId: string,
-    activeFileId: string,
-    payload: object
-): Promise<number | undefined> => {
-    try {
-        const response = await api.put(`/process-order/${orderId}/file/${activeFileId}`, payload);
-        const weight = response.data?.data?.dimensions?.weight;
-        return weight;
-    } catch (error) {
-        console.error("Error fetching weight by file ID:", error);
-        throw error;
-    }
-};
 
-const scaleTheFileByNewDimensionsService = async (
-    orderId: string,
-    activeFileId: string,
-    payload: object): Promise<number | undefined> => {
-    try {
-        const response = await api.put(
-            `/scale-order/${orderId}/file/${activeFileId}`,
-            payload
-        );
-        return response.data.data;
-    } catch (error) {
-        console.error("Error fetching weight by file ID:", error);
-        throw error;
-    }
-}
+
 
 const updateFileDataByFileIdService = async (
     orderId: string,
@@ -475,6 +447,4 @@ const uploadFilesService = async (
     }
 };
 
-export { createOrderService, getFilesByOrderIdService, getWeightByFileIdService, getSpecificationDataService, scaleTheFileByNewDimensionsService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService,deleteStlFileByFileIdService,getOrderByIdService,getOngoingOrderService,isOrderQuoteClosedService , getAllOrdersService, downloadFileFromS3Service, uploadFilesService};
-
-
+export { createOrderService, getFilesByOrderIdService, getSpecificationDataService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService, deleteStlFileByFileIdService, getOrderByIdService, getOngoingOrderService, isOrderQuoteClosedService, getAllOrdersService, downloadFileFromS3Service, uploadFilesService };

@@ -4,11 +4,17 @@ export interface ModelDimensions {
   length: number;
 }
 
+export type Weight = {
+  value: number;
+  unit: string;
+}
+
 export interface FileData {
   _id: string;
   fileName: string;
   dimensions: ModelDimensions;
   fileUrl: string;
+  weight?:Weight;
   fileBlob?: Blob;
   file?: File;
   quantity: number;
@@ -19,6 +25,8 @@ export interface FileData {
   isUploaded?: boolean;
 }
 
+
+
 export interface UploadFileProgress {
   fileId: string;
   progress: number;
@@ -27,4 +35,11 @@ export interface UploadFileProgress {
 
 
 export type UploadFile  = Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'> 
-
+export type UpdateFileData = Partial<Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'>> & { 
+  _id: string
+  color?: string;
+  material?: string;
+  technology?: string;
+  printer?: string;
+  infill?: number;
+ };

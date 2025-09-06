@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Dimensions,
   UpdateValueById,
 } from '../../../store/customizeFilesDetails/reducer';
 import SingleSelectDropdown, {
@@ -23,12 +22,12 @@ import {
   Ruler,
   RotateCcw,
 } from 'lucide-react';
-import { FileData } from '../../../types/uploadFiles';
+import { FileData, ModelDimensions } from '../../../types/uploadFiles';
 
 interface AccordionProps {
   printerData: any[];
-  fileData: FileDetail;
-  oldDimensions: { unit: string | null; dimensions: Dimensions } | null;
+  fileData: FileData;
+  oldDimensions: { unit: string | null; dimensions: ModelDimensions} | null;
   printerMessage: string;
 }
 
@@ -90,7 +89,7 @@ const Accordion: React.FC<AccordionProps> = ({
   };
 
   const handelChangeValue = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }) as FileDetail);
+    setFormData((prev) => ({ ...prev, [field]: value }) as FileData);
   };
 
   const mappedPrinters = useMemo(
@@ -478,7 +477,7 @@ const Accordion: React.FC<AccordionProps> = ({
           Current Weight
         </Typography>
         <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {fileData?.dimensions?.weight || 0} gm
+          {fileData?.weight?.value?.toFixed(3) || 0} {fileData?.weight?.unit || 'g'}
         </Typography>
       </Box>
     </Box>

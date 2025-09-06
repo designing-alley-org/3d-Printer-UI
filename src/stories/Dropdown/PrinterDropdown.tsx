@@ -51,8 +51,6 @@ const PrinterDropdown: React.FC<PrinterDropdownProps> = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selected, setSelected] = useState<PrinterOption | undefined>(defaultValue);
 
-  console.log('PrinterDropdown defaultValue:', defaultValue);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

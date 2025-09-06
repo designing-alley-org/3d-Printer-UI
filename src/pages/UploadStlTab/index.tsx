@@ -247,7 +247,7 @@ const UploadStl = () => {
         // Prepare files for upload quantity
         const filesToUpload = files.filter(f => f.quantity > 1).map(f => ({ id: f._id, quantity: f.quantity }));
 
-        if (filesToUpload.length > 0) await updateFilesQuantity(filesToUpload, orderId);
+        if (filesToUpload.length > 0) await updateFilesQuantity(filesToUpload);
 
         navigate(`/get-quotes/${orderId}/customize`);
       } else if (files.length === 0) {
