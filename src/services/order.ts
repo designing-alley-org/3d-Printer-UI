@@ -3,6 +3,7 @@ import api from "../axiosConfig";
 import { getSignedUrl, uploadFromS3, deleteFromS3 } from "./s3";
 import { createFile } from "./filesService";
 import { FileData } from "../types/uploadFiles";
+import { returnError, returnResponse } from "../utils/function";
 
 // Upload files
 const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
@@ -99,6 +100,7 @@ const updateFileDataByFileIdService = async (
         throw error;
     }
 }
+
 const updateUserOrderByOrderIdService = async (orderId: string, data: object) => {
     try {
         const response = await api.put(
@@ -453,7 +455,20 @@ const updateTotalWeightService = async (orderId: string, navigate: any) => {
         navigate(`/get-quotes/${orderId}/quote`);
         return response;
     } catch (error) {
-        console.error('Error updating total weight:', error);
+        toast.error(returnError(error));
+        throw error;
+    }
+}
+
+const updateOrderService = async (orderId: string, data: object) => {
+    try {
+        const response = await api.put(
+            `/update-order/${orderId}`,
+            data
+        );
+        return returnResponse(response);
+    } catch (error: any) {
+        toast.error(returnError(error));
         throw error;
     }
 }
@@ -477,5 +492,6 @@ export {
     getAllOrdersService, 
     downloadFileFromS3Service, 
     uploadFilesService, 
-    updateTotalWeightService
+    updateTotalWeightService,
+    updateOrderService
 };

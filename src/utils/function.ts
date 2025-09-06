@@ -98,3 +98,13 @@ export const returnResponse = (response: any) => {
     return response?.data;
   }
 };
+
+export const returnError = (error: any) => {
+  if (error?.response?.data?.message) {
+    return error.response.data.message;
+  } else if (error?.message) {
+    return error.message;
+  } else {
+    return 'An unexpected error occurred';
+  }
+};

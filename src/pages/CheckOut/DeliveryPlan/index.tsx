@@ -64,38 +64,7 @@ const DeliveryPlan: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const addressId = useSelector((state: RootState) => state.address.addressId);
 
-  // Calculate total weight from order files
-  const calculateTotalWeight = useCallback((orderData: Order): number => {
-    if (!orderData?.files?.length) return 0;
-
-    return orderData.files.reduce((total, file) => {
-      const quantity = file?.quantity || 0;
-      const fileWeight = file?.dimensions?.weight || 0;
-      return total + (quantity * fileWeight) / 1000;
-    }, 0);
-  }, []);
-
-  const totalWeight = order ? calculateTotalWeight(order) : 0;
-
-  // Fetch order data
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        if (!orderId) throw new Error('Order ID is required');
-
-        const response = await getOrderByIdService(orderId);
-        if (!response?.data?.message) throw new Error('Invalid order data');
-
-        setOrder(response.data.message);
-      } catch (error) {
-        const err = error as Error;
-        setError(`Error fetching order: ${err.message}`);
-        console.error('Error fetching order:', error);
-      }
-    };
-
-    void fetchOrder();
-  }, [orderId]);
+  
 
   // Fetch delivery rates when order and address are available
   useEffect(() => {
@@ -105,9 +74,7 @@ const DeliveryPlan: React.FC = () => {
         return;
       }
 
-      if (!order) return;
-
-      const DELIVERY_PAYLOAD = { addressId, units: 'KG', value: totalWeight };
+      const DELIVERY_PAYLOAD = { addressId, orderId };
 
       try {
         setIsLoading(true);
@@ -133,19 +100,10 @@ const DeliveryPlan: React.FC = () => {
     };
 
     void fetchDeliveryRates();
-  }, [addressId, order, orderId, navigate, calculateTotalWeight]);
+  }, [addressId, orderId, navigate]);
 
   // Handlers
   const handleProceed = async () => {
-    if (selectedPlanIndex === -1) {
-      toast('Please select a delivery plan', {
-        icon: '⚠️',
-        style: { background: '#FFF3CD', color: '#856404' },
-      });
-      setError('Please select a delivery plan');
-      return;
-    }
-
     try {
       setIsLoading(true);
       dispatch(selectDeliveryPlan(selectedPlanName));
@@ -155,10 +113,10 @@ const DeliveryPlan: React.FC = () => {
           service_price:
             deliveryData?.rates?.[selectedPlanIndex]?.ratedShipmentDetails[0]
               ?.totalNetCharge || 0,
-          total_weight: { weight: totalWeight || 0, unit: 'KG' },
         },
         address: addressId,
       };
+      
       await updateUserOrderByOrderId(orderId as string, navigate, data);
     } catch (err) {
       const error = err as ApiError;
