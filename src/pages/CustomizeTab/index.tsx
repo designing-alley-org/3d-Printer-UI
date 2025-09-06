@@ -28,6 +28,7 @@ import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
 import { getAllFilesByOrderId, getFileWeight, scaleFile, updateFile } from '../../services/filesService';
+import { updateTotalWeightService } from '../../services/order';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const CustomizeTab: React.FC = () => {
   // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
-      (file: any) => file?.dimensions?.weight
+      (file: any) => file?.weight.value
     );
     setAllFilesCustomized(allFilesCustom);
   }, [fileDetails]);
@@ -219,12 +220,17 @@ const CustomizeTab: React.FC = () => {
     }
   };
 
+
+  const handelNext = async () => {
+    await updateTotalWeightService(orderId as string, navigate);
+  };
+
   return (
     <StepLayout
       stepNumber={2}
       stepText="Customize"
       stepDescription="Customize your design files by selecting materials, colors, and printers."
-      onClick={() => navigate(`/get-quotes/${orderId}/quote`)}
+      onClick={handelNext}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
       isLoading={false}

@@ -447,4 +447,35 @@ const uploadFilesService = async (
     }
 };
 
-export { createOrderService, getFilesByOrderIdService, getSpecificationDataService, updateFileDataByFileIdService, getFileByOrderIdUploadstlService, getQuotesService, uploadFilesByOrderIdService, getAllQuotesService, getAddressService, getUserOrderService, updateUserOrderByOrderIdService, deleteStlFileByFileIdService, getOrderByIdService, getOngoingOrderService, isOrderQuoteClosedService, getAllOrdersService, downloadFileFromS3Service, uploadFilesService };
+const updateTotalWeightService = async (orderId: string, navigate: any) => {
+    try {
+        const response = await api.patch(`/update-total-weight/${orderId}`);
+        navigate(`/get-quotes/${orderId}/quote`);
+        return response;
+    } catch (error) {
+        console.error('Error updating total weight:', error);
+        throw error;
+    }
+}
+
+export { 
+    createOrderService, 
+    getFilesByOrderIdService, 
+    getSpecificationDataService, 
+    updateFileDataByFileIdService, 
+    getFileByOrderIdUploadstlService, 
+    getQuotesService, 
+    uploadFilesByOrderIdService, 
+    getAllQuotesService, 
+    getAddressService, 
+    getUserOrderService, 
+    updateUserOrderByOrderIdService, 
+    deleteStlFileByFileIdService, 
+    getOrderByIdService, 
+    getOngoingOrderService, 
+    isOrderQuoteClosedService, 
+    getAllOrdersService, 
+    downloadFileFromS3Service, 
+    uploadFilesService, 
+    updateTotalWeightService
+};
