@@ -19,27 +19,8 @@ const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
     }
 };
 
-// Service to call the API for creating an order
-const createOrderService = async () => {
-    try {
-        const response = await api.post(`/create-order`);
-        return response;
-    } catch (error) {
-        console.error("Error creating order:", error);
-        throw error;
-    }
-};
 
-// Service to call the API for getting order by ID
-const getOrderByIdService = async (orderId: string) => {
-    try {
-      const response = await api.get(`/order-show/${orderId}`);
-      return response;
-    } catch (error) {
-      console.error('Error fetching user order:', error);
-      throw error;
-    }
-  };
+
 
 const getFilesByOrderIdService = async (orderId: string): Promise<object | undefined> => {
     try {
@@ -207,6 +188,26 @@ const deleteStlFileByFileIdService = async (orderId: string, fileId: string) => 
 
 // New Api 
 
+const createOrderService = async () => {
+    try {
+        const response = await api.post(`/create-order`);
+        return response;
+    } catch (error) {
+        console.error("Error creating order:", error);
+        throw error;
+    }
+};
+
+// Service to call the API for getting order by ID
+const getOrderService = async (orderId: string) => {
+    try {
+      const response = await api.get(`/order-show/${orderId}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching user order:', error);
+      throw error;
+    }
+  };
 
 const getAllOrdersService = async ({ page, limit, orderId }: { page?: number, limit?: number, orderId?: string } = {}) => {
     try {
@@ -327,8 +328,6 @@ const downloadFileFromS3Service = async (s3Url: string, setProgress: (progress: 
         setProgress(0);
     }
 };
-
-
  
 const uploadFilesService = async (
     orderId: string,
@@ -486,7 +485,7 @@ export {
     getUserOrderService, 
     updateUserOrderByOrderIdService, 
     deleteStlFileByFileIdService, 
-    getOrderByIdService, 
+    getOrderService, 
     getOngoingOrderService, 
     isOrderQuoteClosedService, 
     getAllOrdersService, 

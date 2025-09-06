@@ -1,5 +1,7 @@
 import toast from "react-hot-toast";
 import api from "../axiosConfig";
+import { returnError, returnResponse } from "../utils/function";
+import { set } from "lodash-es";
 
 // Dummy data for development
 const dummyAddresses = [
@@ -97,7 +99,7 @@ export const deleteAddressService = async (addressId: string): Promise<any> => {
 
 export const setDefaultAddressService = async (addressId: string, setSelectedAddressId: (id: string | null) => void): Promise<any> => {
   try {
-    const response = await api.put(`/set/default/address/${addressId}`);
+    const response = await api.put(`/set/default-address/${addressId}`);
     toast.success("Default address set successfully");
     setSelectedAddressId(addressId);
     return response;
@@ -107,3 +109,22 @@ export const setDefaultAddressService = async (addressId: string, setSelectedAdd
     throw error;
   }
 };
+
+export const getRateTransitService = async (
+  orderId: string, 
+  setError: (error: string) => void,
+  setIsLoading: (loading: boolean) => void
+): Promise<any> => {
+  try {
+    setIsLoading(true);
+    setError('');
+    const response = await api.get(`/rate/transit/${orderId}/`);
+    return returnResponse(response);
+  } catch (error) {
+    console.error("Error fetching transit rates:", error);
+    setError('Failed to fetch transit rates');
+    throw error;
+  } finally {
+    setIsLoading(false);
+  }
+}
