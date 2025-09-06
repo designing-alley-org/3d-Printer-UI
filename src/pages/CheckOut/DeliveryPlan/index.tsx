@@ -1,7 +1,6 @@
 import { Box,  Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {  useDispatch } from 'react-redux';
 import Card from './Card';
 import StepLayout from '../../../components/Layout/StepLayout';
 import CustomButton from '../../../stories/button/CustomButton';
@@ -30,20 +29,19 @@ interface DeliveryData {
     rateType:string;
     totalBaseCharge:number;
     totalNetCharge:number;
-  }[]
-}
+  }
+}[];
 
 
 
 const DeliveryPlan: React.FC = () => {
-  const dispatch = useDispatch();
   // State management
   const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
   const [selectedPlanName, setSelectedPlanName] = useState<string>('');
   const [deliveryData, setDeliveryData] = useState<DeliveryData>([] as unknown as DeliveryData);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDeliveryPlan, setSelectedDeliveryPlan] = useState(null);
+  const [selectedDeliveryPlan, setSelectedDeliveryPlan] = useState(null as unknown as DeliveryData);
 
   console.log("Delivery Data:", selectedDeliveryPlan);
 
@@ -125,7 +123,7 @@ const DeliveryPlan: React.FC = () => {
           Select Delivery Plan
           </Typography>
         </Box>
-          {deliveryData?.length > 0 && deliveryData?.map((plan, index) => (
+          {deliveryData.length > 0 && deliveryData?.map((plan, index) => (
            <Box onClick={() => setSelectedDeliveryPlan(plan)} key={index}>
              <Card
               key={index}
