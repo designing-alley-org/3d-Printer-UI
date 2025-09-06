@@ -21,16 +21,14 @@ import {
   addAllFiles,
   setActiveFile,
 } from '../../store/customizeFilesDetails/reducer';
-import { getWeightByFileId } from '../../store/actions/getWeightByFileId';
 import { getSpecificationData } from '../../store/actions/getSpecificationData';
-import { scaleTheFileByNewDimensions } from '../../store/actions/scaleTheFileByNewDimensions';
-import { updateFileDataByFileId } from '../../store/actions/updateFileDataByFileId';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import { FileData } from '../../types/uploadFiles';
+import { FileData, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
-import { getAllFilesByOrderId } from '../../services/filesService';
+import { getAllFilesByOrderId, getFileWeight, scaleFile, updateFile } from '../../services/filesService';
+import { updateTotalWeightService } from '../../services/order';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -70,7 +68,7 @@ const CustomizeTab: React.FC = () => {
   // Check if all files have been customized
   useEffect(() => {
     const allFilesCustom = fileDetails.every(
-      (file: any) => file?.dimensions?.weight
+      (file: any) => file?.weight.value
     );
     setAllFilesCustomized(allFilesCustom);
   }, [fileDetails]);
@@ -180,10 +178,6 @@ const CustomizeTab: React.FC = () => {
   }, [fetchPrinterData]);
 
   const handleApplySelection = async () => {
-    if (!activeFile) {
-      console.warn('No active file selected.');
-      return;
-    }
 
     try {
       setIsLoading(true);
@@ -195,32 +189,30 @@ const CustomizeTab: React.FC = () => {
         activeFileIndexDimensions?.dimensions?.length !== dimensions?.length ||
         activeFileIndexDimensions?.unit !== unit
       ) {
-        await scaleTheFileByNewDimensions({
-          orderId: orderId as string,
-          activeFileId: activeFileId as string,
-          updateLength: dimensions?.length,
-          updateWidth: dimensions?.width,
-          updateHeight: dimensions?.height,
-          selectUnit: unit,
+        await scaleFile(activeFileId as string,
+           { 
+            new_length: dimensions?.length, 
+            new_width: dimensions?.width, 
+            new_height: dimensions?.height, 
+            unit: unit  
         });
       }
 
-      // Get weight of the file
-      await getWeightByFileId({
-        orderId: orderId as string,
-        activeFileId: activeFileId as string,
-        selectedMat: material as string,
-        materialMass: materialMass as number,
+      await getFileWeight(
+        activeFileId as string,
         dispatch,
-      });
+        { material_name: material, 
+          material_mass: materialMass 
+        });
 
-      //   // Update file data
-      await updateFileDataByFileId({
-        orderId: orderId as string,
-        activeFile,
-        activeFileId: activeFileId as string,
-        dispatch,
-      });
+        await updateFile(activeFileId as string, {
+          color: activeFile?.color,
+          material: activeFile?.material,
+          technology: activeFile?.technology,
+          printer: activeFile?.printer,
+          infill: activeFile?.infill,
+        } as UpdateFileData);
+
     } catch (error) {
       console.error('Error applying selection:', error);
     } finally {
@@ -228,12 +220,17 @@ const CustomizeTab: React.FC = () => {
     }
   };
 
+
+  const handelNext = async () => {
+    await updateTotalWeightService(orderId as string, navigate);
+  };
+
   return (
     <StepLayout
       stepNumber={2}
       stepText="Customize"
       stepDescription="Customize your design files by selecting materials, colors, and printers."
-      onClick={() => navigate(`/get-quotes/${orderId}/quote`)}
+      onClick={handelNext}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
       isLoading={false}
@@ -286,15 +283,6 @@ const CustomizeTab: React.FC = () => {
                         pointerEvents: 'none'
                       }} />
                     </Box>
-                    {/* <span
-                      className="view-model"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenViewer(file._id);
-                      }}
-                    >
-                      <img src={vector_black} alt="View model" />
-                    </span> */}
                   </Model>
                   <ModelName isActive={activeFileId === file._id} textColor={theme.palette.primary.main}>
                    {formatText(file?.fileName)}

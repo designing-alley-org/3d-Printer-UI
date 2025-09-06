@@ -1,5 +1,6 @@
 import api from "../axiosConfig"
-import {  UploadFile } from "../types/uploadFiles";
+import { updateWeight } from "../store/customizeFilesDetails/reducer";
+import {  FileData, UpdateFileData, UploadFile } from "../types/uploadFiles";
 import { returnResponse } from "../utils/function";
 
 
@@ -34,11 +35,10 @@ const getAllFilesByOrderId = async (orderId: string) => {
     }
 };
 
-const updateFile = async (fileId: string, orderId: string, status: string, fileData: FormData) => {
+const updateFile = async (fileId: string, fileData: UpdateFileData) => {
     try {
-        //   const { orderId, status, fileId } = req.query;
-        // const updatedData = req.body;
-        const response = await api.post(`/api/v1/files/${fileId}`, { orderId, status, ...fileData });
+        // This api for specific customization of file like changing the file
+        const response = await api.put(`/api/v1/files/${fileId}`, {  ...fileData });
         return returnResponse(response);
     } catch (error) {
         console.error('Error updating file:', error);
@@ -46,7 +46,7 @@ const updateFile = async (fileId: string, orderId: string, status: string, fileD
     }
 };
 
-const updateFilesQuantity = async (files: { id: string; quantity: number }[], orderId:string) => {
+const updateFilesQuantity = async (files: { id: string; quantity: number }[]) => {
     try {
         const response = await api.patch(`/api/v1/files/quantity`, { files });
         return returnResponse(response);
@@ -56,10 +56,36 @@ const updateFilesQuantity = async (files: { id: string; quantity: number }[], or
     }
 };
 
+const scaleFile = async (fileId: string, dimensions: { new_length: number; new_width: number; new_height: number; unit: string }) => {
+    try {
+        const response = await api.put(`/api/v1/files/scale/${fileId}`, { ...dimensions });
+        return returnResponse(response);
+    } catch (error) {
+        console.error('Error scaling file:', error);
+        throw error;
+    }
+}
+
+
+const getFileWeight = async (fileId: string, dispatch: any, payload: { material_name: string; material_mass: number }) => {
+    try {
+        const response = await api.put(`/api/v1/files/process/${fileId}`, payload);
+        const { weight } = returnResponse(response);
+        dispatch(updateWeight({ id: fileId, weight: weight }));
+        return returnResponse(response);
+    } catch (error) {
+        console.error('Error fetching file weight:', error);
+        throw error;
+    }
+}
+
+
 export {
     createFile,
     deleteFile,
     getAllFilesByOrderId,
     updateFile,
-    updateFilesQuantity 
+    updateFilesQuantity,
+    scaleFile,
+    getFileWeight
 }

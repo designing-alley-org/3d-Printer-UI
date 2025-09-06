@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FileData } from '../../types/uploadFiles';
+import { FileData, Weight } from '../../types/uploadFiles';
 
 export interface FileDetailsState {
   files: FileData[];
@@ -36,10 +36,10 @@ export const fileDetailsSlice = createSlice({
       }
     },
 
-    updateWeight: (state, action: PayloadAction<{ id: string; weight: number }>) => {
+    updateWeight: (state, action: PayloadAction<{ id: string; weight: Weight }>) => {
       const file = state.updateFiles.find((file) => file._id === action.payload.id);
       if (file) {
-        file.dimensions.weight = action.payload.weight;
+        file.weight = action.payload.weight;
       }
     },
   },

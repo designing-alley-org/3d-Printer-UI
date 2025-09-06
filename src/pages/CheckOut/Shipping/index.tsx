@@ -27,6 +27,7 @@ import { Box, Chip, Radio, Typography, useMediaQuery } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddIcon from '@mui/icons-material/Add';
 import { X } from 'lucide-react';
+import { updateOrderService } from '../../../services/order';
 
 
 const ShippingDetails = () => {
@@ -37,8 +38,6 @@ const ShippingDetails = () => {
     (state: any) => state.address
   );
   const { defaultAddress } = useSelector((state: any) => state.user.user);
-  console.log('Default address:', defaultAddress);
-
   const [editingAddress, setEditingAddress] = useState<any>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const navigate = useNavigate();
@@ -57,9 +56,6 @@ const ShippingDetails = () => {
             }
           }
         } catch (error: any) {
-          // if (error?.response?.data?.message) {
-          //   toast.info(error?.response?.data?.message);
-          // }
           setIsPageLoading(false);
         }
       } else {
@@ -101,8 +97,6 @@ const ShippingDetails = () => {
         countryCode: values.countryCode.trim().toUpperCase(),
       };
 
-      console.log('Cleaned values:', cleanedValues);
-
       if (editingAddress) {
         // Update existing address
         await updateAddressService(editingAddress._id, cleanedValues);
@@ -110,7 +104,6 @@ const ShippingDetails = () => {
         setEditingAddress(null);
       } else {
         // Create new address
-        console.log('Creating new address with orderId:', orderId);
         await createAddress({ ...cleanedValues, orderId });
         toast.success('Address created successfully');
       }
@@ -137,14 +130,22 @@ const ShippingDetails = () => {
     dispatch(toggleCreateAddress());
   };
 
+  const handleNext = async () => {
+    await updateOrderService(orderId as string, 
+      { 
+      address: addressId,
+      order_status: 'address_select'
+     }
+    );
+    navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
+  };
+
   return (
     <StepLayout
       stepNumber={4}
       stepText="Checkout"
       stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
-      onClick={() =>
-        navigate(`/get-quotes/${orderId}/checkout/select-delivery`)
-      }
+      onClick={handleNext}
       orderId={orderId}
       onClickBack={() => navigate(`/get-quotes/${orderId}/quote`)}
       isLoading={false}

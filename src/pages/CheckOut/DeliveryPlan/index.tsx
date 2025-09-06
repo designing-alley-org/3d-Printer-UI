@@ -1,21 +1,13 @@
 import { Box,  Typography } from '@mui/material';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import Card from './Card';
-import api from '../../../axiosConfig';
-import { updateUserOrderByOrderId } from '../../../store/actions/updateUserOderByOrderID';
-import { RootState } from '../../../store/types';
-import { getOrderByIdService } from '../../../services/order';
-import {
-  addDeliveryData,
-  selectDeliveryPlan,
-} from '../../../store/Address/deliveryDetails';
-import toast from 'react-hot-toast';
 import StepLayout from '../../../components/Layout/StepLayout';
 import CustomButton from '../../../stories/button/CustomButton';
 // Icon
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { getRateTransitService } from '../../../services/address';
+import { updateOrderService } from '../../../services/order';
 // Types
 export interface Rate {
   serviceName: string;
@@ -25,152 +17,67 @@ export interface Rate {
 }
 
 interface DeliveryData {
-  rates: Rate[];
-  status?: string;
-  error?: string;
-}
+  commit:{
+    commitMessageDetails : string;
+    label:string;
+    saturdayDelivery:boolean;
+  }
+  packagingType: string;
+  serviceType: string;
+  ratedShipmentDetails:{
+    currency:string;
+    rateType:string;
+    totalBaseCharge:number;
+    totalNetCharge:number;
+  }
+}[];
 
-interface ApiError {
-  message: string;
-  status?: number;
-}
 
-interface OrderFile {
-  quantity: number;
-  dimensions: { weight: number };
-}
 
-interface Order {
-  files: OrderFile[];
-}
-
-// Define the responsive breakpoints for the carousel
-
-//
 const DeliveryPlan: React.FC = () => {
-  // Redux
-  const dispatch = useDispatch();
-
   // State management
   const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
   const [selectedPlanName, setSelectedPlanName] = useState<string>('');
-  const [deliveryData, setDeliveryData] = useState<DeliveryData | null>(null);
-  const [order, setOrder] = useState<Order | null>(null);
+  const [deliveryData, setDeliveryData] = useState<DeliveryData>([] as unknown as DeliveryData);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDeliveryPlan, setSelectedDeliveryPlan] = useState(null as unknown as DeliveryData);
+
 
   // Hooks
   const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
-  const addressId = useSelector((state: RootState) => state.address.addressId);
 
-  // Calculate total weight from order files
-  const calculateTotalWeight = useCallback((orderData: Order): number => {
-    if (!orderData?.files?.length) return 0;
-
-    return orderData.files.reduce((total, file) => {
-      const quantity = file?.quantity || 0;
-      const fileWeight = file?.dimensions?.weight || 0;
-      return total + (quantity * fileWeight) / 1000;
-    }, 0);
-  }, []);
-
-  const totalWeight = order ? calculateTotalWeight(order) : 0;
-
-  // Fetch order data
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        if (!orderId) throw new Error('Order ID is required');
-
-        const response = await getOrderByIdService(orderId);
-        if (!response?.data?.message) throw new Error('Invalid order data');
-
-        setOrder(response.data.message);
-      } catch (error) {
-        const err = error as Error;
-        setError(`Error fetching order: ${err.message}`);
-        console.error('Error fetching order:', error);
-      }
-    };
-
-    void fetchOrder();
-  }, [orderId]);
+  
 
   // Fetch delivery rates when order and address are available
   useEffect(() => {
     const fetchDeliveryRates = async () => {
-      if (!addressId) {
-        navigate(`/get-quotes/${orderId}/checkout`);
-        return;
-      }
-
-      if (!order) return;
-
-      const DELIVERY_PAYLOAD = { addressId, units: 'KG', value: totalWeight };
-
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const response = await api.post<DeliveryData>(
-          '/rate/transit',
-          DELIVERY_PAYLOAD
-        );
-
-        if (!response?.data?.rates?.length) {
-          throw new Error('No delivery rates available');
-        }
-        dispatch(addDeliveryData(response?.data?.rates));
-        setDeliveryData(response.data);
-      } catch (err) {
-        const error = err as ApiError;
-        setError(error.message || 'Failed to fetch delivery rates');
-        console.error('Error fetching delivery rates:', error);
-      } finally {
-        setIsLoading(false);
-      }
+      const response = await getRateTransitService(orderId as string, setError, setIsLoading);
+      setDeliveryData(response.rates);
     };
 
     void fetchDeliveryRates();
-  }, [addressId, order, orderId, navigate, calculateTotalWeight]);
+  }, [orderId]);
 
   // Handlers
   const handleProceed = async () => {
-    if (selectedPlanIndex === -1) {
-      toast('Please select a delivery plan', {
-        icon: '⚠️',
-        style: { background: '#FFF3CD', color: '#856404' },
-      });
-      setError('Please select a delivery plan');
-      return;
-    }
-
     try {
       setIsLoading(true);
-      dispatch(selectDeliveryPlan(selectedPlanName));
-      const data = {
-        delivery_service: {
-          service_type: selectedPlanName,
+      await updateOrderService(orderId as string, {
+          service_type: selectedDeliveryPlan?.serviceType || '',
           service_price:
-            deliveryData?.rates?.[selectedPlanIndex]?.ratedShipmentDetails[0]
+            (selectedDeliveryPlan as any)?.ratedShipmentDetails[0]
               ?.totalNetCharge || 0,
-          total_weight: { weight: totalWeight || 0, unit: 'KG' },
-        },
-        address: addressId,
-      };
-      await updateUserOrderByOrderId(orderId as string, navigate, data);
+      });
+      navigate(`/get-quotes/${orderId}/checkout/payment`);
     } catch (err) {
-      const error = err as ApiError;
-      setError(error.message || 'Failed to update order');
-      console.error('Error updating order:', error);
-      toast.error('Failed to update order');
+      console.error('Error updating order:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const deliveryOptions = deliveryData?.rates || [];
 
   return (
     <StepLayout
@@ -182,7 +89,7 @@ const DeliveryPlan: React.FC = () => {
       onClickBack={() => navigate(`/get-quotes/${orderId}/checkout`)}
       isLoading={false}
       isPageLoading={isLoading}
-      isDisabled={selectedPlanIndex === -1 || isLoading}
+      isDisabled={!selectedDeliveryPlan || isLoading}
     >
       {error ? (
         <Box sx={{ padding: '2rem', textAlign: 'center' }}>
@@ -215,8 +122,9 @@ const DeliveryPlan: React.FC = () => {
           Select Delivery Plan
           </Typography>
         </Box>
-          {deliveryOptions.map((plan, index) => (
-            <Card
+          {deliveryData.length > 0 && deliveryData?.map((plan, index) => (
+           <Box onClick={() => setSelectedDeliveryPlan(plan)} key={index}>
+             <Card
               key={index}
               deliveryName={plan.serviceName}
               serviceType={plan.serviceType}
@@ -229,6 +137,7 @@ const DeliveryPlan: React.FC = () => {
               index={index}
               item={plan}
             />
+           </Box>
           ))}
         </Box>
       )}
