@@ -122,8 +122,8 @@ const CustomizeTab: React.FC = () => {
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    const { colorId, materialId, technologyId, printer, infill } = activeFile;
-    if (colorId && materialId && technologyId && printer && infill) return false;
+    const { colorId, materialId, technologyId, printerId, infill } = activeFile;
+    if (colorId && materialId && technologyId && printerId && infill) return false;
     return true;
   }, [activeFile]);
 
@@ -173,8 +173,7 @@ const CustomizeTab: React.FC = () => {
   const handleApplySelection = async () => {
 
     try {
-      setIsLoading(true);
-
+      setIsLoading(true)
       // Check if scaling is required
       if (
         activeFileIndexDimensions?.dimensions?.width !== dimensions?.width ||

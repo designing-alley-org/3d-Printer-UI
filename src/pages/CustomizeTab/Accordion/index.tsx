@@ -457,9 +457,9 @@ const Accordion: React.FC<AccordionProps> = ({
          { printerMessage === '' ?  
          <PrinterDropdown
             options={mappedPrinters}
-            onChange={(option) => handelChangeValue('printer', option.id)}
+            onChange={(option) => handelChangeValue('printerId', option.id)}
             defaultValue={mappedPrinters.find(
-              (opt) => opt.id === formData?.printer
+              (opt) => opt.id === formData?.printerId 
             )}
             titleHelper="Please Select First Color, Material and Technology"
             sx={{ width: '100%' }}
