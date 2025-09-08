@@ -71,7 +71,6 @@ const Accordion: React.FC<AccordionProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FileDataDB | undefined>(fileData);
-  console.log("fileData in accordion", fileData);
   const dataspec = useSelector((state: RootState) => state.specification);
 
   const theme = useTheme();
@@ -462,9 +461,9 @@ const Accordion: React.FC<AccordionProps> = ({
             defaultValue={mappedPrinters.find(
               (opt) => opt.id === formData?.printer
             )}
-            titleHelper="Please Select First Material and Technology"
+            titleHelper="Please Select First Color, Material and Technology"
             sx={{ width: '100%' }}
-            disabled={!formData?.materialId || !formData?.technologyId}
+            disabled={!formData?.materialId || !formData?.technologyId || !formData?.colorId}
           /> : 
           <Typography variant="body2" color="textSecondary">
            {printerMessage || 'No printers available for the selected material and technology.'}

@@ -2,11 +2,12 @@ import api from "../axiosConfig";
 
 export const getPrintersByTechnologyAndMaterialService = async (
     selectedTech: string,
-    selectedMat: string
+    selectedMat: string,
+    selectedColor: string
 ): Promise<any[]> => {
     try {
         let response = await api.get(
-            `/filter?technology=${selectedTech}&materials=${selectedMat}`
+            `/filter?technologyId=${selectedTech}&materialsId=${selectedMat}&colorsId=${selectedColor}`
         );
         return response.data.data || []; 
     } catch (error) {

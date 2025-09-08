@@ -85,7 +85,7 @@ const CustomizeTab: React.FC = () => {
       : null;
   }, [activeFileId, orderFiles]);
 
-  const { materialId, technologyId, dimensions, unit, printerId } = activeFile || {};
+  const { materialId, technologyId, dimensions, unit, printerId, colorId } = activeFile || {};
 
    useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -155,15 +155,16 @@ const CustomizeTab: React.FC = () => {
   }, [activeFileId]);
 
   const fetchPrinterData = useCallback(async () => {
-    if (materialId && technologyId) {
+    if (materialId && technologyId && colorId) {
       await getPrintersByTechnologyAndMaterial({
         materialId,
         technologyId,
+        colorId,
         setPrinterData,
         setPrinterMessage,
       });
     }
-  }, [materialId, technologyId]);
+  }, [materialId, technologyId, colorId]);
 
   useEffect(() => {
     fetchPrinterData();
