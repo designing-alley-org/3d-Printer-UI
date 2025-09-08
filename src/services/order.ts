@@ -4,6 +4,7 @@ import { getSignedUrl, uploadFromS3, deleteFromS3 } from "./s3";
 import { createFile } from "./filesService";
 import { FileData } from "../types/uploadFiles";
 import { returnError, returnResponse } from "../utils/function";
+import { addDataSpec } from "../store/customizeFilesDetails/SpecificationReducer";
 
 // Upload files
 const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
@@ -95,16 +96,7 @@ const updateUserOrderByOrderIdService = async (orderId: string, data: object) =>
     }
 }
 
-//  getSpecificationDataService
-const getSpecificationDataService = async () => {
-    try {
-        const response = await api.get(`/get-specification`);
-        const res = response.data?.data?.[0];
-        return res;
-    } catch (error) {
-        console.error('Error fetching specification:', error);
-    }
-}
+
 
 //  getQuotesService
 const getQuotesService = async (orderId: string): Promise<any> => {
@@ -484,10 +476,21 @@ const getOrderSummaryService = async (orderId: string, setIsLoading: (loading: b
     }
 }
 
+const getCMT_DataService = async (dispatch: any) => {
+    try {
+        const response = await api.get(`/api/v1/cmt`);
+        dispatch(addDataSpec(returnResponse(response)));
+        return returnResponse(response);
+    } catch (error) {
+        toast.error(returnError(error));
+        console.error('Error fetching CMT data:', error);
+        throw error;
+    }
+}
+
 export { 
     createOrderService, 
     getFilesByOrderIdService, 
-    getSpecificationDataService, 
     updateFileDataByFileIdService, 
     getFileByOrderIdUploadstlService, 
     getQuotesService, 
@@ -505,5 +508,6 @@ export {
     uploadFilesService, 
     updateTotalWeightService,
     updateOrderService,
-    getOrderSummaryService
+    getOrderSummaryService,
+    getCMT_DataService
 };

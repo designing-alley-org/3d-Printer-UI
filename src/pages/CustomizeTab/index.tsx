@@ -21,14 +21,13 @@ import {
   addAllFiles,
   setActiveFile,
 } from '../../store/customizeFilesDetails/reducer';
-import { getSpecificationData } from '../../store/actions/getSpecificationData';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
-import { FileData, UpdateFileData } from '../../types/uploadFiles';
+import { FileDataDB, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
 import { getAllFilesByOrderId, getFileWeight, scaleFile, updateFile } from '../../services/filesService';
-import { updateTotalWeightService } from '../../services/order';
+import { getCMT_DataService, updateTotalWeightService } from '../../services/order';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -61,9 +60,10 @@ const CustomizeTab: React.FC = () => {
   const activeFile = useMemo(() => {
     if (!fileDetails) return null;
     return (
-      fileDetails.find((file: FileData) => file._id === activeFileId) || null
+      fileDetails.find((file: FileDataDB) => file._id === activeFileId) || null
     );
   }, [fileDetails, activeFileId]);
+
 
   // Check if all files have been customized
   useEffect(() => {
@@ -77,7 +77,7 @@ const CustomizeTab: React.FC = () => {
   const activeFileIndexDimensions = useMemo(() => {
     if (!orderFiles || !activeFileId) return null;
     const activeFileObj = orderFiles.find(
-      (file: FileData) => file._id === activeFileId
+      (file: FileDataDB) => file._id === activeFileId
     );
 
     return activeFileObj
@@ -85,15 +85,7 @@ const CustomizeTab: React.FC = () => {
       : null;
   }, [activeFileId, orderFiles]);
 
-  const { material, technology, dimensions, unit } =
-    activeFile || {};
-
-  const materialCompatibility = useSelector(
-    (state: any) => state.specification.material_with_mass
-  );
-  const materialMass = materialCompatibility?.find(
-    (mat: any) => mat.material_name === material
-  )?.material_mass;
+  const { materialId, technologyId, dimensions, unit, printerId } = activeFile || {};
 
    useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -106,7 +98,7 @@ const CustomizeTab: React.FC = () => {
         setIsPageLoading(true);
         const response = await getAllFilesByOrderId(orderId);
         if (response.length === 0) navigate(`/get-quotes/${orderId}/upload-stl`);
-        dispatch(addAllFiles(response as FileData[]));
+        dispatch(addAllFiles(response as FileDataDB[]));
       } catch (error) {
         console.error('Error fetching order files:', error);
       } finally {
@@ -120,7 +112,7 @@ const CustomizeTab: React.FC = () => {
 
   // Get specifications
   const fetchSpec = useCallback(async () => {
-    getSpecificationData({ dispatch });
+    await getCMT_DataService(dispatch);
   }, [dispatch]);
 
   useEffect(() => {
@@ -130,8 +122,8 @@ const CustomizeTab: React.FC = () => {
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    const { color, material, technology, printer, infill } = activeFile;
-    if (color && material && technology && printer && infill) return false;
+    const { colorId, materialId, technologyId, printer, infill } = activeFile;
+    if (colorId && materialId && technologyId && printer && infill) return false;
     return true;
   }, [activeFile]);
 
@@ -163,15 +155,15 @@ const CustomizeTab: React.FC = () => {
   }, [activeFileId]);
 
   const fetchPrinterData = useCallback(async () => {
-    if (material && technology) {
+    if (materialId && technologyId) {
       await getPrintersByTechnologyAndMaterial({
-        material,
-        technology,
+        materialId,
+        technologyId,
         setPrinterData,
         setPrinterMessage,
       });
     }
-  }, [material, technology]);
+  }, [materialId, technologyId]);
 
   useEffect(() => {
     fetchPrinterData();
@@ -198,20 +190,18 @@ const CustomizeTab: React.FC = () => {
         });
       }
 
-      await getFileWeight(
-        activeFileId as string,
-        dispatch,
-        { material_name: material, 
-          material_mass: materialMass 
-        });
-
-        await updateFile(activeFileId as string, {
-          color: activeFile?.color,
-          material: activeFile?.material,
-          technology: activeFile?.technology,
-          printer: activeFile?.printer,
+       await updateFile(activeFileId as string, {
+          colorId: activeFile?.colorId,
+          materialId,
+          technologyId,
+          printerId,
           infill: activeFile?.infill,
         } as UpdateFileData);
+
+      await getFileWeight(
+        activeFileId as string,
+        dispatch
+      );
 
     } catch (error) {
       console.error('Error applying selection:', error);
@@ -289,10 +279,10 @@ const CustomizeTab: React.FC = () => {
                   </ModelName>
                   <CustomizeBox>
                     {[
-                      { key: 'technology', Icon: TechnologyIcon },
-                      { key: 'material', Icon: MaterialIcon },
-                      { key: 'color', Icon: ColorIcon },
-                      { key: 'printer', Icon: PrinterIcon },
+                      { key: 'technologyId', Icon: TechnologyIcon },
+                      { key: 'materialId', Icon: MaterialIcon },
+                      { key: 'colorId', Icon: ColorIcon },
+                      { key: 'printerId', Icon: PrinterIcon },
                       { key: 'infill', Icon: InfillIcon },
                     ].map(({ key, Icon }) => {
                       const isSelected = activeFileId === file._id;
@@ -355,7 +345,7 @@ const CustomizeTab: React.FC = () => {
           >
             <CustomButton
               children="Apply Selection"
-              disabled={isApplyButtonDisabled || isLoading}
+              disabled={isApplyButtonDisabled || isLoading} 
               onClick={handleApplySelection}
               loading={isLoading}
               variant="outlined"

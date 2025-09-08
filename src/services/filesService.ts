@@ -67,9 +67,9 @@ const scaleFile = async (fileId: string, dimensions: { new_length: number; new_w
 }
 
 
-const getFileWeight = async (fileId: string, dispatch: any, payload: { material_name: string; material_mass: number }) => {
+const getFileWeight = async (fileId: string, dispatch: any) => {
     try {
-        const response = await api.put(`/api/v1/files/process/${fileId}`, payload);
+        const response = await api.put(`/api/v1/files/process/${fileId}`);
         const { weight } = returnResponse(response);
         dispatch(updateWeight({ id: fileId, weight: weight }));
         return returnResponse(response);
