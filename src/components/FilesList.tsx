@@ -19,16 +19,21 @@ import CustomButton from '../stories/button/CustomButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Download } from 'lucide-react';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../public/Icon/MUI_Coustom_icon/index';
 import {
-  Ruler
-} from 'lucide-react';
+  ColorIcon,
+  InfillIcon,
+  TechnologyIcon,
+  MaterialIcon,
+  PrinterIcon,
+} from '../../public/Icon/MUI_Coustom_icon/index';
+import { Ruler } from 'lucide-react';
 import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import { downloadFileFromS3Service } from '../services/order';
+import { FileDataOrder } from '../types/uploadFiles';
 
 interface Props {
-  file: any;
+  file: FileDataOrder;
 }
 
 const FilesList = ({ file }: Props) => {
@@ -66,7 +71,7 @@ const FilesList = ({ file }: Props) => {
             />
             <Typography variant="h6" color="primary.main" gutterBottom>
               {' '}
-              {file.fileName.split(' ')[0]}.stl
+              {file?.fileName?.split(' ')[0]}.stl
             </Typography>
           </Box>
           {/* Right */}
@@ -75,7 +80,13 @@ const FilesList = ({ file }: Props) => {
               {/* Add your file actions here */}
               <CustomButton
                 variant="contained"
-                onClick={() => downloadFileFromS3Service(file.fileUrl, setFileDownloadProgress, setIsDownloading)}
+                onClick={() =>
+                  downloadFileFromS3Service(
+                    file.fileUrl,
+                    setFileDownloadProgress,
+                    setIsDownloading
+                  )
+                }
                 disabled={isDownloading}
                 sx={{
                   display: 'flex',
@@ -83,10 +94,13 @@ const FilesList = ({ file }: Props) => {
                   gap: '4px',
                 }}
               >
-             {isDownloading ? `${fileDownloadProgress}%` : <>
-             Download <Download  size={20}/>
-             </>
-             }
+                {isDownloading ? (
+                  `${fileDownloadProgress}%`
+                ) : (
+                  <>
+                    Download <Download size={20} />
+                  </>
+                )}
               </CustomButton>
               <CustomButton
                 variant="contained"
@@ -103,7 +117,7 @@ const FilesList = ({ file }: Props) => {
                   animate={{ rotate: isTableExpanded ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <KeyboardArrowDownIcon fontSize='medium' />
+                  <KeyboardArrowDownIcon fontSize="medium" />
                 </motion.div>
               </CustomButton>
             </Stack>
@@ -136,38 +150,103 @@ const FilesList = ({ file }: Props) => {
                 </TableHead>
                 <TableBody sx={{}}>
                   <TableRow>
-                    <TableCell> <Ruler size={15} style={{ transform: 'rotate(100deg)' }} /> Scale</TableCell>
-                    <TableCell align="right">{
-                      file?.dimensions?.height + ' x ' + file?.dimensions?.width + ' x ' + file?.dimensions?.height + ' ' + (file.unit || 'N/A')
-                      }</TableCell>
+                    <TableCell>
+                      {' '}
+                      <Ruler
+                        size={15}
+                        style={{ transform: 'rotate(100deg)' }}
+                      />{' '}
+                      Scale
+                    </TableCell>
+                    <TableCell align="right">
+                      {file?.dimensions?.height +
+                        ' x ' +
+                        file?.dimensions?.width +
+                        ' x ' +
+                        file?.dimensions?.height +
+                        ' ' +
+                        (file.unit || 'N/A')}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell> <TechnologyIcon sx={{ fontSize: 15 }} /> Technology</TableCell>
-                    <TableCell align="right">{file.technology || 'N/A'}</TableCell>
+                    <TableCell>
+                      {' '}
+                      <TechnologyIcon sx={{ fontSize: 15 }} /> Technology
+                    </TableCell>
+                    <TableCell align="right">
+                      {file.technology?.code || 'N/A'}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell> <MaterialIcon sx={{ fontSize: 15 }} /> Material</TableCell>
-                    <TableCell align="right">{file.material || 'N/A'}</TableCell>
+                    <TableCell>
+                      {' '}
+                      <MaterialIcon sx={{ fontSize: 15 }} /> Material
+                    </TableCell>
+                    <TableCell align="right">
+                      {file.material?.code || 'N/A'}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell> <ColorIcon sx={{ fontSize: 15 }} /> Colors</TableCell>
-                    <TableCell align="right">{file.color || 'N/A'}</TableCell>
+                    <TableCell>
+                      {' '}
+                      <ColorIcon sx={{ fontSize: 15 }} /> Colors
+                    </TableCell>
+                    <TableCell align="right">
+                      <Box>
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            width: '15px',
+                            height: '15px',
+                            borderRadius: '50%',
+                            backgroundColor: file.color
+                              ? file.color.hexCode
+                              : '#ffffff',
+                            marginRight: '8px',
+                            verticalAlign: 'middle',
+                          }}
+                        ></span>
+                      {file.color?.name || 'N/A'}
+                      </Box>
+                    </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell> <PrinterIcon sx={{ fontSize: 15 }} /> Printers</TableCell>
-                    <TableCell align="right">{file.printer || 'N/A'}</TableCell>
+                    <TableCell>
+                      {' '}
+                      <PrinterIcon sx={{ fontSize: 15 }} /> Printers
+                    </TableCell>
+                    <TableCell align="right">
+                      {file.printer?.name || 'N/A'}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell> <InfillIcon sx={{ fontSize: 15 }} /> Infill</TableCell>
+                    <TableCell>
+                      {' '}
+                      <InfillIcon sx={{ fontSize: 15 }} /> Infill
+                    </TableCell>
                     <TableCell align="right">{file.infill || 'N/A'}</TableCell>
                   </TableRow>
+                  {file?.weight?.value && (
+                    <TableRow>
+                      <TableCell>
+                        {' '}
+                        <ScaleOutlinedIcon sx={{ fontSize: 15 }} /> Weight
+                      </TableCell>
+                      <TableCell align="right">
+                        {file?.weight?.value +
+                          ' ' +
+                          (file?.weight?.unit || 'N/A') || 'N/A'}
+                      </TableCell>
+                    </TableRow>
+                  )}
                   <TableRow>
-                    <TableCell> <ScaleOutlinedIcon sx={{ fontSize: 15 }} /> Weight</TableCell>
-                    <TableCell align="right">{(file?.dimensions?.weight + ' ' + ('g.m.')) || 'N/A'}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell><AddShoppingCartOutlinedIcon sx={{ fontSize: 15 }} /> Quantity</TableCell>
-                    <TableCell align="right">{file.quantity || 'N/A'}</TableCell>
+                    <TableCell>
+                      <AddShoppingCartOutlinedIcon sx={{ fontSize: 15 }} />{' '}
+                      Quantity
+                    </TableCell>
+                    <TableCell align="right">
+                      {file.quantity || 'N/A'}
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

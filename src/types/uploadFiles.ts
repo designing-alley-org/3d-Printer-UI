@@ -35,6 +35,28 @@ export type FileDataDB = Omit<FileData, 'fileBlob' | 'file' | 'isUploading' | 'i
   updatedAt: string;
 }
 
+export type FileDataDB = Omit<
+  FileData,
+  'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'
+> & {
+  materialId: Material;
+  colorId: Color;
+  technologyId: Technology;
+  printerId: any;
+  infill: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type FileDataOrder = FileDataDB & {
+  material: Material;
+  color: Color;
+  technology: Technology;
+  printer: {
+    _id: string;
+    name: string;
+  };
+};
 
 
 
