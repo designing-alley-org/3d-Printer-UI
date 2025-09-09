@@ -159,11 +159,11 @@ const FilesList = ({ file }: Props) => {
                       Scale
                     </TableCell>
                     <TableCell align="right">
-                      {file?.dimensions?.height +
+                      {file?.dimensions?.height?.toFixed(3) +
                         ' x ' +
-                        file?.dimensions?.width +
+                        file?.dimensions?.width?.toFixed(3) +
                         ' x ' +
-                        file?.dimensions?.height +
+                        file?.dimensions?.length?.toFixed(3) +
                         ' ' +
                         (file.unit || 'N/A')}
                     </TableCell>
