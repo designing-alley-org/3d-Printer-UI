@@ -28,6 +28,7 @@ import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
 import { getAllFilesByOrderId, getFileWeight, scaleFile, updateFile } from '../../services/filesService';
 import { getCMT_DataService, updateTotalWeightService } from '../../services/order';
+import { RootState } from '../../store/types';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,8 +40,13 @@ const CustomizeTab: React.FC = () => {
   const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedFileForViewer, setSelectedFileForViewer] = useState<{ url: string; name: string } | null>(null);
+  const colors = useSelector((state: RootState) => state.specification.colors);
+  const [colorHexcode, setColorHexcode] = useState<string>('');
   const navigate = useNavigate();
   const theme = useTheme();
+
+ 
+
 
   const {
     updateFiles: fileDetails,
@@ -84,8 +90,19 @@ const CustomizeTab: React.FC = () => {
       ? { unit: activeFileObj.unit || '', dimensions: activeFileObj.dimensions }
       : null;
   }, [activeFileId, orderFiles]);
+  
 
   const { materialId, technologyId, dimensions, unit, printerId, colorId } = activeFile || {};
+
+
+  // Set color hex code when active file or colors change
+ useEffect(() => {
+    if (activeFile && colors.length > 0) {
+      const selectedColor = colors.find((color: any) => color._id === activeFile.colorId);
+      setColorHexcode(selectedColor ? selectedColor.hexCode : '#ffffff');
+    }
+  }, [activeFile, colors]);
+
 
    useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -358,6 +375,7 @@ const CustomizeTab: React.FC = () => {
       {selectedFileForViewer && (
         <STLViewerModal
           open={modalOpen}
+          color={colorHexcode || '#ffffff'}
           onClose={handleCloseSTLViewer}
           fileUrl={selectedFileForViewer.url}
           fileName={selectedFileForViewer.name}
