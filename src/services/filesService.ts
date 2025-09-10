@@ -127,6 +127,7 @@ const stlFileDownloadAndParse = async ({
     const chunks: Uint8Array[] = [];
     let receivedLength = 0;
     let lastProgressUpdate = 0;
+    console.log('Starting STL download and parse...');
 
     while (true) {
       const { done, value } = await reader.read();
@@ -146,6 +147,7 @@ const stlFileDownloadAndParse = async ({
       } else {
         // If no content-length, show indeterminate progress
         setDownloadProgress(50);
+        console.warn('Content-Length header is missing; cannot compute download progress.');
       }
     }
 
@@ -175,6 +177,7 @@ const stlFileDownloadAndParse = async ({
     // Set progress to 100% after successful parsing
     setDownloadProgress(100);
     setStlGeometry(geometry);
+    console.log('STL file downloaded and parsed successfully.');
 
   } catch (error) {
     console.error('Error downloading/parsing STL file:', error);

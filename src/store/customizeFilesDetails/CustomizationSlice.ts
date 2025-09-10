@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {  FileDataDB, ModelDimensions, Weight } from '../../types/uploadFiles';
+import {  FileDataDB, Weight } from '../../types/uploadFiles';
 import { FileDetailsState } from '../types';
 
 
@@ -25,7 +25,7 @@ export const CustomizationSlice = createSlice({
         _id: file._id,
         unit: file.unit,
         dimensions: file.dimensions
-      })) as { _id: string; dimensions: ModelDimensions, unit: 'string' }[];
+      }));
       state.activeFileId = action.payload.length > 0 ? action.payload[0]._id : null;
     },
 

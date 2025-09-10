@@ -29,7 +29,7 @@ export interface FileDetailsState {
   files: FileDataDB[];
   reverseDimensions: {
     _id: string;
-    unit: 'string';
+    unit: string;
     dimensions: ModelDimensions;
   }[];
   activeFileId: string | null;

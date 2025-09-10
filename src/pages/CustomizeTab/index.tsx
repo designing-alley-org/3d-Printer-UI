@@ -109,6 +109,26 @@ const CustomizeTab: React.FC = () => {
     return files.find((file: FileDataDB) => file._id === activeFileId) || null;
   }, [activeFileId]);
 
+ 
+
+  // Update color hex code when files or colors change
+useEffect(() => {
+  if(files.length === 0) return;
+  const currentFile = files.find((file: any) => file._id === activeFileId);
+    if (currentFile && currentFile.colorId && colors.length > 0) {
+      const selectedColor = colors.find(
+        (color: any) => color._id === currentFile.colorId
+      );
+      if (selectedColor) {
+        setColorHexcode(selectedColor.hexCode);
+      } else {
+        setColorHexcode('#ffffff');
+      }
+    }
+  }, [files, colors]); 
+
+
+
   const { materialId, technologyId, printerId, colorId } = activeFile || {};
 
   const isAllCoustomized = useMemo(() => {
@@ -155,13 +175,17 @@ const CustomizeTab: React.FC = () => {
 
   // Set color hex code when active file or colors change
   useEffect(() => {
-    if (activeFile && colors.length > 0) {
+    if (activeFile?.colorId && colors.length > 0) {
       const selectedColor = colors.find(
         (color: any) => color._id === activeFile.colorId
       );
-      setColorHexcode(selectedColor ? selectedColor.hexCode : '#ffffff');
+      const hexCode = selectedColor ? selectedColor.hexCode : '#ffffff';
+      setColorHexcode(hexCode);
+      console.log('Color updated:', { colorId: activeFile.colorId, hexCode, selectedColor });
+    } else {
+      setColorHexcode('#ffffff');
     }
-  }, [activeFile, colors]);
+  }, [activeFile, colors]); // Watch the entire activeFile object instead of just colorId
 
   useEffect(() => {
     fetchSpec();
@@ -238,8 +262,13 @@ const CustomizeTab: React.FC = () => {
         data: updateData 
       }));
 
-      // Optionally show success message or refresh data
-      console.log('File customization applied successfully');
+      // Force update color hex code if colorId changed
+      if (colorId && colors.length > 0) {
+        const selectedColor = colors.find((color: any) => color._id === colorId);
+        if (selectedColor) {
+          setColorHexcode(selectedColor.hexCode);
+        }
+      }
 
     } catch (error) {
       console.error('Error applying selection:', error);
@@ -399,6 +428,7 @@ const CustomizeTab: React.FC = () => {
               <div className="customize-container">
                 <AccordionMemo
                   key={activeFileId}
+                  downloadProgress={downloadProgress}
                   printerData={printerData}
                   fileData={activeFile}
                   printerMessage={printerMessage}

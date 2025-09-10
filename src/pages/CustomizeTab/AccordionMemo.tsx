@@ -20,7 +20,7 @@ import {
   Ruler,
   RotateCcw,
 } from 'lucide-react';
-import { Color, FileDataDB, Material, ModelDimensions, Technology } from '../../types/uploadFiles';
+import { Color, FileDataDB, Material, Technology } from '../../types/uploadFiles';
 import { RootState } from '../../store/types';
 import { setRevertDimensions, UpdateValueById } from '../../store/customizeFilesDetails/CustomizationSlice';
 
@@ -28,6 +28,7 @@ interface AccordionProps {
   printerData: any[];
   fileData: FileDataDB;
   printerMessage: string;
+  downloadProgress: number;
 }
 
 const MM_TO_INCH = 1 / 25.4;
@@ -64,11 +65,12 @@ const Accordion: React.FC<AccordionProps> = ({
   printerData,
   fileData,
   printerMessage,
+  downloadProgress
 }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FileDataDB | undefined>(fileData);
   const dataspec = useSelector((state: RootState) => state.specification);
-  const { activeFileId,  reverseDimensions } = useSelector(
+  const { activeFileId, reverseDimensions, files } = useSelector(
     (state: RootState) => state.customization
   );
 
@@ -76,12 +78,18 @@ const Accordion: React.FC<AccordionProps> = ({
     return reverseDimensions.find(file => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
 
+  // Get the current file data from Redux to ensure we have the latest state
+  const currentFileFromRedux = useMemo(() => {
+    return files.find(file => file._id === fileData._id) || fileData;
+  }, [files, fileData]);
 
   const theme = useTheme();
 
+  // Update formData when fileData changes OR when Redux state changes (for revert functionality)
   useEffect(() => {
-    setFormData(fileData);
-  }, [fileData]);
+    console.log('AccordionMemo: fileData changed', { fileData: currentFileFromRedux });
+    setFormData(currentFileFromRedux);
+  }, [currentFileFromRedux]);
 
   const convertDimensions = (
     value: number,
@@ -95,7 +103,14 @@ const Accordion: React.FC<AccordionProps> = ({
   };
 
   const handelChangeValue = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }) as FileDataDB);
+    const updatedData = { ...formData, [field]: value } as FileDataDB;
+    setFormData(updatedData);
+    
+    // Immediately dispatch to Redux for certain fields that need immediate updates
+    if (['colorId', 'materialId', 'technologyId', 'printerId', 'infill'].includes(field)) {
+      console.log(`AccordionMemo: Updating ${field} to ${value}`);
+      dispatch(UpdateValueById({ id: fileData._id, data: { [field]: value } }));
+    }
   };
 
   const mappedPrinters = useMemo(
@@ -152,11 +167,18 @@ const Accordion: React.FC<AccordionProps> = ({
       }
     };
 
+  // Only dispatch dimension changes when formData dimensions change
   useEffect(() => {
-    if (formData) {
-      dispatch(UpdateValueById({ id: fileData._id, data: formData }));
+    if (formData && formData.dimensions) {
+      dispatch(UpdateValueById({ 
+        id: fileData._id, 
+        data: { 
+          dimensions: formData.dimensions,
+          unit: formData.unit 
+        } 
+      }));
     }
-  }, [formData, dispatch, fileData._id]);
+  }, [formData?.dimensions, formData?.unit, dispatch, fileData._id]);
 
 
   const options = useMemo(
@@ -170,14 +192,43 @@ const Accordion: React.FC<AccordionProps> = ({
   );
 
 
-
-  if (!fileData) {
+  if(downloadProgress < 100){
     return (
-      <Box sx={{ m: 2 }}>
-        <Typography>Please select a file then proceed</Typography>
+      <Box p={2} display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="200px">
+        <Typography variant="h6" color="primary.main" gutterBottom>
+          Processing File...
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Please wait while we process your file. This may take a few moments.
+        </Typography>
+        <Box mt={2} width="100%">
+          <Box
+            sx={{
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: '#E0E0E0',
+              overflow: 'hidden',
+            }}
+          >
+            <Box
+              sx={{
+                height: '100%',
+                width: `${downloadProgress}%`,
+                backgroundColor: theme.palette.primary.main,
+                transition: 'width 0.3s ease-in-out',
+              }}
+            />
+          </Box>
+          <Typography variant="caption" color="textSecondary" align="right">
+            {downloadProgress}%
+          </Typography>
+        </Box>
       </Box>
     );
   }
+
+
+
 
   return (
     <Box p={2}>
@@ -278,7 +329,16 @@ const Accordion: React.FC<AccordionProps> = ({
               }}
             >
               <CustomButton
-                onClick={() => activeFileId && dispatch(setRevertDimensions({ _id: activeFileId }))}
+                onClick={() => {
+                  if (activeFileId) {
+                    console.log('Reverting dimensions for file:', { 
+                      activeFileId, 
+                      currentDimensions: formData?.dimensions,
+                      originalDimensions: activeReverseDimension?.dimensions 
+                    });
+                    dispatch(setRevertDimensions({ _id: activeFileId }));
+                  }
+                }}
                 size="small"
                 variant="contained"
                 sx={{
