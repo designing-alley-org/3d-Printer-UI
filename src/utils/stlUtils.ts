@@ -139,6 +139,205 @@ export class STLParser {
     };
   }
 
+  // /**
+  //  * Calculate total volume of a mesh from triangles
+  //  */
+  // public calculateTotalVolume(triangles: number[][][]): number {
+  //   return Math.abs(
+  //     triangles.reduce((sum, tri) => sum + this.calculateTriangleVolume(tri[0], tri[1], tri[2]), 0)
+  //   );
+  // }
+
+  // private parseASCIISTL(content: string): number[][][] {
+  //   const lines = content.split("\n");
+  //   const triangles: number[][][] = [];
+  //   let currentTriangle: number[][] = [];
+  //   for (const line of lines) {
+  //     const trimmed = line.trim();
+  //     if (trimmed.startsWith("vertex")) {
+  //       const coords = trimmed.split(/\s+/).slice(1).map(Number);
+  //       if (coords.length === 3 && coords.every((n) => !isNaN(n))) {
+  //         currentTriangle.push(coords);
+  //         if (currentTriangle.length === 3) {
+  //           triangles.push([...currentTriangle]);
+  //           currentTriangle = [];
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return triangles;
+  // };
+
+  // private parseBinarySTL  (buffer: ArrayBuffer): number[][][]  {
+  //   const view = new DataView(buffer);
+  //   const triangleCount = view.getUint32(80, true);
+  //   const triangles: number[][][] = [];
+  //   let offset = 84;
+  //   for (let i = 0; i < triangleCount; i++) {
+  //     offset += 12; // skip normal
+  //     const triangle: number[][] = [];
+  //     for (let j = 0; j < 3; j++) {
+  //       const vertex = [
+  //         view.getFloat32(offset, true),
+  //         view.getFloat32(offset + 4, true),
+  //         view.getFloat32(offset + 8, true),
+  //       ];
+  //       triangle.push(vertex);
+  //       offset += 12;
+  //     }
+  //     triangles.push(triangle);
+  //     offset += 2;
+  //   }
+  //   return triangles;
+  // };
+
+  // async processSTLFile(densityValue: Number, buffer: ArrayBuffer, scaleFactor: number): Promise<{
+  //   volumeMm3: number;
+  //   volumeCm3: number;
+  //   volumeIn3: number;
+  //   massGrams: number;
+  // } | undefined> {
+  //   try {
+  //     let triangles: number[][][] = [];
+  //       const header = new TextDecoder().decode(buffer.slice(0, 80));
+  //       const contentSample = new TextDecoder().decode(buffer);
+
+  //       if (header.trim().toLowerCase().startsWith("solid") && contentSample.includes("endsolid")) {
+  //         triangles = this.parseASCIISTL(contentSample);
+  //       }
+
+  //       if (triangles.length === 0) triangles = this.parseBinarySTL(buffer);
+
+  //       if (triangles.length === 0) throw new Error("No valid triangles found.");
+
+  //       const scaledTriangles =
+  //         scaleFactor === 1.0
+  //           ? triangles
+  //           : triangles.map((tri) => tri.map((v) => v.map((c) => c * scaleFactor)));
+
+        
+  //       const volumeMm3 = this.calculateTotalVolume(scaledTriangles);
+  //       const volumeCm3 = volumeMm3 / 1000.0;
+  //       const volumeIn3 = volumeCm3 * 0.0610237;
+  //       const massGrams = volumeCm3 * Number(densityValue);
+
+  //       return {
+  //         volumeMm3,
+  //         volumeCm3: Number(volumeCm3.toFixed(3)),
+  //         volumeIn3: Number(volumeIn3.toFixed(3)),
+  //         massGrams: Number(massGrams.toFixed(3))
+  //       }
+
+  //   } catch (error) {
+  //     console.error('Error processing STL file:', error);
+  //     return undefined;
+  //   }
+  // }
+
+  async processSTLGeometry(
+    densityValue: number,
+    geometry: THREE.BufferGeometry,
+    scaleFactor = 1.0
+  ): Promise<
+    | {
+        volumeMm3: number;
+        volumeCm3: number;
+        volumeIn3: number;
+        massGrams: number;
+      }
+    | undefined
+  > {
+    try {
+      if (!geometry) throw new Error("No geometry provided.");
+      const posAttr = geometry.attributes.position;
+      if (!posAttr) throw new Error("Geometry missing position attribute.");
+      if (posAttr.itemSize !== 3) throw new Error("Position attribute itemSize !== 3.");
+  
+      // Get the underlying array (Float32Array usually)
+      const posArray = posAttr.array as Float32Array | number[];
+  
+      // Helper: compute signed volume of tetrahedron (v0, v1, v2) relative to origin
+      const signedTetraVolume = (
+        x0: number,
+        y0: number,
+        z0: number,
+        x1: number,
+        y1: number,
+        z1: number,
+        x2: number,
+        y2: number,
+        z2: number
+      ): number => {
+        // dot(v0, cross(v1, v2)) / 6
+        const cx = y1 * z2 - z1 * y2;
+        const cy = z1 * x2 - x1 * z2;
+        const cz = x1 * y2 - y1 * x2;
+        return (x0 * cx + y0 * cy + z0 * cz) / 6.0;
+      };
+  
+      let totalSignedVolume = 0;
+  
+      if (geometry.index) {
+        // Indexed geometry
+        const index = geometry.index.array as Uint16Array | Uint32Array | number[];
+        for (let i = 0; i < index.length; i += 3) {
+          const i0 = index[i] * 3;
+          const i1 = index[i + 1] * 3;
+          const i2 = index[i + 2] * 3;
+  
+          const x0 = (posArray[i0] as number) * scaleFactor;
+          const y0 = (posArray[i0 + 1] as number) * scaleFactor;
+          const z0 = (posArray[i0 + 2] as number) * scaleFactor;
+  
+          const x1 = (posArray[i1] as number) * scaleFactor;
+          const y1 = (posArray[i1 + 1] as number) * scaleFactor;
+          const z1 = (posArray[i1 + 2] as number) * scaleFactor;
+  
+          const x2 = (posArray[i2] as number) * scaleFactor;
+          const y2 = (posArray[i2 + 1] as number) * scaleFactor;
+          const z2 = (posArray[i2 + 2] as number) * scaleFactor;
+  
+          totalSignedVolume += signedTetraVolume(x0, y0, z0, x1, y1, z1, x2, y2, z2);
+        }
+      } else {
+        // Non-indexed: every 9 numbers form a triangle (3 verts * 3 coords)
+        const vertexCount = posArray.length / 3;
+        if (!Number.isInteger(vertexCount))
+          throw new Error("Position array length not divisible by 3.");
+        for (let i = 0; i < posArray.length; i += 9) {
+          const x0 = (posArray[i] as number) * scaleFactor;
+          const y0 = (posArray[i + 1] as number) * scaleFactor;
+          const z0 = (posArray[i + 2] as number) * scaleFactor;
+  
+          const x1 = (posArray[i + 3] as number) * scaleFactor;
+          const y1 = (posArray[i + 4] as number) * scaleFactor;
+          const z1 = (posArray[i + 5] as number) * scaleFactor;
+  
+          const x2 = (posArray[i + 6] as number) * scaleFactor;
+          const y2 = (posArray[i + 7] as number) * scaleFactor;
+          const z2 = (posArray[i + 8] as number) * scaleFactor;
+  
+          totalSignedVolume += signedTetraVolume(x0, y0, z0, x1, y1, z1, x2, y2, z2);
+        }
+      }
+  
+      const volumeMm3 = Math.abs(totalSignedVolume); // mm^3 if input coords are mm
+      const volumeCm3 = volumeMm3 / 1000.0; // 1 cm^3 = 1000 mm^3
+      const volumeIn3 = volumeCm3 * 0.0610237440953699; // 1 cm^3 = 0.0610237 in^3
+      const massGrams = volumeCm3 * Number(densityValue); // density in g/cm^3
+  
+      return {
+        volumeMm3: Number(volumeMm3.toFixed(3)),
+        volumeCm3: Number(volumeCm3.toFixed(3)),
+        volumeIn3: Number(volumeIn3.toFixed(6)),
+        massGrams: Number(massGrams.toFixed(3)),
+      };
+    } catch (err) {
+      console.error("processSTLGeometry error:", err);
+      return undefined;
+    }
+  }
+
   /**
    * Generate thumbnail image from geometry with enhanced options
    */
@@ -323,35 +522,7 @@ export const STLUtils = {
     return { isValid: true };
   },
 
-  /**
-   * Format file size in human readable format
-   */
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  },
-
-  /**
-   * Format dimensions for display
-   */
-  formatDimensions(dimensions: STLDimensions): string {
-    const { length, width, height, unit = 'mm' } = dimensions;
-    return `${length.toFixed(2)} × ${width.toFixed(2)} × ${height.toFixed(2)} ${unit}`;
-  },
-
-  /**
-   * Calculate surface area (approximate)
-   */
-  calculateSurfaceArea(dimensions: STLDimensions): number {
-    const { length, width, height } = dimensions;
-    return 2 * (length * width + length * height + width * height);
-  },
-
+ 
   /**
    * Estimate print time (very rough estimation)
    */
@@ -367,13 +538,6 @@ export const STLUtils = {
     return `${minutes}m`;
   },
 
-  /**
-   * Generate filename for processed file
-   */
-  generateProcessedFilename(originalName: string, suffix: string = 'processed'): string {
-    const name = originalName.replace(/\.stl$/i, '');
-    return `${name}_${suffix}.stl`;
-  },
 
   /**
    * Convert data URL to File

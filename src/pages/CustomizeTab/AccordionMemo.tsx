@@ -87,7 +87,6 @@ const Accordion: React.FC<AccordionProps> = ({
 
   // Update formData when fileData changes OR when Redux state changes (for revert functionality)
   useEffect(() => {
-    console.log('AccordionMemo: fileData changed', { fileData: currentFileFromRedux });
     setFormData(currentFileFromRedux);
   }, [currentFileFromRedux]);
 

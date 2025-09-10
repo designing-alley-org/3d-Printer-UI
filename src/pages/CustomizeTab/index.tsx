@@ -46,6 +46,7 @@ import {
   setFiles,
   UpdateValueById,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
+import { stlParser } from '../../utils/stlUtils';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -56,9 +57,21 @@ const CustomizeTab: React.FC = () => {
   const [printerMessage, setPrinterMessage] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [colorHexcode, setColorHexcode] = useState<string>('');
+  const [materialDensity, setMaterialDensity] = useState<number | null>(null); // Default density
+
+    // Stl File
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
+    null
+  );
+  
 
   // state
   const colors = useSelector((state: RootState) => state.specification.colors);
+  const materials = useSelector((state: RootState) => state.specification.materials);
+
+
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
   );
@@ -111,6 +124,20 @@ const CustomizeTab: React.FC = () => {
 
  
 
+  const processGeometry = useCallback(async () => {
+    if (stlGeometry) {
+      try {
+        const result = await stlParser.processSTLGeometry(1.04, stlGeometry, 1.0);
+        return result;
+      } catch (error) {
+        console.error('Error processing STL geometry:', error);
+      }
+    }
+  }, [stlGeometry]);
+
+
+
+  
   // Update color hex code when files or colors change
 useEffect(() => {
   if(files.length === 0) return;
@@ -135,12 +162,6 @@ useEffect(() => {
     return files.every((file: any) => file?.weight?.value);
   }, [files]);
 
-  // Stl File
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState(0);
-  const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
-    null
-  );
 
   const [error, setError] = useState<string | null>(null);
 
@@ -185,7 +206,7 @@ useEffect(() => {
     } else {
       setColorHexcode('#ffffff');
     }
-  }, [activeFile, colors]); // Watch the entire activeFile object instead of just colorId
+  }, [activeFile, colors, materials]); // Watch the entire activeFile object instead of just colorId
 
   useEffect(() => {
     fetchSpec();
