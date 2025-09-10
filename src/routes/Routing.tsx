@@ -26,12 +26,14 @@ import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
 import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
 import UploadStl from '../pages/UploadStlTab/index.tsx';
 import Notification from '../pages/Notifications/index.tsx';
+import STLWeightCalculator from '../pages/STLWeightCalculator';
 
 const Routing: React.FC = () => {
   return (
     <Routes>
       {/* Public Routes */}
       <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route path={'test2'} element={<STLWeightCalculator />} />
       <Route path={ROUTES.SIGNUP} element={<RegisterForm />} />
       <Route path={ROUTES.GOOGLE_AUTH} element={<GoogleAuthHandler />} />
       <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgetPassword />} />

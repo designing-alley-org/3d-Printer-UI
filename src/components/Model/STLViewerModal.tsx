@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -8,13 +8,16 @@ import {
 } from '@mui/material';
 import ResponsiveModal from './ResponsiveModal';
 import STLViewer from '../STLViewer';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import * as THREE from 'three';
 
 interface STLViewerModalProps {
   open: boolean;
   onClose: () => void;
   fileUrl: string;
+  isDownloading: boolean;
+  downloadProgress: number;
+  stlGeometry: THREE.BufferGeometry | null;
+  error: string | null;
   color: string;
   fileName: string;
 }
@@ -22,100 +25,22 @@ interface STLViewerModalProps {
 const STLViewerModal: React.FC<STLViewerModalProps> = ({
   open,
   color="#c0c0c0 ",
+  stlGeometry,
+  isDownloading,
+  downloadProgress,
+  error,
   onClose,
-  fileUrl,
   fileName,
 }) => {
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState(0);
-  const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
-    null
-  );
-  const [error, setError] = useState<string | null>(null);
+
   const [showWireframe, setShowWireframe] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
 
-  const downloadAndParseSTL = useCallback(async (url: string) => {
-    try {
-      setIsDownloading(true);
-      setDownloadProgress(0);
-      setError(null);
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch STL file: ${response.status}`);
-      }
-
-      const contentLength = response.headers.get('content-length');
-      const total = contentLength ? parseInt(contentLength, 10) : 0;
-
-      if (!response.body) {
-        throw new Error('Response body is null');
-      }
-
-      const reader = response.body.getReader();
-      const chunks: Uint8Array[] = [];
-      let receivedLength = 0;
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done) break;
-
-        chunks.push(value);
-        receivedLength += value.length;
-
-        if (total > 0) {
-          const progress = (receivedLength / total) * 100;
-          setDownloadProgress(Math.round(progress));
-        }
-      }
-
-      // Combine chunks into single array buffer
-      const arrayBuffer = new ArrayBuffer(receivedLength);
-      const uint8Array = new Uint8Array(arrayBuffer);
-      let position = 0;
-      for (const chunk of chunks) {
-        uint8Array.set(chunk, position);
-        position += chunk.length;
-      }
-
-      // Parse the STL data
-      const stlLoader = new STLLoader();
-      const geometry = stlLoader.parse(arrayBuffer);
-
-      setStlGeometry(geometry);
-      setIsDownloading(false);
-    } catch (error) {
-      console.error('Error downloading/parsing STL file:', error);
-      setError(
-        error instanceof Error ? error.message : 'Unknown error occurred'
-      );
-      setIsDownloading(false);
-    }
-  }, []);
-
-  const handleModalOpen = useCallback(() => {
-    if (open && fileUrl && !stlGeometry && !isDownloading) {
-      downloadAndParseSTL(fileUrl);
-    }
-  }, [open, fileUrl, stlGeometry, isDownloading, downloadAndParseSTL]);
-
-  React.useEffect(() => {
-    handleModalOpen();
-  }, [handleModalOpen]);
-
-  const handleClose = () => {
-    setStlGeometry(null);
-    setDownloadProgress(0);
-    setError(null);
-    onClose();
-  };
 
   return (
     <ResponsiveModal
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       title={`3D Model Viewer - ${fileName}`}
       maxWidth="md"
     >
