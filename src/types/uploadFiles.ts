@@ -26,26 +26,14 @@ export interface FileData {
 }
 
 export type FileDataDB = Omit<FileData, 'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'> & {
-  materialId: Material;
-  colorId: Color;
-  technologyId: Technology;
-  printerId: any;
-  infill: number;
+  materialId?: string;
+  colorId?: string;
+  technologyId?: string;
+  printerId?: string;
+  infill?: number;
   createdAt: string;
   updatedAt: string;
-}
-
-export type FileDataDB = Omit<
-  FileData,
-  'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'
-> & {
-  materialId: Material;
-  colorId: Color;
-  technologyId: Technology;
-  printerId: any;
-  infill: number;
-  createdAt: string;
-  updatedAt: string;
+  _id: string;
 };
 
 export type FileDataOrder = FileDataDB & {

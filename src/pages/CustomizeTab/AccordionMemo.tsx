@@ -1,35 +1,32 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  UpdateValueById,
-} from '../../../store/customizeFilesDetails/reducer';
 import SingleSelectDropdown, {
   Option,
-} from '../../../stories/Dropdown/SingleSelectDropdown';
+} from '../../stories/Dropdown/SingleSelectDropdown';
 
-import { sizeOption } from '../../../constants';
+import { sizeOption } from '../../constants';
 
 
-import CustomButton from '../../../stories/button/CustomButton';
-import CustomTextField from '../../../stories/inputs/CustomTextField';
-import ColorDropdown from '../../../stories/Dropdown/ColorDropdown';
-import PrinterDropdown from '../../../stories/Dropdown/PrinterDropdown';
+import CustomButton from '../../stories/button/CustomButton';
+import CustomTextField from '../../stories/inputs/CustomTextField';
+import ColorDropdown from '../../stories/Dropdown/ColorDropdown';
+import PrinterDropdown from '../../stories/Dropdown/PrinterDropdown';
 
 // Icon Custom Icon 
-import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../../public/Icon/MUI_Coustom_icon/index';
+import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../public/Icon/MUI_Coustom_icon/index';
 
 import {
   Ruler,
   RotateCcw,
 } from 'lucide-react';
-import { Color, FileDataDB, Material, ModelDimensions, Technology } from '../../../types/uploadFiles';
-import { RootState } from '../../../store/types';
+import { Color, FileDataDB, Material, ModelDimensions, Technology } from '../../types/uploadFiles';
+import { RootState } from '../../store/types';
+import { setRevertDimensions, UpdateValueById } from '../../store/customizeFilesDetails/CustomizationSlice';
 
 interface AccordionProps {
   printerData: any[];
   fileData: FileDataDB;
-  oldDimensions: { unit: string | null; dimensions: ModelDimensions} | null;
   printerMessage: string;
 }
 
@@ -66,15 +63,21 @@ const mapPrinterData = (printers: any[]) => {
 const Accordion: React.FC<AccordionProps> = ({
   printerData,
   fileData,
-  oldDimensions,
   printerMessage,
 }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FileDataDB | undefined>(fileData);
   const dataspec = useSelector((state: RootState) => state.specification);
+  const { activeFileId,  reverseDimensions } = useSelector(
+    (state: RootState) => state.customization
+  );
+
+  const activeReverseDimension = useMemo(() => {
+    return reverseDimensions.find(file => file._id === activeFileId) || null;
+  }, [reverseDimensions, activeFileId]);
+
 
   const theme = useTheme();
-
 
   useEffect(() => {
     setFormData(fileData);
@@ -155,21 +158,6 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   }, [formData, dispatch, fileData._id]);
 
-  const handleRevert = () => {
-    setFormData(
-      (prev) =>
-        ({
-          ...prev,
-          unit: oldDimensions?.unit || 'mm',
-          dimensions: {
-            ...prev?.dimensions,
-            height: oldDimensions?.dimensions?.height || 0,
-            width: oldDimensions?.dimensions?.width || 0,
-            length: oldDimensions?.dimensions?.length || 0,
-          },
-        }) as FileDataDB
-    );
-  };
 
   const options = useMemo(
     () =>
@@ -290,7 +278,7 @@ const Accordion: React.FC<AccordionProps> = ({
               }}
             >
               <CustomButton
-                onClick={handleRevert}
+                onClick={() => activeFileId && dispatch(setRevertDimensions({ _id: activeFileId }))}
                 size="small"
                 variant="contained"
                 sx={{
@@ -303,18 +291,18 @@ const Accordion: React.FC<AccordionProps> = ({
               >
                 <RotateCcw size={16} />  Revert To Original
               </CustomButton>
-              {oldDimensions && (
+              {activeReverseDimension && (
                 <Typography
                   variant="caption"
                   fontWeight={600}
                   sx={{ color: 'text.secondary', textAlign: 'right', mt: 1 }}
                 >
-                  {oldDimensions?.dimensions?.height.toFixed(2)}{' '}
-                  {oldDimensions?.unit} x{' '}
-                  {oldDimensions?.dimensions?.width.toFixed(2)}{' '}
-                  {oldDimensions?.unit} x{' '}
-                  {oldDimensions?.dimensions?.length.toFixed(2)}{' '}
-                  {oldDimensions?.unit}
+                  {activeReverseDimension?.dimensions?.height.toFixed(2)}{' '}
+                  {activeReverseDimension?.unit} x{' '}
+                  {activeReverseDimension?.dimensions?.width.toFixed(2)}{' '}
+                  {activeReverseDimension?.unit} x{' '}
+                  {activeReverseDimension?.dimensions?.length.toFixed(2)}{' '}
+                  {activeReverseDimension?.unit}
                 </Typography>
               )}
             </Box>

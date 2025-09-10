@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Color, Material, Technology } from '../../types/uploadFiles';
 import { SpecificationState } from '../types';
-
-
-
-
 
 const initialState: SpecificationState = {
     colors: [],

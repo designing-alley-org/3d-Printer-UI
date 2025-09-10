@@ -12,7 +12,7 @@ import {
   CustomizeBox,
 } from './styles';
 import { STLViewerModal } from '../../components/Model';
-import { AccordionMemo } from './Accordion';
+import { AccordionMemo } from './AccordionMemo';
 
 // Three js
 import * as THREE from 'three';
@@ -26,10 +26,6 @@ import {
   PrinterIcon,
 } from '../../../public/Icon/MUI_Coustom_icon/index';
 
-import {
-  addAllFiles,
-  setActiveFile,
-} from '../../store/customizeFilesDetails/reducer';
 import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
 import { FileDataDB, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
@@ -37,8 +33,6 @@ import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
 import {
   getAllFilesByOrderId,
-  getFileWeight,
-  scaleFile,
   stlFileDownloadAndParse,
   updateFile,
 } from '../../services/filesService';
@@ -47,36 +41,91 @@ import {
   updateTotalWeightService,
 } from '../../services/order';
 import { RootState } from '../../store/types';
+import {
+  setActiveFileId,
+  setFiles,
+  UpdateValueById,
+} from '../../store/customizeFilesDetails/CustomizationSlice';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
-  const [allFilesCustomized, setAllFilesCustomized] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedFileForViewer, setSelectedFileForViewer] = useState<{
-    url: string;
-    name: string;
-  } | null>(null);
-  const colors = useSelector((state: RootState) => state.specification.colors);
   const [colorHexcode, setColorHexcode] = useState<string>('');
+
+  // state
+  const colors = useSelector((state: RootState) => state.specification.colors);
+  const { activeFileId, files } = useSelector(
+    (state: RootState) => state.customization
+  );
+
   const navigate = useNavigate();
   const theme = useTheme();
 
+  useEffect(() => {
+    const fetchOrderFiles = async () => {
+      if (!orderId) {
+        setIsPageLoading(false);
+        return;
+      }
+      try {
+        setIsPageLoading(true);
+        const response = await getAllFilesByOrderId(orderId);
+        if (response.length === 0)
+          navigate(`/get-quotes/${orderId}/upload-stl`);
+        dispatch(setFiles(response as FileDataDB[]));
+      } catch (error) {
+        console.error('Error fetching order files:', error);
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
+    fetchOrderFiles();
+  }, [orderId]);
+
+  // Get specifications
+  const fetchSpec = useCallback(async () => {
+    await getCMT_DataService(dispatch);
+  }, [dispatch]);
+
+  // Clear printer data and reset STL state when activeFileId changes
+  useEffect(() => {
+    if (activeFileId) {
+      setPrinterData([]);
+      setPrinterMessage('');
+      setError(null);
+      setDownloadProgress(0);
+      setIsDownloading(false);
+    }
+  }, [activeFileId]);
+
+  // Extract the active file from the files
+  const activeFile = useMemo(() => {
+    if (!files) return null;
+    return files.find((file: FileDataDB) => file._id === activeFileId) || null;
+  }, [activeFileId]);
+
+  const { materialId, technologyId, printerId, colorId } = activeFile || {};
+
+  const isAllCoustomized = useMemo(() => {
+    return files.every((file: any) => file?.weight?.value);
+  }, [files]);
+
   // Stl File
   const [isDownloading, setIsDownloading] = useState(false);
-  
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
     null
   );
+
   const [error, setError] = useState<string | null>(null);
 
-  const downloadAndParseSTL = useCallback(async(url: string) => {
+  // Download and parse STL file with proper error handling
+  const downloadAndParseSTL = useCallback(async (url: string) => {
     await stlFileDownloadAndParse({
       url,
       setIsDownloading,
@@ -86,54 +135,22 @@ const CustomizeTab: React.FC = () => {
     });
   }, []);
 
-  const {
-    updateFiles: fileDetails,
-    activeFileId,
-    files: orderFiles,
-  } = useSelector((state: any) => state.fileDetails);
-
-  // Set default active file to index 0 if not set
+  // Download and parse STL when selectedFileUrl changes
   useEffect(() => {
-    if (fileDetails && fileDetails.length > 0 && !activeFileId) {
-      dispatch(setActiveFile(fileDetails[0]._id));
+    if (!activeFile) {
+      setStlGeometry(null);
+      setError(null);
+      setDownloadProgress(0);
+      return;
     }
-  }, [fileDetails, activeFileId, dispatch]);
-
-  // Extract the active file from the files
-  const activeFile = useMemo(() => {
-    if (!fileDetails) return null;
-    return (
-      fileDetails.find((file: FileDataDB) => file._id === activeFileId) || null
-    );
-  }, [fileDetails, activeFileId]);
-
-  //
-
-  useEffect(() => {
-    if (!selectedFileUrl) return;
-    downloadAndParseSTL(selectedFileUrl);
-  }, [selectedFileUrl]);
-
-  // Check if all files have been customized
-  useEffect(() => {
-    const allFilesCustom = fileDetails.every((file: any) => file?.weight.value);
-    setAllFilesCustomized(allFilesCustom);
-  }, [fileDetails]);
-
-  // For Contain old dimensions of the active file
-  const activeFileIndexDimensions = useMemo(() => {
-    if (!orderFiles || !activeFileId) return null;
-    const activeFileObj = orderFiles.find(
-      (file: FileDataDB) => file._id === activeFileId
-    );
-
-    return activeFileObj
-      ? { unit: activeFileObj.unit || '', dimensions: activeFileObj.dimensions }
-      : null;
-  }, [activeFileId, orderFiles]);
-
-  const { materialId, technologyId, dimensions, unit, printerId, colorId } =
-    activeFile || {};
+    
+    // Reset states before downloading new file
+    setError(null);
+    setDownloadProgress(0);
+    setStlGeometry(null);
+    
+    downloadAndParseSTL(activeFile.fileUrl);
+  }, [activeFile, downloadAndParseSTL]);
 
   // Set color hex code when active file or colors change
   useEffect(() => {
@@ -144,34 +161,6 @@ const CustomizeTab: React.FC = () => {
       setColorHexcode(selectedColor ? selectedColor.hexCode : '#ffffff');
     }
   }, [activeFile, colors]);
-
-  useEffect(() => {
-    const fetchOrderFiles = async () => {
-      if (!orderId) {
-        setIsPageLoading(false);
-        return;
-      }
-
-      try {
-        setIsPageLoading(true);
-        const response = await getAllFilesByOrderId(orderId);
-        if (response.length === 0)
-          navigate(`/get-quotes/${orderId}/upload-stl`);
-        dispatch(addAllFiles(response as FileDataDB[]));
-      } catch (error) {
-        console.error('Error fetching order files:', error);
-      } finally {
-        setIsPageLoading(false);
-      }
-    };
-
-    fetchOrderFiles();
-  }, [orderId, dispatch]);
-
-  // Get specifications
-  const fetchSpec = useCallback(async () => {
-    await getCMT_DataService(dispatch);
-  }, [dispatch]);
 
   useEffect(() => {
     fetchSpec();
@@ -186,39 +175,17 @@ const CustomizeTab: React.FC = () => {
     return true;
   }, [activeFile]);
 
-  // For Viewer
-  const handleSetActiveFile = useCallback((fileId: string) => {
-    dispatch(setActiveFile(fileId));
-    const fileUrl = fileDetails.find((file: FileDataDB) => file._id === fileId)
-      ?.fileUrl;
-    if (fileUrl) {
-      setSelectedFileUrl(fileUrl);
-    }
+  // Handle opening and closing STL viewer modal
+  const handleOpenSTLViewer = useCallback((event: React.MouseEvent) => {
+    event.stopPropagation();
+    setModalOpen(true);
   }, []);
 
-  // Handle opening STL viewer modal
-  const handleOpenSTLViewer = useCallback(
-    (fileUrl: string, fileName: string, event: React.MouseEvent) => {
-      event.stopPropagation();
-      setSelectedFileForViewer({ url: fileUrl, name: fileName });
-      setModalOpen(true);
-    },
-    []
-  );
-
-  // Handle closing STL viewer modal
   const handleCloseSTLViewer = useCallback(() => {
     setModalOpen(false);
-    setSelectedFileForViewer(null);
   }, []);
 
-  // Clear printer data when selectedId changes
-  useEffect(() => {
-    if (activeFileId) {
-      setPrinterData([]);
-    }
-  }, [activeFileId]);
-
+  // Fetch printer data when materialId, technologyId, or colorId changess
   const fetchPrinterData = useCallback(async () => {
     if (materialId && technologyId && colorId) {
       await getPrintersByTechnologyAndMaterial({
@@ -235,38 +202,47 @@ const CustomizeTab: React.FC = () => {
     fetchPrinterData();
   }, [fetchPrinterData]);
 
+  // Cleanup effect to dispose of geometry when component unmounts
+  useEffect(() => {
+    return () => {
+      if (stlGeometry) {
+        stlGeometry.dispose();
+      }
+    };
+  }, [stlGeometry]);
+
   const handleApplySelection = async () => {
+    if (!activeFileId || !activeFile) {
+      console.error('No active file selected');
+      return;
+    }
+
     try {
       setIsLoading(true);
-      // Check if scaling is required
-      if (
-        activeFileIndexDimensions?.dimensions?.width !== dimensions?.width ||
-        activeFileIndexDimensions?.dimensions?.height !== dimensions?.height ||
-        activeFileIndexDimensions?.dimensions?.length !== dimensions?.length ||
-        activeFileIndexDimensions?.unit !== unit
-      ) {
-        await scaleFile(activeFileId as string, {
-          new_length: dimensions?.length,
-          new_width: dimensions?.width,
-          new_height: dimensions?.height,
-          unit: unit,
-        });
-      }
+      
+      const updateData: UpdateFileData = {
+        _id: activeFileId,
+        colorId,
+        materialId,
+        technologyId,
+        printerId,
+        infill: activeFile.infill,
+      };
 
-      await updateFile(
-        activeFileId as string,
-        {
-          colorId: activeFile?.colorId,
-          materialId,
-          technologyId,
-          printerId,
-          infill: activeFile?.infill,
-        } as UpdateFileData
-      );
+      await updateFile(activeFileId, updateData);
 
-      await getFileWeight(activeFileId as string, dispatch);
+      // Update the file in Redux store to reflect the changes
+      dispatch(UpdateValueById({ 
+        id: activeFileId, 
+        data: updateData 
+      }));
+
+      // Optionally show success message or refresh data
+      console.log('File customization applied successfully');
+
     } catch (error) {
       console.error('Error applying selection:', error);
+      // Optionally show error message to user
     } finally {
       setIsLoading(false);
     }
@@ -286,7 +262,7 @@ const CustomizeTab: React.FC = () => {
       onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
       isLoading={false}
       isPageLoading={isPageLoading}
-      isDisabled={!allFilesCustomized}
+      isDisabled={isAllCoustomized ? false : true}
     >
       <Box
         display="flex"
@@ -298,15 +274,14 @@ const CustomizeTab: React.FC = () => {
             <Typography variant="h6" color="primary.contrastText">
               Files
             </Typography>
-            {/* <span className="count">{files.length}</span> */}
           </span>
           <div className="file-list">
             <UploadedFile>
-              {fileDetails.map((file: any) => (
+              {files.map((file: any) => (
                 <span
                   key={file._id}
                   className="upload-file"
-                  onClick={() => handleSetActiveFile(file._id)}
+                  onClick={() => dispatch(setActiveFileId(file._id))}
                   style={{
                     background:
                       activeFileId === file._id ? '#FFFFFF' : 'transparent',
@@ -325,9 +300,7 @@ const CustomizeTab: React.FC = () => {
                         },
                         cursor: 'pointer',
                       }}
-                      onClick={(e) =>
-                        handleOpenSTLViewer(file.fileUrl, file.fileName, e)
-                      }
+                      onClick={(e) => handleOpenSTLViewer(e)}
                     >
                       <img
                         src={file.thumbnailUrl}
@@ -389,12 +362,18 @@ const CustomizeTab: React.FC = () => {
           </div>
         </Files>
         <Customize>
-          {isDownloading ? (
-            <Box>
+          {isDownloading || downloadProgress < 100 ? (
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              height="400px"
+            >
               <Box
                 component="img"
-                src="AnimationLoading.gif"
-                alt="example"
+                src="/Icon/AnimationLoading.gif"
+                alt="Loading STL file"
                 sx={{
                   width: 200,
                   height: 200,
@@ -402,30 +381,27 @@ const CustomizeTab: React.FC = () => {
                   borderRadius: 2,
                 }}
               />
+              <Typography variant="h6" color="primary.main" sx={{ mt: 2 }}>
+                Loading STL File...
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                {downloadProgress}% Complete
+              </Typography>
+              {error && (
+                <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                  Error: {error}
+                </Typography>
+              )}
             </Box>
-          ) : (
+          ) : activeFile && downloadProgress === 100 && !error ? (
             <>
               <div className="customize-container">
-                {activeFileId === null ? (
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Typography variant="h6" color="text.secondary">
-                      Please select a file to customize
-                    </Typography>
-                  </Box>
-                ) : null}
-                {activeFileId && activeFile && (
-                  <AccordionMemo
-                    key={activeFileId}
-                    printerData={printerData}
-                    fileData={activeFile}
-                    oldDimensions={activeFileIndexDimensions}
-                    printerMessage={printerMessage}
-                  />
-                )}
+                <AccordionMemo
+                  key={activeFileId}
+                  printerData={printerData}
+                  fileData={activeFile}
+                  printerMessage={printerMessage}
+                />
               </div>
               <Box
                 sx={{
@@ -442,12 +418,29 @@ const CustomizeTab: React.FC = () => {
                 />
               </Box>
             </>
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              height="400px"
+            >
+              <Typography variant="h6" color="text.secondary">
+                {error ? 'Failed to load STL file' : 'No file selected'}
+              </Typography>
+              {error && (
+                <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                  {error}
+                </Typography>
+              )}
+            </Box>
           )}
         </Customize>
       </Box>
 
       {/* STL Viewer Modal */}
-      {selectedFileForViewer && (
+      {activeFile && (
         <STLViewerModal
           open={modalOpen}
           stlGeometry={stlGeometry}
@@ -456,8 +449,7 @@ const CustomizeTab: React.FC = () => {
           error={error}
           color={colorHexcode || '#ffffff'}
           onClose={handleCloseSTLViewer}
-          fileUrl={selectedFileForViewer.url}
-          fileName={selectedFileForViewer.name}
+          fileName={activeFile.fileName}
         />
       )}
     </StepLayout>

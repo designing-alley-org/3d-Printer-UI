@@ -4,12 +4,12 @@ import { authReducer } from './auth/reducer';
 import { registerReducer } from './auth/registerReducer';
 import { printerReducer } from './printer/printerReducer';
 import userReducer from './user/reducer';
-import  fileDetailsReducer  from './customizeFilesDetails/reducer';
 import  specificationReducer  from './customizeFilesDetails/SpecificationReducer';
 import addressReducer from './Address/address.reducer.ts';
 import DeliveryReducer from './Address/deliveryDetails.ts';
 import { NotificationSlice } from './notification/notification.ts';
 import  QuoteSlice from './quote/quote.ts';
+import { CustomizationSlice } from './customizeFilesDetails/CustomizationSlice.ts';
 
 const store = configureStore({
   reducer: {
@@ -17,13 +17,13 @@ const store = configureStore({
     fileState: fileReducer,
     register: registerReducer,
     printerDetails: printerReducer,
+    customization: CustomizationSlice.reducer,
     user: userReducer,
-    fileDetails: fileDetailsReducer,
     specification: specificationReducer,
     address: addressReducer,
     delivery: DeliveryReducer,
-    notification:NotificationSlice.reducer,
-    quoteData:QuoteSlice
+    notification: NotificationSlice.reducer,
+    quoteData: QuoteSlice
   },
 });
 

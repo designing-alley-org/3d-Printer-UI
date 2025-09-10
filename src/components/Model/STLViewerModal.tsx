@@ -13,7 +13,7 @@ import * as THREE from 'three';
 interface STLViewerModalProps {
   open: boolean;
   onClose: () => void;
-  fileUrl: string;
+  fileUrl?: string;
   isDownloading: boolean;
   downloadProgress: number;
   stlGeometry: THREE.BufferGeometry | null;

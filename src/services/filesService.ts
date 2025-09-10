@@ -1,7 +1,6 @@
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import api from '../axiosConfig';
-import { updateWeight } from '../store/customizeFilesDetails/reducer';
-import { FileData, UpdateFileData, UploadFile } from '../types/uploadFiles';
+import { UpdateFileData, UploadFile } from '../types/uploadFiles';
 import { returnResponse } from '../utils/function';
 import * as THREE from 'three';
 
@@ -92,7 +91,6 @@ const getFileWeight = async (fileId: string, dispatch: any) => {
   try {
     const response = await api.put(`/api/v1/files/process/${fileId}`);
     const { weight } = returnResponse(response);
-    dispatch(updateWeight({ id: fileId, weight: weight }));
     return returnResponse(response);
   } catch (error) {
     console.error('Error fetching file weight:', error);
@@ -111,10 +109,11 @@ const stlFileDownloadAndParse = async ({
     setIsDownloading(true);
     setDownloadProgress(0);
     setError(null);
+    setStlGeometry(null); // Clear previous geometry
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Failed to fetch STL file: ${response.status}`);
+      throw new Error(`Failed to fetch STL file: ${response.status} ${response.statusText}`);
     }
 
     const contentLength = response.headers.get('content-length');
@@ -127,6 +126,7 @@ const stlFileDownloadAndParse = async ({
     const reader = response.body.getReader();
     const chunks: Uint8Array[] = [];
     let receivedLength = 0;
+    let lastProgressUpdate = 0;
 
     while (true) {
       const { done, value } = await reader.read();
@@ -137,10 +137,20 @@ const stlFileDownloadAndParse = async ({
       receivedLength += value.length;
 
       if (total > 0) {
-        const progress = (receivedLength / total) * 100;
-        setDownloadProgress(Math.round(progress));
+        const progress = Math.round((receivedLength / total) * 90); // Reserve 10% for parsing
+        // Update progress only if it changed by at least 1% to avoid too many re-renders
+        if (progress > lastProgressUpdate) {
+          setDownloadProgress(progress);
+          lastProgressUpdate = progress;
+        }
+      } else {
+        // If no content-length, show indeterminate progress
+        setDownloadProgress(50);
       }
     }
+
+    // Set download to 90% before parsing
+    setDownloadProgress(90);
 
     // Combine chunks into single array buffer
     const arrayBuffer = new ArrayBuffer(receivedLength);
@@ -151,15 +161,29 @@ const stlFileDownloadAndParse = async ({
       position += chunk.length;
     }
 
+    // Update progress to 95% before STL parsing
+    setDownloadProgress(95);
+
     // Parse the STL data
     const stlLoader = new STLLoader();
     const geometry = stlLoader.parse(arrayBuffer);
 
+    if (!geometry) {
+      throw new Error('Failed to parse STL file - invalid geometry');
+    }
+
+    // Set progress to 100% after successful parsing
+    setDownloadProgress(100);
     setStlGeometry(geometry);
-    setIsDownloading(false);
+
   } catch (error) {
     console.error('Error downloading/parsing STL file:', error);
-    setError(error instanceof Error ? error.message : 'Unknown error occurred');
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    setError(errorMessage);
+    setDownloadProgress(0); // Reset progress on error
+    setStlGeometry(null);
+  } finally {
+    // Keep isDownloading true until progress reaches 100% or error occurs
     setIsDownloading(false);
   }
 };

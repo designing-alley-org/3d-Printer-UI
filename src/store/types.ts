@@ -1,5 +1,5 @@
 import { User } from '../types';
-import { Color, Material, Technology } from '../types/uploadFiles';
+import { Color, FileDataDB, Material, ModelDimensions, Technology } from '../types/uploadFiles';
 import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -20,8 +20,19 @@ export interface RootState {
   userState: UserReducerState;
   address: AddressState;
   fileState: FileReducerState;
+  customization: FileDetailsState;
   register: RegisterState;
   printerDetails: IPrinterDetails[];
+}
+
+export interface FileDetailsState {
+  files: FileDataDB[];
+  reverseDimensions: {
+    _id: string;
+    unit: 'string';
+    dimensions: ModelDimensions;
+  }[];
+  activeFileId: string | null;
 }
 
 // types.ts
