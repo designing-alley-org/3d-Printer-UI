@@ -135,6 +135,7 @@ const CustomizeTab: React.FC = () => {
     });
   }, []);
 
+
   // Download and parse STL when selectedFileUrl changes
   useEffect(() => {
     if (!activeFile) {
