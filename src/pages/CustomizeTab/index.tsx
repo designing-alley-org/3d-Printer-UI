@@ -45,6 +45,7 @@ import {
   setActiveFileId,
   setFiles,
   UpdateValueById,
+  updateWeight,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
 import { stlParser } from '../../utils/stlUtils';
 
@@ -57,7 +58,7 @@ const CustomizeTab: React.FC = () => {
   const [printerMessage, setPrinterMessage] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [colorHexcode, setColorHexcode] = useState<string>('');
-  const [materialDensity, setMaterialDensity] = useState<number | null>(null); // Default density
+  const [materialDensity, setMaterialDensity] = useState<number | null>(null);
 
     // Stl File
   const [isDownloading, setIsDownloading] = useState(false);
@@ -70,7 +71,6 @@ const CustomizeTab: React.FC = () => {
   // state
   const colors = useSelector((state: RootState) => state.specification.colors);
   const materials = useSelector((state: RootState) => state.specification.materials);
-
 
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
@@ -125,15 +125,26 @@ const CustomizeTab: React.FC = () => {
  
 
   const processGeometry = useCallback(async () => {
-    if (stlGeometry) {
+    if (stlGeometry && materialDensity) {
       try {
-        const result = await stlParser.processSTLGeometry(1.04, stlGeometry, 1.0);
+        const result = await stlParser.processSTLGeometry(materialDensity, stlGeometry, 1.0);
+        if (result) {
+          // setCurrentWeight(result);
+          dispatch(updateWeight({ id: activeFileId as string, weight: result.massGrams }));
+        }
         return result;
       } catch (error) {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry]);
+  }, [stlGeometry, materialDensity]);
+
+  // Calculate weight when geometry or material density changes
+  useEffect(() => {
+    if (stlGeometry && materialDensity) {
+      processGeometry();
+    }
+  }, [processGeometry]);
 
 
 
@@ -206,7 +217,22 @@ useEffect(() => {
     } else {
       setColorHexcode('#ffffff');
     }
-  }, [activeFile, colors, materials]); // Watch the entire activeFile object instead of just colorId
+  }, [activeFile, colors]);
+
+  // Update material density when material changes
+  useEffect(() => {
+    if (files?.length > 0 && materials.length > 0) {
+      const currentFile = files.find((file: any) => file._id === activeFileId);
+      if (currentFile && currentFile.materialId) {
+        const selectedMaterial = materials.find(
+          (material: any) => material._id === currentFile.materialId
+        );
+        if (selectedMaterial && selectedMaterial.density) {
+          setMaterialDensity(selectedMaterial.density);
+        }
+      }
+    }
+  }, [files, materials]);
 
   useEffect(() => {
     fetchSpec();

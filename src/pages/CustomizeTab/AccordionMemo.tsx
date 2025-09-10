@@ -29,6 +29,7 @@ interface AccordionProps {
   fileData: FileDataDB;
   printerMessage: string;
   downloadProgress: number;
+
 }
 
 const MM_TO_INCH = 1 / 25.4;
@@ -65,7 +66,7 @@ const Accordion: React.FC<AccordionProps> = ({
   printerData,
   fileData,
   printerMessage,
-  downloadProgress
+  downloadProgress,
 }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FileDataDB | undefined>(fileData);
@@ -82,6 +83,7 @@ const Accordion: React.FC<AccordionProps> = ({
   const currentFileFromRedux = useMemo(() => {
     return files.find(file => file._id === fileData._id) || fileData;
   }, [files, fileData]);
+
 
   const theme = useTheme();
 
@@ -369,6 +371,8 @@ const Accordion: React.FC<AccordionProps> = ({
         </Grid>
       </Box>
 
+      {/* Weight Information */}
+   
       {/* Configuration Options */}
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid size={6}>
@@ -532,7 +536,7 @@ const Accordion: React.FC<AccordionProps> = ({
           Current Weight
         </Typography>
         <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {fileData?.weight?.value?.toFixed(3) || 0} {fileData?.weight?.unit || 'g'}
+          {formData?.weight?.value?.toFixed(3) || 0} {formData?.weight?.unit || 'g'}
         </Typography>
       </Box>
     </Box>
