@@ -18,15 +18,17 @@ import PrinterDropdown from '../../../stories/Dropdown/PrinterDropdown';
 
 // Icon Custom Icon 
 import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../../public/Icon/MUI_Coustom_icon/index';
+
 import {
   Ruler,
   RotateCcw,
 } from 'lucide-react';
-import { FileData, ModelDimensions } from '../../../types/uploadFiles';
+import { Color, FileDataDB, Material, ModelDimensions, Technology } from '../../../types/uploadFiles';
+import { RootState } from '../../../store/types';
 
 interface AccordionProps {
   printerData: any[];
-  fileData: FileData;
+  fileData: FileDataDB;
   oldDimensions: { unit: string | null; dimensions: ModelDimensions} | null;
   printerMessage: string;
 }
@@ -68,8 +70,9 @@ const Accordion: React.FC<AccordionProps> = ({
   printerMessage,
 }) => {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState<FileData | undefined>(fileData);
-  const dataspec = useSelector((state: any) => state.specification);
+  const [formData, setFormData] = useState<FileDataDB | undefined>(fileData);
+  const dataspec = useSelector((state: RootState) => state.specification);
+
   const theme = useTheme();
 
 
@@ -89,7 +92,7 @@ const Accordion: React.FC<AccordionProps> = ({
   };
 
   const handelChangeValue = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }) as FileData);
+    setFormData((prev) => ({ ...prev, [field]: value }) as FileDataDB);
   };
 
   const mappedPrinters = useMemo(
@@ -141,7 +144,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 ...prev?.dimensions,
                 [field]: value,
               },
-            }) as FileData
+            }) as FileDataDB
         );
       }
     };
@@ -164,7 +167,7 @@ const Accordion: React.FC<AccordionProps> = ({
             width: oldDimensions?.dimensions?.width || 0,
             length: oldDimensions?.dimensions?.length || 0,
           },
-        }) as FileData
+        }) as FileDataDB
     );
   };
 
@@ -333,20 +336,22 @@ const Accordion: React.FC<AccordionProps> = ({
           </Box>
           <SingleSelectDropdown
             options={
-              dataspec?.technologyType.map((tech: string, index: number) => ({
-                id: index,
-                label: tech,
-                value: tech,
+              dataspec?.technologies.map((tech: Technology) => ({
+                id: tech._id,
+                label: tech.code,
+                labelView: tech.code + ` ( ${tech.name})`,
+                value: tech._id,
               })) || []
             }
-            onChange={(option) => handelChangeValue('technology', option.value)}
-            defaultValue={dataspec?.technologyType
-              .map((tech: string, index: number) => ({
-                id: index,
-                label: tech,
-                value: tech,
+            onChange={(option) => handelChangeValue('technologyId', option.id)}
+            defaultValue={dataspec?.technologies
+              .map((tech: Technology) => ({
+                id: tech._id,
+                label: tech.code,
+                labelView: tech.code + ` ( ${tech.name})`,
+                value: tech._id,
               }))
-              .find((opt: Option) => opt.value === formData?.technology)}
+              .find((opt: any) => opt.id === formData?.technologyId)}
             titleHelper="Select Technology"
             sx={{ width: '100%' }} // Ensure full width
           />
@@ -364,22 +369,24 @@ const Accordion: React.FC<AccordionProps> = ({
           </Box>
           <SingleSelectDropdown
             options={
-              dataspec?.material_with_mass?.map(
-                (mat: { material_name: string }, index: number) => ({
-                  id: index,
-                  label: mat.material_name,
-                  value: mat.material_name,
+              dataspec?.materials?.map(
+                (mat: Material) => ({
+                  id: mat._id,
+                  label: mat.code ,
+                  labelView: mat.code + ` ( ${mat.name})`,
+                  value: mat._id,
                 })
               ) || []
             }
-            onChange={(option) => handelChangeValue('material', option.value)}
-            defaultValue={dataspec?.material_with_mass
-              ?.map((mat: { material_name: string }, index: number) => ({
-                id: index,
-                label: mat.material_name,
-                value: mat.material_name,
+            onChange={(option) => handelChangeValue('materialId', option.id)}
+            defaultValue={dataspec?.materials
+              ?.map((mat: Material) => ({
+                id: mat._id,
+                label: mat.code,
+                labelView: mat.code + ` ( ${mat.name})`,
+                value: mat._id,
               }))
-              .find((opt: Option) => opt.value === formData?.material)}
+              .find((opt: any) => opt.id === formData?.materialId)}
             titleHelper="Select Material"
             sx={{ width: '100%' }}
           />
@@ -397,20 +404,20 @@ const Accordion: React.FC<AccordionProps> = ({
           </Box>
           <ColorDropdown
             options={
-              dataspec?.color.map((c: string, index: number) => ({
-                id: index,
-                label: c,
-                value: c,
+              dataspec?.colors.map((c: Color) => ({
+                id: c._id,
+                label: c.name,
+                value: c.hexCode,
               })) || []
             }
-            onChange={(option) => handelChangeValue('color', option.value)}
-            defaultValue={dataspec?.color
-              .map((c: string, index: number) => ({
-                id: index,
-                label: c,
-                value: c,
+            onChange={(option) => handelChangeValue('colorId', option.id)}
+            defaultValue={dataspec?.colors
+              .map((c: Color) => ({
+                id: c._id,
+                label: c.name,
+                value: c.hexCode,
               }))
-              .find((opt: any) => opt.value === formData?.color)}
+              .find((opt: any) => opt.id === formData?.colorId)}
             titleHelper="Select Color"
             sx={{ width: '100%' }}
           />
@@ -447,15 +454,16 @@ const Accordion: React.FC<AccordionProps> = ({
               Printer
             </Typography>
           </Box>
-         { printerMessage === '' ?  <PrinterDropdown
+         { printerMessage === '' ?  
+         <PrinterDropdown
             options={mappedPrinters}
-            onChange={(option) => handelChangeValue('printer', option.id)}
+            onChange={(option) => handelChangeValue('printerId', option.id)}
             defaultValue={mappedPrinters.find(
-              (opt) => opt.id === formData?.printer
+              (opt) => opt.id === formData?.printerId 
             )}
-            titleHelper="Please Select First Material and Technology"
+            titleHelper="Please Select First Color, Material and Technology"
             sx={{ width: '100%' }}
-            disabled={!formData?.material || !formData?.technology}
+            disabled={!formData?.materialId || !formData?.technologyId || !formData?.colorId}
           /> : 
           <Typography variant="body2" color="textSecondary">
            {printerMessage || 'No printers available for the selected material and technology.'}

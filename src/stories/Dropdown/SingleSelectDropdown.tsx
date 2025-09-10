@@ -13,6 +13,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 export interface Option {
   id: number | string;
   label: string;
+  labelView?: string;
   value: string;
 }
 
@@ -123,7 +124,7 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
               },
             }}
           >
-            {option.label}
+            {option.labelView || option.label}
           </MenuItem>
         ))}
       </Menu>

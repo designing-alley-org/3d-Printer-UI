@@ -25,6 +25,69 @@ export interface FileData {
   isUploaded?: boolean;
 }
 
+export type FileDataDB = Omit<FileData, 'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'> & {
+  materialId: Material;
+  colorId: Color;
+  technologyId: Technology;
+  printerId: any;
+  infill: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type FileDataDB = Omit<
+  FileData,
+  'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'
+> & {
+  materialId: Material;
+  colorId: Color;
+  technologyId: Technology;
+  printerId: any;
+  infill: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type FileDataOrder = FileDataDB & {
+  material: Material;
+  color: Color;
+  technology: Technology;
+  printer: {
+    _id: string;
+    name: string;
+  };
+};
+
+
+
+export interface Material {
+    _id: string;
+    name: string;
+    code: string;
+    density: number;
+    unit: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+export interface Color {
+    _id: string;
+    name: string;
+    hexCode: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
+export interface Technology {
+    _id: string;
+    name: string;
+    code: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
 
 
 export interface UploadFileProgress {
@@ -37,9 +100,9 @@ export interface UploadFileProgress {
 export type UploadFile  = Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'> 
 export type UpdateFileData = Partial<Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'>> & { 
   _id: string
-  color?: string;
-  material?: string;
-  technology?: string;
-  printer?: string;
+  colorId?: string;
+  materialId?: string;
+  technologyId?: string;
+  printerId?: string;
   infill?: number;
  };

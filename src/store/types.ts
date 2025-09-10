@@ -1,4 +1,5 @@
 import { User } from '../types';
+import { Color, Material, Technology } from '../types/uploadFiles';
 import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -15,6 +16,8 @@ import {
 
 export interface RootState {
   auth: AuthState;
+  specification: SpecificationState;
+  userState: UserReducerState;
   address: AddressState;
   fileState: FileReducerState;
   register: RegisterState;
@@ -26,6 +29,12 @@ export interface AuthState {
   loading: boolean;
   user: User | null;
   error: string | null;
+}
+
+export interface SpecificationState {
+  colors: Color[];
+  materials: Material[];
+  technologies: Technology[];
 }
 
 

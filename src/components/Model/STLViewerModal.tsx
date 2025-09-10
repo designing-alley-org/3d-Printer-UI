@@ -15,11 +15,13 @@ interface STLViewerModalProps {
   open: boolean;
   onClose: () => void;
   fileUrl: string;
+  color: string;
   fileName: string;
 }
 
 const STLViewerModal: React.FC<STLViewerModalProps> = ({
   open,
+  color="#c0c0c0 ",
   onClose,
   fileUrl,
   fileName,
@@ -179,7 +181,7 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
               <Typography variant="body2"> Rotate</Typography>
             </Box>
             <STLViewer
-              color="#c0c0c0 "
+              color={color}
               geometry={stlGeometry}
               size={600}
               showWireframe={showWireframe}
