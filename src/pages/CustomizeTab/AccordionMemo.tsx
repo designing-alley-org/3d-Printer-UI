@@ -71,8 +71,6 @@ const Accordion: React.FC<AccordionProps> = ({
   const theme = useTheme();
   const dataspec = useSelector((state: RootState) => state.specification);
 
-  console.log('file in accordion', file);
-
   const activeReverseDimension = useMemo(() => {
     return reverseDimensions.find(file => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);

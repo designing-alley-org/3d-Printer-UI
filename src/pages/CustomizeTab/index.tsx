@@ -57,10 +57,7 @@ const CustomizeTab: React.FC = () => {
   const [printerData, setPrinterData] = useState([]);
   const [printerMessage, setPrinterMessage] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [colorHexcode, setColorHexcode] = useState<string>('');
-  const [materialDensity, setMaterialDensity] = useState<number | null>(null);
 
-    // Stl File
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
@@ -79,6 +76,7 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
+  const { materialId, technologyId, printerId, colorId } = file || {};
 
   useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -123,6 +121,32 @@ const CustomizeTab: React.FC = () => {
     return files.find((file: FileDataDB) => file._id === activeFileId) || null;
   }, [activeFileId,dispatch]);
 
+
+  // Calculate material density based on selected material
+  const materialDensity = useMemo(() => {
+    if (materialId && materials.length > 0) {
+      const selectedMaterial = materials.find(
+        (material: any) => material._id === materialId
+      );
+      return selectedMaterial ? selectedMaterial.density : null;
+    }
+    return null;
+  }, [materialId, materials]);
+
+
+
+          // Determine color hex code based on selected color
+  const colorHexcode = useMemo(() => {
+    if (colorId && colors.length > 0) {
+      const selectedColor = colors.find(
+        (color: any) => color._id === colorId
+      );
+      return selectedColor ? selectedColor.hexCode : '#ffffff';
+    }
+    return '#ffffff';
+  }, [colorId, colors]);
+
+
  
 
   const processGeometry = useCallback(async () => {
@@ -148,31 +172,10 @@ const CustomizeTab: React.FC = () => {
   }, [processGeometry]);
 
 
-
-  
-  // Update color hex code when files or colors change
-useEffect(() => {
-  if(files.length === 0) return;
-  const currentFile = files.find((file: any) => file._id === activeFileId);
-    if (currentFile && currentFile.colorId && colors.length > 0) {
-      const selectedColor = colors.find(
-        (color: any) => color._id === currentFile.colorId
-      );
-      if (selectedColor) {
-        setColorHexcode(selectedColor.hexCode);
-      } else {
-        setColorHexcode('#ffffff');
-      }
-    }
-  }, [files, colors]); 
-
-
-
-  const { materialId, technologyId, printerId, colorId } = file || {};
-
   const isAllCoustomized = useMemo(() => {
     return files.every((file: any) => file?.weight?.value);
   }, [files]);
+
 
 
   const [error, setError] = useState<string | null>(null);
@@ -206,33 +209,7 @@ useEffect(() => {
     downloadAndParseSTL(activeFile.fileUrl);
   }, [activeFile, downloadAndParseSTL]);
 
-  // Set color hex code when active file or colors change
-  useEffect(() => {
-    if (activeFile?.colorId && colors.length > 0) {
-      const selectedColor = colors.find(
-        (color: any) => color._id === activeFile.colorId
-      );
-      const hexCode = selectedColor ? selectedColor.hexCode : '#ffffff';
-      setColorHexcode(hexCode);
-    } else {
-      setColorHexcode('#ffffff');
-    }
-  }, [activeFile, colors]);
 
-  // Update material density when material changes
-  useEffect(() => {
-    if (files?.length > 0 && materials.length > 0) {
-      const currentFile = files.find((file: any) => file._id === activeFileId);
-      if (currentFile && currentFile.materialId) {
-        const selectedMaterial = materials.find(
-          (material: any) => material._id === currentFile.materialId
-        );
-        if (selectedMaterial && selectedMaterial.density) {
-          setMaterialDensity(selectedMaterial.density);
-        }
-      }
-    }
-  }, [files, materials]);
 
   useEffect(() => {
     fetchSpec();
@@ -308,14 +285,6 @@ useEffect(() => {
         id: activeFileId, 
         data: updateData 
       }));
-
-      // Force update color hex code if colorId changed
-      if (colorId && colors.length > 0) {
-        const selectedColor = colors.find((color: any) => color._id === colorId);
-        if (selectedColor) {
-          setColorHexcode(selectedColor.hexCode);
-        }
-      }
 
     } catch (error) {
       console.error('Error applying selection:', error);
