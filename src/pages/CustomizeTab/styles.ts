@@ -110,7 +110,6 @@ export const UploadedFile = styled.section`
   
   flex-direction: column;
   .upload-file {
-    height: 6rem;
     display: flex;
     cursor: pointer;
     background: transparent;
@@ -138,10 +137,7 @@ export const Model = styled.section`
   border-radius: 20px;
   border: 1px solid #F6F6F6;
   box-shadow: 0px 2px 2px 0px #CDE1FF;
-  background: #ffffff;
-  width: 6rem;
-  height: 5rem;
-  
+  background: #ffffff;  
   // .view-model {
   //   position: absolute;
   //   bottom: 4px;

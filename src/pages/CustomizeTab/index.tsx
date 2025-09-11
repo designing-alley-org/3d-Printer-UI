@@ -322,28 +322,40 @@ const CustomizeTab: React.FC = () => {
                         : '1px solid #FFFFFF',
                   }}
                 >
-                  <Model>
                     <Box
                       sx={{
                         ':hover': {
                           transform: 'scale(1.05)',
                           transition: 'transform 0.3s ease-in-out',
                         },
+                        overflow: 'hidden',
+                        margin: '7px 10px;',
                         cursor: 'pointer',
+                        width: '5rem',
+                        height: '5rem',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        position: 'relative',
+                        borderRadius: '12px',
+                        background: '#F6F6F6',
+                        boxShadow:   activeFileId === file._id ? '0px 2px 2px 0px #CDE1FF' : 'none',
                       }}
-                      onClick={(e) => handleOpenSTLViewer(e)}
+                      onClick={(e) =>{
+                         dispatch(setActiveFileId(file._id));
+                         handleOpenSTLViewer(e)}
+                        }
                     >
                       <img
                         src={file.thumbnailUrl}
                         alt={file.fileName}
                         style={{
-                          height: '15rem',
-                          objectFit: 'contain',
-                          pointerEvents: 'none',
+                          height: '5rem',
+                          width: '6rem',
+                          transform: 'scale(2.4)',
                         }}
                       />
                     </Box>
-                  </Model>
                   <ModelName
                     isActive={activeFileId === file._id}
                     textColor={theme.palette.primary.main}
