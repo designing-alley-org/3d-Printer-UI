@@ -26,26 +26,15 @@ export interface FileData {
 }
 
 export type FileDataDB = Omit<FileData, 'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'> & {
-  materialId: Material;
-  colorId: Color;
-  technologyId: Technology;
-  printerId: any;
-  infill: number;
+  materialId?: string;
+  colorId?: string;
+  technologyId?: string;
+  printerId?: string;
+  infill?: number;
   createdAt: string;
   updatedAt: string;
-}
-
-export type FileDataDB = Omit<
-  FileData,
-  'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'
-> & {
-  materialId: Material;
-  colorId: Color;
-  technologyId: Technology;
-  printerId: any;
-  infill: number;
-  createdAt: string;
-  updatedAt: string;
+  _id: string;
+  isCustomized?: boolean;
 };
 
 export type FileDataOrder = FileDataDB & {
@@ -99,10 +88,10 @@ export interface UploadFileProgress {
 
 export type UploadFile  = Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'> 
 export type UpdateFileData = Partial<Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'>> & { 
-  _id: string
   colorId?: string;
   materialId?: string;
   technologyId?: string;
   printerId?: string;
   infill?: number;
+  weight?: Weight;
  };

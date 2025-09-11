@@ -14,6 +14,7 @@ interface STLViewerProps {
   backgroundColor?: string;
   cameraPosition?: [number, number, number];
   enableControls?: boolean;
+  defaultZoom?: number;
 }
 
 interface STLMeshProps {
@@ -32,7 +33,8 @@ const STLViewer: React.FC<STLViewerProps> = ({
   lightIntensity = 0.8,
   backgroundColor = 'transparent',
   cameraPosition = [100, 100, 100],
-  enableControls = true
+  enableControls = true,
+  defaultZoom = 75
 }) => {
   if (!geometry) {
     return (
@@ -92,9 +94,9 @@ const STLViewer: React.FC<STLViewerProps> = ({
   };
 
   return (
-    <div style={{ width: size, height: size }}>
+    <div style={{ width: size * 1.4, height: size }}>
       <Canvas
-        camera={{ position: cameraPosition, fov: 75 }}
+        camera={{ position: cameraPosition, fov: defaultZoom }}
         style={{ 
           width: '100%', 
           height: '100%',
