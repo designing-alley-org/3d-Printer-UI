@@ -125,6 +125,7 @@ export const CustomizationSlice = createSlice({
       const file = state.files.find((file) => file._id === action.payload.id);
       if (file) {
         file.thumbnailUrl = action.payload.thumbnailUrl;
+        file.isCustomized = true;
       }
       state.files = [...state.files];
     },

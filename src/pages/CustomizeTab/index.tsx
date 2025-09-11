@@ -174,7 +174,11 @@ const CustomizeTab: React.FC = () => {
   }, [processGeometry]);
 
   const isAllCoustomized = useMemo(() => {
-    return files.every((file: any) => file?.weight?.value);
+    if (files.length === 0) return false;
+    return files.every(
+      (file: FileDataDB) =>
+        file.isCustomized 
+    );
   }, [files]);
 
   const [error, setError] = useState<string | null>(null);
@@ -478,6 +482,7 @@ const CustomizeTab: React.FC = () => {
           color={colorHexcode || '#ffffff'}
           onClose={handleCloseSTLViewer}
           fileName={activeFile.fileName}
+          dimensions={activeFile.dimensions}
         />
       )}
     </StepLayout>

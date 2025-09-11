@@ -9,6 +9,7 @@ import {
 import ResponsiveModal from './ResponsiveModal';
 import STLViewer from '../STLViewer';
 import * as THREE from 'three';
+import { ModelDimensions } from '../../types/uploadFiles';
 
 interface STLViewerModalProps {
   open: boolean;
@@ -20,6 +21,7 @@ interface STLViewerModalProps {
   error: string | null;
   color: string;
   fileName: string;
+  dimensions: ModelDimensions;
 }
 
 const STLViewerModal: React.FC<STLViewerModalProps> = ({
@@ -31,10 +33,14 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
   error,
   onClose,
   fileName,
+  dimensions
 }) => {
 
   const [showWireframe, setShowWireframe] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
+
+
+  const isZoomNeeded =  dimensions.height < 2 && dimensions.length < 2;
 
 
   return (
@@ -112,6 +118,7 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
               showWireframe={showWireframe}
               enableControls={true}
               autoRotate={autoRotate}
+              defaultZoom={isZoomNeeded ? 1 : 75}
             />
           </Box>
         )}

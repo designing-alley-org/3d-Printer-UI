@@ -34,6 +34,7 @@ export type FileDataDB = Omit<FileData, 'fileBlob' | 'file' | 'isUploading' | 'i
   createdAt: string;
   updatedAt: string;
   _id: string;
+  isCustomized?: boolean;
 };
 
 export type FileDataOrder = FileDataDB & {
