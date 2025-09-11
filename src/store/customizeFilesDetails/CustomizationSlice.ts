@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {  FileDataDB, Weight } from '../../types/uploadFiles';
+import {  FileDataDB } from '../../types/uploadFiles';
 import { FileDetailsState } from '../types';
-import { stat } from 'fs';
 
 
 
@@ -59,7 +58,7 @@ export const CustomizationSlice = createSlice({
       }
     },
 
-    UpdateValueById: (state, action: PayloadAction<{ id: string; data: Partial<FileDataDB> }>) => {
+    UpdateValueById: (state, action: PayloadAction<{ id?: string; data: Partial<FileDataDB> }>) => {
       const fileIndex = state.files.findIndex((file) => file._id === action.payload.id);
       if (fileIndex !== -1) {
         state.files[fileIndex] = {
@@ -69,6 +68,45 @@ export const CustomizationSlice = createSlice({
       }
     },
 
+    updateDimensionsValue: (state, action: PayloadAction<{ id: string; key: string; value: number }>) => {
+      const file = state.files.find((file) => file._id === action.payload.id);
+      if (file) {
+        file.dimensions = {
+          ...file.dimensions,
+          [action.payload.key]: action.payload.value
+        };
+      }
+      state.files = [...state.files];
+    },
+
+    updateUnit: (state, action: PayloadAction<{ id: string; unit: string }>) => {
+      const file = state.files.find((file) => file._id === action.payload.id);
+      if (!file || file.unit === action.payload.unit) {
+        return;
+      }
+
+      let convertedDimensions = { ...file.dimensions };
+
+      if (file.unit === 'mm' && action.payload.unit === 'inch') {
+        const conversionFactor = 0.0393701;
+        convertedDimensions = {
+          height: convertedDimensions.height * conversionFactor,
+          width: convertedDimensions.width * conversionFactor,
+          length: convertedDimensions.length * conversionFactor,
+        };
+      } else if (file.unit === 'inch' && action.payload.unit === 'mm') {
+        const conversionFactor = 25.4;
+        convertedDimensions = {
+          height: convertedDimensions.height * conversionFactor,
+          width: convertedDimensions.width * conversionFactor,
+          length: convertedDimensions.length * conversionFactor,
+        };
+      }
+
+      file.unit = action.payload.unit;
+      file.dimensions = convertedDimensions;
+      state.files = [...state.files];
+    },
 
 
     updateWeight: (state, action: PayloadAction<{ id: string; weight: number }>) => {
@@ -91,7 +129,9 @@ export const {
   updateWeight,
   setFileDimension,
   setRevertDimensions,
-  UpdateValueById
+  updateDimensionsValue,
+  UpdateValueById,
+  updateUnit
 } = CustomizationSlice.actions;
 
 export default CustomizationSlice.reducer;

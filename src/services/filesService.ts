@@ -87,10 +87,9 @@ const scaleFile = async (
   }
 };
 
-const getFileWeight = async (fileId: string, dispatch: any) => {
+const getFileWeight = async (fileId: string) => {
   try {
     const response = await api.put(`/api/v1/files/process/${fileId}`);
-    const { weight } = returnResponse(response);
     return returnResponse(response);
   } catch (error) {
     console.error('Error fetching file weight:', error);
@@ -127,7 +126,6 @@ const stlFileDownloadAndParse = async ({
     const chunks: Uint8Array[] = [];
     let receivedLength = 0;
     let lastProgressUpdate = 0;
-    console.log('Starting STL download and parse...');
 
     while (true) {
       const { done, value } = await reader.read();
@@ -177,8 +175,6 @@ const stlFileDownloadAndParse = async ({
     // Set progress to 100% after successful parsing
     setDownloadProgress(100);
     setStlGeometry(geometry);
-    console.log('STL file downloaded and parsed successfully.');
-
   } catch (error) {
     console.error('Error downloading/parsing STL file:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';

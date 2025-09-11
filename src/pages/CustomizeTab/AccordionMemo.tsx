@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {  useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
@@ -22,18 +22,15 @@ import {
 } from 'lucide-react';
 import { Color, FileDataDB, Material, Technology } from '../../types/uploadFiles';
 import { RootState } from '../../store/types';
-import { setRevertDimensions, UpdateValueById } from '../../store/customizeFilesDetails/CustomizationSlice';
+import { setRevertDimensions, updateDimensionsValue, updateUnit, UpdateValueById } from '../../store/customizeFilesDetails/CustomizationSlice';
 
 interface AccordionProps {
   printerData: any[];
-  fileData: FileDataDB;
   printerMessage: string;
   downloadProgress: number;
+  file: FileDataDB | undefined;
 
 }
-
-const MM_TO_INCH = 1 / 25.4;
-const INCH_TO_MM = 25.4;
 
 const mapPrinterData = (printers: any[]) => {
   return printers.map((p: any) => ({
@@ -64,53 +61,27 @@ const mapPrinterData = (printers: any[]) => {
 
 const Accordion: React.FC<AccordionProps> = ({
   printerData,
-  fileData,
   printerMessage,
-  downloadProgress,
+  file
 }) => {
-  const dispatch = useDispatch();
-  const [formData, setFormData] = useState<FileDataDB | undefined>(fileData);
-  const dataspec = useSelector((state: RootState) => state.specification);
-  const { activeFileId, reverseDimensions, files } = useSelector(
+  const { activeFileId, reverseDimensions } = useSelector(
     (state: RootState) => state.customization
   );
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const dataspec = useSelector((state: RootState) => state.specification);
+
+  console.log('file in accordion', file);
 
   const activeReverseDimension = useMemo(() => {
     return reverseDimensions.find(file => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
 
-  // Get the current file data from Redux to ensure we have the latest state
-  const currentFileFromRedux = useMemo(() => {
-    return files.find(file => file._id === fileData._id) || fileData;
-  }, [files, fileData]);
 
-
-  const theme = useTheme();
-
-  // Update formData when fileData changes OR when Redux state changes (for revert functionality)
-  useEffect(() => {
-    setFormData(currentFileFromRedux);
-  }, [currentFileFromRedux]);
-
-  const convertDimensions = (
-    value: number,
-    fromUnit: string,
-    toUnit: string
-  ) => {
-    if (fromUnit === toUnit) return value;
-    return fromUnit === 'mm'
-      ? Math.abs(value * MM_TO_INCH)
-      : Math.abs(value * INCH_TO_MM);
-  };
 
   const handelChangeValue = (field: string, value: any) => {
-    const updatedData = { ...formData, [field]: value } as FileDataDB;
-    setFormData(updatedData);
-    
-    // Immediately dispatch to Redux for certain fields that need immediate updates
-    if (['colorId', 'materialId', 'technologyId', 'printerId', 'infill'].includes(field)) {
-      console.log(`AccordionMemo: Updating ${field} to ${value}`);
-      dispatch(UpdateValueById({ id: fileData._id, data: { [field]: value } }));
+    if (['colorId', 'materialId', 'technologyId', 'printerId', 'infill', 'unit'].includes(field)) {
+      dispatch(UpdateValueById({ id: file?._id, data: { [field]: value } }));
     }
   };
 
@@ -121,33 +92,7 @@ const Accordion: React.FC<AccordionProps> = ({
 
 
   const handleUnitChange = (option: Option) => {
-    const newUnit = option.value as 'mm' | 'inch';
-    if (newUnit === formData?.unit) return;
-
-    const unit = formData?.unit || 'mm';
-
-    const convertedHeight = convertDimensions(
-      formData?.dimensions?.height || 0,
-      unit,
-      newUnit
-    );
-    const convertedWidth = convertDimensions(
-      formData?.dimensions?.width || 0,
-      unit,
-      newUnit
-    );
-    const convertedLength = convertDimensions(
-      formData?.dimensions?.length || 0,
-      unit,
-      newUnit
-    );
-
-    handelChangeValue('unit', newUnit);
-    handelChangeValue('dimensions', {
-      height: convertedHeight,
-      width: convertedWidth,
-      length: convertedLength,
-    });
+    dispatch(updateUnit({ id: file?._id as string, unit: option.value }));
   };
 
   const handleChange =
@@ -155,31 +100,11 @@ const Accordion: React.FC<AccordionProps> = ({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(event.target.value.replace(/[^\d.]/g, ''));
       if (value) {
-        setFormData(
-          (prev) =>
-            ({
-              ...prev,
-              dimensions: {
-                ...prev?.dimensions,
-                [field]: value,
-              },
-            }) as FileDataDB
-        );
+        dispatch(updateDimensionsValue({ id: file?._id as string, key: field, value }) );
       }
     };
 
-  // Only dispatch dimension changes when formData dimensions change
-  useEffect(() => {
-    if (formData && formData.dimensions) {
-      dispatch(UpdateValueById({ 
-        id: fileData._id, 
-        data: { 
-          dimensions: formData.dimensions,
-          unit: formData.unit 
-        } 
-      }));
-    }
-  }, [formData?.dimensions, formData?.unit, dispatch, fileData._id]);
+
 
 
   const options = useMemo(
@@ -191,44 +116,6 @@ const Accordion: React.FC<AccordionProps> = ({
       })),
     []
   );
-
-
-  if(downloadProgress < 100){
-    return (
-      <Box p={2} display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="200px">
-        <Typography variant="h6" color="primary.main" gutterBottom>
-          Processing File...
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          Please wait while we process your file. This may take a few moments.
-        </Typography>
-        <Box mt={2} width="100%">
-          <Box
-            sx={{
-              height: 10,
-              borderRadius: 5,
-              backgroundColor: '#E0E0E0',
-              overflow: 'hidden',
-            }}
-          >
-            <Box
-              sx={{
-                height: '100%',
-                width: `${downloadProgress}%`,
-                backgroundColor: theme.palette.primary.main,
-                transition: 'width 0.3s ease-in-out',
-              }}
-            />
-          </Box>
-          <Typography variant="caption" color="textSecondary" align="right">
-            {downloadProgress}%
-          </Typography>
-        </Box>
-      </Box>
-    );
-  }
-
-
 
 
   return (
@@ -268,7 +155,7 @@ const Accordion: React.FC<AccordionProps> = ({
               options={sizeOption}
               onChange={handleUnitChange}
               defaultValue={sizeOption.find(
-                (opt) => opt.value === formData?.unit
+                (opt) => opt.value === file?.unit
               )}
               titleHelper="Select"
               error={false}
@@ -285,7 +172,7 @@ const Accordion: React.FC<AccordionProps> = ({
               Height
             </Typography>
             <CustomTextField
-              value={formData?.dimensions.height}
+              value={file?.dimensions.height}
               onChange={handleChange('height')}
               inputStyle={2}              
             />
@@ -300,7 +187,7 @@ const Accordion: React.FC<AccordionProps> = ({
               Width
             </Typography>
             <CustomTextField
-              value={formData?.dimensions.width}
+              value={file?.dimensions.width}
               onChange={handleChange('width')}
               inputStyle={2}              
             />
@@ -315,7 +202,7 @@ const Accordion: React.FC<AccordionProps> = ({
               Length
             </Typography>
             <CustomTextField
-              value={formData?.dimensions.length}
+              value={file?.dimensions.length}
               onChange={handleChange('length')}
               inputStyle={2}              
             />
@@ -332,11 +219,6 @@ const Accordion: React.FC<AccordionProps> = ({
               <CustomButton
                 onClick={() => {
                   if (activeFileId) {
-                    console.log('Reverting dimensions for file:', { 
-                      activeFileId, 
-                      currentDimensions: formData?.dimensions,
-                      originalDimensions: activeReverseDimension?.dimensions 
-                    });
                     dispatch(setRevertDimensions({ _id: activeFileId }));
                   }
                 }}
@@ -402,7 +284,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 labelView: tech.code + ` ( ${tech.name})`,
                 value: tech._id,
               }))
-              .find((opt: any) => opt.id === formData?.technologyId)}
+              .find((opt: any) => opt.id === file?.technologyId)}
             titleHelper="Select Technology"
             sx={{ width: '100%' }} // Ensure full width
           />
@@ -437,7 +319,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 labelView: mat.code + ` ( ${mat.name})`,
                 value: mat._id,
               }))
-              .find((opt: any) => opt.id === formData?.materialId)}
+              .find((opt: any) => opt.id === file?.materialId)}
             titleHelper="Select Material"
             sx={{ width: '100%' }}
           />
@@ -468,7 +350,7 @@ const Accordion: React.FC<AccordionProps> = ({
                 label: c.name,
                 value: c.hexCode,
               }))
-              .find((opt: any) => opt.id === formData?.colorId)}
+              .find((opt: any) => opt.id === file?.colorId)}
             titleHelper="Select Color"
             sx={{ width: '100%' }}
           />
@@ -488,7 +370,7 @@ const Accordion: React.FC<AccordionProps> = ({
             options={options}
             onChange={(option) => handelChangeValue('infill', option.value)}
             defaultValue={options.find(
-              (opt) => opt.value === String(formData?.infill)
+              (opt) => opt.value === String(file?.infill)
             )}
             titleHelper="Select Infill"
             sx={{ width: '100%' }}
@@ -510,12 +392,12 @@ const Accordion: React.FC<AccordionProps> = ({
             options={mappedPrinters}
             onChange={(option) => handelChangeValue('printerId', option.id)}
             defaultValue={mappedPrinters.find(
-              (opt) => opt.id === formData?.printerId 
+              (opt) => opt.id === file?.printerId
             )}
             titleHelper="Please Select First Color, Material and Technology"
             sx={{ width: '100%' }}
-            disabled={!formData?.materialId || !formData?.technologyId || !formData?.colorId}
-          /> : 
+            disabled={!file?.materialId || !file?.technologyId || !file?.colorId}
+          /> :
           <Typography variant="body2" color="textSecondary">
            {printerMessage || 'No printers available for the selected material and technology.'}
           </Typography>}
@@ -536,7 +418,7 @@ const Accordion: React.FC<AccordionProps> = ({
           Current Weight
         </Typography>
         <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {formData?.weight?.value?.toFixed(3) || 0} {formData?.weight?.unit || 'g'}
+          {file?.weight?.value?.toFixed(3) || 0} {file?.weight?.unit || 'g'}
         </Typography>
       </Box>
     </Box>

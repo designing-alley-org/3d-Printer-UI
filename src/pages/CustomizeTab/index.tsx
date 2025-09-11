@@ -75,6 +75,7 @@ const CustomizeTab: React.FC = () => {
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
   );
+  const file = files.find((f: FileDataDB) => f._id === activeFileId);
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -120,7 +121,7 @@ const CustomizeTab: React.FC = () => {
   const activeFile = useMemo(() => {
     if (!files) return null;
     return files.find((file: FileDataDB) => file._id === activeFileId) || null;
-  }, [activeFileId]);
+  }, [activeFileId,dispatch]);
 
  
 
@@ -167,7 +168,7 @@ useEffect(() => {
 
 
 
-  const { materialId, technologyId, printerId, colorId } = activeFile || {};
+  const { materialId, technologyId, printerId, colorId } = file || {};
 
   const isAllCoustomized = useMemo(() => {
     return files.every((file: any) => file?.weight?.value);
@@ -213,7 +214,6 @@ useEffect(() => {
       );
       const hexCode = selectedColor ? selectedColor.hexCode : '#ffffff';
       setColorHexcode(hexCode);
-      console.log('Color updated:', { colorId: activeFile.colorId, hexCode, selectedColor });
     } else {
       setColorHexcode('#ffffff');
     }
@@ -475,9 +475,9 @@ useEffect(() => {
               <div className="customize-container">
                 <AccordionMemo
                   key={activeFileId}
+                  file={file}
                   downloadProgress={downloadProgress}
                   printerData={printerData}
-                  fileData={activeFile}
                   printerMessage={printerMessage}
                 />
               </div>
