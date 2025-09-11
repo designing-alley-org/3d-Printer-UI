@@ -120,6 +120,14 @@ export const CustomizationSlice = createSlice({
       state.files = [...state.files];
       
     },
+
+    updateThumbnail: (state, action: PayloadAction<{ id: string; thumbnailUrl: string }>) => {
+      const file = state.files.find((file) => file._id === action.payload.id);
+      if (file) {
+        file.thumbnailUrl = action.payload.thumbnailUrl;
+      }
+      state.files = [...state.files];
+    },
   },
 });
 
@@ -131,7 +139,8 @@ export const {
   setRevertDimensions,
   updateDimensionsValue,
   UpdateValueById,
-  updateUnit
+  updateUnit,
+  updateThumbnail
 } = CustomizationSlice.actions;
 
 export default CustomizationSlice.reducer;

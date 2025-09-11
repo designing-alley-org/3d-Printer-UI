@@ -87,10 +87,10 @@ export interface UploadFileProgress {
 
 export type UploadFile  = Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'> 
 export type UpdateFileData = Partial<Omit<FileData, '_id' | 'fileBlob' | 'isUploading' | 'isUploaded' | 'uploadProgress' | 'file'>> & { 
-  _id: string
   colorId?: string;
   materialId?: string;
   technologyId?: string;
   printerId?: string;
   infill?: number;
+  weight?: Weight;
  };

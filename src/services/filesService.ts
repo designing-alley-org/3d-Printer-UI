@@ -67,35 +67,7 @@ const updateFilesQuantity = async (
   }
 };
 
-const scaleFile = async (
-  fileId: string,
-  dimensions: {
-    new_length: number;
-    new_width: number;
-    new_height: number;
-    unit: string;
-  }
-) => {
-  try {
-    const response = await api.put(`/api/v1/files/scale/${fileId}`, {
-      ...dimensions,
-    });
-    return returnResponse(response);
-  } catch (error) {
-    console.error('Error scaling file:', error);
-    throw error;
-  }
-};
 
-const getFileWeight = async (fileId: string) => {
-  try {
-    const response = await api.put(`/api/v1/files/process/${fileId}`);
-    return returnResponse(response);
-  } catch (error) {
-    console.error('Error fetching file weight:', error);
-    throw error;
-  }
-};
 
 const stlFileDownloadAndParse = async ({
   url,
@@ -193,7 +165,5 @@ export {
   getAllFilesByOrderId,
   updateFile,
   updateFilesQuantity,
-  scaleFile,
-  getFileWeight,
   stlFileDownloadAndParse,
 };

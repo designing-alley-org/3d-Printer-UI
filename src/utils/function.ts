@@ -108,3 +108,16 @@ export const returnError = (error: any) => {
     return 'An unexpected error occurred';
   }
 };
+
+
+/**
+ * Extracts the S3 key from a URL by taking the last two segments
+ * 
+ * @param url The S3 URL to extract the key from
+ * @returns The extracted S3 key
+ */
+export const returnS3Key = (url: string): string => {
+  const parts = url.split("/");
+  const key = parts.slice(-2).join("/");
+  return key;
+};

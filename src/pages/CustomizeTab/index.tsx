@@ -34,7 +34,6 @@ import { formatText } from '../../utils/function';
 import {
   getAllFilesByOrderId,
   stlFileDownloadAndParse,
-  updateFile,
 } from '../../services/filesService';
 import {
   getCMT_DataService,
@@ -44,10 +43,10 @@ import { RootState } from '../../store/types';
 import {
   setActiveFileId,
   setFiles,
-  UpdateValueById,
   updateWeight,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
 import { stlParser } from '../../utils/stlUtils';
+import { updateFileInCustomization } from '../../store/actions/File';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -63,11 +62,12 @@ const CustomizeTab: React.FC = () => {
   const [stlGeometry, setStlGeometry] = useState<THREE.BufferGeometry | null>(
     null
   );
-  
 
   // state
   const colors = useSelector((state: RootState) => state.specification.colors);
-  const materials = useSelector((state: RootState) => state.specification.materials);
+  const materials = useSelector(
+    (state: RootState) => state.specification.materials
+  );
 
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
@@ -76,7 +76,8 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const { materialId, technologyId, printerId, colorId } = file || {};
+  const { materialId, technologyId, printerId, colorId, infill, weight } = file || {};
+
 
   useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -119,8 +120,7 @@ const CustomizeTab: React.FC = () => {
   const activeFile = useMemo(() => {
     if (!files) return null;
     return files.find((file: FileDataDB) => file._id === activeFileId) || null;
-  }, [activeFileId,dispatch]);
-
+  }, [activeFileId, dispatch, isLoading]);
 
   // Calculate material density based on selected material
   const materialDensity = useMemo(() => {
@@ -133,29 +133,31 @@ const CustomizeTab: React.FC = () => {
     return null;
   }, [materialId, materials]);
 
-
-
-          // Determine color hex code based on selected color
+  // Determine color hex code based on selected color
   const colorHexcode = useMemo(() => {
     if (colorId && colors.length > 0) {
-      const selectedColor = colors.find(
-        (color: any) => color._id === colorId
-      );
+      const selectedColor = colors.find((color: any) => color._id === colorId);
       return selectedColor ? selectedColor.hexCode : '#ffffff';
     }
     return '#ffffff';
   }, [colorId, colors]);
 
-
- 
-
   const processGeometry = useCallback(async () => {
     if (stlGeometry && materialDensity) {
       try {
-        const result = await stlParser.processSTLGeometry(materialDensity, stlGeometry, 1.0);
+        const result = await stlParser.processSTLGeometry(
+          materialDensity,
+          stlGeometry,
+          1.0
+        );
         if (result) {
           // setCurrentWeight(result);
-          dispatch(updateWeight({ id: activeFileId as string, weight: result.massGrams }));
+          dispatch(
+            updateWeight({
+              id: activeFileId as string,
+              weight: result.massGrams,
+            })
+          );
         }
         return result;
       } catch (error) {
@@ -171,12 +173,9 @@ const CustomizeTab: React.FC = () => {
     }
   }, [processGeometry]);
 
-
   const isAllCoustomized = useMemo(() => {
     return files.every((file: any) => file?.weight?.value);
   }, [files]);
-
-
 
   const [error, setError] = useState<string | null>(null);
 
@@ -191,7 +190,6 @@ const CustomizeTab: React.FC = () => {
     });
   }, []);
 
-
   // Download and parse STL when selectedFileUrl changes
   useEffect(() => {
     if (!activeFile) {
@@ -200,16 +198,13 @@ const CustomizeTab: React.FC = () => {
       setDownloadProgress(0);
       return;
     }
-    
     // Reset states before downloading new file
     setError(null);
     setDownloadProgress(0);
     setStlGeometry(null);
-    
+
     downloadAndParseSTL(activeFile.fileUrl);
   }, [activeFile, downloadAndParseSTL]);
-
-
 
   useEffect(() => {
     fetchSpec();
@@ -218,11 +213,10 @@ const CustomizeTab: React.FC = () => {
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    const { colorId, materialId, technologyId, printerId, infill } = activeFile;
     if (colorId && materialId && technologyId && printerId && infill)
       return false;
     return true;
-  }, [activeFile]);
+  }, [file]);
 
   // Handle opening and closing STL viewer modal
   const handleOpenSTLViewer = useCallback((event: React.MouseEvent) => {
@@ -261,37 +255,24 @@ const CustomizeTab: React.FC = () => {
   }, [stlGeometry]);
 
   const handleApplySelection = async () => {
-    if (!activeFileId || !activeFile) {
-      console.error('No active file selected');
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      
-      const updateData: UpdateFileData = {
-        _id: activeFileId,
-        colorId,
-        materialId,
-        technologyId,
-        printerId,
-        infill: activeFile.infill,
-      };
-
-      await updateFile(activeFileId, updateData);
-
-      // Update the file in Redux store to reflect the changes
-      dispatch(UpdateValueById({ 
-        id: activeFileId, 
-        data: updateData 
-      }));
-
-    } catch (error) {
-      console.error('Error applying selection:', error);
-      // Optionally show error message to user
-    } finally {
-      setIsLoading(false);
-    }
+    if (!activeFileId || !activeFile) return;
+    const updateData: UpdateFileData = {
+      colorId,
+      materialId,
+      technologyId,
+      printerId,
+      infill,
+      weight
+    };
+    await updateFileInCustomization(
+      activeFileId,
+      updateData,
+      setIsLoading,
+      stlGeometry,
+      colorHexcode,
+      activeFile,
+      dispatch
+    );
   };
 
   const handelNext = async () => {
@@ -457,7 +438,7 @@ const CustomizeTab: React.FC = () => {
                 }}
               >
                 <CustomButton
-                  children="Apply Selection"
+                  children="Save"
                   disabled={isApplyButtonDisabled || isLoading}
                   onClick={handleApplySelection}
                   loading={isLoading}

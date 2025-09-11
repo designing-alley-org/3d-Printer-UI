@@ -1,4 +1,4 @@
-import React, {  useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
@@ -7,29 +7,40 @@ import SingleSelectDropdown, {
 
 import { sizeOption } from '../../constants';
 
-
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 import ColorDropdown from '../../stories/Dropdown/ColorDropdown';
 import PrinterDropdown from '../../stories/Dropdown/PrinterDropdown';
 
-// Icon Custom Icon 
-import {ColorIcon, InfillIcon, TechnologyIcon, MaterialIcon,PrinterIcon} from '../../../public/Icon/MUI_Coustom_icon/index';
-
+// Icon Custom Icon
 import {
-  Ruler,
-  RotateCcw,
-} from 'lucide-react';
-import { Color, FileDataDB, Material, Technology } from '../../types/uploadFiles';
+  ColorIcon,
+  InfillIcon,
+  TechnologyIcon,
+  MaterialIcon,
+  PrinterIcon,
+} from '../../../public/Icon/MUI_Coustom_icon/index';
+
+import { Ruler, RotateCcw } from 'lucide-react';
+import {
+  Color,
+  FileDataDB,
+  Material,
+  Technology,
+} from '../../types/uploadFiles';
 import { RootState } from '../../store/types';
-import { setRevertDimensions, updateDimensionsValue, updateUnit, UpdateValueById } from '../../store/customizeFilesDetails/CustomizationSlice';
+import {
+  setRevertDimensions,
+  updateDimensionsValue,
+  updateUnit,
+  UpdateValueById,
+} from '../../store/customizeFilesDetails/CustomizationSlice';
 
 interface AccordionProps {
   printerData: any[];
   printerMessage: string;
   downloadProgress: number;
   file: FileDataDB | undefined;
-
 }
 
 const mapPrinterData = (printers: any[]) => {
@@ -62,7 +73,7 @@ const mapPrinterData = (printers: any[]) => {
 const Accordion: React.FC<AccordionProps> = ({
   printerData,
   printerMessage,
-  file
+  file,
 }) => {
   const { activeFileId, reverseDimensions } = useSelector(
     (state: RootState) => state.customization
@@ -72,13 +83,20 @@ const Accordion: React.FC<AccordionProps> = ({
   const dataspec = useSelector((state: RootState) => state.specification);
 
   const activeReverseDimension = useMemo(() => {
-    return reverseDimensions.find(file => file._id === activeFileId) || null;
+    return reverseDimensions.find((file) => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
 
-
-
   const handelChangeValue = (field: string, value: any) => {
-    if (['colorId', 'materialId', 'technologyId', 'printerId', 'infill', 'unit'].includes(field)) {
+    if (
+      [
+        'colorId',
+        'materialId',
+        'technologyId',
+        'printerId',
+        'infill',
+        'unit',
+      ].includes(field)
+    ) {
       dispatch(UpdateValueById({ id: file?._id, data: { [field]: value } }));
     }
   };
@@ -87,7 +105,6 @@ const Accordion: React.FC<AccordionProps> = ({
     () => mapPrinterData(printerData),
     [printerData]
   );
-
 
   const handleUnitChange = (option: Option) => {
     dispatch(updateUnit({ id: file?._id as string, unit: option.value }));
@@ -98,12 +115,11 @@ const Accordion: React.FC<AccordionProps> = ({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(event.target.value.replace(/[^\d.]/g, ''));
       if (value) {
-        dispatch(updateDimensionsValue({ id: file?._id as string, key: field, value }) );
+        dispatch(
+          updateDimensionsValue({ id: file?._id as string, key: field, value })
+        );
       }
     };
-
-
-
 
   const options = useMemo(
     () =>
@@ -115,13 +131,24 @@ const Accordion: React.FC<AccordionProps> = ({
     []
   );
 
-
   return (
     <Box p={2}>
       {/* Scale Section */}
       <Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', mb: 0.5, gap: '8px' }}>
-          <Ruler size={25} style={{ transform: 'rotate(100deg)' }} color={theme.palette.primary.main} />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            mb: 0.5,
+            gap: '8px',
+          }}
+        >
+          <Ruler
+            size={25}
+            style={{ transform: 'rotate(100deg)' }}
+            color={theme.palette.primary.main}
+          />
           <Typography
             variant="h6"
             sx={{ fontWeight: 600 }}
@@ -145,16 +172,14 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-               color="primary.main"
+              color="primary.main"
             >
               Scale In
             </Typography>
             <SingleSelectDropdown
               options={sizeOption}
               onChange={handleUnitChange}
-              defaultValue={sizeOption.find(
-                (opt) => opt.value === file?.unit
-              )}
+              defaultValue={sizeOption.find((opt) => opt.value === file?.unit)}
               titleHelper="Select"
               error={false}
               sx={{ width: '100%' }} // Ensure full width
@@ -172,7 +197,7 @@ const Accordion: React.FC<AccordionProps> = ({
             <CustomTextField
               value={file?.dimensions.height}
               onChange={handleChange('height')}
-              inputStyle={2}              
+              inputStyle={2}
             />
           </Grid>
 
@@ -180,14 +205,14 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-               color="primary.main"
+              color="primary.main"
             >
               Width
             </Typography>
             <CustomTextField
               value={file?.dimensions.width}
               onChange={handleChange('width')}
-              inputStyle={2}              
+              inputStyle={2}
             />
           </Grid>
 
@@ -195,14 +220,14 @@ const Accordion: React.FC<AccordionProps> = ({
             <Typography
               variant="body2"
               sx={{ mb: 1, fontWeight: 500 }}
-               color="primary.main"
+              color="primary.main"
             >
               Length
             </Typography>
             <CustomTextField
               value={file?.dimensions.length}
               onChange={handleChange('length')}
-              inputStyle={2}              
+              inputStyle={2}
             />
           </Grid>
 
@@ -227,10 +252,10 @@ const Accordion: React.FC<AccordionProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '4px',
-                  padding: '6px 10px'
+                  padding: '6px 10px',
                 }}
               >
-                <RotateCcw size={16} />  Revert To Original
+                <RotateCcw size={16} /> Revert To Original
               </CustomButton>
               {activeReverseDimension && (
                 <Typography
@@ -252,16 +277,15 @@ const Accordion: React.FC<AccordionProps> = ({
       </Box>
 
       {/* Weight Information */}
-   
+
       {/* Configuration Options */}
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <TechnologyIcon  style={{ marginRight: '8px', color: theme.palette.primary.main }} />
-            <Typography
-              variant="h6"
-              color="primary.main"
-            >
+            <TechnologyIcon
+              style={{ marginRight: '8px', color: theme.palette.primary.main }}
+            />
+            <Typography variant="h6" color="primary.main">
               Technology
             </Typography>
           </Box>
@@ -290,24 +314,21 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <MaterialIcon  style={{ marginRight: '8px', color: theme.palette.primary.main }} />
-            <Typography
-              variant="h6"
-              color="primary.main"
-            >
+            <MaterialIcon
+              style={{ marginRight: '8px', color: theme.palette.primary.main }}
+            />
+            <Typography variant="h6" color="primary.main">
               Material
             </Typography>
           </Box>
           <SingleSelectDropdown
             options={
-              dataspec?.materials?.map(
-                (mat: Material) => ({
-                  id: mat._id,
-                  label: mat.code ,
-                  labelView: mat.code + ` ( ${mat.name})`,
-                  value: mat._id,
-                })
-              ) || []
+              dataspec?.materials?.map((mat: Material) => ({
+                id: mat._id,
+                label: mat.code,
+                labelView: mat.code + ` ( ${mat.name})`,
+                value: mat._id,
+              })) || []
             }
             onChange={(option) => handelChangeValue('materialId', option.id)}
             defaultValue={dataspec?.materials
@@ -325,11 +346,11 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <ColorIcon size={16} style={{ marginRight: '8px', color: theme.palette.primary.main }} />
-            <Typography
-              variant="h6"
-              color='primary.main'
-            >
+            <ColorIcon
+              size={16}
+              style={{ marginRight: '8px', color: theme.palette.primary.main }}
+            />
+            <Typography variant="h6" color="primary.main">
               Colour
             </Typography>
           </Box>
@@ -356,11 +377,10 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <InfillIcon style={{ marginRight: '8px', color: theme.palette.primary.main }} />
-            <Typography
-              variant="h6"
-              color='primary.main'
-            >
+            <InfillIcon
+              style={{ marginRight: '8px', color: theme.palette.primary.main }}
+            />
+            <Typography variant="h6" color="primary.main">
               Infill
             </Typography>
           </Box>
@@ -377,28 +397,32 @@ const Accordion: React.FC<AccordionProps> = ({
 
         <Grid size={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <PrinterIcon style={{ marginRight: '8px', color: theme.palette.primary.main }} />
-            <Typography
-              variant="h6"
-              color="primary.main"
-            >
+            <PrinterIcon
+              style={{ marginRight: '8px', color: theme.palette.primary.main }}
+            />
+            <Typography variant="h6" color="primary.main">
               Printer
             </Typography>
           </Box>
-         { printerMessage === '' ?  
-         <PrinterDropdown
-            options={mappedPrinters}
-            onChange={(option) => handelChangeValue('printerId', option.id)}
-            defaultValue={mappedPrinters.find(
-              (opt) => opt.id === file?.printerId
-            )}
-            titleHelper="Please Select First Color, Material and Technology"
-            sx={{ width: '100%' }}
-            disabled={!file?.materialId || !file?.technologyId || !file?.colorId}
-          /> :
-          <Typography variant="body2" color="textSecondary">
-           {printerMessage || 'No printers available for the selected material and technology.'}
-          </Typography>}
+          {printerMessage === '' ? (
+            <PrinterDropdown
+              options={mappedPrinters}
+              onChange={(option) => handelChangeValue('printerId', option.id)}
+              defaultValue={mappedPrinters.find(
+                (opt) => opt.id === file?.printerId
+              )}
+              titleHelper="Please Select First Color, Material and Technology"
+              sx={{ width: '100%' }}
+              disabled={
+                !file?.materialId || !file?.technologyId || !file?.colorId
+              }
+            />
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              {printerMessage ||
+                'No printers available for the selected material and technology.'}
+            </Typography>
+          )}
         </Grid>
       </Grid>
 
@@ -412,12 +436,18 @@ const Accordion: React.FC<AccordionProps> = ({
           borderBottom: '1px solid #E0E0E0',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 600, color: 'primary.main' }}
+        >
           Current Weight
         </Typography>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {file?.weight?.value?.toFixed(3) || 0} {file?.weight?.unit || 'g'}
-        </Typography>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 600, color: 'primary.main' }}
+          >
+            {file?.weight?.value?.toFixed(3) || 0} {file?.weight?.unit || 'g'}
+          </Typography>
       </Box>
     </Box>
   );
