@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Printer, PrinterInfo } from "../PrinterCard";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { CommandDialog, CommandEmpty, CommandInput, CommandItem, CommandList } from "../MUI/Command";
 
 
@@ -39,7 +39,7 @@ export default function PrinterSelector({ printersData }: { printersData: Printe
         <Button
             variant="outlined"
             onClick={() => setOpen(true)}
-            endIcon={<UnfoldMoreIcon />}
+            // endIcon={<UnfoldMoreIcon />}
             sx={{
                 width: '100%',
                 justifyContent: 'space-between',

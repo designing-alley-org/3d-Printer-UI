@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {  useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
@@ -10,7 +10,6 @@ import { sizeOption } from '../../constants';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 import ColorDropdown from '../../stories/Dropdown/ColorDropdown';
-import PrinterDropdown from '../../stories/Dropdown/PrinterDropdown';
 
 // Icon Custom Icon
 import {
@@ -453,18 +452,6 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-            // <PrinterDropdown
-            //   options={mappedPrinters}
-            //   onChange={(option) => handelChangeValue('printerId', option.id)}
-            //   defaultValue={mappedPrinters.find(
-            //     (opt) => opt.id === file?.printerId
-            //   )}
-            //   titleHelper="Please Select First Color, Material and Technology"
-            //   sx={{ width: '100%' }}
-            //   disabled={
-            //     !file?.materialId || !file?.technologyId || !file?.colorId
-            //   }
-            // />
           <PrinterSelector printersData={printersData} />
 
           ) : (

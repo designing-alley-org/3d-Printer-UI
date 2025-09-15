@@ -7,7 +7,6 @@ import {
   Customize,
   Files,
   UploadedFile,
-  Model,
   ModelName,
   CustomizeBox,
 } from './styles';
@@ -338,8 +337,8 @@ const CustomizeTab: React.FC = () => {
                         alignItems: 'center',
                         position: 'relative',
                         borderRadius: '12px',
-                        background: '#F6F6F6',
-                        boxShadow:   activeFileId === file._id ? '0px 2px 2px 0px #CDE1FF' : 'none',
+                        background: theme.palette.background.paper,
+                        boxShadow:   activeFileId === file._id ? '0px 4px 4px 0px #CDE1FF' : 'none',
                       }}
                       onClick={(e) =>{
                          dispatch(setActiveFileId(file._id));
