@@ -58,6 +58,9 @@ const Accordion: React.FC<AccordionProps> = ({
   const dataspec = useSelector((state: RootState) => state.specification);
 
 
+  console.log('printerData in file:', file);
+
+
   const activeReverseDimension = useMemo(() => {
     return reverseDimensions.find((file) => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
@@ -378,7 +381,7 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-          <PrinterSelector printersData={printerData} />
+          <PrinterSelector printersData={printerData} selectedPrinterId={file?.printerId} />
           ) : (
             <Typography variant="body2" color="textSecondary">
               {printerMessage ||
