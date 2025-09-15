@@ -67,7 +67,8 @@ const AccountLayout = () => {
     if (tab) handlePath(tab.path);
   }}
   variant="scrollable"
-  scrollButtons="auto"
+  scrollButtons="auto"  
+  allowScrollButtonsMobile
   sx={{
     margin: '16px 0',
     width: '100%',

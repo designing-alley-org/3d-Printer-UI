@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
@@ -35,6 +35,8 @@ import {
   updateUnit,
   UpdateValueById,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
+import { Printer } from '../../components/PrinterCard';
+import { PrinterSelector } from '../../components/Model';
 
 interface AccordionProps {
   printerData: any[];
@@ -42,6 +44,50 @@ interface AccordionProps {
   downloadProgress: number;
   file: FileDataDB | undefined;
 }
+
+
+const printersData: Printer[] = [
+  {
+    id: 1,
+    name: "Creality Ender 3 V3",
+    imageUrl: "https://placehold.co/100x100/333/white?text=Ender+3",
+    technologyType: 'FDM',
+    buildVolume: { x: 220, y: 220, z: 250 },
+    nozzleSize: 0.4,
+    printSpeed: 180,
+    materialCompatibility: ["PLA", "ABS", "PETG", "TPU"],
+  },
+  {
+    id: 2,
+    name: "Prusa i3 MK3S+",
+    imageUrl: "https://placehold.co/100x100/E65100/white?text=Prusa+i3",
+    technologyType: 'FDM',
+    buildVolume: { x: 250, y: 210, z: 210 },
+    nozzleSize: 0.4,
+    printSpeed: 200,
+    materialCompatibility: ["PLA", "PETG", "ASA", "PC Blend"],
+  },
+  {
+    id: 3,
+    name: "Anycubic Photon Mono X",
+    imageUrl: "https://placehold.co/100x100/4A148C/white?text=Photon",
+    technologyType: 'SLA',
+    buildVolume: { x: 192, y: 120, z: 245 },
+    nozzleSize: null,
+    printSpeed: null,
+    materialCompatibility: ["405nm UV Resin", "Tough Resin", "Castable Resin"],
+  },
+  {
+    id: 4,
+    name: "Bambu Lab P1S",
+    imageUrl: "https://placehold.co/100x100/00695C/white?text=Bambu",
+    technologyType: 'FDM',
+    buildVolume: { x: 256, y: 256, z: 256 },
+    nozzleSize: 0.4,
+    printSpeed: 500,
+    materialCompatibility: ["PLA", "PETG", "ABS", "ASA", "PVA", "Carbon Fiber"],
+  },
+];
 
 const mapPrinterData = (printers: any[]) => {
   return printers.map((p: any) => ({
@@ -82,9 +128,11 @@ const Accordion: React.FC<AccordionProps> = ({
   const theme = useTheme();
   const dataspec = useSelector((state: RootState) => state.specification);
 
+
   const activeReverseDimension = useMemo(() => {
     return reverseDimensions.find((file) => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
+
 
   const handelChangeValue = (field: string, value: any) => {
     if (
@@ -405,18 +453,20 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-            <PrinterDropdown
-              options={mappedPrinters}
-              onChange={(option) => handelChangeValue('printerId', option.id)}
-              defaultValue={mappedPrinters.find(
-                (opt) => opt.id === file?.printerId
-              )}
-              titleHelper="Please Select First Color, Material and Technology"
-              sx={{ width: '100%' }}
-              disabled={
-                !file?.materialId || !file?.technologyId || !file?.colorId
-              }
-            />
+            // <PrinterDropdown
+            //   options={mappedPrinters}
+            //   onChange={(option) => handelChangeValue('printerId', option.id)}
+            //   defaultValue={mappedPrinters.find(
+            //     (opt) => opt.id === file?.printerId
+            //   )}
+            //   titleHelper="Please Select First Color, Material and Technology"
+            //   sx={{ width: '100%' }}
+            //   disabled={
+            //     !file?.materialId || !file?.technologyId || !file?.colorId
+            //   }
+            // />
+          <PrinterSelector printersData={printersData} />
+
           ) : (
             <Typography variant="body2" color="textSecondary">
               {printerMessage ||
