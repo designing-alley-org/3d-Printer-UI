@@ -9,6 +9,18 @@ export type Weight = {
   unit: string;
 }
 
+
+export type DeliveryWeight = {
+  weight: number;
+  unit: string;
+}
+
+export interface DeliveryService {
+  total_weight: DeliveryWeight;
+  service_type: string;
+  service_price: number;
+}
+
 export interface FileData {
   _id: string;
   fileName: string;

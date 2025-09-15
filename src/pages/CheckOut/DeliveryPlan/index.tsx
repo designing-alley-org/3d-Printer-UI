@@ -1,4 +1,4 @@
-import { Box,  Card,  CardActions,  CardContent,  CardHeader,  Typography } from '@mui/material';
+import { Box,  Card,   CardContent,  CardHeader,  Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Delivery from './DeliveryCard';
@@ -16,10 +16,6 @@ export interface Rate {
   packagingType: string;
   ratedShipmentDetails: Array<{ totalNetCharge: number }>;
 }
-
-
-
-
 
 const DeliveryPlan: React.FC = () => {
   // State management

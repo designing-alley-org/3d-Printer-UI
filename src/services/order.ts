@@ -5,6 +5,7 @@ import { createFile } from "./filesService";
 import { FileData } from "../types/uploadFiles";
 import { returnError, returnResponse } from "../utils/function";
 import { addDataSpec } from "../store/customizeFilesDetails/SpecificationReducer";
+import { set } from "lodash-es";
 
 // Upload files
 const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
@@ -464,12 +465,12 @@ const updateOrderService = async (orderId: string, data: object) => {
     }
 }
 
-const getOrderSummaryService = async (orderId: string, setIsLoading: (loading: boolean) => void) => {
+const getOrderSummaryService = async (orderId: string, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
     try {
         const response = await api.get(`/order-summary/${orderId}`);
         return returnResponse(response);
     } catch (error) {
-        toast.error(returnError(error));
+        setError(returnError(error));
         throw error;
     } finally {
         setIsLoading(false);

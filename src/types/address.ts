@@ -20,5 +20,4 @@ export interface DeliveryData {
   packagingType: string;
   serviceName: string;
   serviceType: string;
-  
 }
