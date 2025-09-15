@@ -121,3 +121,16 @@ export const returnS3Key = (url: string): string => {
   const key = parts.slice(-2).join("/");
   return key;
 };
+
+
+
+
+
+// --- Helper for formatting currency ---
+
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};

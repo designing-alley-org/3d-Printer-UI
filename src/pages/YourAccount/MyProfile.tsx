@@ -31,8 +31,6 @@ const MyProfile = () => {
       setEditEmailModalOpen(false);
     }, 2000);
     email
-    // Dispatch an action to update the email in the user profile
-    // dispatch(updateUser({ ...user.user, email }));
   };
 
 
@@ -72,7 +70,7 @@ const MyProfile = () => {
        Address
       </Typography>
 
-      <Box maxHeight={isSmallScreen ? "300px" : "400px"} overflow="auto">
+      <Box maxHeight={isSmallScreen ? "380px" : "470px"} overflow="auto">
       {allAddresses.length === 0 ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           {

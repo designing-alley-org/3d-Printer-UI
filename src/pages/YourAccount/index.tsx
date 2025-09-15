@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, IconButton, Tooltip, Typography } from '@mui/material';
 import AccountLayout from './AccountLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { EditProfileModal } from '../../components/Model';
@@ -47,13 +47,18 @@ const Account = () => {
         </Typography>
         <CustomButton
           children={
-            <>
-              <CreateOutlinedIcon fontSize="small" sx={{ marginRight: '4px' }} />
-              {/* <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
-                Edit Profile
-              </Typography> */}
-            </>
+            <Tooltip title="Edit Profile" placement="top">
+              <IconButton>
+                <CreateOutlinedIcon
+                  fontSize="small"
+                  sx={{ marginRight: '4px' }}
+                />
+              </IconButton>
+            </Tooltip>
           }
+          sx={{
+            '&:hover': { backgroundColor: 'transparent' },
+          }}
           onClick={handleEditProfile}
         />
       </Box>
