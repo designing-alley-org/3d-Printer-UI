@@ -13,9 +13,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 // Validation and service
 import { Formik, Form } from 'formik';
 import { addressValidationSchema } from '../../../validation';
-import { updateAddressService } from '../../../services/address';
 
-// UI 
+// UI
 import CustomButton from '../../../stories/button/CustomButton';
 import CustomInputLabelField from '../../../stories/inputs/CustomInputLabelField';
 import StepLayout from '../../../components/Layout/StepLayout';
@@ -25,10 +24,11 @@ import { Box, Chip, Radio, Typography, useMediaQuery } from '@mui/material';
 
 // Icon
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import AddIcon from '@mui/icons-material/Add';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { X } from 'lucide-react';
 import { updateOrderService } from '../../../services/order';
-
+import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
+import { addressLabelOptions } from '../../../constant/dropDownOPtion';
 
 const ShippingDetails = () => {
   const { orderId } = useParams();
@@ -38,7 +38,6 @@ const ShippingDetails = () => {
     (state: any) => state.address
   );
   const { defaultAddress } = useSelector((state: any) => state.user.user);
-  const [editingAddress, setEditingAddress] = useState<any>(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -46,16 +45,20 @@ const ShippingDetails = () => {
     const fetchAddress = async () => {
       if (!isCreateAddress) {
         try {
-          const response = await getAddress({ setAddressLoading: setIsPageLoading });
+          const response = await getAddress({
+            setAddressLoading: setIsPageLoading,
+          });
 
           if (response?.data?.data) {
             dispatch(addAddress(response.data.data));
             // Auto-select first address if available
             if (response.data.data.length > 0 && !addressId) {
-              dispatch(setAddressId(defaultAddress || response.data.data[0]._id));
+              dispatch(
+                setAddressId(defaultAddress || response.data.data[0]._id)
+              );
             }
           }
-        } catch (error: any) {
+        } catch {
           setIsPageLoading(false);
         }
       } else {
@@ -65,28 +68,16 @@ const ShippingDetails = () => {
     fetchAddress();
   }, [dispatch, isCreateAddress, addressId, defaultAddress]);
 
-  const getInitialValues = () => {
-    if (editingAddress) {
-      return {
-        personName: editingAddress.personName || '',
-        streetLines: editingAddress.streetLines || '',
-        city: editingAddress.city || '',
-        countryCode: editingAddress.countryCode || '',
-        postalCode: editingAddress.postalCode || '',
-        phoneNumber: editingAddress.phoneNumber || '',
-        email: editingAddress.email || '',
-      };
-    }
-    return {
-      personName: '',
-      streetLines: '',
-      city: '',
-      countryCode: '',
-      postalCode: '',
-      phoneNumber: '',
-      email: '',
-    };
-  };
+  const getInitialValues = () => ({
+    personName: '',
+    streetLines: '',
+    city: '',
+    countryCode: '',
+    postalCode: '',
+    phoneNumber: '',
+    email: '',
+    addressType: '',
+  });
 
   const handleSubmitAddress = async (values: any, { resetForm }: any) => {
     try {
@@ -96,47 +87,32 @@ const ShippingDetails = () => {
         postalCode: values.postalCode.trim().toUpperCase(),
         countryCode: values.countryCode.trim().toUpperCase(),
       };
-
-      if (editingAddress) {
-        // Update existing address
-        await updateAddressService(editingAddress._id, cleanedValues);
-        toast.success('Address updated successfully');
-        setEditingAddress(null);
-      } else {
-        // Create new address
-        await createAddress({ ...cleanedValues, orderId });
-        toast.success('Address created successfully');
-      }
+      await createAddress({ ...cleanedValues, orderId });
+      toast.success('Address created successfully');
 
       dispatch(toggleCreateAddress());
       resetForm();
 
       // Refresh address list
-      const response = await getAddress({ setAddressLoading: () => {} });
+      const response = await getAddress({ setAddressLoading: () => { } });
       if (response?.data?.data) {
         dispatch(addAddress(response.data.data));
       }
     } catch (error) {
       console.error('Error in handleSubmitAddress:', error);
-      toast.error(
-        editingAddress ? 'Failed to update address' : 'Failed to create address'
-      );
-      console.error('Failed to handle address:', error);
+      toast.error('Failed to create address');
     }
   };
 
-  const handleCancelEdit = () => {
-    setEditingAddress(null);
+  const handleCancelForm = () => {
     dispatch(toggleCreateAddress());
   };
 
   const handleNext = async () => {
-    await updateOrderService(orderId as string, 
-      { 
+    await updateOrderService(orderId as string, {
       address: addressId,
-      order_status: 'address_select'
-     }
-    );
+      order_status: 'address_select',
+    });
     navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
   };
 
@@ -153,18 +129,32 @@ const ShippingDetails = () => {
       isDisabled={!addressId}
     >
       <Wrapper>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
-          <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1} color='primary.main'>
-           <LocationOnIcon fontSize="small" />
-           Delivery Address
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            marginBottom: 2,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontSize={{ xs: '1rem', md: '1.25rem' }}
+            sx={{ fontWeight: 600 }}
+            display="flex"
+            alignItems="center"
+            gap={1}
+            color="primary.main"
+          >
+            <LocationOnIcon fontSize="small" />
+            Delivery Address
           </Typography>
         </Box>
 
-        {/* Always show addresses when they exist */}
+        {/* Address List */}
         <div className="address-list">
           {addressData.length === 0 ? (
-            <>
-            </>
+            <></>
           ) : (
             addressData.map((address: any, index: number) => (
               <div
@@ -176,6 +166,7 @@ const ShippingDetails = () => {
                   <Typography
                     variant={isSmallScreen ? 'body1' : 'h6'}
                     color="text.primary"
+                    gutterBottom
                   >
                     {address.personName}{' '}
                     {defaultAddress === address._id && (
@@ -186,6 +177,7 @@ const ShippingDetails = () => {
                           fontSize: '0.6rem',
                           width: 'auto',
                           height: '1.5rem',
+                          backgroundColor: '#DBDCE0',
                         }}
                       />
                     )}
@@ -206,6 +198,7 @@ const ShippingDetails = () => {
                     variant="body2"
                     sx={{ fontSize: isSmallScreen ? '0.6rem' : '' }}
                   >
+                    {address.addressType ? <>{address.addressType}, </> : null}
                     {address.streetLines}
                   </Typography>
                 </span>
@@ -224,40 +217,61 @@ const ShippingDetails = () => {
         {/* Add New Address Button */}
         {!isCreateAddress && (
           <AddNewAddressButton onClick={() => dispatch(toggleCreateAddress())}>
-            <div className="add-text">
-              <AddIcon sx={{ fontSize: '1.2rem' }} />
+            <Typography
+              variant="body1"
+              color="primary"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1,
+              }}
+            >
+              <AddCircleOutlineIcon fontSize="small" />
               Add New Address
-            </div>
+            </Typography>
           </AddNewAddressButton>
         )}
 
-        {/* Address Form with Animation */}
+        {/* Address Form */}
         <AnimatePresence>
           {isCreateAddress && (
             <motion.div
               initial={{ opacity: 0, height: 0, y: -20 }}
               animate={{ opacity: 1, height: 'auto', y: 0 }}
               exit={{ opacity: 0, height: 0, y: -20 }}
-              transition={{ 
-                duration: 0.4, 
+              transition={{
+                duration: 0.5,
                 ease: [0.4, 0, 0.2, 1],
-                height: { duration: 0.3 }
+                height: { duration: 0.3 },
               }}
               style={{ overflow: 'hidden', marginTop: '1rem' }}
             >
-              <Box sx={{ 
-                border: '2px dashed #C5C5C5', 
-                borderRadius: '12px', 
-                padding: { xs: '1rem', md: '2rem' },
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-              }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                  <Typography variant="h6" sx={{ color: '#333', fontWeight: 600, fontSize: '1.1rem' }}>
+              <Box
+                sx={{
+                  border: '2px dashed #2A3F7F',
+                  borderRadius: '12px',
+                  padding: { xs: '1rem', md: '2rem' },
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '1.5rem',
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ color: '#333', fontWeight: 600, fontSize: '1.1rem' }}
+                  >
                     Add New Address
                   </Typography>
                   <CustomButton
                     variant="outlined"
-                    onClick={handleCancelEdit}
+                    onClick={handleCancelForm}
                     sx={{
                       minWidth: 'auto',
                       padding: '0.5rem',
@@ -266,8 +280,8 @@ const ShippingDetails = () => {
                       '&:hover': {
                         borderColor: '#2A2D2F',
                         color: '#2A2D2F',
-                        backgroundColor: 'rgba(42, 45, 47, 0.04)'
-                      }
+                        backgroundColor: 'rgba(42, 45, 47, 0.04)',
+                      },
                     }}
                   >
                     <X size={20} />
@@ -280,9 +294,26 @@ const ShippingDetails = () => {
                   onSubmit={handleSubmitAddress}
                   enableReinitialize={true}
                 >
-                  {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    isSubmitting,
+                  }) => (
+                    console.log('Formik Values:', errors),
                     <Form id="address-form">
-                      <Box sx={{ display: 'grid', gap: '1rem', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', } }}>
+                      <Box
+                        sx={{
+                          display: 'grid',
+                          gap: '1rem',
+                          gridTemplateColumns: {
+                            xs: '1fr',
+                            md: 'repeat(2, 1fr)',
+                          },
+                        }}
+                      >
                         <CustomInputLabelField
                           label="Full Name"
                           name="personName"
@@ -290,11 +321,17 @@ const ShippingDetails = () => {
                           value={values.personName}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          error={touched.personName && Boolean(errors.personName)}
-                          helperText={touched.personName && errors.personName ? String(errors.personName) : ''}
+                          error={
+                            touched.personName && Boolean(errors.personName)
+                          }
+                          helperText={
+                            touched.personName && errors.personName
+                              ? String(errors.personName)
+                              : ''
+                          }
                           required
                         />
-                        
+
                         <CustomInputLabelField
                           label="Phone Number"
                           name="phoneNumber"
@@ -302,22 +339,15 @@ const ShippingDetails = () => {
                           value={values.phoneNumber}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          error={touched.phoneNumber && Boolean(errors.phoneNumber)}
-                          helperText={touched.phoneNumber && errors.phoneNumber ? String(errors.phoneNumber) : ''}
+                          error={
+                            touched.phoneNumber && Boolean(errors.phoneNumber)
+                          }
+                          helperText={
+                            touched.phoneNumber && errors.phoneNumber
+                              ? String(errors.phoneNumber)
+                              : ''
+                          }
                           onlyNumber
-                          required
-                        />
-
-                        <CustomInputLabelField
-                          label="Street Address"
-                          name="streetLines"
-                          placeholder="Enter street address"
-                          value={values.streetLines}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={touched.streetLines && Boolean(errors.streetLines)}
-                          helperText={touched.streetLines && errors.streetLines ? String(errors.streetLines) : ''}
-                          sx={{ gridColumn: { md: 'span 2' } }}
                           required
                         />
 
@@ -329,10 +359,13 @@ const ShippingDetails = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={touched.city && Boolean(errors.city)}
-                          helperText={touched.city && errors.city ? String(errors.city) : ''}
+                          helperText={
+                            touched.city && errors.city
+                              ? String(errors.city)
+                              : ''
+                          }
                           required
                         />
-
 
                         <CustomInputLabelField
                           label="Postal Code"
@@ -341,8 +374,14 @@ const ShippingDetails = () => {
                           value={values.postalCode}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          error={touched.postalCode && Boolean(errors.postalCode)}
-                          helperText={touched.postalCode && errors.postalCode ? String(errors.postalCode) : ''}
+                          error={
+                            touched.postalCode && Boolean(errors.postalCode)
+                          }
+                          helperText={
+                            touched.postalCode && errors.postalCode
+                              ? String(errors.postalCode)
+                              : ''
+                          }
                           required
                         />
 
@@ -353,8 +392,14 @@ const ShippingDetails = () => {
                           value={values.countryCode}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          error={touched.countryCode && Boolean(errors.countryCode)}
-                          helperText={touched.countryCode && errors.countryCode ? String(errors.countryCode) : ''}
+                          error={
+                            touched.countryCode && Boolean(errors.countryCode)
+                          }
+                          helperText={
+                            touched.countryCode && errors.countryCode
+                              ? String(errors.countryCode)
+                              : ''
+                          }
                           required
                         />
 
@@ -366,37 +411,76 @@ const ShippingDetails = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           error={touched.email && Boolean(errors.email)}
-                          helperText={touched.email && errors.email ? String(errors.email) : ''}
+                          helperText={
+                            touched.email && errors.email
+                              ? String(errors.email)
+                              : ''
+                          }
                           required
                         />
 
+
+
+                        <CustomInputLabelField
+                          label="Street Address"
+                          name="streetLines"
+                          placeholder="Enter street address"
+                          value={values.streetLines}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={
+                            touched.streetLines && Boolean(errors.streetLines)
+                          }
+                          helperText={
+                            touched.streetLines && errors.streetLines
+                              ? String(errors.streetLines)
+                              : ''
+                          }
+                          required
+                        />
+                        <Box>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              marginBottom: '0.3rem',
+                              fontWeight: 500,
+                              color: '#333',
+                            }}
+                          >
+                            Address Type{' '}
+                            <span style={{ color: '#FF0000' }}>*</span>
+                          </Typography>
+                          <SingleSelectDropdown
+                            titleHelper="Type"
+                            onChange={(option) => {
+                              handleChange({
+                                target: {
+                                  name: 'addressType',
+                                  value: option.value,
+                                },
+                              } as any);
+                            }}
+                            error={touched.addressType && Boolean(errors.addressType)}
+                            className="dropdown"
+                            options={addressLabelOptions}
+                          />
+                        </Box>
                       </Box>
 
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        marginTop: '2rem' 
-                      }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          marginTop: '2rem',
+                        }}
+                      >
                         <CustomButton
                           variant="contained"
                           loading={isSubmitting}
                           fullWidth
-                          onClick={async () => {
-                            console.log('Button clicked, calling submitForm');
-                            console.log('Current values:', values);
-                            console.log('Current errors:', errors);
-                            console.log('Form is valid:', Object.keys(errors).length === 0);
-                            
-                            // Try to submit directly without validation first
-                            try {
-                              await handleSubmitAddress(values, { resetForm: () => {} });
-                            } catch (error) {
-                              console.error('Direct submission error:', error);
-                            }
-                          }}
-                    
+                          type="submit"
                         >
-                          {editingAddress ? 'Update Address' : 'Add Now'}
+                          Add Now
                         </CustomButton>
                       </Box>
                     </Form>

@@ -1,3 +1,4 @@
+import { add } from 'lodash-es';
 import * as Yup from 'yup';
 
 // Address validation schema
@@ -23,7 +24,7 @@ export const addressValidationSchema = Yup.object({
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
-  state: Yup.string()
-    .min(2, 'State must be at least 2 characters')
-    .required('State is required'),
+  addressType: Yup.string()
+    .min(2, 'Address type must be at least 2 characters')
+    .required('Address type is required'),
 });
