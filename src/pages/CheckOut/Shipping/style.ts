@@ -41,9 +41,11 @@ export const Wrapper = styled.section`
 
     .address-card {
       display: flex;
+      margin-right: 0.3rem;
       justify-content: space-between;
       align-items: start;
-      border: 1px solid #C5C5C5;
+      border: 1px solid #3E424733;
+      box-shadow: 2px 2px 4px 0px #3B3E4929;
       border-radius: 0.5rem;
       padding: 0.5rem 1rem;
       padding: 0.5rem;
@@ -108,7 +110,7 @@ export const Wrapper = styled.section`
 `;
 
 export const AddNewAddressButton = styled.div`
-  border: 2px dashed #C5C5C5;
+  border: 1px dashed #2A3F7F;
   border-radius: 12px;
   padding: 1.2rem;
   text-align: center;
@@ -120,17 +122,6 @@ export const AddNewAddressButton = styled.div`
   &:hover {
     background: rgba(30, 113, 255, 0.02);
     border-color: #2A2D2F;
-  }
-  
-  .add-text {
-    color: #666;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-
   }
   
   @media (max-width: 600px) {

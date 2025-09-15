@@ -11,22 +11,22 @@ import {
   ListItemIcon,
   Radio,
   Chip,
+  CardContent,
+  Card,
+  CardActionArea,
 } from '@mui/material';
 import { Edit2, } from 'lucide-react';
 import StepLayout from '../../../components/Layout/StepLayout';
-import { getAllQuotes } from '../../../store/actions/getAllQuotes';
 import toast from 'react-hot-toast';
 import api from '../../../axiosConfig';
 import CustomButton from '../../../stories/button/CustomButton';
 import { getOrderSummaryService } from '../../../services/order';
 import { formatText } from '../../../utils/function';
+import { DeliveryService, FileDataDB } from '../../../types/uploadFiles';
 
 // Types
 interface QuoteProps {
-  files: Array<{
-    fileName: string;
-    fileId?: string;
-  }>;
+  files: FileDataDB[];
   totalPrice: number;
   tax: number;
 }
@@ -39,6 +39,7 @@ interface AddressData {
   city: string;
   stateOrProvinceCode: string;
   countryCode: string;
+  addressType: string;
   postalCode: string;
 }
 
@@ -54,7 +55,8 @@ const PaymentDetails: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [files, setFiles] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<AddressData>();
-  const [deliveryService, setDeliveryService] = useState<string | null>(null);
+  const [deliveryService, setDeliveryService] = useState<DeliveryService | null>(null);
+  console.log('Delivery Service:', deliveryService);
 
   // Hooks
   const { orderId } = useParams<{ orderId: string }>();
@@ -63,8 +65,7 @@ const PaymentDetails: React.FC = () => {
   // Effects
   useEffect(() => {
     const fetchQuoteData = async () => {
-      const summary = await getOrderSummaryService(orderId as string, setIsLoading);
-      console.log("Order Summary:", summary);
+      const summary = await getOrderSummaryService(orderId as string, setIsLoading, setError);
       if (summary) {
         setFiles(summary.files);
         setQuoteData(summary);
@@ -119,23 +120,27 @@ const PaymentDetails: React.FC = () => {
       buttonLabel="Proceed to Payment"
     >
       {
-        error ?  <Box sx={{ padding: '2rem', textAlign: 'center' }}>
-        <Typography variant="h5" color="error">
+        error ? 
+         <Card sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 2,
+         }}>
+          <CardContent>
+        <Typography  variant="h5" color="error">
           Error
         </Typography>
         <Typography paragraph>{error}</Typography>
+        <CardActionArea>
         <CustomButton children="Try Again" onClick={() => window.location.reload()} sx={{ marginTop: '1rem' }} variant="contained" />
-      </Box> :
-        <Paper
-        elevation={0}
-        sx={{
-          padding: '2rem 1.5rem',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '24px',
-          border: '1px solid #C5C5C5',
-        }}
-      >
-        <Box
+        </CardActionArea>
+          </CardContent>
+        </Card>
+        :
+        <Card>
+        <CardContent
           sx={{
             display: 'grid',
             gridTemplateColumns: {
@@ -161,7 +166,7 @@ const PaymentDetails: React.FC = () => {
                 justifyContent: 'space-between',
               }}
             >
-              <Typography variant="h6">Files Ordered</Typography>
+              <Typography variant="h6" color="primary">Files Ordered</Typography>
             </Box>
             <List dense>
               {files?.map((file, index) => (
@@ -192,7 +197,7 @@ const PaymentDetails: React.FC = () => {
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" color="primary" gutterBottom>
              Shipping & Delivery
             </Typography>
             {selectedAddress && (
@@ -206,13 +211,13 @@ const PaymentDetails: React.FC = () => {
                   {/*  Radio buttonselected */}
                   <Radio checked={true} color="primary" sx={{ padding: 0 }} />
                   <Typography variant="body2" color="primary.main">
-                    {`${selectedAddress.personName}`}
-                    <br />
+                    {`${selectedAddress.personName}, `}
                     {`${selectedAddress.streetLines.join(', ')}`}
                     <br />
                     {`${selectedAddress.city}, ${selectedAddress.postalCode}`}
                     <br />
                     {`${selectedAddress.countryCode}`}
+                    {selectedAddress.addressType && `, ${selectedAddress.addressType}`}
                   </Typography>
                 </Box>
 
@@ -232,14 +237,14 @@ const PaymentDetails: React.FC = () => {
                   >
                     Delivery plan :
                   </Typography>{' '}
-                  {formatText(deliveryService?.service_type)}
+                  {formatText(deliveryService?.service_type || 'N/A')}
                 </Typography>
             </Box>
           </Box>
 
           {/* Billing Details */}
           <Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom color="primary">
               Billing Details
             </Typography>
             <Box
@@ -314,8 +319,8 @@ const PaymentDetails: React.FC = () => {
                 </Typography>
               </Box>
           </Box>
-        </Box>
-      </Paper>
+        </CardContent>
+      </Card>
       }
     </StepLayout>
   );

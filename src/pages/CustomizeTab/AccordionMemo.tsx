@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {  useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
@@ -10,7 +10,6 @@ import { sizeOption } from '../../constants';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 import ColorDropdown from '../../stories/Dropdown/ColorDropdown';
-import PrinterDropdown from '../../stories/Dropdown/PrinterDropdown';
 
 // Icon Custom Icon
 import {
@@ -35,40 +34,16 @@ import {
   updateUnit,
   UpdateValueById,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
+import { PrinterSelector } from '../../components/Model';
+import { IPrinter } from '../../types/printer';
 
 interface AccordionProps {
-  printerData: any[];
+  printerData: IPrinter[];
   printerMessage: string;
   downloadProgress: number;
   file: FileDataDB | undefined;
 }
 
-const mapPrinterData = (printers: any[]) => {
-  return printers.map((p: any) => ({
-    id: p._id,
-    name: p.name,
-    details: {
-      buildVolume: p.buildVolume
-        ? `${p.buildVolume.x} x ${p.buildVolume.y} x ${p.buildVolume.z} mm`
-        : 'N/A',
-      layerResolution: p.layerResolution
-        ? `${p.layerResolution.min} - ${p.layerResolution.max} mm`
-        : 'N/A',
-      nozzleSize: p.nozzleSize ? `${p.nozzleSize} mm` : 'N/A',
-      printSpeed: p.printSpeed ? `${p.printSpeed} mm/s` : 'N/A',
-      materialCompatibility:
-        p.materialCompatibility && Array.isArray(p.materialCompatibility)
-          ? p.materialCompatibility
-              .map((mat: any) => mat.material_name)
-              .join(', ')
-          : 'N/A',
-      technologyType:
-        p.technologyType && Array.isArray(p.technologyType)
-          ? p.technologyType.join(', ')
-          : 'N/A',
-    },
-  }));
-};
 
 const Accordion: React.FC<AccordionProps> = ({
   printerData,
@@ -82,9 +57,14 @@ const Accordion: React.FC<AccordionProps> = ({
   const theme = useTheme();
   const dataspec = useSelector((state: RootState) => state.specification);
 
+
+  console.log('printerData in file:', file);
+
+
   const activeReverseDimension = useMemo(() => {
     return reverseDimensions.find((file) => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
+
 
   const handelChangeValue = (field: string, value: any) => {
     if (
@@ -101,10 +81,6 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   };
 
-  const mappedPrinters = useMemo(
-    () => mapPrinterData(printerData),
-    [printerData]
-  );
 
   const handleUnitChange = (option: Option) => {
     dispatch(updateUnit({ id: file?._id as string, unit: option.value }));
@@ -405,18 +381,7 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-            <PrinterDropdown
-              options={mappedPrinters}
-              onChange={(option) => handelChangeValue('printerId', option.id)}
-              defaultValue={mappedPrinters.find(
-                (opt) => opt.id === file?.printerId
-              )}
-              titleHelper="Please Select First Color, Material and Technology"
-              sx={{ width: '100%' }}
-              disabled={
-                !file?.materialId || !file?.technologyId || !file?.colorId
-              }
-            />
+          <PrinterSelector printersData={printerData} file={file} />
           ) : (
             <Typography variant="body2" color="textSecondary">
               {printerMessage ||

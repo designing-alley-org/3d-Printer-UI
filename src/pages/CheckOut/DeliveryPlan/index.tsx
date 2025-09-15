@@ -1,13 +1,14 @@
-import { Box,  Typography } from '@mui/material';
+import { Box,  Card,   CardContent,  CardHeader,  Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Card from './Card';
+import Delivery from './DeliveryCard';
 import StepLayout from '../../../components/Layout/StepLayout';
 import CustomButton from '../../../stories/button/CustomButton';
 // Icon
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { getRateTransitService } from '../../../services/address';
 import { updateOrderService } from '../../../services/order';
+import { DeliveryData } from '../../../types/address';
 // Types
 export interface Rate {
   serviceName: string;
@@ -16,39 +17,19 @@ export interface Rate {
   ratedShipmentDetails: Array<{ totalNetCharge: number }>;
 }
 
-interface DeliveryData {
-  commit:{
-    commitMessageDetails : string;
-    label:string;
-    saturdayDelivery:boolean;
-  }
-  packagingType: string;
-  serviceType: string;
-  ratedShipmentDetails:{
-    currency:string;
-    rateType:string;
-    totalBaseCharge:number;
-    totalNetCharge:number;
-  }
-}[];
-
-
-
 const DeliveryPlan: React.FC = () => {
   // State management
   const [selectedPlanIndex, setSelectedPlanIndex] = useState<number>(-1);
   const [selectedPlanName, setSelectedPlanName] = useState<string>('');
-  const [deliveryData, setDeliveryData] = useState<DeliveryData>([] as unknown as DeliveryData);
+  const [deliveryData, setDeliveryData] = useState<DeliveryData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDeliveryPlan, setSelectedDeliveryPlan] = useState(null as unknown as DeliveryData);
+  const [selectedDeliveryPlan, setSelectedDeliveryPlan] = useState<DeliveryData | null>(null);
 
 
   // Hooks
   const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
-
-  
 
   // Fetch delivery rates when order and address are available
   useEffect(() => {
@@ -92,7 +73,8 @@ const DeliveryPlan: React.FC = () => {
       isDisabled={!selectedDeliveryPlan || isLoading}
     >
       {error ? (
-        <Box sx={{ padding: '2rem', textAlign: 'center' }}>
+       <Card>
+         <CardContent>
           <Typography color="error" variant="h6">
             {error}
           </Typography>
@@ -102,29 +84,23 @@ const DeliveryPlan: React.FC = () => {
             style={{ marginTop: '1rem' }}
             variant='contained'
           />
-        </Box>
+          </CardContent>
+        </Card>
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            border: '1px solid #C5C5C5',
-            backgroundColor: '#FFFFFF',
-            gap: '16px',
-            borderRadius: { xs: '0.5rem', md: '1rem' },
-            padding: '1rem',
-          }}
-        >
-           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
-          <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1}>
+        <Card>
+           {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: 2 }}>
+         
+        </Box> */}
+        <CardHeader
+        title= {<Typography variant="h6" color='primary' fontSize={{ xs: '1rem', md: '1.25rem' }} sx={{ fontWeight: 600}} display="flex" alignItems="center" gap={1}>
            <LocationOnIcon fontSize="small" />
           Select Delivery Plan
-          </Typography>
-        </Box>
+          </Typography>}
+      />
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, paddingTop: 0 }}>
           {deliveryData.length > 0 && deliveryData?.map((plan, index) => (
            <Box onClick={() => setSelectedDeliveryPlan(plan)} key={index}>
-             <Card
+             <Delivery
               key={index}
               deliveryName={plan.serviceName}
               serviceType={plan.serviceType}
@@ -136,10 +112,12 @@ const DeliveryPlan: React.FC = () => {
               setName={setSelectedPlanName}
               index={index}
               item={plan}
+              commit={plan.commit}
             />
            </Box>
           ))}
-        </Box>
+          </CardContent>
+        </Card>
       )}
     </StepLayout>
   );

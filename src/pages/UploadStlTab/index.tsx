@@ -351,7 +351,12 @@ const UploadStl = () => {
       {files.length === 0 ? (
         <UploadInput onFileChange={processSingleFile} />
       ) : (
-        <>
+        <Card sx={{
+          padding: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem',
+        }}>
           <Box sx={styles.unitContainer}>
             {renderUnitButtons()}
           </Box>
@@ -359,7 +364,7 @@ const UploadStl = () => {
             {renderFileCards()}
             {renderFileUpload()}
           </Box>
-        </>
+        </Card>
       )}
     </StepLayout>
   );
