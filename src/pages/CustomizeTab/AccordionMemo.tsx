@@ -34,86 +34,16 @@ import {
   updateUnit,
   UpdateValueById,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
-import { Printer } from '../../components/PrinterCard';
 import { PrinterSelector } from '../../components/Model';
+import { IPrinter } from '../../types/printer';
 
 interface AccordionProps {
-  printerData: any[];
+  printerData: IPrinter[];
   printerMessage: string;
   downloadProgress: number;
   file: FileDataDB | undefined;
 }
 
-
-const printersData: Printer[] = [
-  {
-    id: 1,
-    name: "Creality Ender 3 V3",
-    imageUrl: "https://placehold.co/100x100/333/white?text=Ender+3",
-    technologyType: 'FDM',
-    buildVolume: { x: 220, y: 220, z: 250 },
-    nozzleSize: 0.4,
-    printSpeed: 180,
-    materialCompatibility: ["PLA", "ABS", "PETG", "TPU"],
-  },
-  {
-    id: 2,
-    name: "Prusa i3 MK3S+",
-    imageUrl: "https://placehold.co/100x100/E65100/white?text=Prusa+i3",
-    technologyType: 'FDM',
-    buildVolume: { x: 250, y: 210, z: 210 },
-    nozzleSize: 0.4,
-    printSpeed: 200,
-    materialCompatibility: ["PLA", "PETG", "ASA", "PC Blend"],
-  },
-  {
-    id: 3,
-    name: "Anycubic Photon Mono X",
-    imageUrl: "https://placehold.co/100x100/4A148C/white?text=Photon",
-    technologyType: 'SLA',
-    buildVolume: { x: 192, y: 120, z: 245 },
-    nozzleSize: null,
-    printSpeed: null,
-    materialCompatibility: ["405nm UV Resin", "Tough Resin", "Castable Resin"],
-  },
-  {
-    id: 4,
-    name: "Bambu Lab P1S",
-    imageUrl: "https://placehold.co/100x100/00695C/white?text=Bambu",
-    technologyType: 'FDM',
-    buildVolume: { x: 256, y: 256, z: 256 },
-    nozzleSize: 0.4,
-    printSpeed: 500,
-    materialCompatibility: ["PLA", "PETG", "ABS", "ASA", "PVA", "Carbon Fiber"],
-  },
-];
-
-const mapPrinterData = (printers: any[]) => {
-  return printers.map((p: any) => ({
-    id: p._id,
-    name: p.name,
-    details: {
-      buildVolume: p.buildVolume
-        ? `${p.buildVolume.x} x ${p.buildVolume.y} x ${p.buildVolume.z} mm`
-        : 'N/A',
-      layerResolution: p.layerResolution
-        ? `${p.layerResolution.min} - ${p.layerResolution.max} mm`
-        : 'N/A',
-      nozzleSize: p.nozzleSize ? `${p.nozzleSize} mm` : 'N/A',
-      printSpeed: p.printSpeed ? `${p.printSpeed} mm/s` : 'N/A',
-      materialCompatibility:
-        p.materialCompatibility && Array.isArray(p.materialCompatibility)
-          ? p.materialCompatibility
-              .map((mat: any) => mat.material_name)
-              .join(', ')
-          : 'N/A',
-      technologyType:
-        p.technologyType && Array.isArray(p.technologyType)
-          ? p.technologyType.join(', ')
-          : 'N/A',
-    },
-  }));
-};
 
 const Accordion: React.FC<AccordionProps> = ({
   printerData,
@@ -148,10 +78,6 @@ const Accordion: React.FC<AccordionProps> = ({
     }
   };
 
-  const mappedPrinters = useMemo(
-    () => mapPrinterData(printerData),
-    [printerData]
-  );
 
   const handleUnitChange = (option: Option) => {
     dispatch(updateUnit({ id: file?._id as string, unit: option.value }));
@@ -452,8 +378,7 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-          <PrinterSelector printersData={printersData} />
-
+          <PrinterSelector printersData={printerData} />
           ) : (
             <Typography variant="body2" color="textSecondary">
               {printerMessage ||

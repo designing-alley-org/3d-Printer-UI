@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { Printer, PrinterInfo } from "../PrinterCard";
+import {  PrinterInfo } from "../PrinterCard";
 import { Box, Button } from "@mui/material";
 import { CommandDialog, CommandEmpty, CommandInput, CommandItem, CommandList } from "../MUI/Command";
 
 
-import {
-  UnfoldMore as UnfoldMoreIcon,
-} from "@mui/icons-material"
+import { IPrinter } from "../../types/printer";
 
 
-export default function PrinterSelector({ printersData }: { printersData: Printer[] }) {
+export default function PrinterSelector({ printersData }: { printersData: IPrinter[] }) {
   const [open, setOpen] = useState(false)
-  const [selectedPrinter, setSelectedPrinter] = useState<Printer | null>(null);
+  const [selectedPrinter, setSelectedPrinter] = useState<IPrinter | null>(null);
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
@@ -25,7 +23,7 @@ export default function PrinterSelector({ printersData }: { printersData: Printe
     return () => document.removeEventListener("keydown", down)
   }, [])
 
-  const handleSelect = (printer: Printer) => {
+  const handleSelect = (printer: IPrinter) => {
     setSelectedPrinter(printer);
     setOpen(false);
   }
@@ -48,7 +46,7 @@ export default function PrinterSelector({ printersData }: { printersData: Printe
                 borderColor: 'divider',
             }}
         >
-            {selectedPrinter ? selectedPrinter.name : "Select a printer..."}
+            {selectedPrinter ? selectedPrinter.name : "Select a Technology, Material, or Color..."}
         </Button>
       <CommandDialog open={open} onClose={() => setOpen(false)}>
         <CommandInput setSearchValue={setSearchValue} />
@@ -58,7 +56,7 @@ export default function PrinterSelector({ printersData }: { printersData: Printe
           ) : (
             filteredPrinters.map((printer) => (
                 <CommandItem
-                    key={printer.id}
+                    key={printer._id}
                     onSelect={() => handleSelect(printer)}
                 >
                     <PrinterInfo printer={printer} />

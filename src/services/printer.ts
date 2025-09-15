@@ -1,6 +1,7 @@
 import api from "../axiosConfig";
+import { returnResponse } from "../utils/function";
 
-export const getPrintersByTechnologyAndMaterialService = async (
+export const filterPrinterService = async (
     selectedTech: string,
     selectedMat: string,
     selectedColor: string
@@ -9,7 +10,7 @@ export const getPrintersByTechnologyAndMaterialService = async (
         let response = await api.get(
             `/filter?technologyId=${selectedTech}&materialsId=${selectedMat}&colorsId=${selectedColor}`
         );
-        return response.data.data || []; 
+        return returnResponse(response); 
     } catch (error) {
         console.error("Error fetching printer data:", error);
         throw error; 

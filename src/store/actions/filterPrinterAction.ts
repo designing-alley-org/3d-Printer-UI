@@ -1,6 +1,6 @@
-import { getPrintersByTechnologyAndMaterialService } from "../../services/printer";
+import { filterPrinterService } from "../../services/printer";
 
-interface IGetPrintersByTechnologyAndMaterial {
+interface Props {
     materialId: string;
     technologyId: string;
     colorId: string;
@@ -8,15 +8,16 @@ interface IGetPrintersByTechnologyAndMaterial {
     setPrinterMessage: React.Dispatch<string>;
 }
 
-export const getPrintersByTechnologyAndMaterial = async ({
+export const filterPrinterAction = async ({
     materialId,
     technologyId,
     colorId,
     setPrinterData,
     setPrinterMessage,
-}: IGetPrintersByTechnologyAndMaterial): Promise<void> => {
+}: Props): Promise<void> => {
     try {
-        const res = await getPrintersByTechnologyAndMaterialService(technologyId, materialId, colorId);
+        setPrinterData([]);
+        const res = await filterPrinterService(technologyId, materialId, colorId);
         if (res.length === 0) {
             setPrinterMessage("No printers found with the selected technology and material");
         } else {

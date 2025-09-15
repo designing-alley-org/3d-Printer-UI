@@ -25,7 +25,7 @@ import {
   PrinterIcon,
 } from '../../../public/Icon/MUI_Coustom_icon/index';
 
-import { getPrintersByTechnologyAndMaterial } from '../../store/actions/getPrintersByTechnologyAndMaterial';
+import { filterPrinterAction } from '../../store/actions/filterPrinterAction';
 import { FileDataDB, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
@@ -46,13 +46,14 @@ import {
 } from '../../store/customizeFilesDetails/CustomizationSlice';
 import { stlParser } from '../../utils/stlUtils';
 import { updateFileInCustomization } from '../../store/actions/File';
+import { IPrinter } from '../../types/printer';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
   const { orderId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const [printerData, setPrinterData] = useState([]);
+  const [printerData, setPrinterData] = useState<IPrinter[]>([]);
   const [printerMessage, setPrinterMessage] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -232,9 +233,9 @@ const CustomizeTab: React.FC = () => {
   }, []);
 
   // Fetch printer data when materialId, technologyId, or colorId changess
-  const fetchPrinterData = useCallback(async () => {
+  const IPrinterData = useCallback(async () => {
     if (materialId && technologyId && colorId) {
-      await getPrintersByTechnologyAndMaterial({
+      await filterPrinterAction({
         materialId,
         technologyId,
         colorId,
@@ -245,8 +246,8 @@ const CustomizeTab: React.FC = () => {
   }, [materialId, technologyId, colorId]);
 
   useEffect(() => {
-    fetchPrinterData();
-  }, [fetchPrinterData]);
+    IPrinterData();
+  }, [IPrinterData]);
 
   // Cleanup effect to dispose of geometry when component unmounts
   useEffect(() => {
