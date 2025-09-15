@@ -39,23 +39,23 @@ const PriceChart = () => {
   return (
      <StepLayout
       stepNumber={3}
-      stepText="Get Price "
+      stepText="Get Your Price"
       stepDescription="The best price for your 3D print"
       onClick={() => navigate('/get-quotes/' + orderId + '/checkout')}
+      onClickBack={() => navigate('/get-quotes/' + orderId + '/customize')}
       isButtonsHide={false}
       orderId={orderId}
       isLoading={isLoading}
       isPageLoading={isPageLoading}
       isDisabled={isDisabled}
+      buttonLabel="Proceed to Checkout"
     >
       <Card>
         <CardHeader title={
-          <Box display="flex" alignItems="center">
+          <Typography variant="h6" component="div" color="primary.main" sx={{ fontWeight: 600 }}>
           <MonetizationOnOutlinedIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-          <Typography variant="h6" component="div">
             Price
           </Typography>
-          </Box>
         } />
         <CardContent>
           <PriceTable  files={files} />
