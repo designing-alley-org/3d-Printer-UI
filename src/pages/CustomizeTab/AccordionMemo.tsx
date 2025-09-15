@@ -381,7 +381,7 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-          <PrinterSelector printersData={printerData} selectedPrinterId={file?.printerId} />
+          <PrinterSelector printersData={printerData} file={file} />
           ) : (
             <Typography variant="body2" color="textSecondary">
               {printerMessage ||
