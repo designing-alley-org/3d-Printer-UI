@@ -444,7 +444,7 @@ const uploadFilesService = async (
 const updateTotalWeightService = async (orderId: string, navigate: any) => {
     try {
         const response = await api.patch(`/update-total-weight/${orderId}`);
-        navigate(`/get-quotes/${orderId}/quote`);
+        navigate(`/get-quotes/${orderId}/price`);
         return response;
     } catch (error) {
         toast.error(returnError(error));

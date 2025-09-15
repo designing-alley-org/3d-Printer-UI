@@ -8,6 +8,7 @@ export const ROUTES = {
   DASHBOARD: 'dashboard',
   UPLOAD_STL: 'upload-stl',
   CUSTOMIZE: 'customize',
+  PRICE: 'price',
   QUOTE: 'quote',
   CHECKOUT: 'checkout',
   SHIPPING_DETAILS: 'checkout',

@@ -27,6 +27,7 @@ import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
 import UploadStl from '../pages/UploadStlTab/index.tsx';
 import Notification from '../pages/Notifications/index.tsx';
 import STLWeightCalculator from '../pages/STLWeightCalculator';
+import PriceChart from '../pages/PriceChart/index.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -60,6 +61,10 @@ const Routing: React.FC = () => {
           <Route
             path={ROUTES.CUSTOMIZE}
             element={<ProtectedRoute component={<Customize />} />}
+          />
+           <Route
+            path={ROUTES.PRICE}
+            element={<ProtectedRoute component={<PriceChart />} />}
           />
           <Route
             path={ROUTES.QUOTE}
