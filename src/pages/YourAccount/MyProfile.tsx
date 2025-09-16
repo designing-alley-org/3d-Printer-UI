@@ -9,6 +9,7 @@ import ListAddress from '../../components/ListAddress/ListAddress';
 import { setDefaultAddressService } from '../../services/address';
 import { EditEmailModal } from '../../components/Model';
 import LoadingScreen from '../../components/LoadingScreen';
+import { sendUpdateEmailVerificationService } from '../../services/user';
 
 const MyProfile = () => {
   const user = useSelector((state: any) => state.user);
@@ -24,13 +25,14 @@ const MyProfile = () => {
     setDefaultAddressService(addressId, setSelectedAddressId);
   };
 
-  const handleSaveEmail = (email: string) => {
-    setSaveLoading(true);
-    setTimeout(() => {
-      setSaveLoading(false);
+  const handleSaveEmail = async (email: string) => {
+    try {
+      setSaveLoading(true);
+      await sendUpdateEmailVerificationService(email);
       setEditEmailModalOpen(false);
-    }, 2000);
-    email
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
 

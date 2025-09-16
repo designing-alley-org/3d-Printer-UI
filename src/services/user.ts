@@ -57,7 +57,9 @@ export const resetPasswordService = async (newPassword: string, token: string): 
 export const sendUpdateEmailVerificationService = async (new_email: string): Promise<any> => {
     try {
       const response = await api.post(`/send-update-email-verification`, { new_email });
-      return returnResponse(response);
+      console.log(response);
+      toast.success(response.data.message);
+      return response;
     } catch (error) {
       toast.error(returnError(error));
       throw error;
