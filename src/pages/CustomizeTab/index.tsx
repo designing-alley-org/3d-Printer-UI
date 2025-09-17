@@ -76,8 +76,8 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const { materialId, technologyId, printerId, colorId, infill, weight } = file || {};
-
+  const { materialId, technologyId, printerId, colorId, infill, weight } =
+    file || {};
 
   useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -143,12 +143,20 @@ const CustomizeTab: React.FC = () => {
   }, [colorId, colors]);
 
   const processGeometry = useCallback(async () => {
-    if (stlGeometry && materialDensity) {
+    if (
+      stlGeometry &&
+      materialDensity &&
+      materialDensity > 0 &&
+      infill &&
+      infill > 0
+    ) {
       try {
         const result = await stlParser.processSTLGeometry(
           materialDensity,
           stlGeometry,
-          1.0
+          infill,
+          1.5, // Assuming a default wall thickness of 1.5mm
+          1.0 // Assuming no scaling
         );
         if (result) {
           // setCurrentWeight(result);
@@ -164,7 +172,7 @@ const CustomizeTab: React.FC = () => {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry, materialDensity]);
+  }, [stlGeometry, infill, materialDensity]);
 
   // Calculate weight when geometry or material density changes
   useEffect(() => {
@@ -175,10 +183,7 @@ const CustomizeTab: React.FC = () => {
 
   const isAllCoustomized = useMemo(() => {
     if (files.length === 0) return false;
-    return files.every(
-      (file: FileDataDB) =>
-        file.isCustomized 
-    );
+    return files.every((file: FileDataDB) => file.isCustomized);
   }, [files]);
 
   const [error, setError] = useState<string | null>(null);
@@ -266,7 +271,7 @@ const CustomizeTab: React.FC = () => {
       technologyId,
       printerId,
       infill,
-      weight
+      weight,
     };
     await updateFileInCustomization(
       activeFileId,
@@ -322,40 +327,43 @@ const CustomizeTab: React.FC = () => {
                         : '1px solid #FFFFFF',
                   }}
                 >
-                    <Box
-                      sx={{
-                        ':hover': {
-                          transform: 'scale(1.05)',
-                          transition: 'transform 0.3s ease-in-out',
-                        },
-                        overflow: 'hidden',
-                        margin: '7px 10px;',
-                        cursor: 'pointer',
-                        width: '5rem',
+                  <Box
+                    sx={{
+                      ':hover': {
+                        transform: 'scale(1.05)',
+                        transition: 'transform 0.3s ease-in-out',
+                      },
+                      overflow: 'hidden',
+                      margin: '7px 10px;',
+                      cursor: 'pointer',
+                      width: '5rem',
+                      height: '5rem',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      position: 'relative',
+                      borderRadius: '12px',
+                      background: theme.palette.background.paper,
+                      boxShadow:
+                        activeFileId === file._id
+                          ? '0px 4px 4px 0px #CDE1FF'
+                          : 'none',
+                    }}
+                    onClick={(e) => {
+                      dispatch(setActiveFileId(file._id));
+                      handleOpenSTLViewer(e);
+                    }}
+                  >
+                    <img
+                      src={file.thumbnailUrl}
+                      alt={file.fileName}
+                      style={{
                         height: '5rem',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        position: 'relative',
-                        borderRadius: '12px',
-                        background: theme.palette.background.paper,
-                        boxShadow:   activeFileId === file._id ? '0px 4px 4px 0px #CDE1FF' : 'none',
+                        width: '6rem',
+                        transform: 'scale(2.4)',
                       }}
-                      onClick={(e) =>{
-                         dispatch(setActiveFileId(file._id));
-                         handleOpenSTLViewer(e)}
-                        }
-                    >
-                      <img
-                        src={file.thumbnailUrl}
-                        alt={file.fileName}
-                        style={{
-                          height: '5rem',
-                          width: '6rem',
-                          transform: 'scale(2.4)',
-                        }}
-                      />
-                    </Box>
+                    />
+                  </Box>
                   <ModelName
                     isActive={activeFileId === file._id}
                     textColor={theme.palette.primary.main}
