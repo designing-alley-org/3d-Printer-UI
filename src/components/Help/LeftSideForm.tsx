@@ -9,7 +9,7 @@ import CustomButton from '../../stories/button/CustomButton';
 
 const LeftSideForm = () => {
   return (
-    <Card sx={{ maxWidth: 430, backgroundColor: 'primary.main' }}>
+    <Card sx={{ maxWidth: 430, backgroundColor: 'primary.main', flex: 1 }}>
       <CardHeader
         title={
           <Typography variant="h6" color="primary.contrastText" gutterBottom>
