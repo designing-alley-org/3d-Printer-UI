@@ -4,29 +4,75 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import ImageIcon from '@mui/icons-material/Image';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
+import { useRef } from 'react';
 
-const actions = [
-  {
-    icon: <ImageIcon />,
-    name: 'Add Image',
-    onClick: () => {
-      console.log('Add Image clicked');
-      // Handle image upload logic here
-    },
-  },
-  {
-    icon: <InsertDriveFileIcon />,
-    name: 'Add Document',
-    onClick: () => {
-      console.log('Add Document clicked');
-      // Handle document upload logic here
-    },
-  },
-];
+interface PinProps {
+  onImageSelect?: (files: File[]) => void;
+  onDocumentSelect?: (files: File[]) => void;
+}
 
-export default function Pin() {
+export default function Pin({ onImageSelect, onDocumentSelect }: PinProps) {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const documentInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = () => {
+    imageInputRef.current?.click();
+  };
+
+  const handleDocumentClick = () => {
+    documentInputRef.current?.click();
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0 && onImageSelect) {
+      onImageSelect(files);
+    }
+    // Reset input to allow selecting the same files again
+    event.target.value = '';
+  };
+
+  const handleDocumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0 && onDocumentSelect) {
+      onDocumentSelect(files);
+    }
+    // Reset input to allow selecting the same files again
+    event.target.value = '';
+  };
+
+  const actions = [
+    {
+      icon: <ImageIcon />,
+      name: 'Add Image',
+      onClick: handleImageClick,
+    },
+    {
+      icon: <InsertDriveFileIcon />,
+      name: 'Add Document',
+      onClick: handleDocumentClick,
+    },
+  ];
   return (
     <Box sx={{ position: 'relative', height: '40px', width: '40px' }}>
+      {/* Hidden file inputs */}
+      <input
+        type="file"
+        ref={imageInputRef}
+        multiple
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleImageChange}
+      />
+      <input
+        type="file"
+        ref={documentInputRef}
+        multiple
+        accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+        style={{ display: 'none' }}
+        onChange={handleDocumentChange}
+      />
+      
       <SpeedDial
         ariaLabel="Attachment options"
         sx={{

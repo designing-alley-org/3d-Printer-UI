@@ -15,6 +15,23 @@ interface  Props {
     isOpen?: boolean;
 }
 
+function statusHexColor(status: string) {
+  switch (status.toLowerCase()) {
+    case 'hold':
+      return '#FFA500'; // Orange
+    case 'in progress':
+      return '#0000FF'; // Blue
+    case 'resolved':
+      return '#008000'; // Green
+    case 'open':
+      return '#FFFF00'; // Yellow
+    case 'closed':
+      return '#808080'; // Grey
+    default:
+      return '#000000'; // Black for unknown status
+  }
+}
+
 const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: Props) => {
   return (
     <Card
@@ -68,7 +85,7 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
               Status:
               <Typography
                 variant="body2"
-                color="primary.main"
+                color={statusHexColor(status || '')}
                 component={'span'}
                 ml={1}
               >
@@ -79,7 +96,7 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
                     width: '8px',
                     height: '8px',
                     borderRadius: '50%',
-                    backgroundColor: 'primary.main',
+                    backgroundColor: statusHexColor(status || ''),
                     display: 'inline-block',
                     mr: 1,
                   }}
@@ -107,7 +124,7 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
           sx={{ pt: 0 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <ChatUI isLoading={false} />
+          <ChatUI isLoading={false} ticketId={id || ''} />
         </CardContent>
       </motion.div>
     </Card>
