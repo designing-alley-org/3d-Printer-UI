@@ -3,7 +3,7 @@ import HelpList from './HelpList'
 
 const RightSideList = () => {
   return (
-   <Card sx={{ flex: 1, maxHeight: 600, overflowY: 'auto' }}>
+   <Card sx={{ flex: 1, overflowY: 'auto' }}>
      <CardHeader
         title={
           <Typography variant="h6" gutterBottom>
