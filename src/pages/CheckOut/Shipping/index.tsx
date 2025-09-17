@@ -28,7 +28,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { X } from 'lucide-react';
 import { updateOrderService } from '../../../services/order';
 import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
-import { addressLabelOptions } from '../../../constant/dropDownOPtion';
+import { addressLabelOptions } from '../../../constant/dropDownOption';
 
 const ShippingDetails = () => {
   const { orderId } = useParams();
