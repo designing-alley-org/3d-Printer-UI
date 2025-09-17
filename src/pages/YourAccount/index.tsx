@@ -38,13 +38,7 @@ const Account = () => {
       maxWidth="lg"
       sx={{ alignSelf: 'start', p: { xs: 2, sm: 3, md: 4 } }}
     >
-      <Typography variant="h5" fontWeight={600} gutterBottom>
-        My Account
-      </Typography>
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="body1">
-          Manage your profile, orders, and settings
-        </Typography>
         <CustomButton
           children={
             <Tooltip title="Edit Profile" placement="top">
