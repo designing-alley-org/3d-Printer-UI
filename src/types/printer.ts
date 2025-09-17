@@ -1,9 +1,6 @@
 import { Color, Material, Technology } from './uploadFiles';
 
-export type ImageURL = {
-  url?: string;
-  key?: string;
-};
+
 
 export type BuildVolume = {
   x: number;
@@ -18,35 +15,29 @@ export type LayerResolution = {
 
 export type isActive = 'active' | 'inactive';
 
-// 🔹 Main Printer type
 export interface IPrinter {
   _id: string; // usually _id mapped to string
 
   name: string;
-  imageURL?: ImageURL;
-  model: string;
+  imageURL?: string;
+  buildVolume_mm: BuildVolume;
 
-  buildVolume: BuildVolume;
-  layerResolution: LayerResolution;
-
-  materialIds: string[]; // could expand into IMaterial[]
-  technologyIds: string[]; // could expand into ITechnology[]
-  colorIds: string[]; // could expand into IColor[]
-
-  nozzleSize: number;
-  printSpeed: number;
-
-  extruders: string; // or "Direct" | "Bowden" if you want enum typing
-
+  nozzleDiameter_mm: number;
+  defaultLayerHeight_mm: number;
+  maxPrintSpeed_mm_s: number;
+  maxVolumetricFlow_mm3s: number;
+  powerConsumption_watts: number;
+  heatingTime_min: number;
+  maxAcceleration_mm_s2: number;
   maxBedHeat?: number;
   heatSinkSize?: number;
 
   createdBy: string; // User ID
 
   isActive?: isActive;
-  materials: Material[];
-  colors: Color[];
-  technologies: Technology[];
+  materials?: Material[];
+  colors?: Color[];
+  technologies?: Technology;
   createdAt?: Date;
   updatedAt?: Date;
 }
