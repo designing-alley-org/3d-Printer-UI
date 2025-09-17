@@ -82,7 +82,7 @@ export const quoteTexts = [
 export const accTab = [
   { id: 1, label: 'My Profile', path: ROUTES.MY_PROFILE, icon: 'Person' },
   { id: 2, label: 'My Orders', path: ROUTES.MY_ORDERS, icon: 'ShoppingBag' },
-  { id: 3, label: 'Help', path: ROUTES.HELP, icon: 'Warning' },
+  { id: 3, label: 'Help', path: ROUTES.HELP, icon: 'Help' },
   { id: 5, label: 'Account Settings', path: ROUTES.PASSWORD, icon: 'Settings' },
 ];
 

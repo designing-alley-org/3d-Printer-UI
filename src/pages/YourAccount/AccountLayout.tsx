@@ -3,9 +3,10 @@ import { Box, Tabs, Tab } from '@mui/material';
 import {
   Person as PersonOutlinedIcon,
   ShoppingBag as ShoppingBagIcon,
-  Warning as WarningIcon,
-  Settings as SettingsOutlinedIcon
+  Settings as SettingsOutlinedIcon,
+  Help as HelpOutlineIcon,
 } from '@mui/icons-material';
+
 
 import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
@@ -28,8 +29,8 @@ const AccountLayout = () => {
         return <PersonOutlinedIcon {...iconProps} />;
       case 'ShoppingBag':
         return <ShoppingBagIcon {...iconProps} />;
-      case 'Warning':
-        return <WarningIcon {...iconProps} />;
+      case 'Help':
+        return <HelpOutlineIcon {...iconProps} />;
       case 'Settings':
         return <SettingsOutlinedIcon {...iconProps} />;
       default:

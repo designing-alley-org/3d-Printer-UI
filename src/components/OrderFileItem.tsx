@@ -18,12 +18,11 @@ import { formatDate, formatText } from '../utils/function';
 interface Props {
   order: any;
   onClick: (id: string) => void;
-  onDispute?: (id: string) => void;
   onReturn?: (id: string, shipmentId: string) => void;
   isExpanded?: boolean;
 }
 
-const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false }: Props) => {
+const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) => {
   const theme = useTheme();
   return (
     <>
@@ -145,22 +144,6 @@ const OrderFileItem = ({ order, onClick, onDispute, onReturn, isExpanded = false
                   }}
                 />
                }
-                {
-                  true
-                  && 
-                 <CustomButton
-                  variant="contained"
-                  sx={{
-                    borderRadius: '4px',
-                     padding: '8px 36px',
-                  }}
-                  children="Dispute"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDispute?.(order._id);
-                  }}
-                />
-                }
               </Box>
              }
             </Box>

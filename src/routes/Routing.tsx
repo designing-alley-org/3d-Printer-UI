@@ -20,7 +20,6 @@ import ForgetPassword from '../pages/Auth/forgetPassword.tsx';
 import VerifyEmail from '../pages/Auth/VerifyEmail.tsx';
 import ChangePassword from '../pages/Auth/ChangePassword.tsx';
 import MyProfile from '../pages/YourAccount/MyProfile.tsx';
-import MyDisputes from '../pages/YourAccount/myDispute/index.tsx';
 import Password from '../pages/YourAccount/Password.tsx';
 import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
 import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
@@ -28,6 +27,7 @@ import UploadStl from '../pages/UploadStlTab/index.tsx';
 import Notification from '../pages/Notifications/index.tsx';
 import STLWeightCalculator from '../pages/STLWeightCalculator';
 import PriceChart from '../pages/PriceChart/index.tsx';
+import Help from '../pages/YourAccount/Help.tsx';
 
 const Routing: React.FC = () => {
   return (
@@ -117,20 +117,10 @@ const Routing: React.FC = () => {
             path={ROUTES.PASSWORD}
             element={<ProtectedRoute component={<Password />} />}
           />
-          
-          {/* Dispute Routes */}
-          <Route path={ROUTES.MY_DISPUTE}>
-            <Route
-              index
-              element={<ProtectedRoute component={<MyDisputes />} />}
-            />
-            <Route
-              path=":_id/:orderId/:dispute_type"
-              element={<ProtectedRoute component={<MyDisputes />} />}
-            />
-          </Route>
-          
-         
+          <Route
+          path={ROUTES.HELP}
+           element={<ProtectedRoute component={<Help />} />}
+          />
         </Route>
 
         {/* Notifications */}
