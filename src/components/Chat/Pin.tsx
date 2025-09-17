@@ -68,7 +68,7 @@ export default function Pin({ onImageSelect, onDocumentSelect }: PinProps) {
         type="file"
         ref={documentInputRef}
         multiple
-        accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+        accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.stl"
         style={{ display: 'none' }}
         onChange={handleDocumentChange}
       />

@@ -2,6 +2,7 @@ import { Box, TextField } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import Pin from './Pin';
 import ImagePreview from './ImagePreview';
+import FilePreview from './FilePreview';
 import { formatDate } from '../../utils/function';
 import LoadingScreen from '../LoadingScreen';
 import MessageUI from './MessageUI';
@@ -18,6 +19,7 @@ interface ChatUIProps {
 const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
     const [messageInput, setMessageInput] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const { chatData, loading, sendingMessage } = useSelector((state: RootState) => state.chat);
     
@@ -49,7 +51,7 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if ((!messageInput.trim() && selectedImages.length === 0) || !ticketId) return;
+        if ((!messageInput.trim() && selectedImages.length === 0 && selectedFiles.length === 0) || !ticketId) return;
         
         // Convert images to attachments (for now, we'll create mock URLs)
         const imageAttachments = selectedImages.map((file) => ({
@@ -59,15 +61,38 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
             size: file.size
         }));
         
+        // Convert files to attachments
+        const fileAttachments = selectedFiles.map((file) => ({
+            type: file.name.split('.').pop()?.toLowerCase() || 'file',
+            url: URL.createObjectURL(file), // In production, upload to server first
+            name: file.name,
+            size: file.size
+        }));
+        
+        // Combine all attachments
+        const allAttachments = [...imageAttachments, ...fileAttachments];
+        
+        // Create message text
+        let messageText = messageInput.trim();
+        if (!messageText && allAttachments.length > 0) {
+            const imageCount = selectedImages.length;
+            const fileCount = selectedFiles.length;
+            const parts = [];
+            if (imageCount > 0) parts.push(`${imageCount} image${imageCount > 1 ? 's' : ''}`);
+            if (fileCount > 0) parts.push(`${fileCount} file${fileCount > 1 ? 's' : ''}`);
+            messageText = `Sent ${parts.join(' and ')}`;
+        }
+        
         const messageData = {
             ticketId,
-            message: messageInput.trim() || (selectedImages.length > 0 ? `Sent ${selectedImages.length} image${selectedImages.length > 1 ? 's' : ''}` : ''),
-            attachments: imageAttachments
+            message: messageText,
+            attachments: allAttachments
         };
         
         dispatch(sendMessage(messageData));
         setMessageInput(''); // Clear input after sending
         setSelectedImages([]); // Clear selected images after sending
+        setSelectedFiles([]); // Clear selected files after sending
         
         // Simulate auto-response after 2 seconds
         setTimeout(() => {
@@ -101,6 +126,18 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
         setSelectedImages([]);
     };
 
+    const handleFileSelect = (files: File[]) => {
+        setSelectedFiles(prev => [...prev, ...files]);
+    };
+
+    const handleRemoveFile = (index: number) => {
+        setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleRemoveAllFiles = () => {
+        setSelectedFiles([]);
+    };
+
     if (isLoading || loading) {
         return <LoadingScreen />;
     }
@@ -127,42 +164,54 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
 
       {/* Input */}
       <Box component={'form'} display={'flex'} gap={2} mt={2} onSubmit={handleSendMessage}>
-        {selectedImages.length > 0 ? (
-          // Show image preview when images are selected
-          <Box sx={{ flex: 1, position: 'relative' }}>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          {/* Image Preview */}
+          {selectedImages.length > 0 && (
             <ImagePreview
               files={selectedImages}
               onRemove={handleRemoveImage}
               onRemoveAll={handleRemoveAllImages}
             />
-          </Box>
-        ) : (
-          // Show text input when no images are selected
-          <TextField
-            type="text"
-            placeholder="Type your message..."
-            variant="outlined"
-            fullWidth
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={sendingMessage}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                height: '40px',
-              },
-            }}
-            InputProps={{
-              endAdornment: <Pin onImageSelect={handleImageSelect} />,
-            }}
-          />
-        )}
+          )}
+          
+          {/* File Preview */}
+          {selectedFiles.length > 0 && (
+            <FilePreview
+              files={selectedFiles}
+              onRemove={handleRemoveFile}
+              onRemoveAll={handleRemoveAllFiles}
+            />
+          )}
+          
+          {/* Text Input - show when no images/files selected, or always if user wants to add message */}
+          {(selectedImages.length === 0 && selectedFiles.length === 0) && (
+            <TextField
+              type="text"
+              placeholder="Type your message..."
+              variant="outlined"
+              fullWidth
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={sendingMessage}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  height: '40px',
+                },
+              }}
+              InputProps={{
+                endAdornment: <Pin onImageSelect={handleImageSelect} onDocumentSelect={handleFileSelect} />,
+              }}
+            />
+          )}
+        </Box>
+        
         <CustomButton
           children={sendingMessage ? "Sending..." : "Send"}
           variant="contained"
           color="primary"
           type="submit"
-          disabled={(!messageInput.trim() && selectedImages.length === 0) || sendingMessage}
+          disabled={(!messageInput.trim() && selectedImages.length === 0 && selectedFiles.length === 0) || sendingMessage}
           sx={{
             borderRadius: '8px',
             height: '40px',
