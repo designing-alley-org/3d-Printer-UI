@@ -1,47 +1,117 @@
-import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material'
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import ChatUI from '../Chat/ChatUI';
+import { motion } from 'framer-motion';
+import { formatDate } from '../../utils/function';
 
-
-
-const HelpList = () => {
-
-  return (
-   <Card sx={{ p: 0 }}>
-    <CardContent sx={{ display: 'flex', flexDirection: 'column'}}>
-        <Box display={'flex'} justifyContent={'space-between'} mb={1}>
-            <Typography variant="body1" color="primary.main" >
-                Payment - Query subject title
-            </Typography>
-            <KeyboardArrowDownOutlinedIcon fontSize="small" sx={{ float: 'right', color: 'primary.main' }}/>
-        </Box>
-        <Box display={'flex'} justifyContent={'space-between'}>
-             <Typography variant="body2" color="secondary" >
-               Created On: 02/08/2025
-            </Typography>
-            <Box display={'flex'} gap={2}>
-                <Typography variant="body2" color="text.secondary" >
-               Order Id:
-               <Typography variant="body2" color="primary.main" component={'span'} ml={1}>
-                    68c8204a027a67fcc8c395cd
-                </Typography>
-            </Typography>
-            <Typography>
-                Status:
-                <Typography variant="body2" color="primary.main" component={'span'} ml={1}>
-                    {/* Dot */}
-                    <Box component={'span'} sx={{ width:'8px', height:'8px', borderRadius:'50%', backgroundColor:'primary.main', display:'inline-block', mr:1 }}/>
-                    in Progress
-                </Typography>
-            </Typography>
-            </Box>
-        </Box>
-    </CardContent>
-    <CardContent>
-        <ChatUI />
-    </CardContent>
-   </Card>
-  )
+interface  Props {
+    onClick?: (id: string) => void;
+    id?: string;
+    type?: string;
+    title?: string;
+    date?: string;
+    orderId?: string;
+    status?: string;
+    isOpen?: boolean;
 }
 
-export default HelpList
+const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: Props) => {
+  return (
+    <Card
+      sx={{
+        p: 0,
+        backgroundColor: isOpen ? '#EFF4FF' : 'transparent',
+        border: isOpen ? '1px solid #F0F4FF' : '1px solid #F0F4FF',
+      }}
+    >
+      <CardContent 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          cursor: 'pointer'
+        }}
+        onClick={() => onClick && id && onClick(id)}
+      >
+        <Box display={'flex'} justifyContent={'space-between'} mb={1}>
+          <Typography variant="body1" color="primary.main">
+            {type} - {title}
+          </Typography>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            style={{ display: 'inline-block', float: 'right' }}
+          >
+            {' '}
+            <KeyboardArrowDownOutlinedIcon
+              fontSize="small"
+              sx={{ float: 'right', color: 'primary.main' }}
+            />
+          </motion.div>
+        </Box>
+        <Box display={'flex'} justifyContent={'space-between'}>
+          <Typography variant="body2" color="secondary">
+            Created On: {formatDate(date || '', false)}
+          </Typography>
+          <Box display={'flex'} gap={2}>
+            <Typography variant="body2" color="text.secondary">
+              Order Id:
+              <Typography
+                variant="body2"
+                color="primary.main"
+                component={'span'}
+                ml={1}
+              >
+                {orderId}
+              </Typography>
+            </Typography>
+            <Typography>
+              Status:
+              <Typography
+                variant="body2"
+                color="primary.main"
+                component={'span'}
+                ml={1}
+              >
+                {/* Dot */}
+                <Box
+                  component={'span'}
+                  sx={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: 'primary.main',
+                    display: 'inline-block',
+                    mr: 1,
+                  }}
+                />
+                {status}
+              </Typography>
+            </Typography>
+          </Box>
+        </Box>
+      </CardContent>
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ 
+          height: isOpen ? 'auto' : 0, 
+          opacity: isOpen ? 1 : 0 
+        }}
+        transition={{ 
+          duration: 0.3, 
+          ease: 'easeInOut',
+          opacity: { duration: 0.2 }
+        }}
+        style={{ overflow: 'hidden' }}
+      >
+        <CardContent 
+          sx={{ pt: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ChatUI isLoading={false} />
+        </CardContent>
+      </motion.div>
+    </Card>
+  );
+};
+
+export default HelpList;

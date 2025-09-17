@@ -2,6 +2,7 @@ import { Box, TextField, Typography } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import Pin from './Pin';
 import { formatDate } from '../../utils/function';
+import LoadingScreen from '../LoadingScreen';
 
 
 
@@ -118,7 +119,11 @@ const MessageUI = ({ message, date, isSender }: { message: string; date: string;
   );
 }
 
-const ChatUI = () => {
+const ChatUI = ({isLoading}: {isLoading: boolean}) => {
+
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
   return (
     <Box>
       {/* Chat UI components go here */}

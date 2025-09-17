@@ -38,6 +38,7 @@ export default function Pin() {
             height: '32px',
             boxShadow: 'none',
             backgroundColor: 'transparent',
+            '&:hover': { backgroundColor: 'transparent' },
             border: 'none',
             minHeight: '32px',
           },
