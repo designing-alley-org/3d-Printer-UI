@@ -38,9 +38,10 @@ const ChatUI = ({isLoading}: {isLoading: boolean}) => {
         {messages.map((msg, index) => (
           <MessageUI
             key={index} 
-            message={msg.message} 
+            message={msg.message || ''} 
             date={formatDate(msg.createdAt, true)} 
-            isSender={msg.isSender} 
+            isSender={msg.isSender}
+            attachments={msg.attachments || []}
           />
         ))}
         {/* Empty div to scroll to bottom */}
