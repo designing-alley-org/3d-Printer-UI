@@ -139,110 +139,114 @@ export class STLParser {
     };
   }
 
-  async processSTLGeometry(
-    densityValue: number,
-    geometry: THREE.BufferGeometry,
-    scaleFactor = 1.0
-  ): Promise<
-    | {
-        volumeMm3: number;
-        volumeCm3: number;
-        volumeIn3: number;
-        massGrams: number;
+  async  processSTLGeometry(
+  densityValue: number,
+  geometry: THREE.BufferGeometry,
+  infillPercent: number,
+  wallThickness_mm: number,
+  scaleFactor = 1.0
+): Promise<
+  | {
+      totalSolidVolumeMm3: number;
+      shellVolumeMm3: number;
+      infillVolumeMm3: number;
+      totalMaterialVolumeMm3: number;
+      massGrams: number;
+    }
+  | undefined
+> {
+    if (!geometry) throw new Error("No geometry provided.");
+    const posAttr = geometry.attributes.position;
+    if (!posAttr) throw new Error("Geometry missing position attribute.");
+
+    const posArray = posAttr.array as Float32Array;
+    const indexArray = geometry.index ? (geometry.index.array as Uint32Array | Uint16Array) : null;
+
+    let totalSolidVolume = 0;
+    let surfaceArea = 0;
+
+    // Helper vectors for calculations
+    const vA = new THREE.Vector3();
+    const vB = new THREE.Vector3();
+    const vC = new THREE.Vector3();
+
+    const processTriangle = (i0: number, i1: number, i2: number) => {
+      vA.set(posArray[i0], posArray[i0 + 1], posArray[i0 + 2]).multiplyScalar(scaleFactor);
+      vB.set(posArray[i1], posArray[i1 + 1], posArray[i1 + 2]).multiplyScalar(scaleFactor);
+      vC.set(posArray[i2], posArray[i2 + 1], posArray[i2 + 2]).multiplyScalar(scaleFactor);
+
+      // 1. Calculate signed volume of the tetrahedron from origin to triangle
+      totalSolidVolume += vA.dot(vB.clone().cross(vC)) / 6.0;
+
+      // 2. Calculate area of the triangle for surface area
+      const ab = vB.clone().sub(vA);
+      const ac = vC.clone().sub(vA);
+      surfaceArea += ab.cross(ac).length() * 0.5;
+    };
+
+    if (indexArray) {
+      // Indexed geometry
+      for (let i = 0; i < indexArray.length; i += 3) {
+        const i0 = indexArray[i] * 3;
+        const i1 = indexArray[i + 1] * 3;
+        const i2 = indexArray[i + 2] * 3;
+        processTriangle(i0, i1, i2);
       }
-    | undefined
-  > {
-    try {
-      if (!geometry) throw new Error("No geometry provided.");
-      const posAttr = geometry.attributes.position;
-      if (!posAttr) throw new Error("Geometry missing position attribute.");
-      if (posAttr.itemSize !== 3) throw new Error("Position attribute itemSize !== 3.");
-  
-      // Get the underlying array (Float32Array usually)
-      const posArray = posAttr.array as Float32Array | number[];
-  
-      // Helper: compute signed volume of tetrahedron (v0, v1, v2) relative to origin
-      const signedTetraVolume = (
-        x0: number,
-        y0: number,
-        z0: number,
-        x1: number,
-        y1: number,
-        z1: number,
-        x2: number,
-        y2: number,
-        z2: number
-      ): number => {
-        // dot(v0, cross(v1, v2)) / 6
-        const cx = y1 * z2 - z1 * y2;
-        const cy = z1 * x2 - x1 * z2;
-        const cz = x1 * y2 - y1 * x2;
-        return (x0 * cx + y0 * cy + z0 * cz) / 6.0;
-      };
-  
-      let totalSignedVolume = 0;
-  
-      if (geometry.index) {
-        // Indexed geometry
-        const index = geometry.index.array as Uint16Array | Uint32Array | number[];
-        for (let i = 0; i < index.length; i += 3) {
-          const i0 = index[i] * 3;
-          const i1 = index[i + 1] * 3;
-          const i2 = index[i + 2] * 3;
-  
-          const x0 = (posArray[i0] as number) * scaleFactor;
-          const y0 = (posArray[i0 + 1] as number) * scaleFactor;
-          const z0 = (posArray[i0 + 2] as number) * scaleFactor;
-  
-          const x1 = (posArray[i1] as number) * scaleFactor;
-          const y1 = (posArray[i1 + 1] as number) * scaleFactor;
-          const z1 = (posArray[i1 + 2] as number) * scaleFactor;
-  
-          const x2 = (posArray[i2] as number) * scaleFactor;
-          const y2 = (posArray[i2 + 1] as number) * scaleFactor;
-          const z2 = (posArray[i2 + 2] as number) * scaleFactor;
-  
-          totalSignedVolume += signedTetraVolume(x0, y0, z0, x1, y1, z1, x2, y2, z2);
-        }
-      } else {
-        // Non-indexed: every 9 numbers form a triangle (3 verts * 3 coords)
-        const vertexCount = posArray.length / 3;
-        if (!Number.isInteger(vertexCount))
-          throw new Error("Position array length not divisible by 3.");
-        for (let i = 0; i < posArray.length; i += 9) {
-          const x0 = (posArray[i] as number) * scaleFactor;
-          const y0 = (posArray[i + 1] as number) * scaleFactor;
-          const z0 = (posArray[i + 2] as number) * scaleFactor;
-  
-          const x1 = (posArray[i + 3] as number) * scaleFactor;
-          const y1 = (posArray[i + 4] as number) * scaleFactor;
-          const z1 = (posArray[i + 5] as number) * scaleFactor;
-  
-          const x2 = (posArray[i + 6] as number) * scaleFactor;
-          const y2 = (posArray[i + 7] as number) * scaleFactor;
-          const z2 = (posArray[i + 8] as number) * scaleFactor;
-  
-          totalSignedVolume += signedTetraVolume(x0, y0, z0, x1, y1, z1, x2, y2, z2);
-        }
+    } else {
+      // Non-indexed geometry
+      for (let i = 0; i < posArray.length; i += 9) {
+        processTriangle(i, i + 3, i + 6);
       }
-  
-      const volumeMm3 = Math.abs(totalSignedVolume); // mm^3 if input coords are mm
-      const volumeCm3 = volumeMm3 / 1000.0; // 1 cm^3 = 1000 mm^3
-      const volumeIn3 = volumeCm3 * 0.0610237440953699; // 1 cm^3 = 0.0610237 in^3
-      const massGrams = volumeCm3 * Number(densityValue); // density in g/cm^3
-  
-      return {
-        volumeMm3: Number(volumeMm3.toFixed(3)),
-        volumeCm3: Number(volumeCm3.toFixed(3)),
-        volumeIn3: Number(volumeIn3.toFixed(6)),
-        massGrams: Number(massGrams.toFixed(3)),
-      };
-    } catch (err) {
-      console.error("processSTLGeometry error:", err);
-      return undefined;
+    }
+
+    const totalSolidVolumeMm3 = Math.abs(totalSolidVolume);
+
+    // --- Infill Calculation Logic ---
+
+    // Approximate the shell volume by multiplying surface area by wall thickness
+    const shellVolumeMm3 = surfaceArea * wallThickness_mm;
+
+    // The shell can't be bigger than the object itself. This is a critical check for small or thin parts.
+    const effectiveShellVolumeMm3 = Math.min(totalSolidVolumeMm3, shellVolumeMm3);
+
+    // The volume to be filled with infill is what's left over
+    const interiorVolumeMm3 = totalSolidVolumeMm3 - effectiveShellVolumeMm3;
+
+    // Calculate the actual volume of the plastic used for infill
+    const infillMaterialVolumeMm3 = interiorVolumeMm3 * (infillPercent / 100.0);
+
+    // The total material used is the shell + the infill material
+    const totalMaterialVolumeMm3 = effectiveShellVolumeMm3 + infillMaterialVolumeMm3;
+
+    // Final mass calculation
+    const totalMaterialVolumeCm3 = totalMaterialVolumeMm3 / 1000.0;
+    const massGrams = totalMaterialVolumeCm3 * densityValue;
+
+    // For debugging
+    console.log(`Calculating printed mass with:
+    Density (g/cm³): ${densityValue}
+    Infill (%): ${infillPercent}
+    Wall Thickness (mm): ${wallThickness_mm}
+    Scale Factor: ${scaleFactor}
+    ---------------------------------
+    Total Solid Model Volume (mm³): ${totalSolidVolumeMm3}
+    Surface Area (mm²): ${surfaceArea}
+    Calculated Shell Volume (mm³): ${shellVolumeMm3}
+    Effective Shell Volume (mm³): ${effectiveShellVolumeMm3}
+    Interior Volume (mm³): ${interiorVolumeMm3}
+    Infill Material Volume (mm³): ${infillMaterialVolumeMm3}
+    ---------------------------------
+    Total Material Volume (mm³): ${totalMaterialVolumeMm3}
+    Final Mass (g): ${massGrams}`);
+
+    return {
+      totalSolidVolumeMm3: Number(totalSolidVolumeMm3.toFixed(3)),
+      shellVolumeMm3: Number(effectiveShellVolumeMm3.toFixed(3)),
+      infillVolumeMm3: Number(infillMaterialVolumeMm3.toFixed(3)),
+      totalMaterialVolumeMm3: Number(totalMaterialVolumeMm3.toFixed(3)),
+      massGrams: Number(massGrams.toFixed(3)),
     }
   }
-
   /**
    * Generate thumbnail image from geometry with enhanced options
    */
