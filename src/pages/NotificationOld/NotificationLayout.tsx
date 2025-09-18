@@ -4,7 +4,6 @@ import { NotWrapper, MainComp, SideTab } from './styles';
 import OngoingOrder from './OngoingOrder';
 import PlaceOrder from './PlaceOrder';
 import { useMediaQuery } from '@mui/material';
-import MyDisputes from './MyDispute';
 import SmallScreenTab from '../../components/SmallScreenTab/SmallScreenTab';
 
 
@@ -37,7 +36,6 @@ const NotificationLayout = () => {
       <MainComp>
         {activeTab === 1 && <OngoingOrder />}
         {activeTab === 2 && <PlaceOrder/>}
-        {activeTab === 3 && <MyDisputes/>}
       </MainComp>
     </NotWrapper>
   );
