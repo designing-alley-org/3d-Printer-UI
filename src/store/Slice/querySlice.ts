@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllUserQueryService, HelpTicket } from '../../services/query';
+import { createHelpService, getAllUserQueryService, HelpPayload } from '../../services/query';
+import { HelpFormData } from '../../validation/helpQuery';
 
 // Async thunk for fetching all user queries
 export const getAllUserQuery = createAsyncThunk(
@@ -14,8 +15,20 @@ export const getAllUserQuery = createAsyncThunk(
   }
 );
 
+export const createQuery = createAsyncThunk(
+  'query/createQuery',
+  async (payload: HelpFormData , { rejectWithValue }) => {
+    try {
+      const data = await createHelpService(payload);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to create help ticket');
+    }
+  }
+);
+
 interface QueryState {
-  helpTickets: HelpTicket[];
+  helpTickets: HelpPayload[];
   loading: boolean;
   error: string | null;
 }
@@ -50,6 +63,16 @@ export const QuerySlice = createSlice({
       })
       .addCase(getAllUserQuery.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createQuery.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(createQuery.fulfilled, (state, action) => {
+        state.error = null;
+        state.helpTickets.push(action.payload);
+      })
+      .addCase(createQuery.rejected, (state, action) => {
         state.error = action.payload as string;
       });
   },

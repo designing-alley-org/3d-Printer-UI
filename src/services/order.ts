@@ -489,6 +489,16 @@ const getCMT_DataService = async (dispatch: any) => {
     }
 }
 
+// /get-user-order-ids
+const getUserOrderIdsService = async () => {
+    try {
+        const response = await api.get('/get-user-order-ids');
+        return returnResponse(response);
+    } catch (error) {
+        throw error;
+    }
+}
+
 export { 
     createOrderService, 
     getFilesByOrderIdService, 
@@ -510,5 +520,6 @@ export {
     updateTotalWeightService,
     updateOrderService,
     getOrderSummaryService,
-    getCMT_DataService
+    getCMT_DataService,
+    getUserOrderIdsService
 };

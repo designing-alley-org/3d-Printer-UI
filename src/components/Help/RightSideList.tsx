@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Typography, Box, CircularProgress } from '@mui/material'
+import { Card, CardContent, CardHeader, Typography, Box } from '@mui/material'
 import HelpList from './HelpList'
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

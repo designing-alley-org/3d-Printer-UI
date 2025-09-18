@@ -9,20 +9,53 @@ import {
   Typography,
   CircularProgress,
   TextField,
-} from "@mui/material";
-import Autocomplete from "@mui/material/Autocomplete";
-import { Formik, Form, Field, FormikHelpers } from "formik";
-import React, { useState } from "react";
-import CustomButton from "../../stories/button/CustomButton";
-import { getValidationSchema } from "../../validation";
+} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import { Formik, Form, Field, FormikHelpers } from 'formik';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import { AppDispatch } from '../../store/store';
+import CustomButton from '../../stories/button/CustomButton';
+import { getValidationSchema, HelpFormData } from '../../validation/helpQuery';
+import { getUserOrderIdsService } from '../../services/order';
+import { queryTypeOptions } from '../../constant/dropDownOption';
+import { createQuery } from '../../store/Slice/querySlice';
 
+const InputStyle = {
+  '& .MuiInputBase-root': {
+    color: 'primary.contrastText',
+  },
+  '& .MuiInputLabel-root': {
+    color: 'primary.contrastText',
+    '&.Mui-focused': {
+      color: 'primary.contrastText',
+    },
+  },
+  '& .MuiOutlinedInput-notchedOutline': {
+    borderColor: 'primary.contrastText',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'primary.contrastText',
+      opacity: 0.8,
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'primary.contrastText',
+      borderWidth: '2px',
+    },
+  },
+  '& .MuiFormHelperText-root': {
+    color: '#ffcdd2',
+  },
+};
 
 type OrderOption = {
   title: string;
 };
 
 interface FormValues {
-  queryType: string;
+  type: string;
   orderId: OrderOption | null;
   subject: string;
   message: string;
@@ -30,21 +63,15 @@ interface FormValues {
 
 // fake fetch orders for demo
 const fetchOrders = async (): Promise<OrderOption[]> => {
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      resolve([
-        { title: "Order #1234" },
-        { title: "Order #5678" },
-        { title: "Order #91011" },
-      ]);
-    }, 1000)
-  );
+  const orders = await getUserOrderIdsService();
+  return orders.map((i: { _id: string }) => ({ title: i._id }));
 };
 
 const LeftSideForm: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<OrderOption[]>([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleOpen = async () => {
     setOpen(true);
@@ -60,19 +87,41 @@ const LeftSideForm: React.FC = () => {
   };
 
   const initialValues: FormValues = {
-    queryType: "",
+    type: '',
     orderId: null,
-    subject: "",
-    message: "",
+    subject: '',
+    message: '',
   };
 
-  const handleSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
-    console.log("Form Submitted:", values);
-    helpers.setSubmitting(false);
+  const handleSubmit = async (
+    values: FormValues,
+    helpers: FormikHelpers<FormValues>
+  ) => {
+    try {
+      const payload: HelpFormData = {
+        type: values.type,
+        orderId: values.orderId,
+        subject: values.subject,
+        message: values.message,
+      };
+      
+      await dispatch(createQuery(payload)).unwrap();
+      
+      // Show success notification
+      toast.success('Query submitted successfully!');
+      
+      // Reset form on successful submission
+      helpers.resetForm();
+    } catch (error) {
+      console.error('Error creating query:', error);
+      toast.error('Failed to submit query. Please try again.');
+    } finally {
+      helpers.setSubmitting(false);
+    }
   };
 
   return (
-    <Card sx={{ maxWidth: 430, backgroundColor: "primary.main", color: "primary.contrastText", flex: 1 }}>
+    <Card sx={{ maxWidth: 430, backgroundColor: 'primary.main', flex: 1 }}>
       <CardHeader
         title={
           <Typography variant="h6" color="primary.contrastText" gutterBottom>
@@ -91,7 +140,7 @@ const LeftSideForm: React.FC = () => {
         initialValues={initialValues}
         validate={(values: FormValues) => {
           try {
-            const schema = getValidationSchema(values.queryType === "Other");
+            const schema = getValidationSchema(values.type !== 'Order Issue');
             schema.validateSync(values, { abortEarly: false });
             return {};
           } catch (err: any) {
@@ -111,41 +160,72 @@ const LeftSideForm: React.FC = () => {
               {/* Query Type */}
               <FormControl fullWidth margin="normal">
                 <Select
-                  value={values.queryType}
-                  displayEmpty
-                  onChange={(e) => setFieldValue("queryType", e.target.value)}
-                  sx={{
-                    "& .MuiSelect-select": { color: "primary.contrastText" },
-                    "& .MuiInputLabel-root": { color: "primary.contrastText" },
-                    "& .MuiOutlinedInput-root": {     
-                      "& fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "primary.contrastText",
-                        opacity: 0.8,
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "primary.contrastText",
+                  value={values.type}
+                  onChange={(e) => setFieldValue('type', e.target.value)}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        borderRadius: '8px',
+                        mt: 1,
                       },
                     },
                   }}
-                  inputProps={{ 'aria-label': 'Query Type' }}
+                  displayEmpty
+                  inputProps={{ 'aria-label': 'Without label' }}
+                  renderValue={(selected) => {
+                    if (!selected) {
+                      return (
+                        <Typography
+                          sx={{
+                            color: 'primary.contrastText',
+                            opacity: 0.7,
+                          }}
+                        >
+                          Query Select
+                        </Typography>
+                      );
+                    }
+                    const selectedOption = queryTypeOptions.find(
+                      (option) => option.value === selected
+                    );
+                    return selectedOption ? selectedOption.label : selected;
+                  }}
+                  sx={{
+                    color: 'primary.contrastText',
+                    '& .MuiSelect-select': {
+                      color: 'primary.contrastText',
+                    },
+                    '& .MuiSelect-icon': {
+                      color: 'primary.contrastText',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.contrastText',
+                      borderWidth: '1px',
+                      borderRadius: '8px',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.contrastText',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'primary.contrastText',
+                    },
+                  }}
                 >
-                  <MenuItem value="">Select</MenuItem>
-                  <MenuItem value="Payment">Payment</MenuItem>
-                  <MenuItem value="Query">Query</MenuItem>
-                  <MenuItem value="Quality">Quality</MenuItem>
-                  <MenuItem value="Delivery">Delivery</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
+                  {queryTypeOptions.map((option) => (
+                    <MenuItem key={option.id} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
                 </Select>
-                {errors.queryType && touched.queryType && (
-                  <Typography color="error">{errors.queryType}</Typography>
+                {errors.type && touched.type && (
+                  <Typography color="error" sx={{ color: '#ffcdd2' }}>
+                    {errors.type}
+                  </Typography>
                 )}
               </FormControl>
 
-              {/* Order ID - visible if queryType !== Other */}
-              {values.queryType !== "Other" && (
+              {/* Order ID - visible if queryType !== Order Issue */}
+              {values.type == 'Order Issue' && (
                 <FormControl fullWidth margin="normal">
                   <Autocomplete<OrderOption, false, false, false>
                     open={open}
@@ -157,34 +237,53 @@ const LeftSideForm: React.FC = () => {
                     getOptionLabel={(option) => option.title}
                     options={options}
                     sx={{
-                      "& .MuiInputBase-root": { color: "primary.contrastText" },
-                      "& .MuiInputLabel-root": { color: "primary.contrastText" },
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "primary.contrastText",
+                      '& .MuiInputBase-root': {
+                        color: 'primary.contrastText',
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'primary.contrastText',
+                        '&.Mui-focused': {
+                          color: 'primary.contrastText',
                         },
-                        "&:hover fieldset": {
-                          borderColor: "primary.contrastText",
+                      },
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.contrastText',
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'primary.contrastText',
                           opacity: 0.8,
                         },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "primary.contrastText",
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'primary.contrastText',
+                          borderWidth: '2px',
                         },
+                      },
+                      '& .MuiAutocomplete-popupIndicator': {
+                        color: 'primary.contrastText',
+                      },
+                      '& .MuiAutocomplete-clearIndicator': {
+                        color: 'primary.contrastText',
                       },
                     }}
                     loading={loading}
                     value={values.orderId}
-                    onChange={(_, value) => setFieldValue("orderId", value)}
+                    onChange={(_, value) => setFieldValue('orderId', value)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Order ID"
                         error={!!errors.orderId && touched.orderId}
                         helperText={
-                          touched.orderId && typeof errors.orderId === "string"
+                          touched.orderId && typeof errors.orderId === 'string'
                             ? errors.orderId
-                            : ""
+                            : ''
                         }
+                        sx={{
+                          '& .MuiFormHelperText-root': {
+                            color: '#ffcdd2',
+                          },
+                        }}
                         InputProps={{
                           ...params.InputProps,
                           endAdornment: (
@@ -210,21 +309,7 @@ const LeftSideForm: React.FC = () => {
                   label="Subject"
                   error={!!errors.subject && touched.subject}
                   helperText={touched.subject && errors.subject}
-                   sx={{
-                    "& .MuiInputBase-root": { color: "primary.contrastText" },
-                    "& .MuiInputLabel-root": { color: "primary.contrastText" },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                    },
-                  }}
+                  sx={{ ...InputStyle }}
                 />
               </FormControl>
 
@@ -238,21 +323,7 @@ const LeftSideForm: React.FC = () => {
                   rows={3}
                   error={!!errors.message && touched.message}
                   helperText={touched.message && errors.message}
-                  sx={{
-                    "& .MuiInputBase-root": { color: "primary.contrastText" },
-                    "& .MuiInputLabel-root": { color: "primary.contrastText" },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "primary.contrastText",
-                      },
-                    },
-                  }}
+                  sx={{ ...InputStyle }}
                 />
               </FormControl>
             </CardContent>
@@ -264,7 +335,7 @@ const LeftSideForm: React.FC = () => {
                 fullWidth
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </CustomButton>
             </CardActions>
           </Form>
