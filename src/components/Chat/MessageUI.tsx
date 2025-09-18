@@ -4,11 +4,9 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import TableViewIcon from '@mui/icons-material/TableView';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import DownloadIcon from '@mui/icons-material/Download';
+import { Attachment } from "../../types/chat";
 
-interface Attachment {
-  type: string;
-  url: string;
-}
+
 
 const getFileIcon = (type: string) => {
   switch (type.toLowerCase()) {
@@ -27,27 +25,25 @@ const getFileIcon = (type: string) => {
   }
 };
 
-const getFileName = (url: string) => {
-  return url.split('/').pop() || 'Unknown file';
-};
 
-const ImageUI = ({ url }: { url: string }) => (
+
+const ImageUI = ({ attachment }: { attachment: Attachment }) => (
   <Card sx={{ maxWidth: 200, m: 0.5 }}>
     <CardMedia
       component="img"
       height="120"
-      image={url}
-      alt="Attachment"
+      image={attachment.url}
+      alt={attachment.filename}
       sx={{ cursor: 'pointer', objectFit: 'cover' }}
-      onClick={() => window.open(url, '_blank')}
+      onClick={() => window.open(attachment.url, '_blank')}
     />
   </Card>
 );
 
-const FileUI = ({ type, url }: { type: string; url: string }) => (
+const FileUI = ({ type, url, filename, size }: Attachment) => (
   <Chip
     icon={getFileIcon(type)}
-    label={getFileName(url)}
+    label={filename}
     variant="outlined"
     clickable
     onClick={() => window.open(url, '_blank')}
@@ -105,7 +101,7 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
           justifyContent={isSender ? 'flex-end' : 'flex-start'}
         >
           {imageAttachments.map((attachment, index) => (
-            <ImageUI key={index} url={attachment.url} />
+            <ImageUI key={index} attachment={attachment} />
           ))}
         </Box>
       )}
@@ -114,13 +110,14 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
       {fileAttachments.length > 0 && (
         <Box 
           display="flex" 
+          flexDirection={'column'}
           flexWrap="wrap" 
           maxWidth="70%" 
           mb={0.5}
           justifyContent={isSender ? 'flex-end' : 'flex-start'}
         >
           {fileAttachments.map((attachment, index) => (
-            <FileUI key={index} type={attachment.type} url={attachment.url} />
+            <FileUI key={index} {...attachment} />
           ))}
         </Box>
       )}

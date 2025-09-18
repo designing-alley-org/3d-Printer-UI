@@ -3,13 +3,14 @@ import CustomButton from '../../stories/button/CustomButton';
 import Pin from './Pin';
 import ImagePreview from './ImagePreview';
 import FilePreview from './FilePreview';
-import { formatDate } from '../../utils/function';
+import { formatChatTime, formatDate } from '../../utils/function';
 import LoadingScreen from '../LoadingScreen';
 import MessageUI from './MessageUI';
 import { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
-import { getUserChat, sendMessage, setCurrentTicketId, addAutoResponse } from '../../store/Slice/chatSlice';
+import { getUserChat, sendMessage, setCurrentTicketId } from '../../store/Slice/chatSlice';
+import { MessageType } from '../../types/chat';
 
 interface ChatUIProps {
   isOpen: boolean | undefined;
@@ -22,6 +23,7 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const { chatData, loading, sendingMessage } = useSelector((state: RootState) => state.chat);
+
     const { user } = useSelector((state: RootState) => state.user);
 
     // Get messages for current conversation
@@ -53,59 +55,51 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
         e.preventDefault();
 
         if ((!messageInput.trim() && selectedImages.length === 0 && selectedFiles.length === 0) || !conversationId) return;
+
+        let messageType : MessageType = 'text';
         
         // Convert images to attachments (for now, we'll create mock URLs)
         const imageAttachments = selectedImages.map((file) => ({
             type: 'image',
             url: URL.createObjectURL(file), // In production, upload to server first
-            name: file.name,
+            filename: file.name,
             size: file.size
         }));
+
+        // If there are images, set messageType to 'image'
+        if (imageAttachments.length > 0) {
+            messageType = 'image';
+        }
         
         // Convert files to attachments
         const fileAttachments = selectedFiles.map((file) => ({
             type: file.name.split('.').pop()?.toLowerCase() || 'file',
             url: URL.createObjectURL(file), // In production, upload to server first
-            name: file.name,
+            filename: file.name,
             size: file.size
         }));
+
+        // If there are files (and no images), set messageType to 'file'
+        if (fileAttachments.length > 0 && imageAttachments.length === 0) {
+            messageType = 'file';
+        }
+
         
         // Combine all attachments
         const allAttachments = [...imageAttachments, ...fileAttachments];
         
         // Create message text
         let messageText = messageInput.trim();
-        if (!messageText && allAttachments.length > 0) {
-            const imageCount = selectedImages.length;
-            const fileCount = selectedFiles.length;
-            const parts = [];
-            if (imageCount > 0) parts.push(`${imageCount} image${imageCount > 1 ? 's' : ''}`);
-            if (fileCount > 0) parts.push(`${fileCount} file${fileCount > 1 ? 's' : ''}`);
-            messageText = `Sent ${parts.join(' and ')}`;
-        }
-        
-        const messageData = {
-            id: `msg_${Date.now()}`, // Temporary ID, replace with server-generated ID
+     
+        dispatch(sendMessage({
+            conversationId,
             message: messageText,
-            attachments: allAttachments
-        };
-        
-        dispatch(sendMessage(messageData));
+            messageType,
+            attachments: allAttachments.length > 0 ? allAttachments : undefined,
+        }));
         setMessageInput(''); // Clear input after sending
         setSelectedImages([]); // Clear selected images after sending
         setSelectedFiles([]); // Clear selected files after sending
-        
-        // Simulate auto-response after 2 seconds
-        setTimeout(() => {
-            const autoResponse = {
-                id: `auto_${Date.now()}`,
-                message: 'Thank you for your message. Our support team will get back to you shortly.',
-                createdAt: new Date().toISOString(),
-                isSender: false,
-                attachments: [],
-            };
-            dispatch(addAutoResponse({ conversationId, message: autoResponse }));
-        }, 2000);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -154,7 +148,7 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
           <MessageUI
             key={index} 
             message={msg.message || ''} 
-            date={formatDate(msg.createdAt, true)} 
+            date={formatChatTime(msg.createdAt)} 
             isSender={msg.sender === user?._id}
             attachments={msg.attachments || []}
           />

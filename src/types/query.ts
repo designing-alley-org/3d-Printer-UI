@@ -5,7 +5,7 @@ export interface HelpPayload {
 }
 
 interface Help {
-    id: string;
+  _id: string;
   type: string;
   subject: string;
   createdAt: string;

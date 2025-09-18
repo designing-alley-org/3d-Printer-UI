@@ -19,15 +19,15 @@ interface  Props {
 function statusHexColor(status: string) {
   switch (status.toLowerCase()) {
     case 'hold':
-      return '#FFA500'; // Orange
+      return '#FFFF00'; // yellow
     case 'in progress':
       return '#0000FF'; // Blue
     case 'resolved':
       return '#008000'; // Green
     case 'open':
-      return '#FFFF00'; // Yellow
+      return '#0cb6ee'; // light blue
     case 'closed':
-      return '#808080'; // Grey
+      return '#FF0000'; // Red
     default:
       return '#000000'; // Black for unknown status
   }
@@ -66,11 +66,11 @@ const HelpList = ({ onClick, id, type, subject, createdAt, orderId, status, isOp
             />
           </motion.div>
         </Box>
-        <Box display={'flex'} justifyContent={'space-between'}>
+        <Box display={'flex'} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent={'space-between'}>
           <Typography variant="body2" color="secondary">
             Created On: {formatDate(createdAt || '', false)}
           </Typography>
-          <Box display={'flex'} gap={2}>
+          <Box display={'flex'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }} mt={{ xs: 1, sm: 0 }}>
            {orderId && <Typography variant="body2" color="text.secondary">
               Order Id:
               <Typography
@@ -99,7 +99,9 @@ const HelpList = ({ onClick, id, type, subject, createdAt, orderId, status, isOp
                     borderRadius: '50%',
                     backgroundColor: statusHexColor(status || ''),
                     display: 'inline-block',
-                    mr: 1,
+                    mr: 0.5,
+                    '&:hover': { transform: 'scale(1.2)'
+                  },
                   }}
                 />
                 {status}

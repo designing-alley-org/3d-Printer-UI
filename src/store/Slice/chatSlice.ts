@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserChatService, sendMessageService, SendMessageRequest } from '../../services/chat';
-import { ChatPayload } from '../../types/chat';
+import { getUserChatService, sendMessageService } from '../../services/chat';
+import { ChatPayload, SendMessageRequest } from '../../types/chat';
+import toast from 'react-hot-toast';
+import { returnError } from '../../utils/function';
 
 // Async thunk for fetching user chat
 export const getUserChat = createAsyncThunk(
@@ -10,6 +12,7 @@ export const getUserChat = createAsyncThunk(
       const data = await getUserChatService(ticketId);
       return { ticketId, messages: data };
     } catch (error: any) {
+      toast.error(returnError(error) || 'Failed to fetch chat messages');
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch chat messages');
     }
   }
@@ -20,18 +23,10 @@ export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
   async (messageData: SendMessageRequest, { rejectWithValue }) => {
     try {
-      const response = await sendMessageService(messageData);
-      return {
-        ticketId: messageData.ticketId,
-        message: {
-          id: response.id,
-          message: response.message,
-          createdAt: response.createdAt,
-          isSender: response.isSender,
-          attachments: messageData.attachments || [],
-        }
-      };
+      const data = await sendMessageService(messageData);
+      return { ticketId: messageData.conversationId, message: data };
     } catch (error: any) {
+      toast.error(returnError(error) || 'Failed to send message');
       return rejectWithValue(error.response?.data?.message || 'Failed to send message');
     }
   }
@@ -86,7 +81,6 @@ export const ChatSlice = createSlice({
         state.loading = false;
         const { ticketId, messages } = action.payload;
         state.chatData[ticketId] = messages;
-        state.currentTicketId = ticketId;
         state.error = null;
       })
       .addCase(getUserChat.rejected, (state, action) => {
@@ -100,12 +94,11 @@ export const ChatSlice = createSlice({
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendingMessage = false;
-        // const { ticketId, message } = action.payload;
-        // if (state.chatData[ticketId]) {
-        //   state.chatData[ticketId].push(message);
-        // } else {
-        //   state.chatData[ticketId] = [message];
-        // }
+        const { ticketId, message } = action.payload;
+        if (!state.chatData[ticketId]) {
+          state.chatData[ticketId] = [];
+        }
+        state.chatData[ticketId].push(message);
         state.error = null;
       })
       .addCase(sendMessage.rejected, (state, action) => {
