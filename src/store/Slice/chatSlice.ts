@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getUserChatService, sendMessageService, ChatMessage, SendMessageRequest } from '../../services/chat';
+import { getUserChatService, sendMessageService, SendMessageRequest } from '../../services/chat';
+import { ChatPayload } from '../../types/chat';
 
 // Async thunk for fetching user chat
 export const getUserChat = createAsyncThunk(
@@ -37,7 +38,7 @@ export const sendMessage = createAsyncThunk(
 );
 
 interface ChatState {
-  chatData: Record<string, ChatMessage[]>; // ticketId -> messages
+  chatData: Record<string, ChatPayload[]>; 
   loading: boolean;
   sendingMessage: boolean;
   error: string | null;
@@ -99,12 +100,12 @@ export const ChatSlice = createSlice({
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendingMessage = false;
-        const { ticketId, message } = action.payload;
-        if (state.chatData[ticketId]) {
-          state.chatData[ticketId].push(message);
-        } else {
-          state.chatData[ticketId] = [message];
-        }
+        // const { ticketId, message } = action.payload;
+        // if (state.chatData[ticketId]) {
+        //   state.chatData[ticketId].push(message);
+        // } else {
+        //   state.chatData[ticketId] = [message];
+        // }
         state.error = null;
       })
       .addCase(sendMessage.rejected, (state, action) => {

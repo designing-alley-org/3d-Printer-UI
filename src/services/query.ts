@@ -2,17 +2,11 @@
 // import { returnError, returnResponse } from "../utils/function";
 
 import api from "../axiosConfig";
+import { HelpPayload } from "../types/query";
 import { returnResponse } from "../utils/function";
 import { HelpFormData } from "../validation/helpQuery";
 
-export interface HelpPayload {
-  id: string;
-  type: string;
-  title: string;
-  date: string;
-  orderId: string;
-  status: string;
-}
+
 
 
 

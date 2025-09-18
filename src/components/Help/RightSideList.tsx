@@ -53,14 +53,15 @@ const RightSideList = () => {
             ) :
             helpTickets.map((ticket) => (
               <HelpList
-                key={ticket.id}
-                id={ticket.id}
-                type={ticket.type}
-                title={ticket.title}
-                date={ticket.date}
-                orderId={ticket.orderId}
-                status={ticket.status}
-                isOpen={openTicketId === ticket.id}
+                key={ticket.help._id}
+                id={ticket.help._id}
+                type={ticket.help.type}
+                subject={ticket.help.subject}
+                createdAt={ticket.help.createdAt}
+                orderId={ticket.help.orderId}
+                status={ticket.help.status}
+                conversationId={ticket.conversationId}
+                isOpen={openTicketId === ticket.help._id}
                 onClick={handleTicketClick}
               />
             ))

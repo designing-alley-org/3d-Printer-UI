@@ -12,19 +12,20 @@ import { RootState, AppDispatch } from '../../store/store';
 import { getUserChat, sendMessage, setCurrentTicketId, addAutoResponse } from '../../store/Slice/chatSlice';
 
 interface ChatUIProps {
-  isLoading: boolean;
-  ticketId: string;
+  isOpen: boolean | undefined;
+  conversationId: string;
 }
 
-const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
+const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
     const [messageInput, setMessageInput] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const dispatch = useDispatch<AppDispatch>();
     const { chatData, loading, sendingMessage } = useSelector((state: RootState) => state.chat);
-    
-    // Get messages for current ticket
-    const messages = chatData[ticketId] || [];
+    const { user } = useSelector((state: RootState) => state.user);
+
+    // Get messages for current conversation
+    const messages = chatData[conversationId] || [];
 
     // useRef and useEffect to scroll to bottom on new message
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -40,18 +41,18 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
         scrollToBottom();
     }, [messages]); // Scroll when messages change
 
-    // Fetch chat data when ticketId changes
+    // Fetch chat data when conversationId changes
     useEffect(() => {
-        if (ticketId) {
-            dispatch(setCurrentTicketId(ticketId));
-            dispatch(getUserChat(ticketId));
+        if (conversationId && isOpen) {
+            dispatch(setCurrentTicketId(conversationId));
+            dispatch(getUserChat(conversationId));
         }
-    }, [dispatch, ticketId]);
+    }, [dispatch, conversationId, isOpen]);
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
-        
-        if ((!messageInput.trim() && selectedImages.length === 0 && selectedFiles.length === 0) || !ticketId) return;
+
+        if ((!messageInput.trim() && selectedImages.length === 0 && selectedFiles.length === 0) || !conversationId) return;
         
         // Convert images to attachments (for now, we'll create mock URLs)
         const imageAttachments = selectedImages.map((file) => ({
@@ -84,7 +85,7 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
         }
         
         const messageData = {
-            ticketId,
+            id: `msg_${Date.now()}`, // Temporary ID, replace with server-generated ID
             message: messageText,
             attachments: allAttachments
         };
@@ -103,7 +104,7 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
                 isSender: false,
                 attachments: [],
             };
-            dispatch(addAutoResponse({ ticketId, message: autoResponse }));
+            dispatch(addAutoResponse({ conversationId, message: autoResponse }));
         }, 2000);
     };
 
@@ -138,7 +139,7 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
         setSelectedFiles([]);
     };
 
-    if (isLoading || loading) {
+    if ( loading) {
         return <LoadingScreen />;
     }
 
@@ -154,7 +155,7 @@ const ChatUI = ({ isLoading, ticketId }: ChatUIProps) => {
             key={index} 
             message={msg.message || ''} 
             date={formatDate(msg.createdAt, true)} 
-            isSender={msg.isSender}
+            isSender={msg.sender === user?._id}
             attachments={msg.attachments || []}
           />
         ))}

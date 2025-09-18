@@ -2,6 +2,7 @@ import * as Yup from "yup";
 
 export interface HelpFormData {
   type: string;
+  _id: string;
   orderId: { title: string } | null;
   subject: string;
   message: string;

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createHelpService, getAllUserQueryService, HelpPayload } from '../../services/query';
+import { createHelpService, getAllUserQueryService } from '../../services/query';
 import { HelpFormData } from '../../validation/helpQuery';
+import { HelpPayload } from '../../types/query';
 
 // Async thunk for fetching all user queries
 export const getAllUserQuery = createAsyncThunk(

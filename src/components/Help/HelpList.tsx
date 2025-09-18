@@ -8,11 +8,12 @@ interface  Props {
     onClick?: (id: string) => void;
     id?: string;
     type?: string;
-    title?: string;
-    date?: string;
+    subject?: string;
+    createdAt?: string;
     orderId?: string;
     status?: string;
     isOpen?: boolean;
+    conversationId?: string;
 }
 
 function statusHexColor(status: string) {
@@ -32,7 +33,7 @@ function statusHexColor(status: string) {
   }
 }
 
-const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: Props) => {
+const HelpList = ({ onClick, id, type, subject, createdAt, orderId, status, isOpen , conversationId }: Props) => {
   return (
     <Card
       sx={{
@@ -51,7 +52,7 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
       >
         <Box display={'flex'} justifyContent={'space-between'} mb={1}>
           <Typography variant="body1" color="primary.main">
-            {type} - {title}
+            {type} - {subject}
           </Typography>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
@@ -67,10 +68,10 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
         </Box>
         <Box display={'flex'} justifyContent={'space-between'}>
           <Typography variant="body2" color="secondary">
-            Created On: {formatDate(date || '', false)}
+            Created On: {formatDate(createdAt || '', false)}
           </Typography>
           <Box display={'flex'} gap={2}>
-            <Typography variant="body2" color="text.secondary">
+           {orderId && <Typography variant="body2" color="text.secondary">
               Order Id:
               <Typography
                 variant="body2"
@@ -80,7 +81,7 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
               >
                 {orderId}
               </Typography>
-            </Typography>
+            </Typography>}
             <Typography>
               Status:
               <Typography
@@ -124,7 +125,7 @@ const HelpList = ({ onClick, id, type, title, date, orderId, status, isOpen }: P
           sx={{ pt: 0 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <ChatUI isLoading={false} ticketId={id || ''} />
+          <ChatUI isOpen={isOpen} conversationId={conversationId || ''} />
         </CardContent>
       </motion.div>
     </Card>
