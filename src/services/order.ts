@@ -5,7 +5,6 @@ import { createFile } from "./filesService";
 import { FileData } from "../types/uploadFiles";
 import { returnError, returnResponse } from "../utils/function";
 import { addDataSpec } from "../store/customizeFilesDetails/SpecificationReducer";
-import { set } from "lodash-es";
 
 // Upload files
 const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
@@ -20,9 +19,6 @@ const uploadFilesByOrderIdService = async (orderId: string, formData: any) => {
         throw error;
     }
 };
-
-
-
 
 const getFilesByOrderIdService = async (orderId: string): Promise<object | undefined> => {
     try {
@@ -62,9 +58,6 @@ const getFileByOrderIdUploadstlService = async (orderId: string) => {
         throw error;
     }
 };
-
-
-
 
 const updateFileDataByFileIdService = async (
     orderId: string,
