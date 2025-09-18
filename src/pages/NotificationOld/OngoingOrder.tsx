@@ -3,7 +3,6 @@ import Pagin from '../../components/Paging/Pagin';
 import { useNavigate } from 'react-router-dom';
 import { getOngoingOrder } from '../../store/actions/getOngoingOrder';
 import toast from 'react-hot-toast';
-import { Loader } from 'lucide-react';
 import { formatDateTime, formatOrderStatus } from '../../utils/Validation';
 import { useSelector } from 'react-redux';
 import api from '../../axiosConfig';
