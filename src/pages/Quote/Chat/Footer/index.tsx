@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { Socket } from 'socket.io-client';
-import MessageInput from '../../../../stories/MessageInput/MessageInput';
+// import MessageInput from '../../../../stories/MessageInput/MessageInput';
 import AttachmentPreview from './AttachmentPreview';
 import "./footer.css";
 
@@ -100,7 +100,7 @@ export default function ChatFooter({
               title="Image Name"
             />
           )}
-          <MessageInput
+          {/* <MessageInput
             value={message}
             setValue={setMessage}
             disabled={false}
@@ -109,7 +109,7 @@ export default function ChatFooter({
             file={file}
             images={images}
             handleSendAttachment={handleSendAttachment}
-          />
+          /> */}
         </Box>
       </Box>
     </form>
