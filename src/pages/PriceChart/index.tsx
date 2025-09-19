@@ -1,25 +1,28 @@
 import { useNavigate, useParams } from "react-router-dom"
 import StepLayout from "../../components/Layout/StepLayout"
-import { Box, Card, CardContent, CardHeader, Link, Typography } from "@mui/material"
+import { Card, CardContent, CardHeader, Link, Typography } from "@mui/material"
 
 
 // Icon
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
-import PriceTable from "./PriceTabel";
+
+
+import PriceTable, { PriceTableProps } from "./PriceTabel";
 import { useEffect, useState } from "react";
-import { getAllFilesByOrderId } from "../../services/filesService";
-import { FileDataDB } from "../../types/uploadFiles";
+
+import { getCheckoutDetailsService } from "../../services/order";
 
 type fetchOrderProps = {
   orderId: string;
-  setFiles: React.Dispatch<React.SetStateAction<FileDataDB[]>>;
+  setData: React.Dispatch<React.SetStateAction<PriceTableProps>>;
   setIsPageLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const fetchOrder = async ({ orderId, setFiles, setIsPageLoading }: fetchOrderProps) => {
-     const response = await getAllFilesByOrderId(orderId);
-     setFiles(response);
+
+const fetchOrder = async ({ orderId, setData, setIsPageLoading }: fetchOrderProps) => {
+     const response = await getCheckoutDetailsService(orderId);
+     setData(response);
      setIsPageLoading(false);
 }
 
@@ -27,13 +30,19 @@ const PriceChart = () => {
 
   const navigate = useNavigate()
   const orderId = useParams().orderId || ""
-  const [files, setFiles] = useState<FileDataDB[]>([])
+  const [data, setData] = useState<PriceTableProps>({
+    subtotal: 0,
+    taxes: 0,
+    taxRate: 0,
+    totalAmount: 0,
+    fileTable: []
+  })
   const isLoading = false
   const [ isPageLoading, setIsPageLoading] = useState<boolean>(true)
   const isDisabled = false
 
   useEffect(() => {
-    if (orderId)  fetchOrder({ orderId, setFiles, setIsPageLoading })
+    if (orderId)  fetchOrder({ orderId, setData, setIsPageLoading })
   }, [orderId])
 
   return (
@@ -58,7 +67,12 @@ const PriceChart = () => {
           </Typography>
         } />
         <CardContent>
-          <PriceTable  files={files} />
+          <PriceTable  
+          subtotal={data?.subtotal || 0} 
+          taxes={data?.taxes || 0} 
+          taxRate={data?.taxRate || 0} 
+          totalAmount={data?.totalAmount || 0} 
+          fileTable={data?.fileTable || []} />
         </CardContent>
       </Card>
       <Typography variant="body2" color="textSecondary" align="center" sx={{ alignItems: 'self', display: 'flex', justifyContent: 'start', mt: 2 }}>

@@ -492,6 +492,15 @@ const getUserOrderIdsService = async () => {
     }
 }
 
+const getCheckoutDetailsService = async (orderId: string) => {
+    try {
+        const response = await api.get(`/checkout-details/${orderId}`);
+        return returnResponse(response);
+    } catch (error) {
+        throw error;
+    }
+}
+
 export { 
     createOrderService, 
     getFilesByOrderIdService, 
@@ -514,5 +523,6 @@ export {
     updateOrderService,
     getOrderSummaryService,
     getCMT_DataService,
-    getUserOrderIdsService
+    getUserOrderIdsService,
+    getCheckoutDetailsService
 };

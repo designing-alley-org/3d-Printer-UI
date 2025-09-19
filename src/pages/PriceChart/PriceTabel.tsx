@@ -45,31 +45,18 @@ const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// --- Mock Data ---
 
-function createData(name: string, quantity: number, price: number) {
-  return { name, quantity, price, total: quantity * price };
+export type PriceTableProps = {
+    subtotal: number;
+    taxes: number;
+    taxRate: number;
+    totalAmount: number;
+    fileTable: (FileDataDB & { fileId: string, pricePerUnit: number, totalPrice: number })[];
 }
 
-const rows = [
-  createData('Frozen.stl', 1, 6.0),
-  createData('Ice.stl', 2, 9.0),
-  createData('Eclair.stl', 1, 16.0),
-  createData('Cupcake.stl', 3, 3.7),
-  createData('Gingerbread.stl', 1, 16.0),
-];
+export default function PriceTable({  subtotal, taxes, taxRate, totalAmount, fileTable }: PriceTableProps) {
 
-type IProps = {
-    files: FileDataDB[]
-}
-
-export default function PriceTable({ files }: IProps) {
-  const subtotal = rows.reduce((sum, row) => sum + row.total, 0);
-  const taxRate = 0.18; // 18% tax
-  const taxes = subtotal * taxRate;
-  const grandTotal = subtotal + taxes;
-
-  if (files.length === 0) {
+  if (fileTable.length === 0) {
     return <Typography variant="body1" align="center">No files available to display pricing.</Typography>;
   }
 
@@ -85,15 +72,15 @@ export default function PriceTable({ files }: IProps) {
           </TableRow>
         </StyledTableHead>
         <TableBody>
-          {files.map((row) => (
+          {fileTable?.map((row)  => (
             // Use the new StyledDataRow component here
-            <StyledDataRow key={row._id}>
+            <StyledDataRow key={row.fileId}>
               <TableCell component="th" scope="row">
                 {row.fileName}
               </TableCell>
               <TableCell align="center">{row.quantity}</TableCell>
-              {/* <TableCell align="right">{formatCurrency(row.price)}</TableCell> */}
-              {/* <TableCell align="right">{formatCurrency(row.total)}</TableCell> */}
+              <TableCell align="right">{formatCurrency(row.pricePerUnit)}</TableCell>
+              <TableCell align="right">{formatCurrency(row.totalPrice)}</TableCell>
             </StyledDataRow>
           ))}
         </TableBody>
@@ -108,11 +95,11 @@ export default function PriceTable({ files }: IProps) {
             <TableCell align="right">
               <Typography variant="body1" fontWeight="600">-</Typography>
             </TableCell>
-            <TableCell align='right' >{formatCurrency(subtotal)}</TableCell>
+            <TableCell align='right'>{formatCurrency(subtotal)}</TableCell>
           </StyledFooterTableRow>
 
           <StyledFooterTableRow>
-            <TableCell >Taxes ({taxRate * 100}%)</TableCell>
+            <TableCell >Taxes ({taxRate}%)</TableCell>
             <TableCell align="center">
               <Typography variant="body1" fontWeight="600">-</Typography>
             </TableCell>
@@ -133,7 +120,7 @@ export default function PriceTable({ files }: IProps) {
               <Typography variant="body1" fontWeight="600">-</Typography>
             </TableCell>
             <TableCell align="right">
-              <Typography variant="h6" component="div">{formatCurrency(grandTotal)}</Typography>
+              <Typography variant="h6" component="div">{formatCurrency( totalAmount)}</Typography>
             </TableCell>
           </StyledFooterTableRow>
         </TableFooter>
