@@ -138,4 +138,6 @@ export type UpdateFileData = Partial<
   printerId?: string;
   infill?: number;
   weight?: Weight;
+  cost ?: Cost;
+  print_totalTime_s ?: number;
 };

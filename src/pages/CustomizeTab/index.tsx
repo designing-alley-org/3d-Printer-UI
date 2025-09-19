@@ -76,7 +76,7 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const { materialId, technologyId, printerId, colorId, infill, weight } =
+  const { materialId, technologyId, printerId, colorId, infill, weight, cost, print_totalTime_s } =
     file || {};
 
   useEffect(() => {
@@ -171,7 +171,6 @@ const CustomizeTab: React.FC = () => {
           infillPercent: infill,
           scale: 1.0,
         });
-        console.log('Estimated Result:', result);
         if (result) {
           dispatch(
             UpdateValueById({
@@ -292,6 +291,8 @@ const CustomizeTab: React.FC = () => {
       printerId,
       infill,
       weight,
+      cost,
+      print_totalTime_s,
     };
     await updateFileInCustomization(
       activeFileId,
