@@ -5,6 +5,7 @@ const initialState: SpecificationState = {
     colors: [],
     materials: [],
     technologies: [],
+    pricing: null
 };
 
 export const DataSlice = createSlice({
@@ -15,7 +16,7 @@ export const DataSlice = createSlice({
         state.colors = action.payload.colors;
         state.materials = action.payload.materials;
         state.technologies = action.payload.technologies;
-
+        state.pricing = action.payload.pricing;
     },
 }});
 

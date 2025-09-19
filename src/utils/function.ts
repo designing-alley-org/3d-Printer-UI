@@ -57,6 +57,63 @@ export function formatDate(date: Date | number | string, includeTime: boolean = 
 }
 
 /**
+ * Formats a timestamp for chat messages in a relative, human-readable format
+ * 
+ * @param date The date to format (Date object, timestamp, or date string)
+ * @returns A formatted string representing the relative time (e.g., "Just now", "5 mins ago", "Yesterday", etc.)
+ */
+export function formatChatTime(date: Date | number | string): string {
+  try {
+    const dateObj = new Date(date);
+    
+    if (isNaN(dateObj.getTime())) {
+      return 'Invalid date';
+    }
+    
+    const now = new Date();
+    const diffMs = now.getTime() - dateObj.getTime();
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    
+    // Just now (less than a minute ago)
+    if (diffMinutes < 1) {
+      return 'Just now';
+    }
+    
+    // Minutes ago (less than an hour)
+    if (diffMinutes < 60) {
+      return `${diffMinutes} ${diffMinutes === 1 ? 'min' : 'mins'} ago`;
+    }
+    
+    // Hours ago (less than 6 hours)
+    if (diffHours < 6) {
+      return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+    }
+    
+    // Check if it's today
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
+    
+    if (dateObj >= today) {
+      return 'Today';
+    }
+    
+    // Check if it's yesterday
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (dateObj >= yesterday) {
+      return 'Yesterday';
+    }
+    
+    // For older messages, show the date and time
+    return formatDate(dateObj, true);
+  } catch (error) {
+    return 'Invalid date';
+  }
+}
+/**
  * Converts text by replacing underscores with spaces and capitalizing the first letter
  * 
  * @param text The text to convert (with underscores)
@@ -71,24 +128,6 @@ export function formatText(text: string): string {
     // Capitalize the first letter
     return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1);
 }
-
-
-
-// // Error Handle Utility
-// const sendErrorResponse = (res, statusCode, message) => {
-//     return res.status(statusCode).json({ status: 0, message });
-// };
-
-// // Utility for success response
-// const sendSuccessResponse = (res, statusCode, message, data) => {
-//     return res.status(statusCode).json({ status: 1, message, data: data });
-// // };
-//    return {
-//             success: true,
-//             key: response.data.data.key,
-//             url: response.data.data.url
-//         };
-
 
 
 export const returnResponse = (response: any) => {
@@ -134,3 +173,7 @@ export const formatCurrency = (amount: number) => {
     currency: 'USD',
   }).format(amount);
 };
+
+
+
+

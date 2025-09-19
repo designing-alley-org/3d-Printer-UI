@@ -2,7 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 export const UserDetailsSlice = createSlice({
   name: 'snackbar',
   initialState: {
-    user: {},
+    user: {
+      _id: '',
+      email: '',
+      role: '',
+      createdAt: '',
+      updatedAt: ''
+    },
   },
   reducers: {
     addUserDetails: (state, action) => {

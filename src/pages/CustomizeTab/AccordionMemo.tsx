@@ -1,4 +1,4 @@
-import React, {  useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Typography, Grid, Box, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
@@ -36,6 +36,7 @@ import {
 } from '../../store/customizeFilesDetails/CustomizationSlice';
 import { PrinterSelector } from '../../components/Model';
 import { IPrinter } from '../../types/printer';
+import { getEstimatedTime, PrintEstimator } from '../../utils/PrintEstimator';
 
 interface AccordionProps {
   printerData: IPrinter[];
@@ -43,7 +44,6 @@ interface AccordionProps {
   downloadProgress: number;
   file: FileDataDB | undefined;
 }
-
 
 const Accordion: React.FC<AccordionProps> = ({
   printerData,
@@ -57,11 +57,9 @@ const Accordion: React.FC<AccordionProps> = ({
   const theme = useTheme();
   const dataspec = useSelector((state: RootState) => state.specification);
 
-
   const activeReverseDimension = useMemo(() => {
     return reverseDimensions.find((file) => file._id === activeFileId) || null;
   }, [reverseDimensions, activeFileId]);
-
 
   const handelChangeValue = (field: string, value: any) => {
     if (
@@ -77,7 +75,6 @@ const Accordion: React.FC<AccordionProps> = ({
       dispatch(UpdateValueById({ id: file?._id, data: { [field]: value } }));
     }
   };
-
 
   const handleUnitChange = (option: Option) => {
     dispatch(updateUnit({ id: file?._id as string, unit: option.value }));
@@ -378,7 +375,7 @@ const Accordion: React.FC<AccordionProps> = ({
             </Typography>
           </Box>
           {printerMessage === '' ? (
-          <PrinterSelector printersData={printerData} file={file} />
+            <PrinterSelector printersData={printerData} file={file} />
           ) : (
             <Typography variant="body2" color="textSecondary">
               {printerMessage ||
@@ -402,14 +399,19 @@ const Accordion: React.FC<AccordionProps> = ({
           variant="h6"
           sx={{ fontWeight: 600, color: 'primary.main' }}
         >
-          Current Weight
-        </Typography>
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: 600, color: 'primary.main' }}
-          >
+          Current Weight :{' '}
+          <span>
             {file?.weight?.value?.toFixed(3) || 0} {file?.weight?.unit || 'g'}
-          </Typography>
+          </span>
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 600, color: 'primary.main' }}
+        >
+          {/* in to mints */}
+          Printer Time :{' '}
+          <span>{getEstimatedTime(file?.print_totalTime_s || 0)} mins</span>
+        </Typography>
       </Box>
     </Box>
   );

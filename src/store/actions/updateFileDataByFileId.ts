@@ -1,5 +1,5 @@
 import { updateFileDataByFileIdService } from "../../services/order"
-import { addAllFiles } from "../customizeFilesDetails/reducer";
+
 interface IUpdateFileDataByFileId {
     orderId: string,
     activeFile: any,

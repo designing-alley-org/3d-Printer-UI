@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import { Formik, Form, FormikHelpers } from 'formik';
-import { changePasswordValidationSchema } from '../../validation/authValidation';
+import { changePasswordValidationSchema, forgotPasswordValidationSchema } from '../../validation/authValidation';
 import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
 
 interface FormState {
@@ -54,8 +54,65 @@ const Password = () => {
     <Container
       sx={{
         p:0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
       }}
     >
+        {/* Email update */}
+
+      <Card sx={{ marginTop: '1rem' }}>
+       <CardHeader 
+          title="Email Settings"
+          subheader="Manage your account email address"
+        />
+        <CardContent>
+          <Formik
+            initialValues={{ email: '' }}
+            validationSchema={forgotPasswordValidationSchema}
+            onSubmit={async (values, { resetForm }) => {
+              // Handle email update logic here
+              toast.success('Email updated successfully');
+              resetForm();
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              isValid,
+              dirty,
+            }) => (
+              <Form>
+                <Box maxWidth={500}>
+                  <CustomInputLabelField
+                    label="New Email"
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email ? errors.email : undefined}
+                    placeholder="Enter your new email"
+                    required
+                    sx={{ mb: 2 }}
+                  />  
+
+                  <CustomButton
+                    children={'Update Email'}
+                    disabled={!isValid || !dirty}
+                    type="submit"
+                    variant="contained"
+                  />
+                </Box>
+              </Form>
+            )}
+          </Formik>
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader
           title="Security Settings"

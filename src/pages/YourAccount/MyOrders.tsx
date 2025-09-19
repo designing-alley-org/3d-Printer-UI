@@ -1,15 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import CustomPagination from '../../components/CustomPagination';
 import NoDataFound from '../../components/NoDataFound';
-import { Box, Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Box, Card, CardContent,  Typography } from '@mui/material';
 import CustomTextField from '../../stories/inputs/CustomTextField';
 import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
 import OrderFileItem from '../../components/OrderFileItem';
-import CreateDisputeModel from '../../components/Model/CreateDisputeModel';
 import CreateReturnModel from '../../components/Model/CreateReturnModel';
-import { DisputeFormValues } from '../../validation/disputeValidation';
 import { ReturnFormValues } from '../../validation/returnValidation';
-import { createDisputeByOrderService } from '../../services/disputes';
 import { getAllOrdersService } from '../../services/order';
 import { debounce } from '../../utils/function';
 import LoadingScreen from '../../components/LoadingScreen';
@@ -56,10 +53,6 @@ export const MyOrders = () => {
     label: string;
   }>({ id: 1, value: 'all', label: 'All' });
 
-  // Dispute modal state
-  const [isDisputeModalOpen, setIsDisputeModalOpen] = useState(false);
-  const [disputeOrderId, setDisputeOrderId] = useState<string>('');
-  const [isSubmittingDispute, setIsSubmittingDispute] = useState(false);
 
   // Return modal state
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
@@ -144,38 +137,7 @@ export const MyOrders = () => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
   };
 
-  const handleOpenDispute = (orderId: string) => {
-    setDisputeOrderId(orderId);
-    setIsDisputeModalOpen(true);
-  };
 
-  const handleCloseDispute = () => {
-    setIsDisputeModalOpen(false);
-    setDisputeOrderId('');
-  };
-
-  const handleSubmitDispute = async (disputeData: DisputeFormValues) => {
-    try {
-      setIsSubmittingDispute(true);
-      
-      // Prepare data for API
-      const apiData = {
-        reason: disputeData.disputeReason,
-        dispute_type: disputeData.disputeType.value,
-      };
-
-      // Call API service
-      await createDisputeByOrderService(apiData, disputeOrderId);
-      
-      // Close modal on success
-      handleCloseDispute();
-
-    } catch (error: any) {
-      toast.error(error.response.data.message || 'Failed to submit dispute');
-    } finally {
-      setIsSubmittingDispute(false);
-    }
-  };
 
   const handleOpenReturn = (orderId: string, shipmentId: string) => {
     setReturnOrderId(orderId);
@@ -279,7 +241,6 @@ export const MyOrders = () => {
                   onClick={() => {
                     handleViewDetails(order._id);
                   }}
-                  onDispute={handleOpenDispute}
                   onReturn={handleOpenReturn}
                   isExpanded={selectedOrderId === order._id}
                 />
@@ -305,15 +266,7 @@ export const MyOrders = () => {
         </Box>
       )}
 
-      {/* Dispute Modal */}
-      <CreateDisputeModel
-        open={isDisputeModalOpen}
-        onClose={handleCloseDispute}
-        onSave={handleSubmitDispute}
-        loading={isSubmittingDispute}
-        orderId={disputeOrderId}
-      />
-
+    
       {/* Return Modal */}
       <CreateReturnModel
         open={isReturnModalOpen}

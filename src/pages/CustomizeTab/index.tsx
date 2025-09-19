@@ -26,7 +26,7 @@ import {
 } from '../../../public/Icon/MUI_Coustom_icon/index';
 
 import { filterPrinterAction } from '../../store/actions/filterPrinterAction';
-import { FileDataDB, UpdateFileData } from '../../types/uploadFiles';
+import { FileDataDB, Pricing, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
@@ -42,11 +42,12 @@ import { RootState } from '../../store/types';
 import {
   setActiveFileId,
   setFiles,
-  updateWeight,
+  UpdateValueById,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
-import { stlParser } from '../../utils/stlUtils';
+
 import { updateFileInCustomization } from '../../store/actions/File';
 import { IPrinter } from '../../types/printer';
+import { PrintEstimator } from '../../utils/PrintEstimator';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -65,9 +66,8 @@ const CustomizeTab: React.FC = () => {
 
   // state
   const colors = useSelector((state: RootState) => state.specification.colors);
-  const materials = useSelector(
-    (state: RootState) => state.specification.materials
-  );
+  const pricing = useSelector((state: RootState) => state.specification.pricing);
+  const materials = useSelector((state: RootState) => state.specification.materials);
 
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
@@ -76,7 +76,7 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const { materialId, technologyId, printerId, colorId, infill, weight } =
+  const { materialId, technologyId, printerId, colorId, infill, weight, costs, print_totalTime_s } =
     file || {};
 
   useEffect(() => {
@@ -122,13 +122,13 @@ const CustomizeTab: React.FC = () => {
     return files.find((file: FileDataDB) => file._id === activeFileId) || null;
   }, [activeFileId, dispatch, isLoading]);
 
-  // Calculate material density based on selected material
-  const materialDensity = useMemo(() => {
+  // Calculate material  based on selected material
+  const material = useMemo(() => {
     if (materialId && materials.length > 0) {
       const selectedMaterial = materials.find(
         (material: any) => material._id === materialId
       );
-      return selectedMaterial ? selectedMaterial.density : null;
+      return selectedMaterial ? selectedMaterial : null;
     }
     return null;
   }, [materialId, materials]);
@@ -142,28 +142,47 @@ const CustomizeTab: React.FC = () => {
     return '#ffffff';
   }, [colorId, colors]);
 
+  // get Printer profiles based on selected printer
+  const printer = useMemo(() => {
+    if (printerId && printerData.length > 0) {
+      const selectedPrinter = printerData.find(
+        (printer: IPrinter) => printer._id === printerId
+      );
+      return selectedPrinter ? selectedPrinter : null;
+    }
+    return null;
+  }, [printerId, printerData]);
+
   const processGeometry = useCallback(async () => {
     if (
       stlGeometry &&
-      materialDensity &&
-      materialDensity > 0 &&
+      material?.density &&
+      material?.density > 0 &&
+      printer &&
       infill &&
       infill > 0
     ) {
       try {
-        const result = await stlParser.processSTLGeometry(
-          materialDensity,
-          stlGeometry,
-          infill,
-          1.5, // Assuming a default wall thickness of 1.5mm
-          1.0 // Assuming no scaling
-        );
+        const estimator = new PrintEstimator(printer, material, pricing as Pricing);
+        const result = await estimator.getEstimates({
+          modelGeometry: stlGeometry as any,
+          printer: printer,
+          material: material,
+          infillPercent: infill,
+          scale: 1.0,
+        });
         if (result) {
-          // setCurrentWeight(result);
           dispatch(
-            updateWeight({
+            UpdateValueById({
               id: activeFileId as string,
-              weight: result.massGrams,
+              data: { 
+                weight: {
+                  value: result.weight_g,
+                  unit: 'gm',
+                },
+                print_totalTime_s: result.totalTime_s,
+                costs: result.costs,
+              },
             })
           );
         }
@@ -172,11 +191,11 @@ const CustomizeTab: React.FC = () => {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry, infill, materialDensity]);
+  }, [stlGeometry, infill, material, printer]);
 
   // Calculate weight when geometry or material density changes
   useEffect(() => {
-    if (stlGeometry && materialDensity) {
+    if (stlGeometry && material?.density && infill) {
       processGeometry();
     }
   }, [processGeometry]);
@@ -272,6 +291,8 @@ const CustomizeTab: React.FC = () => {
       printerId,
       infill,
       weight,
+      costs,
+      print_totalTime_s,
     };
     await updateFileInCustomization(
       activeFileId,
