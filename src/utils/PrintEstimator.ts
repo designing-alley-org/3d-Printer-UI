@@ -1,91 +1,35 @@
-// --- 1. Define the data structures with TypeScript Interfaces ---
-
 import { IPrinter } from "../types/printer";
-import { Material } from "../types/uploadFiles";
+import { EstimateOptions, EstimateResult, ModelGeometry, ModelProperties } from "../types/PrinterEstimator";
+import { Material, Pricing } from "../types/uploadFiles";
 
-
-interface Pricing {
-    electricityCost_gbp_per_kwh: number;
-    printerOperationalCost_gbp_per_hour: number;
-    laborCost_gbp_per_hour: number;
-    postProcessingTime_min: number;
-}
-
-interface ModelGeometry {
-    attributes: {
-        position: {
-            array: Float32Array | number[];
-            count: number;
-        };
-    };
-    index?: {
-        array: Uint32Array | Uint16Array | number[];
-        count: number;
-    } | null;
-}
-
-interface ModelProperties {
-    volume_mm3: number;
-    triangleCount: number;
-    dimensions: { x: number; y: number; z: number };
-}
-
-interface EstimateOptions {
-    modelGeometry: ModelGeometry;
-    printer: any
-    material: any;
-    infillPercent?: number;
-    scale?: number;
-}
-
-interface EstimateResult {
-    weight_g: number;
-    totalTime_s: number;
-    formattedTime: string;
-    layers: number;
-    costs: {
-        material: number;
-        energy: number;
-        operational: number;
-        labor: number;
-        total: number;
-    };
-}
-
-
-// --- 2. The Refactored TypeScript Class ---
-
-/**
- * A pure TypeScript class for estimating 3D print time, weight, and cost.
- * It is completely self-contained and has no DOM dependencies.
- */
-class PrintEstimator {
-    private printerProfiles: IPrinter[];
-    private materials: Material[];
+export class PrintEstimator {
+    private printerProfile: IPrinter;
+    private material: Material;
     private pricing: Pricing;
 
-    /**
-     * Creates an instance of PrintEstimator.
-     * @param printerProfiles - An array of printer profile objects, typically fetched from a backend.
-     * @param materials - An array of material objects, typically fetched from a backend.
-     * @param pricing - A pricing configuration object.
-     */
-    constructor(printerProfiles: IPrinter[], materials: Material[], pricing: Pricing) {
-        this.printerProfiles = printerProfiles;
-        this.materials = materials;
+    constructor(printerProfile: IPrinter, material: Material, pricing: Pricing) {
+        this.printerProfile = printerProfile;
+        this.material = material;
         this.pricing = pricing;
     }
 
+    private _getModelProperties(geometry: ModelGeometry): ModelProperties {
+        return {
+            volume_mm3: this._calculateVolumeFromGeometry(geometry),
+            triangleCount: geometry.attributes.position.count / 3,
+            dimensions: this._calculateBoundingBox(geometry),
+        };
+    }
     /**
-     * Calculates the print weight, time, and cost for a given 3D model geometry.
+     * Instance method (not static anymore).
      */
-    public getEstimates({
+    public async getEstimates({
         modelGeometry,
         printer,
         material,
         infillPercent = 20,
         scale = 1.0,
-    }: EstimateOptions): EstimateResult {
+    }: EstimateOptions): Promise<EstimateResult> {
 
         if (!modelGeometry?.attributes?.position?.array) {
             throw new Error("Valid model geometry with position attributes is required.");
@@ -107,14 +51,7 @@ class PrintEstimator {
         };
     }
 
-    private _getModelProperties(geometry: ModelGeometry): ModelProperties {
-        return {
-            volume_mm3: this._calculateVolumeFromGeometry(geometry),
-            triangleCount: geometry.attributes.position.count / 3,
-            dimensions: this._calculateBoundingBox(geometry),
-        };
-    }
-    
+    // --- private helpers (unchanged) ---
     private _calculateBoundingBox(geometry: ModelGeometry): { x: number; y: number; z: number } {
         const positions = geometry.attributes.position.array;
         let minX = Infinity, minY = Infinity, minZ = Infinity;
@@ -132,11 +69,11 @@ class PrintEstimator {
     private _signedTetraVolume(p0x: number, p0y: number, p0z: number, p1x: number, p1y: number, p1z: number, p2x: number, p2y: number, p2z: number): number {
         return (-p2x * p1y * p0z + p1x * p2y * p0z + p2x * p0y * p1z - p0x * p2y * p1z - p1x * p0y * p2z + p0x * p1y * p2z) / 6.0;
     }
-    
+
     private _calculateVolumeFromGeometry(geometry: ModelGeometry): number {
         const posArray = geometry.attributes.position.array;
         let totalSignedVolume = 0;
-        
+
         if (geometry.index?.array) {
             const index = geometry.index.array;
             for (let i = 0; i < index.length; i += 3) {
@@ -158,7 +95,7 @@ class PrintEstimator {
         }
         return Math.abs(totalSignedVolume);
     }
-    
+
     private _calculateEnhancedEstimates(
         { modelData, printer, material, infillPercent, scale }: { modelData: ModelProperties; printer: IPrinter; material: Material; infillPercent: number; scale: number }
     ): Omit<EstimateResult, 'formattedTime'> {
@@ -196,7 +133,7 @@ class PrintEstimator {
             },
         };
     }
-    
+
     private _formatTime(totalSeconds: number): string {
         if (isNaN(totalSeconds) || totalSeconds < 0) return "00:00:00";
         const h = Math.floor(totalSeconds / 3600);
@@ -205,61 +142,3 @@ class PrintEstimator {
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     }
 }
-
-
-// --- 3. Example Usage (How you would use it with data from a backend) ---
-
-// async function runExample() {
-//     // --- Mock Backend Data ---
-//     // In a real app, you would fetch this data from your API.
-//     const mockPrinterProfiles: IPrinter[] = [
-//         { name: "Bambu Lab X1-Carbon", nozzleDiameter_mm: 0.4, defaultLayerHeight_mm: 0.16, maxPrintSpeed_mm_s: 500, maxVolumetricFlow_mm3s: 21, powerConsumption_watts: 350, heatingTime_min: 3 },
-//         { name: "Creality K1", nozzleDiameter_mm: 0.4, defaultLayerHeight_mm: 0.2, maxPrintSpeed_mm_s: 600, maxVolumetricFlow_mm3s: 32, powerConsumption_watts: 360, heatingTime_min: 2 },
-//     ];
-//     const mockMaterials: Material[] = [
-//         { name: "PLA", density: 1.24, cost_gbp_per_kg: 20.00 },
-//         { name: "PETG", density: 1.27, cost_gbp_per_kg: 25.00 },
-//     ];
-//     const mockPricing: Pricing = {
-//         electricityCost_gbp_per_kwh: 0.25,
-//         printerOperationalCost_gbp_per_hour: 1.50,
-//         laborCost_gbp_per_hour: 15.00,
-//         postProcessingTime_min: 10
-//     };
-
-//     // 1. Instantiate the estimator with data from your backend.
-//     const estimator = new PrintEstimator(mockPrinterProfiles, mockMaterials, mockPricing);
-    
-//     // 2. Get your model geometry (e.g., from an STL file loader).
-//     const fakeGeometry: ModelGeometry = {
-//         attributes: {
-//             position: {
-//                 array: new Float32Array([0,0,0, 10,0,0, 0,10,0, 10,10,0, 10,0,0, 0,10,0]),
-//                 count: 6
-//             }
-//         }
-//     };
-    
-//     // 3. Call the getEstimates method with your chosen settings.
-//     try {
-//         const results = estimator.getEstimates({
-//             modelGeometry: fakeGeometry,
-//             printerName: "Bambu Lab X1-Carbon",
-//             materialName: "PLA",
-//             infillPercent: 15,
-//             scale: 2.5
-//         });
-
-//         console.log("--- Print Estimate Results ---");
-//         console.log(`Formatted Time: ${results.formattedTime}`);
-//         console.log(`Weight: ${results.weight_g.toFixed(2)} g`);
-//         console.log(`Total Cost: £${results.costs.total.toFixed(2)}`);
-//         console.log("----------------------------");
-
-//     } catch (error) {
-//         console.error("Estimation failed:", (error as Error).message);
-//     }
-// }
-
-// Run the example
-// runExample();

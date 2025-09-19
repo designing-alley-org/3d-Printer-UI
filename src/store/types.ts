@@ -1,5 +1,5 @@
 import { User } from '../types';
-import { Color, FileDataDB, Material, ModelDimensions, Technology } from '../types/uploadFiles';
+import { Color, FileDataDB, Material, ModelDimensions, Pricing, Technology } from '../types/uploadFiles';
 import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -46,6 +46,7 @@ export interface SpecificationState {
   colors: Color[];
   materials: Material[];
   technologies: Technology[];
+  pricing: Pricing | null;
 }
 
 
