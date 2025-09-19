@@ -17,6 +17,15 @@ export type Pricing = {
   taxRate_percent: number;
 };
 
+
+export type Cost = {
+  energy: number;
+  labor: number;
+  material: number;
+  operational: number;
+  total: number;
+}
+
 export type DeliveryWeight = {
   weight: number;
   unit: string;
@@ -57,6 +66,8 @@ export type FileDataDB = Omit<
   updatedAt: string;
   _id: string;
   isCustomized?: boolean;
+  cost?: Cost;
+  print_totalTime_s?: number;
 };
 
 export type FileDataOrder = FileDataDB & {

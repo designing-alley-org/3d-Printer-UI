@@ -42,7 +42,7 @@ import { RootState } from '../../store/types';
 import {
   setActiveFileId,
   setFiles,
-  updateWeight,
+  UpdateValueById,
 } from '../../store/customizeFilesDetails/CustomizationSlice';
 
 import { updateFileInCustomization } from '../../store/actions/File';
@@ -163,7 +163,6 @@ const CustomizeTab: React.FC = () => {
       infill > 0
     ) {
       try {
-
         const estimator = new PrintEstimator(printer, material, pricing as Pricing);
         const result = await estimator.getEstimates({
           modelGeometry: stlGeometry as any,
@@ -172,18 +171,22 @@ const CustomizeTab: React.FC = () => {
           infillPercent: infill,
           scale: 1.0,
         });
-
-
         console.log('Estimated Result:', result);
-
-        // if (result) {
-        //   dispatch(
-        //     updateWeight({
-        //       id: activeFileId as string,
-        //       weight: result.massGrams,
-        //     })
-        //   );
-        // }
+        if (result) {
+          dispatch(
+            UpdateValueById({
+              id: activeFileId as string,
+              data: { 
+                weight: {
+                  value: result.weight_g,
+                  unit: 'gm',
+                },
+                print_totalTime_s: result.totalTime_s,
+                cost: result.costs,
+              },
+            })
+          );
+        }
         return result;
       } catch (error) {
         console.error('Error processing STL geometry:', error);
