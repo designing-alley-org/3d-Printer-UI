@@ -143,6 +143,10 @@ const Password = () => {
           </Formik>
         </CardContent>
       </Card>
+
+      <Card sx={{ marginTop: '1rem' }}>
+        <CardHeader title="Two-Factor Authentication (2FA)" />
+      </Card>
     </Container>
   );
 };
