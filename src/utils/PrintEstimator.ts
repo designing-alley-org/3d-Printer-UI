@@ -137,9 +137,6 @@ export class PrintEstimator {
    
 }
 
-
-
-
 export function getEstimatedTime(totalSeconds: number): string {
     if (isNaN(totalSeconds) || totalSeconds < 0) return "00:00:00";
     const h = Math.floor(totalSeconds / 3600);

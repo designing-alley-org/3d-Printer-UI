@@ -76,7 +76,7 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const { materialId, technologyId, printerId, colorId, infill, weight, cost, print_totalTime_s } =
+  const { materialId, technologyId, printerId, colorId, infill, weight, costs, print_totalTime_s } =
     file || {};
 
   useEffect(() => {
@@ -181,7 +181,7 @@ const CustomizeTab: React.FC = () => {
                   unit: 'gm',
                 },
                 print_totalTime_s: result.totalTime_s,
-                cost: result.costs,
+                costs: result.costs,
               },
             })
           );
@@ -291,7 +291,7 @@ const CustomizeTab: React.FC = () => {
       printerId,
       infill,
       weight,
-      cost,
+      costs,
       print_totalTime_s,
     };
     await updateFileInCustomization(

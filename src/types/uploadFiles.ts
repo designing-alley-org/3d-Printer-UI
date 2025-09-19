@@ -18,7 +18,7 @@ export type Pricing = {
 };
 
 
-export type Cost = {
+export type Costs = {
   energy: number;
   labor: number;
   material: number;
@@ -66,7 +66,7 @@ export type FileDataDB = Omit<
   updatedAt: string;
   _id: string;
   isCustomized?: boolean;
-  cost?: Cost;
+  costs?: Costs;
   print_totalTime_s?: number;
 };
 
@@ -138,6 +138,6 @@ export type UpdateFileData = Partial<
   printerId?: string;
   infill?: number;
   weight?: Weight;
-  cost ?: Cost;
-  print_totalTime_s ?: number;
+  costs?: Costs;
+  print_totalTime_s?: number;
 };
