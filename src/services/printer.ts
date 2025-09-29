@@ -18,15 +18,7 @@ export const filterPrinterService = async (
 };
 
 
-export const getPrinterByIdService = async (printerId: string) => {
-    try {
-        const response = await api.get(`/printer-show/${printerId}`);
-        return response;
-    } catch (error) {
-        console.error('Error fetching user printer:', error);
-        throw error;
-    }
-}
+
 
 export const getAllPrintersService = async () => {
     try {

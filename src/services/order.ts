@@ -6,10 +6,6 @@ import { FileData } from "../types/uploadFiles";
 import { returnError, returnResponse } from "../utils/function";
 import { addDataSpec } from "../store/customizeFilesDetails/SpecificationReducer";
 
-
-
-
-
 // New Api 
 
 const createOrderService = async () => {
