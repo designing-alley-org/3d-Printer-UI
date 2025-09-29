@@ -10,9 +10,6 @@ import {
 } from './auth/action_types';
 
 
-import {
-  ADD_FILE,REMOVE_FILE,UPDATE_FILE_PROGRESS,SET_ACTIVE_FILE
-} from './stlFile/action_types';
 
 export interface RootState {
   auth: AuthState;
@@ -133,41 +130,14 @@ export type RegisterActionTypes =
     user: User | null;
   }
   
-   interface AddFileAction {
-    type: typeof ADD_FILE;
-    payload: {
-      file: File;
-      id: string;
-    };
-  }
+   
   
-  interface RemoveFileAction {
-    type: typeof REMOVE_FILE;
-    payload: string;
-  }
   
-  interface UpdateFileProgressAction {
-    type: typeof UPDATE_FILE_PROGRESS;
-    payload: {
-      id: string;
-      progress: number;
-    };
-  }
-  
-  interface SetActiveFileAction {
-    type: typeof SET_ACTIVE_FILE;
-    payload: string;
-  }
   
   export type UserActionTypes =
     | AddUserAction;
 
 
-  export type FileActionTypes =
-    | AddFileAction
-    | RemoveFileAction
-    | UpdateFileProgressAction
-    | SetActiveFileAction;
   
 export interface IPrinterDetails {
   printerName: string;
