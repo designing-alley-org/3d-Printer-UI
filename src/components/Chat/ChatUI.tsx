@@ -10,7 +10,8 @@ import { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import { getUserChat, sendMessage, setCurrentTicketId } from '../../store/Slice/chatSlice';
-import { MessageType } from '../../types/chat';
+
+
 
 interface ChatUIProps {
   isOpen: boolean | undefined;
@@ -21,8 +22,10 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
     const [messageInput, setMessageInput] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
     const dispatch = useDispatch<AppDispatch>();
     const { chatData, loading, sendingMessage } = useSelector((state: RootState) => state.chat);
+
 
     const { user } = useSelector((state: RootState) => state.user);
 
@@ -56,50 +59,26 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
 
         if ((!messageInput.trim() && selectedImages.length === 0 && selectedFiles.length === 0) || !conversationId) return;
 
-        let messageType : MessageType = 'text';
-        
-        // Convert images to attachments (for now, we'll create mock URLs)
-        const imageAttachments = selectedImages.map((file) => ({
-            type: 'image',
-            url: URL.createObjectURL(file), // In production, upload to server first
-            filename: file.name,
-            size: file.size
-        }));
-
-        // If there are images, set messageType to 'image'
-        if (imageAttachments.length > 0) {
-            messageType = 'image';
+        try {
+            // Send message with files - let the dispatch handle all S3 upload logic
+            await dispatch(sendMessage({
+                conversationId,
+                message: messageInput.trim(),
+                messageType: 'text', // This will be determined in the dispatch based on files
+                selectedImages: selectedImages.length > 0 ? selectedImages : undefined,
+                selectedFiles: selectedFiles.length > 0 ? selectedFiles : undefined,
+                setUploadProgress
+            })).unwrap(); // Use unwrap() to catch dispatch errors
+            
+            // Clear inputs only after successful send
+            setMessageInput('');
+            setSelectedImages([]);
+            setSelectedFiles([]);
+            setUploadProgress(0); // Reset upload progress
+            
+        } catch (error) {
+            console.error('Error in handleSendMessage:', error);
         }
-        
-        // Convert files to attachments
-        const fileAttachments = selectedFiles.map((file) => ({
-            type: file.name.split('.').pop()?.toLowerCase() || 'file',
-            url: URL.createObjectURL(file), // In production, upload to server first
-            filename: file.name,
-            size: file.size
-        }));
-
-        // If there are files (and no images), set messageType to 'file'
-        if (fileAttachments.length > 0 && imageAttachments.length === 0) {
-            messageType = 'file';
-        }
-
-        
-        // Combine all attachments
-        const allAttachments = [...imageAttachments, ...fileAttachments];
-        
-        // Create message text
-        let messageText = messageInput.trim();
-     
-        dispatch(sendMessage({
-            conversationId,
-            message: messageText,
-            messageType,
-            attachments: allAttachments.length > 0 ? allAttachments : undefined,
-        }));
-        setMessageInput(''); // Clear input after sending
-        setSelectedImages([]); // Clear selected images after sending
-        setSelectedFiles([]); // Clear selected files after sending
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -166,6 +145,7 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
               files={selectedImages}
               onRemove={handleRemoveImage}
               onRemoveAll={handleRemoveAllImages}
+              isSending = {sendingMessage}
             />
           )}
           
@@ -175,6 +155,7 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
               files={selectedFiles}
               onRemove={handleRemoveFile}
               onRemoveAll={handleRemoveAllFiles}
+              isSending = { sendingMessage}
             />
           )}
           
@@ -202,7 +183,13 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
         </Box>
         
         <CustomButton
-          children={sendingMessage ? "Sending..." : "Send"}
+          children={
+            sendingMessage && uploadProgress > 0 && uploadProgress < 100
+              ? `Uploading... ${uploadProgress}%`
+              : sendingMessage
+              ? "Sending..."
+              : "Send"
+          }
           variant="contained"
           color="primary"
           type="submit"
@@ -210,6 +197,7 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
           sx={{
             borderRadius: '8px',
             height: '40px',
+            alignSelf: 'flex-end',
           }}
         />
       </Box>

@@ -22,9 +22,14 @@ export type Attachment = {
 /**
  * SendMessageRequest = ChatPayload without auto-generated fields
  * (_id, createdAt, updatedAt, sender, readBy)
+ * Also includes selectedImages and selectedFiles for handling uploads
  */
 export interface SendMessageRequest
   extends Omit<
     ChatPayload,
     "_id" | "createdAt" | "updatedAt" | "sender" | "readBy"
-  > {}
+  > {
+  selectedImages?: File[];
+  selectedFiles?: File[];
+  setUploadProgress?: (progress: number) => void;
+}

@@ -54,7 +54,7 @@ export const deleteFromS3 = async (key: string) => {
  */
 export const getSignedUrl = async (
     filename: string,
-    folder: 'stl' | 'stlImage' | 'image',
+    folder: 'stl' | 'stlImage' | 'image' | 'document',
     contentType: string
 ): Promise<{ success: boolean, key: string, url: string, storeUrl: string }> => {
     try {
