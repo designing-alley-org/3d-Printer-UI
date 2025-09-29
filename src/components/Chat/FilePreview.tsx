@@ -4,11 +4,13 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TableViewIcon from '@mui/icons-material/TableView';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import { Trash } from 'lucide-react';
 
 interface FilePreviewProps {
   files: File[];
   onRemove: (index: number) => void;
   onRemoveAll: () => void;
+  isSending: Boolean
 }
 
 const getFileIcon = (fileName: string) => {
@@ -39,7 +41,7 @@ const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-const FilePreview = ({ files, onRemove, onRemoveAll }: FilePreviewProps) => {
+const FilePreview = ({ files, onRemove, onRemoveAll, isSending }: FilePreviewProps) => {
   if (files.length === 0) return null;
 
   return (
@@ -63,6 +65,7 @@ const FilePreview = ({ files, onRemove, onRemoveAll }: FilePreviewProps) => {
         <IconButton
           size="small"
           onClick={onRemoveAll}
+          disabled={isSending ? true : false}
           sx={{
             color: 'error.main',
             '&:hover': {
@@ -126,15 +129,18 @@ const FilePreview = ({ files, onRemove, onRemoveAll }: FilePreviewProps) => {
             <IconButton
               size="small"
               onClick={() => onRemove(index)}
+              disabled={isSending ? true : false}
               sx={{
                 color: 'error.main',
+                width: '25px',
+                height: '25px',
                 '&:hover': {
                   backgroundColor: 'error.light',
                   color: 'white',
                 },
               }}
             >
-              <CloseIcon fontSize="small" />
+              <Trash fontSize="small" />
             </IconButton>
           </Box>
         ))}

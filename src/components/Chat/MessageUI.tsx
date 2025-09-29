@@ -32,6 +32,7 @@ const ImageUI = ({ attachment }: { attachment: Attachment }) => (
     <CardMedia
       component="img"
       height="120"
+      width={150}
       image={attachment.url}
       alt={attachment.filename}
       sx={{ cursor: 'pointer', objectFit: 'cover' }}
@@ -97,6 +98,7 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
           display="flex" 
           flexWrap="wrap" 
           maxWidth="70%" 
+          minWidth={100}
           mb={0.5}
           justifyContent={isSender ? 'flex-end' : 'flex-start'}
         >

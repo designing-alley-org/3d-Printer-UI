@@ -1,14 +1,16 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect } from 'react';
+import { Trash } from 'lucide-react';
 
 interface ImagePreviewProps {
   files: File[];
   onRemove: (index: number) => void;
   onRemoveAll: () => void;
+  isSending: Boolean
 }
 
-const ImagePreview = ({ files, onRemove, onRemoveAll }: ImagePreviewProps) => {
+const ImagePreview = ({ files, onRemove, onRemoveAll, isSending }: ImagePreviewProps) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   // Create object URLs for preview
@@ -69,20 +71,21 @@ const ImagePreview = ({ files, onRemove, onRemoveAll }: ImagePreviewProps) => {
             <IconButton
               size="small"
               onClick={() => handleRemove(index)}
+              disabled={isSending ? true : false}
               sx={{
                 position: 'absolute',
-                top: -5,
+                top: -2,
                 right: -5,
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                backgroundColor: 'error.light',
                 color: 'white',
                 width: '20px',
                 height: '20px',
                 '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                  backgroundColor: 'error.dark',
                 },
               }}
             >
-              <CloseIcon fontSize="small" />
+              <Trash/>
             </IconButton>
           </Box>
         ))}
@@ -92,6 +95,7 @@ const ImagePreview = ({ files, onRemove, onRemoveAll }: ImagePreviewProps) => {
       <IconButton
         size="small"
         onClick={onRemoveAll}
+        disabled={isSending ? true : false}
         sx={{
           color: 'error.main',
           '&:hover': {
