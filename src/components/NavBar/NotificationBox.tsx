@@ -3,6 +3,11 @@ import { useRef, useState } from 'react';
 import { Badge, Box, IconButton, useMediaQuery, useTheme, ClickAwayListener } from '@mui/material';
 import { Bell } from 'lucide-react';
 import NotificationDropDown from './NotificationDropDown';
+import { useDispatch } from 'react-redux';
+import { getNotifications } from '../../store/Slice/notificationSlice';
+import { AppDispatch } from '../../store/store';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/types';
 
 // Dummy notification type
 interface Notification {
@@ -65,30 +70,24 @@ const fetchNotifications = async (): Promise<Notification[]> => {
 
 const NotificationBox = () => {
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery('(max-width:600px)');
   const theme = useTheme();
+  const dispatch = useDispatch<AppDispatch>();
+
+
+  const {notifications, loading, error } = useSelector((state:RootState) => state.notification);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   const handleBellClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+    setShowNotification((prev) => !prev);
+
     if (!showNotification && notifications.length === 0) {
-      setLoading(true);
-      try {
-        const fetchedNotifications = await fetchNotifications();
-        setNotifications(fetchedNotifications);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      } finally {
-        setLoading(false);
-      }
+      await dispatch(getNotifications());
     }
     
-    setShowNotification((prev) => !prev);
   };
 
   const handleClickAway = () => {

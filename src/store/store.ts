@@ -9,6 +9,7 @@ import DeliveryReducer from './Address/deliveryDetails.ts';
 import { CustomizationSlice } from './customizeFilesDetails/CustomizationSlice.ts';
 import queryReducer from './Slice/querySlice';
 import chatReducer from './Slice/chatSlice';
+import notificationReducer from './Slice/notificationSlice.ts';
 
 const store = configureStore({
   reducer: {
@@ -21,7 +22,8 @@ const store = configureStore({
     address: addressReducer,
     delivery: DeliveryReducer,
     query: queryReducer,
-    chat: chatReducer
+    chat: chatReducer,
+    notification: notificationReducer
   },
 });
 

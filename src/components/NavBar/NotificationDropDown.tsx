@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Box,
@@ -12,18 +11,20 @@ import {
   ListItemIcon,
   CircularProgress,
   Chip,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import {
   Close,
   AdminPanelSettings,
   ShoppingCart,
   SupportAgent,
-  Visibility
+  Visibility,
 } from '@mui/icons-material';
 import CustomButton from '../../stories/button/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import { formatChatTime } from '../../utils/function';
+import LoadingScreen from '../LoadingScreen';
+import NoDataFound from '../NoDataFound';
 
 // Notification interface
 interface Notification {
@@ -44,26 +45,37 @@ interface NotificationDropDownProps {
 const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
   notifications,
   loading,
-  onClose
+  onClose,
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  
+
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'admin':
-        return <AdminPanelSettings sx={{ color: theme.palette.customColors.warning }} />;
+        return (
+          <AdminPanelSettings
+            sx={{ color: theme.palette.customColors.warning }}
+          />
+        );
       case 'order':
-        return <ShoppingCart sx={{ color: theme.palette.customColors.success }} />;
+        return (
+          <ShoppingCart sx={{ color: theme.palette.customColors.success }} />
+        );
       case 'ticket':
-        return <SupportAgent sx={{ color: theme.palette.customColors.linkBlue }} />;
+        return (
+          <SupportAgent sx={{ color: theme.palette.customColors.linkBlue }} />
+        );
       default:
-        return <AdminPanelSettings sx={{ color: theme.palette.customColors.textLight }} />;
+        return (
+          <AdminPanelSettings
+            sx={{ color: theme.palette.customColors.textLight }}
+          />
+        );
     }
   };
 
-
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handelViewAll = () => {
     navigate('/notifications');
@@ -79,7 +91,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: '16px',
         overflow: 'hidden',
-        p:  '0'
+        p: '0',
       }}
     >
       {/* Header */}
@@ -90,7 +102,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
           color: theme.palette.primary.contrastText,
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <Box display="flex" alignItems="center" gap={1}>
@@ -106,7 +118,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                 color: 'white',
                 fontWeight: 600,
                 minWidth: '20px',
-                height: '20px'
+                height: '20px',
               }}
             />
           )}
@@ -114,11 +126,11 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
         <IconButton
           size="small"
           onClick={onClose}
-          sx={{ 
+          sx={{
             color: 'inherit',
             '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.1)'
-            }
+              bgcolor: 'rgba(255, 255, 255, 0.1)',
+            },
           }}
         >
           <Close />
@@ -130,14 +142,10 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
       {/* Content */}
       <Box sx={{ maxHeight: '350px', overflow: 'auto' }}>
         {loading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            p={4}
-          >
-            <CircularProgress size={40} />
-          </Box>
+          <LoadingScreen
+            title="Loading Notifications..."
+            description="Please wait while we fetch your notifications."
+          />
         ) : notifications.length > 0 ? (
           <List sx={{ p: 0 }}>
             {notifications.slice(0, 5).map((notification, index) => (
@@ -147,10 +155,12 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                     py: 1.5,
                     px: 2,
                     cursor: 'pointer',
-                    bgcolor: notification.isRead ? 'transparent' : theme.palette.action.hover,
+                    bgcolor: notification.isRead
+                      ? 'transparent'
+                      : theme.palette.action.hover,
                     '&:hover': {
-                      bgcolor: theme.palette.action.selected
-                    }
+                      bgcolor: theme.palette.action.selected,
+                    },
                   }}
                 >
                   <ListItemIcon sx={{ minWidth: '40px' }}>
@@ -161,7 +171,11 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                       <Typography
                         variant="subtitle2"
                         fontWeight={notification.isRead ? 400 : 600}
-                        color={notification.isRead ? theme.palette.text.secondary : theme.palette.text.primary}
+                        color={
+                          notification.isRead
+                            ? theme.palette.text.secondary
+                            : theme.palette.text.primary
+                        }
                         noWrap
                       >
                         {notification.title}
@@ -177,7 +191,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
-                            mb: 0.5
+                            mb: 0.5,
                           }}
                         >
                           {notification.message}
@@ -198,7 +212,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                         height: 8,
                         borderRadius: '50%',
                         bgcolor: theme.palette.primary.main,
-                        ml: 1
+                        ml: 1,
                       }}
                     />
                   )}
@@ -208,21 +222,10 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
             ))}
           </List>
         ) : (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            p={4}
-          >
-            <Typography
-              variant="body1"
-              color={theme.palette.text.secondary}
-              textAlign="center"
-            >
-              No notifications yet
-            </Typography>
-          </Box>
+          <NoDataFound
+            text="No Notifications"
+            description="You're all caught up! No new notifications."
+          />
         )}
       </Box>
 
@@ -235,7 +238,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
               p: 1.5,
               display: 'flex',
               justifyContent: 'space-between',
-              gap: 1
+              gap: 1,
             }}
           >
             <CustomButton
@@ -247,7 +250,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                 flex: 1,
                 borderRadius: '8px',
                 textTransform: 'none',
-                fontWeight: 600
+                fontWeight: 600,
               }}
             >
               View All
@@ -260,7 +263,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                 flex: 1,
                 borderRadius: '8px',
                 textTransform: 'none',
-                fontWeight: 600
+                fontWeight: 600,
               }}
             >
               Close
