@@ -5,7 +5,6 @@ import {
   addNotification,
   setNotification,
 } from '../../store/notification/notification';
-import { NotificationViewer } from '../Notifications';
 import api from '../../axiosConfig';
 
 import {
@@ -107,11 +106,6 @@ const NotificationBox = () => {
           left={isMobile ? '-9rem' : '-7rem'}
           zIndex={1000}
         >
-        
-            <NotificationViewer
-              notification={notification}
-              setShowNotification={setShowNotification}
-            />
         </Box>
       )}
     </Box>
