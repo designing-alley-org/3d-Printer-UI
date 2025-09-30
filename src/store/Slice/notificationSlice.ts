@@ -63,10 +63,10 @@ const notificationSlice = createSlice({
       })
       .addCase(markNotificationAsRead.fulfilled, (state, action) => {
         const { messageId } = action.payload;
-        const notification = state.notifications.find(n => n.id === parseInt(messageId));
-        if (notification) {
-          notification.isRead = true;
-        }
+        state.notifications = state.notifications.map(n =>
+          n.messageId === messageId ? { ...n, isRead: true } : n
+        );
+        state.length = Math.max(0, state.length - 1);
       });
   }
 });

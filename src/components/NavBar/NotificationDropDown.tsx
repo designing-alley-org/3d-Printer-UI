@@ -24,16 +24,8 @@ import { useNavigate } from 'react-router-dom';
 import { formatChatTime } from '../../utils/function';
 import LoadingScreen from '../LoadingScreen';
 import NoDataFound from '../NoDataFound';
+import { Notification } from '../../types/notification';
 
-// Notification interface
-interface Notification {
-  id: number;
-  title: string;
-  message: string;
-  type: 'admin' | 'order' | 'ticket';
-  timestamp: Date;
-  isRead: boolean;
-}
 
 interface NotificationDropDownProps {
   notifications: Notification[];
