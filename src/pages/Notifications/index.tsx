@@ -19,11 +19,7 @@ import { useSelector } from 'react-redux';
 const Notification = () => {
   const [selectedTag, setSelectedTag] = useState('');
 
-
-
   const {notifications } = useSelector((state:RootState) => state.notification);
-
-
 
   const getHelpMessageLength = notifications.filter(
     (n) => n.type === 'ticket'

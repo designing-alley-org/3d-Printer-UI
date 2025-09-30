@@ -5,13 +5,15 @@ import ImageIcon from '@mui/icons-material/Image';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import { useRef } from 'react';
+import { hideInput } from '../../constant/const';
 
 interface PinProps {
   onImageSelect?: (files: File[]) => void;
   onDocumentSelect?: (files: File[]) => void;
+  status: string;
 }
 
-export default function Pin({ onImageSelect, onDocumentSelect }: PinProps) {
+export default function Pin({ onImageSelect, onDocumentSelect, status }: PinProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const documentInputRef = useRef<HTMLInputElement>(null);
 
@@ -73,7 +75,7 @@ export default function Pin({ onImageSelect, onDocumentSelect }: PinProps) {
         onChange={handleDocumentChange}
       />
       
-      <SpeedDial
+     {!hideInput.includes(status) && <SpeedDial
         ariaLabel="Attachment options"
         sx={{
           position: 'absolute',
@@ -106,7 +108,7 @@ export default function Pin({ onImageSelect, onDocumentSelect }: PinProps) {
             }}
           />
         ))}
-      </SpeedDial>
+      </SpeedDial>}
     </Box>
   );
 }

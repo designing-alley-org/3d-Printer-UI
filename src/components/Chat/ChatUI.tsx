@@ -3,22 +3,24 @@ import CustomButton from '../../stories/button/CustomButton';
 import Pin from './Pin';
 import ImagePreview from './ImagePreview';
 import FilePreview from './FilePreview';
-import { formatChatTime, formatDate } from '../../utils/function';
+import { formatChatTime } from '../../utils/function';
 import LoadingScreen from '../LoadingScreen';
 import MessageUI from './MessageUI';
 import { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import { getUserChat, sendMessage, setCurrentTicketId } from '../../store/Slice/chatSlice';
+import { hideInput } from '../../constant/const';
 
 
 
 interface ChatUIProps {
   isOpen: boolean | undefined;
   conversationId: string;
+  status: string;
 }
 
-const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
+const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
     const [messageInput, setMessageInput] = useState('');
     const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -169,14 +171,14 @@ const ChatUI = ({ isOpen, conversationId }: ChatUIProps) => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              disabled={sendingMessage}
+              disabled={sendingMessage || hideInput.includes(status)}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   height: '40px',
                 },
               }}
               InputProps={{
-                endAdornment: <Pin onImageSelect={handleImageSelect} onDocumentSelect={handleFileSelect} />,
+                endAdornment: <Pin onImageSelect={handleImageSelect} onDocumentSelect={handleFileSelect} status={status}/>,
               }}
             />
           )}

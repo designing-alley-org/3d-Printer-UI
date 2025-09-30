@@ -127,7 +127,7 @@ const HelpList = ({ onClick, id, type, subject, createdAt, orderId, status, isOp
           sx={{ pt: 0 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <ChatUI isOpen={isOpen} conversationId={conversationId || ''} />
+          <ChatUI isOpen={isOpen} conversationId={conversationId || ''} status={status || ''} />
         </CardContent>
       </motion.div>
     </Card>
