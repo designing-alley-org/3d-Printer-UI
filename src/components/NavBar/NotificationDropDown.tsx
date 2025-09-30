@@ -9,7 +9,6 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  CircularProgress,
   Chip,
   useTheme,
 } from '@mui/material';
@@ -40,12 +39,14 @@ interface NotificationDropDownProps {
   notifications: Notification[];
   loading: boolean;
   onClose: () => void;
+  unreadCount: number;
 }
 
 const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
   notifications,
   loading,
   onClose,
+  unreadCount
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -74,8 +75,6 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
         );
     }
   };
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handelViewAll = () => {
     navigate('/notifications');
@@ -148,7 +147,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
           />
         ) : notifications.length > 0 ? (
           <List sx={{ p: 0 }}>
-            {notifications.slice(0, 5).map((notification, index) => (
+            {notifications.slice(0, 15).map((notification, index) => (
               <React.Fragment key={notification.id}>
                 <ListItem
                   sx={{

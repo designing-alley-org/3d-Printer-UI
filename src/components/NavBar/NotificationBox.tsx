@@ -119,6 +119,7 @@ const NotificationBox = () => {
               notifications={notifications}
               loading={loading}
               onClose={handleClickAway}
+              unreadCount={unreadCount}
             />
           </Box>
         )}
