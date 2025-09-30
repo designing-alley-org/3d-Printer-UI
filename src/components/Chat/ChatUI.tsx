@@ -139,7 +139,7 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
       </Box>
 
       {/* Input */}
-      <Box component={'form'} display={'flex'} gap={2} mt={2} onSubmit={handleSendMessage}>
+     {!hideInput.includes(status) && <Box component={'form'} display={'flex'} gap={2} mt={2} onSubmit={handleSendMessage}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
           {/* Image Preview */}
           {selectedImages.length > 0 && (
@@ -171,14 +171,14 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
               value={messageInput}
               onChange={(e) => setMessageInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              disabled={sendingMessage || hideInput.includes(status)}
+              disabled={sendingMessage}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   height: '40px',
                 },
               }}
               InputProps={{
-                endAdornment: <Pin onImageSelect={handleImageSelect} onDocumentSelect={handleFileSelect} status={status}/>,
+                endAdornment: <Pin onImageSelect={handleImageSelect} onDocumentSelect={handleFileSelect}/>,
               }}
             />
           )}
@@ -202,7 +202,11 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
             alignSelf: 'flex-end',
           }}
         />
-      </Box>
+      </Box>}
+
+      {hideInput.includes(status) && <Box mt={2} textAlign={'center'}>
+        <em>You can't send messages in this status: {status}</em>
+      </Box>}
     </Box>
   );
 };
