@@ -111,7 +111,7 @@ const Routing: React.FC = () => {
 
         {/* Notifications */}
         <Route
-          path={ROUTES.Notification}
+          path={ROUTES.Notifications}
           element={<ProtectedRoute component={<Notification />} />}
         />
 

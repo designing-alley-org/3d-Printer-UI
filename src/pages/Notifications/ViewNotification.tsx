@@ -11,33 +11,13 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import CustomButton from '../../stories/button/CustomButton';
 import { motion } from 'framer-motion';
 import { formatText } from '../../utils/function';
+import { bellCSS } from '../../utils/colors';
 
 interface Props {
   tag?: string;
 }
 
-function bellCSS(tag: string | undefined) {
-  switch (tag) {
-    case 'pending':
-      return {
-        color: '#FFC71E',
-      };
-    case 'confirmed':
-      return {
-        color: '#31AE00',
-      };
-    case 'completed':
-      return {
-        color: '#2E7EFF',
-      };
-    case 'disputed':
-      return {
-        color: '#E00000',
-      };
-    default:
-      return {};
-  }
-}
+
 
 const NotificationCard = ({ tag }: Props) => {
   const theme = useTheme();

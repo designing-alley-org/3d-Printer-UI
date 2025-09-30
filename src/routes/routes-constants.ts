@@ -18,7 +18,7 @@ export const ROUTES = {
   GET_QUOTES: 'get-quotes',
   SERVICES: 'services',
   ACCOUNT: 'account',
-  Notification: 'notification',
+  Notifications: 'notifications',
   CART: 'cart',
   SUCCESS: 'order-successful',
   GOOGLE_AUTH: 'google-auth-handler',

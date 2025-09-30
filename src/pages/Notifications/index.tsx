@@ -10,9 +10,27 @@ import StackCard from './StackCard';
 import { useState } from 'react';
 import ViewNotification from './ViewNotification';
 import CustomPagination from '../../components/CustomPagination';
+import { RootState } from '../../store/types';
+import { useSelector } from 'react-redux';
 
 
-const stackData = [
+
+
+const Notification = () => {
+  const [selectedTag, setSelectedTag] = useState('');
+
+  const {notifications } = useSelector((state:RootState) => state.notification);
+
+  const getHelpMessageLength = notifications.filter(
+    (n) => n.type === 'ticket'
+  ).length;
+  // const getOrderMessageLength = notifications.filter((n) => n.type === 'order').length;
+  // const getAdminMessageLength = notifications.filter((n) => n.type === 'admin').length;
+  // const getOtherMessageLength = notifications.filter((n) => n.type === 'other').length;
+
+
+
+  const stackData = [
   {
     id: 1,
     title: 'Pending Quote',
@@ -33,14 +51,11 @@ const stackData = [
   },
   {
     id: 4,
-    title: 'Disputed',
-    Subtitle: '3 Notification',
-    tag: 'disputed',
+    title: 'Help',
+    Subtitle: `${getHelpMessageLength} Notification`,
+    tag: 'ticket',
   },
 ];
-
-const Notification = () => {
-  const [selectedTag, setSelectedTag] = useState('');
 
   return (
     <Container

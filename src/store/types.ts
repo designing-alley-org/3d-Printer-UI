@@ -1,4 +1,5 @@
 import { User } from '../types';
+import { Notification } from '../types/notification';
 import { Color, FileDataDB, Material, ModelDimensions, Pricing, Technology } from '../types/uploadFiles';
 import {
   LOGIN_FAILURE,
@@ -20,7 +21,18 @@ export interface RootState {
   customization: FileDetailsState;
   register: RegisterState;
   printerDetails: IPrinterDetails[];
+  notification: NotificationState;
 }
+
+
+
+export interface NotificationState {
+  notifications: Notification[];
+  loading: boolean;
+  length: number;
+  error: string | null;
+}
+
 
 export interface FileDetailsState {
   files: FileDataDB[];

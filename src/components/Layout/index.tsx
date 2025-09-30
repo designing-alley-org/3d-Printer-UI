@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../../store/actions/getCurrentUser';
 import { Box } from '@mui/material';
 import DesktopNav from '../NavBar/DesktopNav';
+import { getNotifications } from '../../store/Slice/notificationSlice';
+import { AppDispatch } from '../../store/store';
 
 const API_URL = import.meta.env.VITE_AWS_URL as string;
 
@@ -19,7 +21,7 @@ const Index: React.FC = () => {
   const { pathname } = useLocation();
   const user = useSelector((state: any) => state.user);
   const userId = user?.user?._id;
-  const dispatch = useDispatch();
+   const dispatch = useDispatch<AppDispatch>();
   const isDashboard = pathname.includes(ROUTES.DASHBOARD);
 
   // Set active tab based on path
@@ -64,10 +66,11 @@ const Index: React.FC = () => {
     };
   }, [userId]);
 
-  // Fetch current user on mount
+  // Fetch current user on moun
   useEffect(() => {
     const fetchData = async () => {
       await getCurrentUser(dispatch);
+      await dispatch(getNotifications())
     };
     fetchData();
   }, []);
