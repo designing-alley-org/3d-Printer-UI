@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 import { returnRequestService } from '../../services/fedex';
 import { filterStatus } from '../../constant/dropDownOption';
 
-// Define interfaces for type safety
+// Interfaces remain the same...
 interface Order {
   _id: string;
   numberOfFiles: number;
@@ -26,7 +26,6 @@ interface Order {
   updatedAt: string;
   name?: string;
   createdAt: string;
-  // Add other order properties as needed
 }
 
 interface PaginationData {
@@ -43,37 +42,40 @@ interface OrderResponse {
   pagination: PaginationData;
 }
 
+
 export const MyOrders = () => {
-  // Get the status parameter from the URL query params
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status');
+  const orderId = searchParams.get('orderId'); 
 
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
+  
+  // UPDATED: Initialize searchQuery state from the URL's orderId param
+  const [searchQuery, setSearchQuery] = useState(orderId || ''); 
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
-  // if status param is present in url, set the status filter accordingly
   const selectedStatusOption =
     filterStatus.find(
       (option) => option.value.toLowerCase() === status?.toLowerCase()
     ) || filterStatus[0];
 
-  // Return modal state
+  // ... Return modal state remains the same ...
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   const [returnOrderId, setReturnOrderId] = useState<string>('');
   const [returnShipmentId, setReturnShipmentId] = useState<string>('');
   const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
-  // Fetch orders function
+
+  // Fetch orders function remains the same
   const fetchOrders = async (
     page: number = currentPage,
     limit: number = pageSize,
-    orderId?: string,
-    status?: string
+    orderId?: string | null, // Allow null
+    status?: string | null  // Allow null
   ) => {
     try {
       setIsLoading(true);
@@ -115,36 +117,38 @@ export const MyOrders = () => {
     }
   };
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
+  // UPDATED: Debounced function now just updates the URL
+  const debouncedUrlUpdate = useCallback(
     debounce((query: string) => {
-      setCurrentPage(1); // Reset to first page on search
-      fetchOrders(1, pageSize, query, status || undefined);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (query.trim()) {
+        newSearchParams.set('orderId', query);
+      } else {
+        newSearchParams.delete('orderId');
+      }
+      // Use replace to avoid adding unnecessary entries to browser history
+      setSearchParams(newSearchParams, { replace: true });
     }, 500),
-    [pageSize, status] // eslint-disable-line react-hooks/exhaustive-deps
+    [searchParams, setSearchParams]
   );
 
-  // Handle search input change
+  // UPDATED: Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setSearchQuery(value);
-    debouncedSearch(value);
+    setSearchQuery(value); // Update input field immediately
+    debouncedUrlUpdate(value); // Debounce the URL update
   };
 
-  // Handle page change
+  // ... other handlers (handlePageChange, handlePageSizeChange, etc.) remain the same
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    fetchOrders(page, pageSize, searchQuery, status || undefined);
   };
 
-  // Handle page size change
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
     setCurrentPage(1);
-    fetchOrders(1, newPageSize, searchQuery, status || undefined);
   };
-
-  // Handle status filter change
+  
   const handleStatusFilterChange = (value: any) => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (value.value === 'all') {
@@ -155,6 +159,7 @@ export const MyOrders = () => {
     setSearchParams(newSearchParams);
   };
 
+  // UPDATED: Main useEffect now depends on URL params (status, orderId)
   useEffect(() => {
     const run = async () => {
       if (status) {
@@ -162,28 +167,27 @@ export const MyOrders = () => {
           (option) => option.value.toLowerCase() === status.toLowerCase()
         );
         if (!isValidStatus) {
-          // Remove invalid status from URL
           const newSearchParams = new URLSearchParams(searchParams);
           newSearchParams.delete('status');
           setSearchParams(newSearchParams);
           return;
         }
-        await fetchOrders(currentPage, pageSize, searchQuery, status);
-      } else {
-        await fetchOrders(currentPage, pageSize, searchQuery);
       }
+      // Fetch using values directly from URL params
+      await fetchOrders(currentPage, pageSize, orderId, status);
     };
 
     run();
   }, [
     status,
+    orderId, // NEW dependency
     pageSize,
-    searchQuery,
     currentPage,
     searchParams,
     setSearchParams,
   ]);
-
+  
+  // ... other functions (handleViewDetails, handleSubmitReturn, etc.) remain the same ...
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
   };
@@ -204,32 +208,22 @@ export const MyOrders = () => {
   ) => {
     try {
       setIsSubmittingReturn(true);
-
-      // Create FormData for API
       const formData = new FormData();
       formData.append('reason', JSON.stringify(returnData.returnReason));
       formData.append('orderId', JSON.stringify(returnOrderId));
-
-      // Add images to FormData
       returnData.imageFiles.forEach((file) => {
         formData.append(`files`, file);
       });
-
       await returnRequestService(
         returnShipmentId,
         formData,
         setOrdersData,
         returnOrderId
       );
-
-      // Close modal on success
       handleCloseReturn();
-
-      // TODO: Show success message to user
       console.log('Return submitted successfully!');
     } catch (error: any) {
       toast.error(error.response.data.message || 'Failed to submit return');
-      // TODO: Show error message to user
     } finally {
       setIsSubmittingReturn(false);
     }
@@ -255,7 +249,7 @@ export const MyOrders = () => {
             variant="outlined"
             isSearch={true}
             inputStyle={2}
-            value={searchQuery}
+            value={searchQuery} // Input is controlled by searchQuery state
             onChange={handleSearchChange}
           />
           <SingleSelectDropdown
@@ -269,7 +263,7 @@ export const MyOrders = () => {
         </CardContent>
       </Card>
 
-      {/* Order File Start  */}
+      {/* The rest of your JSX remains exactly the same */}
       {isLoading ? (
         <LoadingScreen
           title="Loading Orders..."
@@ -305,7 +299,6 @@ export const MyOrders = () => {
         </Box>
       )}
 
-      {/* Pagination */}
       {ordersData?.pagination && ordersData.pagination.totalPages > 1 && (
         <Box mt={3}>
           <CustomPagination
@@ -321,14 +314,13 @@ export const MyOrders = () => {
         </Box>
       )}
 
-      {/* Return Modal */}
       <CreateReturnModel
         open={isReturnModalOpen}
         onClose={handleCloseReturn}
         onSave={handleSubmitReturn}
         loading={isSubmittingReturn}
         orderId={returnOrderId}
-        shipmentId={returnShipmentId} // Mock shipment ID as requested
+        shipmentId={returnShipmentId}
       />
     </>
   );
