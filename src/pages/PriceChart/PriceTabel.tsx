@@ -37,7 +37,8 @@ const StyledDataRow = styled(TableRow)(({ theme }) => ({
 
 const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   '&:last-child td': {
-    borderBottom: 0,
+    borderBottom: 1,
+    borderTop: `1px solid ${theme.palette.divider}`,
   },
   '& td:first-of-type': {
     fontWeight: 600,
@@ -99,7 +100,9 @@ export default function PriceTable({  subtotal, taxes, taxRate, totalAmount, fil
           </StyledFooterTableRow>
 
           <StyledFooterTableRow>
-            <TableCell >Taxes ({taxRate}%)</TableCell>
+            <TableCell >
+               <Typography variant="body1" fontWeight="600">Taxes ({taxRate}%)</Typography>
+              </TableCell>
             <TableCell align="center">
               <Typography variant="body1" fontWeight="600">-</Typography>
             </TableCell>

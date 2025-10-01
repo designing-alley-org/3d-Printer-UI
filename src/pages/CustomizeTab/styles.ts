@@ -42,7 +42,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
 
   padding: 4px;
   margin-right: 20px;
-  height: 42rem;
+  height: 39rem;
   overflow-y: auto;
   .header {
     display: flex;
@@ -239,7 +239,7 @@ export const Customize = styled.article`
 
   .customize-container {
     overflow-y: auto;
-    height: 38.5rem;
+    height: 34.5rem;
   }
   .text {
     display: flex;

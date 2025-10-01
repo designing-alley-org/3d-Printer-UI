@@ -81,14 +81,14 @@ const ColorDropdown: React.FC<ColorDropdownProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box
               sx={{
-                width: 20,
-                height: 20,
+                width: 15,
+                height: 15,
                 borderRadius: '50%',
                 backgroundColor: selected.value,
                 mr: 1,
               }}
             />
-            <span>{selected.label}</span>
+            <span style={{fontSize: '.875rem',}}>{selected.label}</span>
           </Box>
         ) : (
           <span>{titleHelper}</span>

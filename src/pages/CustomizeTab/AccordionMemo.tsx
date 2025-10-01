@@ -36,7 +36,6 @@ import {
 } from '../../store/customizeFilesDetails/CustomizationSlice';
 import { PrinterSelector } from '../../components/Model';
 import { IPrinter } from '../../types/printer';
-import { getEstimatedTime, PrintEstimator } from '../../utils/PrintEstimator';
 
 interface AccordionProps {
   printerData: IPrinter[];
@@ -82,14 +81,14 @@ const Accordion: React.FC<AccordionProps> = ({
 
   const handleChange =
     (field: 'height' | 'width' | 'length') =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = Number(event.target.value.replace(/[^\d.]/g, ''));
-      if (value) {
-        dispatch(
-          updateDimensionsValue({ id: file?._id as string, key: field, value })
-        );
-      }
-    };
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Number(event.target.value.replace(/[^\d.]/g, ''));
+        if (value) {
+          dispatch(
+            updateDimensionsValue({ id: file?._id as string, key: field, value })
+          );
+        }
+      };
 
   const options = useMemo(
     () =>
@@ -115,12 +114,13 @@ const Accordion: React.FC<AccordionProps> = ({
           }}
         >
           <Ruler
-            size={25}
+            fontSize='small'
             style={{ transform: 'rotate(100deg)' }}
             color={theme.palette.primary.main}
           />
           <Typography
             variant="h6"
+            fontSize={'1rem'}
             sx={{ fontWeight: 600 }}
             color="primary.main"
           >
@@ -153,6 +153,7 @@ const Accordion: React.FC<AccordionProps> = ({
               titleHelper="Select"
               error={false}
               sx={{ width: '100%' }} // Ensure full width
+              fontSize={'.875rem'}
             />
           </Grid>
 
@@ -253,9 +254,10 @@ const Accordion: React.FC<AccordionProps> = ({
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <TechnologyIcon
+              fontSize='small'
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
-            <Typography variant="h6" color="primary.main">
+            <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
               Technology
             </Typography>
           </Box>
@@ -264,7 +266,7 @@ const Accordion: React.FC<AccordionProps> = ({
               dataspec?.technologies.map((tech: Technology) => ({
                 id: tech._id,
                 label: tech.code,
-                labelView: tech.code + ` ( ${tech.name})`,
+                labelView: tech.code + ` (${tech.name})`,
                 value: tech._id,
               })) || []
             }
@@ -279,15 +281,17 @@ const Accordion: React.FC<AccordionProps> = ({
               .find((opt: any) => opt.id === file?.technologyId)}
             titleHelper="Select Technology"
             sx={{ width: '100%' }} // Ensure full width
+            fontSize={'.875rem'}
           />
         </Grid>
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <MaterialIcon
+              fontSize='small'
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
-            <Typography variant="h6" color="primary.main">
+            <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
               Material
             </Typography>
           </Box>
@@ -311,16 +315,17 @@ const Accordion: React.FC<AccordionProps> = ({
               .find((opt: any) => opt.id === file?.materialId)}
             titleHelper="Select Material"
             sx={{ width: '100%' }}
+            fontSize={'.875rem'}
           />
         </Grid>
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <ColorIcon
-              size={16}
+              fontSize='small'
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
-            <Typography variant="h6" color="primary.main">
+            <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
               Colour
             </Typography>
           </Box>
@@ -342,15 +347,17 @@ const Accordion: React.FC<AccordionProps> = ({
               .find((opt: any) => opt.id === file?.colorId)}
             titleHelper="Select Color"
             sx={{ width: '100%' }}
+            
           />
         </Grid>
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <InfillIcon
+              fontSize='small'
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
-            <Typography variant="h6" color="primary.main">
+            <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
               Infill
             </Typography>
           </Box>
@@ -362,15 +369,17 @@ const Accordion: React.FC<AccordionProps> = ({
             )}
             titleHelper="Select Infill"
             sx={{ width: '100%' }}
+            fontSize={'.875rem'}
           />
         </Grid>
 
         <Grid size={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <PrinterIcon
+              fontSize='small'
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
-            <Typography variant="h6" color="primary.main">
+            <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
               Printer
             </Typography>
           </Box>
@@ -386,33 +395,7 @@ const Accordion: React.FC<AccordionProps> = ({
       </Grid>
 
       {/* Current Weight */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          pt: 2,
-          borderBottom: '1px solid #E0E0E0',
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 600, color: 'primary.main' }}
-        >
-          Current Weight :{' '}
-          <span>
-            {file?.weight?.value?.toFixed(3) || 0} {file?.weight?.unit || 'g'}
-          </span>
-        </Typography>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 600, color: 'primary.main' }}
-        >
-          {/* in to mints */}
-          Printer Time :{' '}
-          <span>{getEstimatedTime(file?.print_totalTime_s || 0)} mins</span>
-        </Typography>
-      </Box>
+
     </Box>
   );
 };

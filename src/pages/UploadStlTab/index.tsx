@@ -16,6 +16,7 @@ import CustomButton from '../../stories/button/CustomButton';
 import STlFileList from './STlFileList';
 import { deleteFile, getAllFilesByOrderId, updateFilesQuantity } from '../../services/filesService';
 import toast from 'react-hot-toast';
+import { Upload } from 'lucide-react';
 
 const INITIAL_DIMENSIONS: ModelDimensions = { height: 0, width: 0, length: 0 };
 
@@ -301,6 +302,7 @@ const UploadStl = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: 1,
       }}>
         <input
           ref={fileInputRef}
@@ -310,11 +312,11 @@ const UploadStl = () => {
           onChange={handleFileUpload}
           style={styles.hiddenInput as React.CSSProperties}
         />
-        <AnimatedUploadIcon />
+       <Upload strokeWidth={3} color="#c5c2c2ff" />
         <Typography variant="body1" fontWeight={600}>
           Upload Another File
         </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
+        <Typography variant="body2" >
           Supports STL files up to 100 MB.
         </Typography>
       </CardContent>

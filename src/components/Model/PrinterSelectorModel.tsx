@@ -42,6 +42,7 @@ export default function PrinterSelector({
           borderRadius: 0.5,
           color: selectedPrinter ? 'text.primary' : 'text.secondary',
           borderColor: 'divider',
+          fontSize: '.875rem',
         }}
       >
         {selectedPrinter

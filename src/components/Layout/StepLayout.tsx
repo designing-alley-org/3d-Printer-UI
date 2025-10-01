@@ -101,16 +101,16 @@ const StepLayout = ({
           mt: isSmallScreen ? 2 : 0,
         }}
       >
-        <CustomButton
+      {!(stepNumber === 1 ) &&  <CustomButton
           variant="outlined"
           onClick={onClickBack}
-          disabled={stepNumber === 1 ? true : isBackDisabled ? true : false}
+          disabled={ isBackDisabled ? true : false}
           children="Go Back"
           sx={{
             width: isSmallScreen ? '100%' : 'auto',
             padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 2rem',
           }}
-        />
+        />}
         <CustomButton
           variant="contained"
           size="large"

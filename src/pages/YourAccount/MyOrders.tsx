@@ -1,9 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import CustomPagination from '../../components/CustomPagination';
 import NoDataFound from '../../components/NoDataFound';
-import { Box, Card, CardContent,  Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
+import SingleSelectDropdown, {
+  Option,
+} from '../../stories/Dropdown/SingleSelectDropdown';
 import OrderFileItem from '../../components/OrderFileItem';
 import CreateReturnModel from '../../components/Model/CreateReturnModel';
 import { ReturnFormValues } from '../../validation/returnValidation';
@@ -12,8 +15,9 @@ import { debounce } from '../../utils/function';
 import LoadingScreen from '../../components/LoadingScreen';
 import toast from 'react-hot-toast';
 import { returnRequestService } from '../../services/fedex';
+import { filterStatus } from '../../constant/dropDownOption';
 
-// Define interfaces for type safety
+// Interfaces remain the same...
 interface Order {
   _id: string;
   numberOfFiles: number;
@@ -22,7 +26,6 @@ interface Order {
   updatedAt: string;
   name?: string;
   createdAt: string;
-  // Add other order properties as needed
 }
 
 interface PaginationData {
@@ -39,48 +42,69 @@ interface OrderResponse {
   pagination: PaginationData;
 }
 
+
 export const MyOrders = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const status = searchParams.get('status');
+  const orderId = searchParams.get('orderId'); 
+
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
+  
+  // UPDATED: Initialize searchQuery state from the URL's orderId param
+  const [searchQuery, setSearchQuery] = useState(orderId || ''); 
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<{
-    id: number;
-    value: string;
-    label: string;
-  }>({ id: 1, value: 'all', label: 'All' });
 
+  const selectedStatusOption =
+    filterStatus.find(
+      (option) => option.value.toLowerCase() === status?.toLowerCase()
+    ) || filterStatus[0];
 
-  // Return modal state
+  // ... Return modal state remains the same ...
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   const [returnOrderId, setReturnOrderId] = useState<string>('');
   const [returnShipmentId, setReturnShipmentId] = useState<string>('');
   const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
-  // Fetch orders function
-  const fetchOrders = async (page: number = currentPage, limit: number = pageSize, orderId?: string) => {
+
+  // Fetch orders function remains the same
+  const fetchOrders = async (
+    page: number = currentPage,
+    limit: number = pageSize,
+    orderId?: string | null, // Allow null
+    status?: string | null  // Allow null
+  ) => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const params: { page: number; limit: number; orderId?: string } = { 
-        page, 
-        limit 
+
+      const params: {
+        page: number;
+        limit: number;
+        orderId?: string;
+        status?: string;
+      } = {
+        page,
+        limit,
       };
-      
+
       if (orderId && orderId.trim()) {
         params.orderId = orderId.trim();
       }
-      
+
+      if (status && status.trim()) {
+        params.status = status.trim();
+      }
+
       const response = await getAllOrdersService(params);
-      
+
       if (response?.data) {
         setOrdersData({
           orders: response.data.data.orders || [],
-          pagination: response.data.data.pagination
+          pagination: response.data.data.pagination,
         });
       } else {
         throw new Error('Failed to fetch orders');
@@ -93,51 +117,79 @@ export const MyOrders = () => {
     }
   };
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
+  // UPDATED: Debounced function now just updates the URL
+  const debouncedUrlUpdate = useCallback(
     debounce((query: string) => {
-      setCurrentPage(1); // Reset to first page on search
-      fetchOrders(1, pageSize, query);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (query.trim()) {
+        newSearchParams.set('orderId', query);
+      } else {
+        newSearchParams.delete('orderId');
+      }
+      // Use replace to avoid adding unnecessary entries to browser history
+      setSearchParams(newSearchParams, { replace: true });
     }, 500),
-    [pageSize] // eslint-disable-line react-hooks/exhaustive-deps
+    [searchParams, setSearchParams]
   );
 
-  // Handle search input change
+  // UPDATED: Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setSearchQuery(value);
-    debouncedSearch(value);
+    setSearchQuery(value); // Update input field immediately
+    debouncedUrlUpdate(value); // Debounce the URL update
   };
 
-  // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    fetchOrders(page, pageSize, searchQuery);
   };
 
-  // Handle page size change
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
     setCurrentPage(1);
-    fetchOrders(1, newPageSize, searchQuery);
   };
-
-  // Handle status filter change
+  
   const handleStatusFilterChange = (value: any) => {
-    setStatusFilter(value);
-    // You can implement status filtering here if needed
-    // For now, we'll just update the state
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (value.value === 'all') {
+      newSearchParams.delete('status');
+    } else {
+      newSearchParams.set('status', value.value.toLowerCase());
+    }
+    setSearchParams(newSearchParams);
   };
 
+  // UPDATED: Main useEffect now depends on URL params (status, orderId)
   useEffect(() => {
-    fetchOrders();
-  }, []); // Only run on component mount
+    const run = async () => {
+      if (status) {
+        const isValidStatus = filterStatus.some(
+          (option) => option.value.toLowerCase() === status.toLowerCase()
+        );
+        if (!isValidStatus) {
+          const newSearchParams = new URLSearchParams(searchParams);
+          newSearchParams.delete('status');
+          setSearchParams(newSearchParams);
+          return;
+        }
+      }
+      // Fetch using values directly from URL params
+      await fetchOrders(currentPage, pageSize, orderId, status);
+    };
 
+    run();
+  }, [
+    status,
+    orderId, // NEW dependency
+    pageSize,
+    currentPage,
+    searchParams,
+    setSearchParams,
+  ]);
+  
+  // ... other functions (handleViewDetails, handleSubmitReturn, etc.) remain the same ...
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);
   };
-
-
 
   const handleOpenReturn = (orderId: string, shipmentId: string) => {
     setReturnOrderId(orderId);
@@ -150,30 +202,27 @@ export const MyOrders = () => {
     setReturnOrderId('');
   };
 
-  const handleSubmitReturn = async (returnData: ReturnFormValues & { imageFiles: File[] }) => {
+  const handleSubmitReturn = async (
+    returnData: ReturnFormValues & { imageFiles: File[] }
+  ) => {
     try {
       setIsSubmittingReturn(true);
-
-      // Create FormData for API
       const formData = new FormData();
       formData.append('reason', JSON.stringify(returnData.returnReason));
       formData.append('orderId', JSON.stringify(returnOrderId));
-
-      // Add images to FormData
       returnData.imageFiles.forEach((file) => {
         formData.append(`files`, file);
       });
-
-      await returnRequestService(returnShipmentId, formData, setOrdersData, returnOrderId);
-
-      // Close modal on success
+      await returnRequestService(
+        returnShipmentId,
+        formData,
+        setOrdersData,
+        returnOrderId
+      );
       handleCloseReturn();
-      
-      // TODO: Show success message to user
       console.log('Return submitted successfully!');
     } catch (error: any) {
       toast.error(error.response.data.message || 'Failed to submit return');
-      // TODO: Show error message to user
     } finally {
       setIsSubmittingReturn(false);
     }
@@ -199,19 +248,12 @@ export const MyOrders = () => {
             variant="outlined"
             isSearch={true}
             inputStyle={2}
-            value={searchQuery}
+            value={searchQuery} // Input is controlled by searchQuery state
             onChange={handleSearchChange}
           />
           <SingleSelectDropdown
-            options={[
-              { id: 1, value: 'all', label: 'All' },
-              { id: 2, value: 'pending', label: 'Pending' },
-              { id: 3, value: 'completed', label: 'Completed' },
-              { id: 4, value: 'processing', label: 'Processing' },
-              { id: 5, value: 'shipped', label: 'Shipped' },
-              { id: 6, value: 'delivered', label: 'Delivered' },
-            ]}
-            defaultValue={statusFilter}
+            options={filterStatus}
+            defaultValue={selectedStatusOption}
             sx={{
               width: '200px',
             }}
@@ -220,9 +262,12 @@ export const MyOrders = () => {
         </CardContent>
       </Card>
 
-      {/* Order File Start  */}
+      {/* The rest of your JSX remains exactly the same */}
       {isLoading ? (
-        <LoadingScreen  title='Loading Orders...' description='Please wait while we fetch your orders.'/>
+        <LoadingScreen
+          title="Loading Orders..."
+          description="Please wait while we fetch your orders."
+        />
       ) : error ? (
         <Box mt={3}>
           <Typography color="error" variant="h6" textAlign="center">
@@ -230,7 +275,10 @@ export const MyOrders = () => {
           </Typography>
         </Box>
       ) : !ordersData?.orders?.length ? (
-        <NoDataFound text="No Orders Found" description="No orders available." />
+        <NoDataFound
+          text="No Orders Found"
+          description="No orders available."
+        />
       ) : (
         <Box mt={3}>
           {ordersData.orders.map((order: Order) => {
@@ -250,7 +298,6 @@ export const MyOrders = () => {
         </Box>
       )}
 
-      {/* Pagination */}
       {ordersData?.pagination && ordersData.pagination.totalPages > 1 && (
         <Box mt={3}>
           <CustomPagination
@@ -266,15 +313,13 @@ export const MyOrders = () => {
         </Box>
       )}
 
-    
-      {/* Return Modal */}
       <CreateReturnModel
         open={isReturnModalOpen}
         onClose={handleCloseReturn}
         onSave={handleSubmitReturn}
         loading={isSubmittingReturn}
         orderId={returnOrderId}
-        shipmentId={returnShipmentId}// Mock shipment ID as requested
+        shipmentId={returnShipmentId}
       />
     </>
   );

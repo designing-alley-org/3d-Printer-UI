@@ -66,8 +66,12 @@ const CustomizeTab: React.FC = () => {
 
   // state
   const colors = useSelector((state: RootState) => state.specification.colors);
-  const pricing = useSelector((state: RootState) => state.specification.pricing);
-  const materials = useSelector((state: RootState) => state.specification.materials);
+  const pricing = useSelector(
+    (state: RootState) => state.specification.pricing
+  );
+  const materials = useSelector(
+    (state: RootState) => state.specification.materials
+  );
 
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
@@ -76,8 +80,16 @@ const CustomizeTab: React.FC = () => {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const { materialId, technologyId, printerId, colorId, infill, weight, costs, print_totalTime_s } =
-    file || {};
+  const {
+    materialId,
+    technologyId,
+    printerId,
+    colorId,
+    infill,
+    weight,
+    costs,
+    print_totalTime_s,
+  } = file || {};
 
   useEffect(() => {
     const fetchOrderFiles = async () => {
@@ -163,7 +175,11 @@ const CustomizeTab: React.FC = () => {
       infill > 0
     ) {
       try {
-        const estimator = new PrintEstimator(printer, material, pricing as Pricing);
+        const estimator = new PrintEstimator(
+          printer,
+          material,
+          pricing as Pricing
+        );
         const result = await estimator.getEstimates({
           modelGeometry: stlGeometry as any,
           printer: printer,
@@ -175,7 +191,7 @@ const CustomizeTab: React.FC = () => {
           dispatch(
             UpdateValueById({
               id: activeFileId as string,
-              data: { 
+              data: {
                 weight: {
                   value: result.weight_g,
                   unit: 'gm',
@@ -479,15 +495,36 @@ const CustomizeTab: React.FC = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  gap: 2,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '0 15px',
                 }}
               >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: 'primary.main', fontSize: '1rem' }}
+                >
+                  Current Weight :{' '}
+                  <span>
+                    {file?.weight?.value?.toFixed(3) || 0}{' '}
+                    {file?.weight?.unit || 'g'}
+                  </span>
+                </Typography>
+                {/* <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: 'primary.main' }}
+                >
+                  Printer Time :{' '}
+                  <span>
+                    {getEstimatedTime(file?.print_totalTime_s || 0)} mins
+                  </span>
+                </Typography> */}
                 <CustomButton
-                  children="Save"
+                  children="Save & Apply"
                   disabled={isApplyButtonDisabled || isLoading}
                   onClick={handleApplySelection}
                   loading={isLoading}
-                  variant="outlined"
+                  variant="contained"
                 />
               </Box>
             </>

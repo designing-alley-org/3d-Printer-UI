@@ -49,7 +49,7 @@ const theme = createTheme({
       primary: "#2A2D2F", // Text Dark
       secondary: "#5F6368", // Text Light
     },
-    divider: "#D7D7D7",
+    divider: "#D7D7D7", // Divider Color
     background: {
       default: "#F5F5F5", // App background
       paper: "#FFFFFF", // Card background
@@ -140,6 +140,30 @@ const theme = createTheme({
         },
       },
     },
+     MuiTable: {
+      styleOverrides: {
+        root: {
+          borderCollapse: "collapse", // optional: cleaner look
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: "#C5C5C5",
+          borderBottom: "1px solid #C5C5C5", 
+        },
+      },
+    },
+    // MuiTableRow: {
+    //   styleOverrides: {
+    //     root: {
+    //       "&:last-child td, &:last-child th": {
+    //         border: 0, 
+    //       },
+    //     },
+    //   },
+    // },
   },
 });
 
