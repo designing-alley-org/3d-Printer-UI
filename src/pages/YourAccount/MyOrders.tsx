@@ -139,7 +139,6 @@ export const MyOrders = () => {
     debouncedUrlUpdate(value); // Debounce the URL update
   };
 
-  // ... other handlers (handlePageChange, handlePageSizeChange, etc.) remain the same
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
