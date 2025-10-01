@@ -68,10 +68,27 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
     }
   };
 
-  const handelViewAll = () => {
-    navigate('/notifications');
-    onClose();
+  const handleClick = (data: Notification) => {
+    if (data) {
+      switch (data.type) {
+        case 'admin':
+          navigate('/account/notifications');
+          break;
+        case 'order':
+          navigate('/account/orders');
+          break;
+        case 'ticket':
+          navigate(`/account/help?conversationId=${data.conversationId}`);
+          break;
+        default:
+          navigate('/account/notifications');
+      }
+      onClose();
+    }
+    // Here you would also mark the notification as read in your state/store
   };
+
+
 
   return (
     <Card
@@ -142,6 +159,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
             {notifications.slice(0, 15).map((notification, index) => (
               <React.Fragment key={notification.id}>
                 <ListItem
+                 onClick={() => handleClick(notification)} 
                   sx={{
                     py: 1.5,
                     px: 2,
@@ -232,20 +250,6 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
               gap: 1,
             }}
           >
-            <CustomButton
-              variant="outlined"
-              size="small"
-              onClick={handelViewAll}
-              startIcon={<Visibility />}
-              sx={{
-                flex: 1,
-                borderRadius: '8px',
-                textTransform: 'none',
-                fontWeight: 600,
-              }}
-            >
-              View All
-            </CustomButton>
             <CustomButton
               variant="contained"
               size="small"

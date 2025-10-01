@@ -1,14 +1,17 @@
 import { Card, CardContent, CardHeader, Typography, Box } from '@mui/material'
 import HelpList from './HelpList'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState, AppDispatch } from '../../store/store'
 import { getAllUserQuery } from '../../store/Slice/querySlice'
 import LoadingScreen from '../LoadingScreen'
 import NoDataFound from '../NoDataFound'
+import { useSearchParams } from 'react-router-dom'
 
 const RightSideList = () => {
-  const [openTicketId, setOpenTicketId] = useState<string | null>(null)
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const conversationId = searchParams.get('conversationId');
 
   const dispatch = useDispatch<AppDispatch>()
 
@@ -18,9 +21,7 @@ const RightSideList = () => {
     dispatch(getAllUserQuery())
   }, [dispatch])
 
-  const handleTicketClick = (id: string) => {
-    setOpenTicketId(openTicketId === id ? null : id)
-  }
+
 
   return (
    <Card sx={{ flex: 1, overflowY: 'auto' }}>
@@ -54,15 +55,13 @@ const RightSideList = () => {
             helpTickets.map((ticket) => (
               <HelpList
                 key={ticket.help._id}
-                id={ticket.help._id}
                 type={ticket.help.type}
                 subject={ticket.help.subject}
                 createdAt={ticket.help.createdAt}
                 orderId={ticket.help.orderId}
                 status={ticket.help.status}
                 conversationId={ticket.conversationId}
-                isOpen={openTicketId === ticket.help._id}
-                onClick={handleTicketClick}
+                isOpen={conversationId === ticket.conversationId}
               />
             ))
           )}

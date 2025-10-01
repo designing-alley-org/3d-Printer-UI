@@ -3,6 +3,7 @@ import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDown
 import ChatUI from '../Chat/ChatUI';
 import { motion } from 'framer-motion';
 import { formatDate } from '../../utils/function';
+import { useSearchParams } from 'react-router-dom';
 
 interface  Props {
     onClick?: (id: string) => void;
@@ -33,7 +34,19 @@ function statusHexColor(status: string) {
   }
 }
 
-const HelpList = ({ onClick, id, type, subject, createdAt, orderId, status, isOpen , conversationId }: Props) => {
+const HelpList = ({  type, subject, createdAt, orderId, status, isOpen , conversationId }: Props) => {
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isChatOpen = searchParams.get('conversationId') === conversationId;
+
+  const handelClick = () => {
+    if (isChatOpen) {
+      setSearchParams({});
+    } else {
+      setSearchParams({ conversationId: conversationId || '' });
+    }
+  }
+
   return (
     <Card
       sx={{
@@ -48,7 +61,7 @@ const HelpList = ({ onClick, id, type, subject, createdAt, orderId, status, isOp
           flexDirection: 'column',
           cursor: 'pointer'
         }}
-        onClick={() => onClick && id && onClick(id)}
+        onClick={handelClick}
       >
         <Box display={'flex'} justifyContent={'space-between'} mb={1}>
           <Typography variant="body1" color="primary.main">

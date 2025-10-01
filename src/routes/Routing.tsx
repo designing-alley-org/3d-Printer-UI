@@ -22,7 +22,7 @@ import Password from '../pages/YourAccount/Password.tsx';
 import { MyOrders } from '../pages/YourAccount/MyOrders.tsx';
 import DashboardLayout from '../pages/Home/DashboardLayout.tsx';
 import UploadStl from '../pages/UploadStlTab/index.tsx';
-import Notification from '../pages/Notifications/index.tsx';
+// import Notification from '../pages/Notifications/index.tsx';
 import PriceChart from '../pages/PriceChart/index.tsx';
 import Help from '../pages/YourAccount/Help.tsx';
 
@@ -93,7 +93,7 @@ const Routing: React.FC = () => {
             element={<ProtectedRoute component={<MyProfile />} />}
           />
           <Route
-            path={`${ROUTES.MY_ORDERS}/:status?`} // `?` makes it optional
+            path={`${ROUTES.MY_ORDERS}/*`} 
             element={<ProtectedRoute component={<MyOrders />} />}
           />
 
@@ -102,16 +102,16 @@ const Routing: React.FC = () => {
             element={<ProtectedRoute component={<Password />} />}
           />
           <Route
-            path={ROUTES.HELP}
+            path={`${ROUTES.HELP}/*`}
             element={<ProtectedRoute component={<Help />} />}
           />
         </Route>
 
         {/* Notifications */}
-        <Route
+        {/* <Route
           path={ROUTES.Notifications}
           element={<ProtectedRoute component={<Notification />} />}
-        />
+        /> */}
 
         {/* Order Success */}
         <Route
