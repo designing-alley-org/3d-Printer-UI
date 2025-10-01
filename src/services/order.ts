@@ -29,14 +29,15 @@ const getOrderService = async (orderId: string) => {
     }
   };
 
-const getAllOrdersService = async ({ page, limit, orderId }: { page?: number, limit?: number, orderId?: string } = {}) => {
+const getAllOrdersService = async ({ page, limit, orderId, status }: { page?: number, limit?: number, orderId?: string, status?: string } = {}) => {
     try {
         const params: any = {};
         
         if (page !== undefined) params.page = page;
         if (limit !== undefined) params.limit = limit;
         if (orderId) params.orderId = orderId;
-        
+        if (status) params.status = status;
+
         const response = await api.get('/get-all-orders', { params });
         return response;
     } catch (error) {

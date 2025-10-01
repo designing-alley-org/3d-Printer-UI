@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import CustomPagination from '../../components/CustomPagination';
 import NoDataFound from '../../components/NoDataFound';
 import { Box, Card, CardContent,  Typography } from '@mui/material';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
+import SingleSelectDropdown, { Option } from '../../stories/Dropdown/SingleSelectDropdown';
 import OrderFileItem from '../../components/OrderFileItem';
 import CreateReturnModel from '../../components/Model/CreateReturnModel';
 import { ReturnFormValues } from '../../validation/returnValidation';
@@ -13,6 +13,7 @@ import { debounce } from '../../utils/function';
 import LoadingScreen from '../../components/LoadingScreen';
 import toast from 'react-hot-toast';
 import { returnRequestService } from '../../services/fedex';
+import { filterStatus } from '../../constant/dropDownOption';
 
 // Define interfaces for type safety
 interface Order {
@@ -41,12 +42,9 @@ interface OrderResponse {
 }
 
 export const MyOrders = () => {
-  // Get the status parameter from the URL
-  const { status } = useParams<{ status?: string }>();
-  
-  // Console log the status parameter
-  console.log('URL Status Parameter:', status);
-  
+  // Get the status parameter from the URL query params
+  const [searchParams, setSearchParams] = useSearchParams();
+  const status = searchParams.get('status');
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,11 +52,20 @@ export const MyOrders = () => {
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<{
-    id: number;
-    value: string;
-    label: string;
-  }>({ id: 1, value: 'all', label: 'All' });
+  const [statusFilter, setStatusFilter] = useState<Option>({ id: 1, value: 'all', label: 'All' });
+
+
+  
+
+  // if status param is present in url, set the status filter accordingly
+  useEffect(() => {
+    if (status) {
+    const matchedStatus = filterStatus.find(option => option.value.toLowerCase() === status.toLowerCase());
+    if (matchedStatus) {
+      setStatusFilter(matchedStatus);    
+    }
+  }
+  }, [status]);
 
 
   // Return modal state
@@ -68,18 +75,22 @@ export const MyOrders = () => {
   const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
   // Fetch orders function
-  const fetchOrders = async (page: number = currentPage, limit: number = pageSize, orderId?: string) => {
+  const fetchOrders = async (page: number = currentPage, limit: number = pageSize, orderId?: string, status?: string) => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const params: { page: number; limit: number; orderId?: string } = { 
-        page, 
-        limit 
+
+      const params: { page: number; limit: number; orderId?: string; status?: string } = {
+        page,
+        limit
       };
       
       if (orderId && orderId.trim()) {
         params.orderId = orderId.trim();
+      }
+
+      if (status && status.trim()) {
+        params.status = status.trim();
       }
       
       const response = await getAllOrdersService(params);
@@ -104,9 +115,9 @@ export const MyOrders = () => {
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       setCurrentPage(1); // Reset to first page on search
-      fetchOrders(1, pageSize, query);
+      fetchOrders(1, pageSize, query, status || undefined);
     }, 500),
-    [pageSize] // eslint-disable-line react-hooks/exhaustive-deps
+    [pageSize, status] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // Handle search input change
@@ -119,26 +130,49 @@ export const MyOrders = () => {
   // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    fetchOrders(page, pageSize, searchQuery);
+    fetchOrders(page, pageSize, searchQuery, status || undefined);
   };
 
   // Handle page size change
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
     setCurrentPage(1);
-    fetchOrders(1, newPageSize, searchQuery);
+    fetchOrders(1, newPageSize, searchQuery, status || undefined);
   };
 
   // Handle status filter change
   const handleStatusFilterChange = (value: any) => {
     setStatusFilter(value);
-    // You can implement status filtering here if needed
-    // For now, we'll just update the state
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (value.value === 'all') {
+      newSearchParams.delete('status');
+    } else {
+      newSearchParams.set('status', value.value.toLowerCase());
+    }
+    setSearchParams(newSearchParams);
   };
 
-  useEffect(() => {
-    fetchOrders();
-  }, []); // Only run on component mount
+useEffect(() => {
+  const run = async () => {
+    if (status) {
+      const isValidStatus = filterStatus.some(
+        option => option.value.toLowerCase() === status.toLowerCase()
+      );
+      if (!isValidStatus) {
+        // Remove invalid status from URL
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete('status');
+        setSearchParams(newSearchParams);
+        return;
+      }
+      await fetchOrders(currentPage, pageSize, searchQuery, status);
+    } else {
+      await fetchOrders(currentPage, pageSize, searchQuery);
+    }
+  };
+
+  run();
+}, [status, pageSize, searchQuery, currentPage, searchParams, setSearchParams]);
 
 
   const handleViewDetails = (orderId: string) => {
@@ -211,14 +245,7 @@ export const MyOrders = () => {
             onChange={handleSearchChange}
           />
           <SingleSelectDropdown
-            options={[
-              { id: 1, value: 'all', label: 'All' },
-              { id: 2, value: 'pending', label: 'Pending' },
-              { id: 3, value: 'completed', label: 'Completed' },
-              { id: 4, value: 'processing', label: 'Processing' },
-              { id: 5, value: 'shipped', label: 'Shipped' },
-              { id: 6, value: 'delivered', label: 'Delivered' },
-            ]}
+            options={filterStatus}
             defaultValue={statusFilter}
             sx={{
               width: '200px',
