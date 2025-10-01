@@ -65,7 +65,9 @@ const PriceChart = () => {
           <MonetizationOnOutlinedIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
             Price
           </Typography>
-        } />
+        } 
+        sx={{ pb: 0 }}
+        />
         <CardContent>
           <PriceTable  
           subtotal={data?.subtotal || 0} 
@@ -77,7 +79,7 @@ const PriceChart = () => {
       </Card>
       <Typography variant="body2" color="textSecondary" align="center" sx={{ alignItems: 'self', display: 'flex', justifyContent: 'start', mt: 2 }}>
         <InfoOutlineIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-        Connect with admin to discuss before proceeding. <Link variant="body2" color="primary" component="span"> Connect Now</Link>
+        Connect with admin to discuss before proceeding. <Link  variant="body2" color="primary" component="span" onClick={() => {navigate('/account/help')}} > Connect Now</Link>
       </Typography>
       </StepLayout>
   )

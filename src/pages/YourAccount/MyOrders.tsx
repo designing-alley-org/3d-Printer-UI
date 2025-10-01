@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import CustomPagination from '../../components/CustomPagination';
 import NoDataFound from '../../components/NoDataFound';
 import { Box, Card, CardContent,  Typography } from '@mui/material';
@@ -40,6 +41,12 @@ interface OrderResponse {
 }
 
 export const MyOrders = () => {
+  // Get the status parameter from the URL
+  const { status } = useParams<{ status?: string }>();
+  
+  // Console log the status parameter
+  console.log('URL Status Parameter:', status);
+  
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -132,6 +139,7 @@ export const MyOrders = () => {
   useEffect(() => {
     fetchOrders();
   }, []); // Only run on component mount
+
 
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);

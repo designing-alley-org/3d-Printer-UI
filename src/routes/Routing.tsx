@@ -48,7 +48,7 @@ const Routing: React.FC = () => {
         />
 
         {/* Quote Process Routes */}
-        
+
         <Route path={`${ROUTES.GET_QUOTES}/:orderId`}>
           <Route
             path={ROUTES.UPLOAD_STL}
@@ -58,7 +58,7 @@ const Routing: React.FC = () => {
             path={ROUTES.CUSTOMIZE}
             element={<ProtectedRoute component={<Customize />} />}
           />
-           <Route
+          <Route
             path={ROUTES.PRICE}
             element={<ProtectedRoute component={<PriceChart />} />}
           />
@@ -87,25 +87,23 @@ const Routing: React.FC = () => {
           path={ROUTES.ACCOUNT}
           element={<ProtectedRoute component={<Account />} />}
         >
-          <Route
-            index
-            element={<Navigate to={ROUTES.MY_PROFILE} replace />}
-          />
+          <Route index element={<Navigate to={ROUTES.MY_PROFILE} replace />} />
           <Route
             path={ROUTES.MY_PROFILE}
             element={<ProtectedRoute component={<MyProfile />} />}
           />
           <Route
-            path={ROUTES.MY_ORDERS}
+            path={`${ROUTES.MY_ORDERS}/:status?`} // `?` makes it optional
             element={<ProtectedRoute component={<MyOrders />} />}
           />
+
           <Route
             path={ROUTES.PASSWORD}
             element={<ProtectedRoute component={<Password />} />}
           />
           <Route
-          path={ROUTES.HELP}
-           element={<ProtectedRoute component={<Help />} />}
+            path={ROUTES.HELP}
+            element={<ProtectedRoute component={<Help />} />}
           />
         </Route>
 

@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   CardActions,
   CardContent,
+  CardActionArea,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CustomButton from '../../stories/button/CustomButton';
@@ -84,47 +85,49 @@ const WelcomePage = () => {
           </Typography>
 
           {/* Steps */}
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={{ xs: 1, sm: 2 }}
-            justifyContent="center"
-            divider={
-              !isMobile ? (
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{
-                    borderColor: 'primary.main',
+            {/* <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ xs: 1, sm: 2 }}
+              justifyContent="center"
+              divider={
+                !isMobile ? (
+                  <Divider
+                    orientation="vertical"
+                    flexItem
+                    sx={{
+                      borderColor: 'primary.main',
 
+                    }}
+                  />
+                ) : null
+              }
+              sx={{ mb: 4 }}
+            >
+              {[
+                '1: Upload Your Design',
+                '2: Customise',
+                '3: Quote',
+                '4: Delivery',
+              ].map((step, index) => (
+                <Typography
+                  key={index}
+                  sx={{
+                    fontWeight: 600,
+                    color: theme.palette.customColors.primaryDark,
                   }}
-                />
-              ) : null
-            }
-            sx={{ mb: 4 }}
-          >
-            {[
-              '1: Upload Your Design',
-              '2: Customise',
-              '3: Quote',
-              '4: Delivery',
-            ].map((step, index) => (
-              <Typography
-                key={index}
-                sx={{
-                  fontWeight: 600,
-                  color: theme.palette.customColors.primaryDark,
-                }}
-                variant='body1'
-              >
-                {step}
-              </Typography>
-            ))}
-          </Stack>
+                  variant='body1'
+                >
+                  {step}
+                </Typography>
+              ))}
+            </Stack> */}
         </CardContent>
 
         {/* Button */}
+        <CardActionArea sx={{ mt: { xs: 2, sm: 4 } }}>
         <CardActions sx={{ justifyContent: 'center', pb: 4 }}>
-          <CustomButton
+
+            <CustomButton
             variant="contained"
             size="large"
             onClick={handleSave}
@@ -133,6 +136,8 @@ const WelcomePage = () => {
             Get Started Now
           </CustomButton>
         </CardActions>
+
+        </CardActionArea>
       </Card>
     </>
   );

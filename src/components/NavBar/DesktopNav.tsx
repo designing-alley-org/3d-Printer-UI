@@ -8,6 +8,7 @@ import {
   useTheme,
   useMediaQuery,
   IconButton,
+  Container,
 } from '@mui/material';
 
 // Importing icons
@@ -19,18 +20,26 @@ interface ITab {
   activeTabs: number;
 }
 
-
-
 const DesktopNav = ({ activeTabs }: ITab) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-    const { pathname } = useLocation();
-     const isDashboard = pathname.includes(ROUTES.DASHBOARD);
+  const { pathname } = useLocation();
+  const isDashboard = pathname.includes(ROUTES.DASHBOARD);
+
+  const handleNavigation = (id:number, path: string) => {
+    if(id === 3) {
+      localStorage.clear();
+      navigate('/login');
+      return;
+    }
+    navigate(path);
+  }
 
   return (
-    <StyledAppBar position="static" elevation={0} isDashboard={isDashboard}>
-      <Toolbar
+    <StyledAppBar position="static" elevation={0} isDashboard={isDashboard} >
+      <Container maxWidth="xl">
+       <Toolbar
         sx={{
           justifyContent: 'space-between',
           minHeight: '60px !important',
@@ -67,7 +76,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             cursor: 'pointer',
           }}
         >
-           3D Print Your Future
+          3D Print Your Future
         </Typography>
 
         {/* Navigation Links */}
@@ -79,7 +88,6 @@ const DesktopNav = ({ activeTabs }: ITab) => {
             ml: 'auto',
           }}
         >
-
           {/* Notification Section */}
           <Box sx={{ mx: { xs: 1, md: 2 } }}>
             <NotificationBox />
@@ -90,7 +98,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
               key={item.id}
               isDashboard={isDashboard}
               active={activeTabs === item.id}
-              onClick={() => navigate(item.path)}
+              onClick={() => handleNavigation(item.id, item.path)}
               sx={{
                 display: { xs: 'none', md: 'flex' },
                 fontSize: { md: '0.775rem', lg: '0.875rem' },
@@ -117,6 +125,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
           </IconButton>
         )}
       </Toolbar>
+      </Container>
     </StyledAppBar>
   );
 };

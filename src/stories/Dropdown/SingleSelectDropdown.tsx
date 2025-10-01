@@ -18,6 +18,7 @@ export interface Option {
 }
 
 interface SingleSelectDropdownProps {
+  fontSize?: string | number;
   options: Option[];
   defaultValue?: Option;
   onChange: (selected: Option) => void;
@@ -29,6 +30,7 @@ interface SingleSelectDropdownProps {
 }
 
 const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
+  fontSize,
   options,
   defaultValue,
   onChange,
@@ -81,7 +83,7 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
           ...style,
         }}
       >
-        <span>{selected.label ? selected.label : titleHelper}</span>
+        <span style={{ fontSize: fontSize }}>{selected.label ? selected.label : titleHelper}</span>
        
         {open ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
       </Button>

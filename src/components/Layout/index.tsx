@@ -77,7 +77,7 @@ const Index: React.FC = () => {
 
   return (
     <Box width={'100%'} height="100vh" display="flex" flexDirection="column" sx={{
-      backgroundColor: isDashboard ? 'primary.main' : 'background.default',
+      backgroundColor: isDashboard ? 'primary.main' : '#FCFDFF',
     }}>
       <Box position="sticky" top={0} zIndex={1000}>
         <DesktopNav activeTabs={activeTabs} />

@@ -3,7 +3,7 @@
 
 /* Global CSS Variables */
 :root {
-  --primary-blue: #060B35;
+  --primary-bg: #FCFDFF;
   --text-black: #2A2D2F;
   --border-color: #D7D7D7;
   --card-border: #EDEDED;
@@ -19,7 +19,7 @@
 /* Body Styles */
 body {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  background-color: var(--primary-blue);
+  background-color: var(--primary-bg) !important;
   color: var(--text-black);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
