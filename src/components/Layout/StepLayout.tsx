@@ -15,7 +15,7 @@ interface StepLayoutProps {
   onClick?: () => void;
   stepDescription?: string;
   isBackDisabled?: boolean;
-  orderId?: string;
+  orderNo?: string;
   isDisabled?: boolean;
   isLoading?: boolean;
   children?: React.ReactNode;
@@ -29,7 +29,7 @@ const StepLayout = ({
   stepNumber,
   stepDescription,
   stepText,
-  orderId,
+  orderNo,
   onClick,
   isDisabled,
   isLoading,
@@ -74,7 +74,7 @@ const StepLayout = ({
             sx={{ fontWeight: 600 }}
             color="primary.main"
           >
-            Order ID: {orderId || 'N/A'}
+            Order No: {orderNo|| 'N/A'}
           </Typography>
         </Box>
       )}

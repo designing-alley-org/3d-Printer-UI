@@ -31,7 +31,7 @@ import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown
 import { addressLabelOptions } from '../../../constant/dropDownOption';
 
 const ShippingDetails = () => {
-  const { orderId } = useParams();
+  const { orderId, orderNumber } = useParams();
   const dispatch = useDispatch();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const { addressData, addressId, isCreateAddress } = useSelector(
@@ -113,7 +113,7 @@ const ShippingDetails = () => {
       address: addressId,
       order_status: 'address_select',
     });
-    navigate(`/get-quotes/${orderId}/checkout/select-delivery`);
+    navigate(`/get-quotes/${orderId}/${orderNumber}/checkout/select-delivery`);
   };
 
   return (
@@ -122,8 +122,8 @@ const ShippingDetails = () => {
       stepText="Checkout"
       stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={handleNext}
-      orderId={orderId}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/quote`)}
+      orderNo={orderNumber}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/${orderNumber}/price`)}
       isLoading={false}
       isPageLoading={isPageLoading}
       isDisabled={!addressId}

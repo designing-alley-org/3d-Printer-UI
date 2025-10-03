@@ -13,6 +13,8 @@ import DeliveryDetail from './DeliveryDetail';
 import FilesList from './FilesList';
 import NoDataFound from './NoDataFound';
 import { formatDate, formatText } from '../utils/function';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { ROUTES } from '../routes/routes-constants';
 
 interface Props {
   order: any;
@@ -32,8 +34,40 @@ const buttonStyle = (theme: any) => ({
   },
 });
 
-const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) => {
+const handelGoBack = (order: any, navigate: NavigateFunction) => {
+  const orderStatus = order?.order_status;
+
+  switch (orderStatus) {
+    case 'pending':
+    case 'created':
+      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.UPLOAD_STL}`);
+      break;
+    case 'files_uploaded':
+      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CUSTOMIZE}`);
+      break;
+    case 'price':
+      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.PRICE}`);
+      break;
+    case 'checkout':
+      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}`);
+      break;
+    case 'address_select':
+      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}/${ROUTES.DELIVERY_PLAN}`);
+      break;
+    default:
+      navigate('/your-account/my-orders');
+  }
+};
+
+const OrderFileItem = ({
+  order,
+  onClick,
+  onReturn,
+  isExpanded = false,
+}: Props) => {
+  const navigate = useNavigate();
   const theme = useTheme();
+
   return (
     <>
       <Card
@@ -93,7 +127,7 @@ const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) 
                 variant="body2"
                 color={theme.palette.customColors.lightTextOverDark}
               >
-                Status:  {formatText(order.order_status) || 'N/A'}
+                Status: {formatText(order.order_status) || 'N/A'}
               </Typography>
             </Box>
           </Box>
@@ -102,9 +136,13 @@ const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) 
           <CustomButton
             sx={buttonStyle(theme)}
             children={'Go to Back'}
+            onClick={(e) => {
+              e.stopPropagation();
+              handelGoBack(order, navigate);
+            }}
           />
           <CustomButton
-             sx={buttonStyle(theme)}
+            sx={buttonStyle(theme)}
             children={isExpanded ? 'Close' : 'View '}
           />
         </CardActions>
@@ -117,41 +155,46 @@ const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) 
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }} 
+            style={{ overflow: 'hidden' }}
           >
             <Box mt={2}>
               {/* DeliveryDetail */}
-             {order?.shipmentCreated?.created &&
-               <DeliveryDetail shipment={order?.shipmentCreated} return={order?.returnCreated} />
-             }
-
-              {
-                order.numberOfFiles === 0 ? <NoDataFound text="No Files Found" description='No files have been uploaded for this order.' /> :  order.files.map((file: any) => (
-                    <FilesList key={file.id} file={file} />
-                  ))
-              }
-
-             {
-              order.paymentStatus.status === 'success' 
-              &&  
-              <Box display="flex" gap={1} justifyContent="end" mt={2}>
-               {
-                order?.shipmentCreated?.status === 'Delivered' && 
-                order?.returnCreated?.created !== true  &&
-                <CustomButton
-                  variant="outlined"
-                  sx={{
-                    padding: '8px 36px',
-                  }}
-                  children="Return"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onReturn?.(order._id, order?.shipmentCreated?._id);
-                  }}
+              {order?.shipmentCreated?.created && (
+                <DeliveryDetail
+                  shipment={order?.shipmentCreated}
+                  return={order?.returnCreated}
                 />
-               }
-              </Box>
-             }
+              )}
+
+              {order.numberOfFiles === 0 ? (
+                <NoDataFound
+                  text="No Files Found"
+                  description="No files have been uploaded for this order."
+                />
+              ) : (
+                order.files.map((file: any) => (
+                  <FilesList key={file.id} file={file} />
+                ))
+              )}
+
+              {order.paymentStatus.status === 'success' && (
+                <Box display="flex" gap={1} justifyContent="end" mt={2}>
+                  {order?.shipmentCreated?.status === 'Delivered' &&
+                    order?.returnCreated?.created !== true && (
+                      <CustomButton
+                        variant="outlined"
+                        sx={{
+                          padding: '8px 36px',
+                        }}
+                        children="Return"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onReturn?.(order._id, order?.shipmentCreated?._id);
+                        }}
+                      />
+                    )}
+                </Box>
+              )}
             </Box>
           </motion.div>
         )}

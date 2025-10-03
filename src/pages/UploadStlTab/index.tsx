@@ -11,7 +11,6 @@ import { FileData, ModelDimensions } from '../../types/uploadFiles';
 import { stlParser, STLUtils, STLParser } from '../../utils/stlUtils';
 import { uploadFilesService } from '../../services/order';
 import UploadInput from './UploadInput';
-import AnimatedUploadIcon from '../../components/AnimatedUploadIcon';
 import CustomButton from '../../stories/button/CustomButton';
 import STlFileList from './STlFileList';
 import { deleteFile, getAllFilesByOrderId, updateFilesQuantity } from '../../services/filesService';
@@ -30,7 +29,7 @@ const UploadStl = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { orderId } = useParams();
+  const { orderId, orderNumber } = useParams();
 
   // Fetch files on component mount
   useEffect(() => {
@@ -250,7 +249,7 @@ const UploadStl = () => {
 
         if (filesToUpload.length > 0) await updateFilesQuantity(filesToUpload);
 
-        navigate(`/get-quotes/${orderId}/customize`);
+        navigate(`/get-quotes/${orderId}/${orderNumber}/customize`);
       } else if (files.length === 0) {
         console.warn('No files to upload');
       } else {
@@ -345,7 +344,7 @@ const UploadStl = () => {
       stepDescription="Upload your 3D model file ( STL or OBJ format )"
       onClick={handleSave}
       isButtonsHide={files.length === 0}
-      orderId={orderId}
+      orderNo={orderNumber}
       isLoading={isLoading}
       isPageLoading={isPageLoading}
       isDisabled={isDisabled}

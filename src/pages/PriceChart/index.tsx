@@ -29,7 +29,7 @@ const fetchOrder = async ({ orderId, setData, setIsPageLoading }: fetchOrderProp
 const PriceChart = () => {
 
   const navigate = useNavigate()
-  const orderId = useParams().orderId || ""
+  const { orderId, orderNumber } = useParams()
   const [data, setData] = useState<PriceTableProps>({
     subtotal: 0,
     taxes: 0,
@@ -50,10 +50,10 @@ const PriceChart = () => {
       stepNumber={3}
       stepText="Get Your Price"
       stepDescription="The best price for your 3D print"
-      onClick={() => navigate('/get-quotes/' + orderId + '/checkout')}
-      onClickBack={() => navigate('/get-quotes/' + orderId + '/customize')}
+      onClick={() => navigate('/get-quotes/' + orderId + '/' + orderNumber + '/checkout')}
+      onClickBack={() => navigate('/get-quotes/' + orderId + '/' + orderNumber + '/customize')}
       isButtonsHide={false}
-      orderId={orderId}
+      orderNo={orderNumber}
       isLoading={isLoading}
       isPageLoading={isPageLoading}
       isDisabled={isDisabled}
