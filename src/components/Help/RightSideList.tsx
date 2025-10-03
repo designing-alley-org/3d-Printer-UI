@@ -10,7 +10,6 @@ import { useSearchParams } from 'react-router-dom'
 
 const RightSideList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const conversationId = searchParams.get('conversationId');
 
   const dispatch = useDispatch<AppDispatch>()

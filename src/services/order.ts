@@ -327,14 +327,26 @@ const getUserOrderIdsService = async () => {
     }
 }
 
-const getCheckoutDetailsService = async (orderId: string) => {
-    try {
-        const response = await api.get(`/checkout-details/${orderId}`);
-        return returnResponse(response);
-    } catch (error) {
-        throw error;
-    }
-}
+const getCheckoutDetailsService = async ({
+  orderId,
+  orderNumber 
+}:{orderId?:string, orderNumber?:string }) => {
+  try {
+
+    console.log('Fetching checkout details for:', { orderId, orderNumber });
+    const response = await api.get(`/checkout-details`, {
+      params: {
+        ...(orderId && { orderId }),
+        ...(orderNumber && { orderNumber }),
+      },
+    });
+
+    return returnResponse(response);
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export { 
     createOrderService, 

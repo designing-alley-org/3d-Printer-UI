@@ -23,7 +23,7 @@ export const createHelpService = async (payload: HelpFormData) => {
       subject: payload.subject,
       message: payload.message,
     });
-    return returnResponse(response);
+    return response.data;
   } catch (error) {
     throw error;
   }

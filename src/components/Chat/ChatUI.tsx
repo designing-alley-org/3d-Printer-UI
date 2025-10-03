@@ -16,14 +16,31 @@ import {
 } from '../../store/Slice/chatSlice';
 import { hideInput } from '../../constant/const';
 import { markNotificationAsRead } from '../../store/Slice/notificationSlice';
+import PriceTable, { PriceTableProps } from '../../pages/PriceChart/PriceTabel';
+import { getCheckoutDetailsService } from '../../services/order';
 
 interface ChatUIProps {
   isOpen: boolean | undefined;
   conversationId: string;
   status: string;
+  type: string | undefined;
+  orderNumber: string | undefined;
 }
 
-const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
+type fetchOrderProps = {
+  orderNumber: string;
+  setData: React.Dispatch<React.SetStateAction<PriceTableProps>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+const fetchOrder = async ({ orderNumber, setData, setIsLoading }: fetchOrderProps) => {
+     const response = await getCheckoutDetailsService({orderNumber});
+     setData(response);
+     setIsLoading(false);
+}
+
+const ChatUI = ({ isOpen, conversationId, status, type , orderNumber}: ChatUIProps) => {
   const [messageInput, setMessageInput] = useState('');
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -34,6 +51,20 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
   );
 
   const { user } = useSelector((state: RootState) => state.user);
+
+
+    const [data, setData] = useState<PriceTableProps>({
+      subtotal: 0,
+      taxes: 0,
+      taxRate: 0,
+      totalAmount: 0,
+      fileTable: [],
+    });
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+  
+    useEffect(() => {
+        if (orderNumber)  fetchOrder({ orderNumber, setData, setIsLoading })
+      }, [orderNumber])
 
   // Get messages for current conversation
   const messages = chatData[conversationId] || [];
@@ -93,6 +124,7 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
         sendMessage({
           conversationId,
           message: messageInput.trim(),
+          
           messageType: 'text', // This will be determined in the dispatch based on files
           selectedImages:
             selectedImages.length > 0 ? selectedImages : undefined,
@@ -157,6 +189,19 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
         borderRadius={0.5}
         p={2}
       >
+        {/* If type is Negotiation */}
+      {type === 'Negotiation' && 
+      <Box mb={2}>
+        <PriceTable
+          subtotal={data?.subtotal || 0}
+          taxes={data?.taxes || 0}
+          taxRate={data?.taxRate || 0}
+          totalAmount={data?.totalAmount || 0}
+          fileTable={data?.fileTable || []}
+        />
+      </Box>
+      }
+
         {messages.map((msg, index) => (
           <MessageUI
             key={index}
@@ -166,6 +211,8 @@ const ChatUI = ({ isOpen, conversationId, status }: ChatUIProps) => {
             attachments={msg.attachments || []}
           />
         ))}
+
+
         {/* Empty div to scroll to bottom */}
         <div ref={messagesEndRef} />
       </Box>

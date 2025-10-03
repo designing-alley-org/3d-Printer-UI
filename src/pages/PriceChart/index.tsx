@@ -21,7 +21,7 @@ type fetchOrderProps = {
 
 
 const fetchOrder = async ({ orderId, setData, setIsPageLoading }: fetchOrderProps) => {
-     const response = await getCheckoutDetailsService(orderId);
+     const response = await getCheckoutDetailsService({orderId});
      setData(response);
      setIsPageLoading(false);
 }
@@ -79,7 +79,7 @@ const PriceChart = () => {
       </Card>
       <Typography variant="body2" color="textSecondary" align="center" sx={{ alignItems: 'self', display: 'flex', justifyContent: 'start', mt: 2 }}>
         <InfoOutlineIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-        Connect with admin to discuss before proceeding. <Link  variant="body2" color="primary" component="span" onClick={() => {navigate('/account/help')}} > Connect Now</Link>
+        Connect with admin to discuss before proceeding. <Link  variant="body2" color="primary" component="span" onClick={() => {navigate('/account/help', { state: { orderId, orderNumber , data } })}} > Connect Now</Link>
       </Typography>
       </StepLayout>
   )

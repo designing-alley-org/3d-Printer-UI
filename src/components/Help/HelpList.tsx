@@ -39,13 +39,15 @@ const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , con
   const [searchParams, setSearchParams] = useSearchParams();
   const isChatOpen = searchParams.get('conversationId') === conversationId;
 
+
   const handelClick = () => {
     if (isChatOpen) {
       setSearchParams({});
     } else {
-      setSearchParams({ conversationId: conversationId || '' });
+      setSearchParams({ conversationId: conversationId  || '' } );
     }
   }
+
 
   return (
     <Card
@@ -140,7 +142,7 @@ const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , con
           sx={{ pt: 0 }}
           onClick={(e) => e.stopPropagation()}
         >
-          <ChatUI isOpen={isOpen} conversationId={conversationId || ''} status={status || ''} />
+          <ChatUI isOpen={isOpen} conversationId={conversationId || ''} status={status || ''} type={type}  orderNumber={orderNumber || ''}/>
         </CardContent>
       </motion.div>
     </Card>
