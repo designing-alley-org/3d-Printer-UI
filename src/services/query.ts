@@ -19,7 +19,7 @@ export const createHelpService = async (payload: HelpFormData) => {
   try {
     const response = await api.post('/api/v1/help-tickets', {
       type: payload.type,
-      orderId: payload.orderId?.title || null,
+      orderId: payload.orderId || null,
       subject: payload.subject,
       message: payload.message,
     });

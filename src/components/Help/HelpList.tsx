@@ -11,7 +11,7 @@ interface  Props {
     type?: string;
     subject?: string;
     createdAt?: string;
-    orderId?: string;
+    orderNumber?: string;
     status?: string;
     isOpen?: boolean;
     conversationId?: string;
@@ -34,7 +34,7 @@ function statusHexColor(status: string) {
   }
 }
 
-const HelpList = ({  type, subject, createdAt, orderId, status, isOpen , conversationId }: Props) => {
+const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , conversationId }: Props) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const isChatOpen = searchParams.get('conversationId') === conversationId;
@@ -84,15 +84,15 @@ const HelpList = ({  type, subject, createdAt, orderId, status, isOpen , convers
             Created On: {formatDate(createdAt || '', false)}
           </Typography>
           <Box display={'flex'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }} mt={{ xs: 1, sm: 0 }}>
-           {orderId && <Typography variant="body2" color="text.secondary">
-              Order Id:
+           {orderNumber && <Typography variant="body2" color="text.secondary">
+              Order No:
               <Typography
                 variant="body2"
                 color="primary.main"
                 component={'span'}
                 ml={1}
               >
-                {orderId}
+                {orderNumber}
               </Typography>
             </Typography>}
             <Typography>

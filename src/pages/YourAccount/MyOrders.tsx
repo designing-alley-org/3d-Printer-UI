@@ -43,7 +43,6 @@ export const MyOrders = () => {
   const orderId = searchParams.get('orderId'); 
 
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
-  console.log("Orders Data:", ordersData); // Debugging log
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);

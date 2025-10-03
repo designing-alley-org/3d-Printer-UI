@@ -58,7 +58,7 @@ const RightSideList = () => {
                 type={ticket.help.type}
                 subject={ticket.help.subject}
                 createdAt={ticket.help.createdAt}
-                orderId={ticket.help.orderId}
+                orderNumber={ticket.help.order_number}
                 status={ticket.help.status}
                 conversationId={ticket.conversationId}
                 isOpen={conversationId === ticket.conversationId}

@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomButton from '../stories/button/CustomButton';
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import DeliveryDetail from './DeliveryDetail';
 import FilesList from './FilesList';
@@ -21,6 +20,17 @@ interface Props {
   onReturn?: (id: string, shipmentId: string) => void;
   isExpanded?: boolean;
 }
+
+const buttonStyle = (theme: any) => ({
+  padding: '8px 36px',
+  color: theme.palette.primary.contrastText,
+  border: 1,
+  borderColor: theme.palette.primary.contrastText,
+  '&:hover': {
+    backgroundColor: theme.palette.primary.contrastText,
+    color: theme.palette.primary.main,
+  },
+});
 
 const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) => {
   const theme = useTheme();
@@ -61,7 +71,7 @@ const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) 
                 color="primary.contrastText"
                 gutterBottom
               >
-                {order._id}
+                {order.order_number || 'N/A'}
               </Typography>
               <Typography
                 variant="body2"
@@ -90,17 +100,13 @@ const OrderFileItem = ({ order, onClick, onReturn, isExpanded = false }: Props) 
         </CardContent>
         <CardActions>
           <CustomButton
-            sx={{
-              color: 'primary.contrastText',
-            }}
-          >
-            <motion.div
-              animate={{ rotate: isExpanded ? 90 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ArrowForwardIosOutlinedIcon fontSize="medium" />
-            </motion.div>
-          </CustomButton>
+            sx={buttonStyle(theme)}
+            children={'Go to Back'}
+          />
+          <CustomButton
+             sx={buttonStyle(theme)}
+            children={isExpanded ? 'Close' : 'View '}
+          />
         </CardActions>
       </Card>
 
