@@ -16,6 +16,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import toast from 'react-hot-toast';
 import { returnRequestService } from '../../services/fedex';
 import { filterStatus } from '../../constant/dropDownOption';
+import { Pagination } from '../../types';
 
 // Interfaces remain the same...
 interface Order {
@@ -28,18 +29,11 @@ interface Order {
   createdAt: string;
 }
 
-interface PaginationData {
-  currentPage: number;
-  totalPages: number;
-  totalOrders: number;
-  ordersPerPage: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-}
+
 
 interface OrderResponse {
   orders: Order[];
-  pagination: PaginationData;
+  pagination: Pagination | null;
 }
 
 
@@ -49,6 +43,7 @@ export const MyOrders = () => {
   const orderId = searchParams.get('orderId'); 
 
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
+  console.log("Orders Data:", ordersData); // Debugging log
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);

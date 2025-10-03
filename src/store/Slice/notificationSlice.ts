@@ -36,6 +36,7 @@ export const markNotificationAsRead = createAsyncThunk(
 
 const initialState : NotificationState = {
     notifications: [],
+    pagination: null,
     length: 0,
     loading: false,
     error: null

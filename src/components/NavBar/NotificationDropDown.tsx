@@ -14,10 +14,6 @@ import {
 } from '@mui/material';
 import {
   Close,
-  AdminPanelSettings,
-  ShoppingCart,
-  SupportAgent,
-  Visibility,
 } from '@mui/icons-material';
 import CustomButton from '../../stories/button/CustomButton';
 import { useNavigate } from 'react-router-dom';
@@ -43,28 +39,16 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const getNotificationIcon = (type: string) => {
+  const getNotificationColor = (type: string) => {
     switch (type) {
       case 'admin':
-        return (
-          <AdminPanelSettings
-            sx={{ color: theme.palette.customColors.warning }}
-          />
-        );
+        return theme.palette.info.main;
       case 'order':
-        return (
-          <ShoppingCart sx={{ color: theme.palette.customColors.success }} />
-        );
+        return theme.palette.success.main;
       case 'ticket':
-        return (
-          <SupportAgent sx={{ color: theme.palette.customColors.linkBlue }} />
-        );
+        return theme.palette.success.main;
       default:
-        return (
-          <AdminPanelSettings
-            sx={{ color: theme.palette.customColors.textLight }}
-          />
-        );
+        return theme.palette.text.primary;
     }
   };
 
@@ -172,9 +156,6 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                     },
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: '40px' }}>
-                    {getNotificationIcon(notification.type)}
-                  </ListItemIcon>
                   <ListItemText
                     primary={
                       <Typography
@@ -187,27 +168,29 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                         }
                         noWrap
                       >
-                        {notification.title}
+                        {notification.message}
                       </Typography>
                     }
                     secondary={
-                      <Box>
+                      <Box display="flex" justifyContent={"space-between"} alignItems="center">
                         <Typography
                           variant="body2"
-                          color={theme.palette.text.secondary}
+                          color={theme.palette.text.primary}
                           sx={{
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
                             WebkitBoxOrient: 'vertical',
                             overflow: 'hidden',
                             mb: 0.5,
+                            fontSize: 12
                           }}
                         >
-                          {notification.message}
+                          Category: <Typography component="span" fontSize={12} color={getNotificationColor(notification.type)}>{notification.title}</Typography>
                         </Typography>
                         <Typography
                           variant="caption"
-                          color={theme.palette.text.disabled}
+                          color={theme.palette.text.primary}
+                          
                         >
                           {formatChatTime(notification.timestamp)}
                         </Typography>
