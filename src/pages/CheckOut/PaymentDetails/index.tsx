@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import {
   Box,
   Typography,
-  Paper,
   List,
   ListItem,
   ListItemText,
@@ -22,14 +20,9 @@ import api from '../../../axiosConfig';
 import CustomButton from '../../../stories/button/CustomButton';
 import { getOrderSummaryService } from '../../../services/order';
 import { formatText } from '../../../utils/function';
-import { DeliveryService, FileDataDB } from '../../../types/uploadFiles';
+import { DeliveryService } from '../../../types/uploadFiles';
 
-// Types
-interface QuoteProps {
-  files: FileDataDB[];
-  totalPrice: number;
-  tax: number;
-}
+
 
 interface AddressData {
   _id: string;
@@ -44,22 +37,16 @@ interface AddressData {
 }
 
 const PaymentDetails: React.FC = () => {
-  // State
-  const [quoteData, setQuoteData] = useState<QuoteProps>({
-    files: [],
-    totalPrice: 0,
-    tax: 0,
-  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [files, setFiles] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<AddressData>();
   const [deliveryService, setDeliveryService] = useState<DeliveryService | null>(null);
-  console.log('Delivery Service:', deliveryService);
 
   // Hooks
-  const { orderId } = useParams<{ orderId: string }>();
+  const { orderId, orderNumber } = useParams<{ orderId: string, orderNumber: string }>();
   const navigate = useNavigate();
 
   // Effects
@@ -68,7 +55,6 @@ const PaymentDetails: React.FC = () => {
       const summary = await getOrderSummaryService(orderId as string, setIsLoading, setError);
       if (summary) {
         setFiles(summary.files);
-        setQuoteData(summary);
         setSelectedAddress(summary.order.address);
         setDeliveryService(summary.order.delivery_service);
       }
@@ -109,9 +95,9 @@ const PaymentDetails: React.FC = () => {
       stepText="Order Summary"
       stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={handlePayment}
-      orderId={orderId}
+      orderNo={orderNumber}
       onClickBack={() =>
-        navigate(`/get-quotes/${orderId}/checkout/select-delivery`)
+        navigate(`/get-quotes/${orderId}/${orderNumber}/checkout/select-delivery`)
       }
       isBackDisabled={isSaving || isLoading}
       isLoading={isSaving}
@@ -265,7 +251,7 @@ const PaymentDetails: React.FC = () => {
                     Price
                   </Typography>
                   <Typography variant="body2">
-                    ${quoteData.totalPrice?.toFixed(2)}
+                    {/* ${quoteData.totalPrice?.toFixed(2)} */}
                   </Typography>
                 </Box>
                 <Box
@@ -294,7 +280,7 @@ const PaymentDetails: React.FC = () => {
                   </Typography>
                   <Typography variant="body2">
                     $
-                    {((quoteData?.tax / 100) * quoteData.totalPrice)?.toFixed(2)}
+                    {/* {((quoteData?.tax / 100) * quoteData.totalPrice)?.toFixed(2)} */}
                   </Typography>
                 </Box>
               </Box>
@@ -310,12 +296,12 @@ const PaymentDetails: React.FC = () => {
                   Total
                 </Typography>
                 <Typography variant="h6" color="primary.main">
-                  $
+                  {/* $
                   {(
                     Number(quoteData.totalPrice) +
                     Number(deliveryService?.service_price || 0) +
                     (Number(quoteData?.tax) * quoteData.totalPrice) / 100
-                  )?.toFixed(2)}
+                  )?.toFixed(2)} */}
                 </Typography>
               </Box>
           </Box>
