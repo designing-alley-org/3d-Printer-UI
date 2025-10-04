@@ -1,4 +1,4 @@
-import { Box, TextField } from '@mui/material';
+import { Box, CircularProgress, TextField } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import Pin from './Pin';
 import ImagePreview from './ImagePreview';
@@ -92,12 +92,12 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
 
   // useRef and useEffect to scroll to bottom on new message
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-    });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -189,6 +189,7 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
     <Box>
       {/* Chat UI components go here */}
       <Box
+        ref={chatContainerRef}
         minHeight={300}
         maxHeight={400}
         overflow="auto"
@@ -199,6 +200,8 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
         {/* If type is Negotiation */}
         {type === 'Negotiation' && (
           <Box mb={2}>
+            {
+            isLoading ? <CircularProgress size={20} color="primary" /> :
             <PriceTable
               subtotal={data?.subtotal || 0}
               taxes={data?.taxes || 0}
@@ -206,9 +209,11 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
               totalAmount={data?.totalAmount || 0}
               fileTable={data?.fileTable || []}
             />
+            }
+
           </Box>
         )}
-
+        <Box ref={messagesEndRef}>
           {messages.map((msg, index) => (
             <MessageUI
               key={msg._id || index}
@@ -219,7 +224,7 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
             />
           ))}
         {/* Empty div to scroll to bottom */}
-        <div ref={messagesEndRef} />
+       </Box>
       </Box>
 
       {/* Input */}
