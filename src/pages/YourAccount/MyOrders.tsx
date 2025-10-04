@@ -16,6 +16,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import toast from 'react-hot-toast';
 import { returnRequestService } from '../../services/fedex';
 import { filterStatus } from '../../constant/dropDownOption';
+import { Pagination } from '../../types';
 
 // Interfaces remain the same...
 interface Order {
@@ -28,18 +29,11 @@ interface Order {
   createdAt: string;
 }
 
-interface PaginationData {
-  currentPage: number;
-  totalPages: number;
-  totalOrders: number;
-  ordersPerPage: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-}
+
 
 interface OrderResponse {
   orders: Order[];
-  pagination: PaginationData;
+  pagination: Pagination | null;
 }
 
 
@@ -243,7 +237,7 @@ export const MyOrders = () => {
           }}
         >
           <CustomTextField
-            label="Search Orders by ID"
+            label="Search Orders by Number"
             size="small"
             variant="outlined"
             isSearch={true}

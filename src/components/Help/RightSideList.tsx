@@ -10,7 +10,6 @@ import { useSearchParams } from 'react-router-dom'
 
 const RightSideList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const conversationId = searchParams.get('conversationId');
 
   const dispatch = useDispatch<AppDispatch>()
@@ -58,7 +57,7 @@ const RightSideList = () => {
                 type={ticket.help.type}
                 subject={ticket.help.subject}
                 createdAt={ticket.help.createdAt}
-                orderId={ticket.help.orderId}
+                orderNumber={ticket.help.order_number}
                 status={ticket.help.status}
                 conversationId={ticket.conversationId}
                 isOpen={conversationId === ticket.conversationId}

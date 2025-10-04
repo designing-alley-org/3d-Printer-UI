@@ -4,20 +4,22 @@ import { ChatPayload, SendMessageRequest, MessageType } from '../../types/chat';
 import toast from 'react-hot-toast';
 import { returnError } from '../../utils/function';
 import { getSignedUrl, uploadFromS3, deleteFromS3 } from '../../services/s3';
+import { Pagination } from '../../types';
 
 // Async thunk for fetching user chat
 export const getUserChat = createAsyncThunk(
   'chat/getUserChat',
-  async (ticketId: string, { rejectWithValue }) => {
+  async (id : string, { rejectWithValue }) => {
     try {
-      const data = await getUserChatService(ticketId);
-      return { ticketId, messages: data };
+      const data = await getUserChatService(id);
+      return { id, messages: data };
     } catch (error: any) {
       toast.error(returnError(error) || 'Failed to fetch chat messages');
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch chat messages');
     }
   }
 );
+
 
 // Async thunk for sending a message
 export const sendMessage = createAsyncThunk(
@@ -158,7 +160,7 @@ export const sendMessage = createAsyncThunk(
 );
 
 interface ChatState {
-  chatData: Record<string, ChatPayload[]>; 
+  chatData: ChatPayload[];
   loading: boolean;
   sendingMessage: boolean;
   error: string | null;
@@ -166,7 +168,7 @@ interface ChatState {
 }
 
 const initialState: ChatState = {
-  chatData: {},
+  chatData: [],
   loading: false,
   sendingMessage: false,
   error: null,
@@ -184,28 +186,25 @@ export const ChatSlice = createSlice({
       state.currentTicketId = action.payload;
     },
     clearChatData: (state) => {
-      state.chatData = {};
+      state.chatData = [];
       state.currentTicketId = null;
     },
     // Action to add auto-response messages (for simulation)
     addAutoResponse: (state, action) => {
-      const { ticketId, message } = action.payload;
-      if (state.chatData[ticketId]) {
-        state.chatData[ticketId].push(message);
-      }
+      const { message } = action.payload;
+      state.chatData.push(message); 
     },
   },
   extraReducers: (builder) => {
     builder
       // Get user chat cases
-      .addCase(getUserChat.pending, (state) => {
+      .addCase(getUserChat.pending, (state, action) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(getUserChat.fulfilled, (state, action) => {
         state.loading = false;
-        const { ticketId, messages } = action.payload;
-        state.chatData[ticketId] = messages;
+        state.chatData = action.payload.messages;
         state.error = null;
       })
       .addCase(getUserChat.rejected, (state, action) => {
@@ -219,11 +218,11 @@ export const ChatSlice = createSlice({
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sendingMessage = false;
-        const { ticketId, message } = action.payload;
-        if (!state.chatData[ticketId]) {
-          state.chatData[ticketId] = [];
+        const { message } = action.payload;
+        if (!state.chatData) {
+          state.chatData = [];
         }
-        state.chatData[ticketId].push(message);
+        state.chatData.push(message);
         state.error = null;
       })
       .addCase(sendMessage.rejected, (state, action) => {

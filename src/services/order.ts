@@ -269,10 +269,10 @@ const uploadFilesService = async (
     }
 };
 
-const updateTotalWeightService = async (orderId: string, navigate: any) => {
+const updateTotalWeightService = async (orderId: string, order_number: string, navigate: any) => {
     try {
         const response = await api.patch(`/update-total-weight/${orderId}`);
-        navigate(`/get-quotes/${orderId}/price`);
+        navigate(`/get-quotes/${orderId}/${order_number}/price`);
         return response;
     } catch (error) {
         toast.error(returnError(error));
@@ -327,14 +327,25 @@ const getUserOrderIdsService = async () => {
     }
 }
 
-const getCheckoutDetailsService = async (orderId: string) => {
-    try {
-        const response = await api.get(`/checkout-details/${orderId}`);
-        return returnResponse(response);
-    } catch (error) {
-        throw error;
-    }
-}
+const getCheckoutDetailsService = async ({
+  orderId,
+  orderNumber 
+}:{orderId?:string, orderNumber?:string }) => {
+  try {
+
+    const response = await api.get(`/checkout-details`, {
+      params: {
+        ...(orderId && { orderId }),
+        ...(orderNumber && { orderNumber }),
+      },
+    });
+
+    return returnResponse(response);
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export { 
     createOrderService, 

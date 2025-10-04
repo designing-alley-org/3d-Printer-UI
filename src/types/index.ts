@@ -39,3 +39,12 @@ export interface User {
 export type editUser = Omit<User,'email' | '_id' | 'token'>;
 
 export type EditMail = Partial<Pick<User, 'email'>>;
+
+export interface Pagination {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}

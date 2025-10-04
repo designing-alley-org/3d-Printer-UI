@@ -21,7 +21,7 @@ type fetchOrderProps = {
 
 
 const fetchOrder = async ({ orderId, setData, setIsPageLoading }: fetchOrderProps) => {
-     const response = await getCheckoutDetailsService(orderId);
+     const response = await getCheckoutDetailsService({orderId});
      setData(response);
      setIsPageLoading(false);
 }
@@ -29,7 +29,7 @@ const fetchOrder = async ({ orderId, setData, setIsPageLoading }: fetchOrderProp
 const PriceChart = () => {
 
   const navigate = useNavigate()
-  const orderId = useParams().orderId || ""
+  const { orderId, orderNumber } = useParams()
   const [data, setData] = useState<PriceTableProps>({
     subtotal: 0,
     taxes: 0,
@@ -50,10 +50,10 @@ const PriceChart = () => {
       stepNumber={3}
       stepText="Get Your Price"
       stepDescription="The best price for your 3D print"
-      onClick={() => navigate('/get-quotes/' + orderId + '/checkout')}
-      onClickBack={() => navigate('/get-quotes/' + orderId + '/customize')}
+      onClick={() => navigate('/get-quotes/' + orderId + '/' + orderNumber + '/checkout')}
+      onClickBack={() => navigate('/get-quotes/' + orderId + '/' + orderNumber + '/customize')}
       isButtonsHide={false}
-      orderId={orderId}
+      orderNo={orderNumber}
       isLoading={isLoading}
       isPageLoading={isPageLoading}
       isDisabled={isDisabled}
@@ -79,7 +79,7 @@ const PriceChart = () => {
       </Card>
       <Typography variant="body2" color="textSecondary" align="center" sx={{ alignItems: 'self', display: 'flex', justifyContent: 'start', mt: 2 }}>
         <InfoOutlineIcon fontSize="small" sx={{ verticalAlign: 'middle', mr: 0.5 }} />
-        Connect with admin to discuss before proceeding. <Link  variant="body2" color="primary" component="span" onClick={() => {navigate('/account/help')}} > Connect Now</Link>
+        Connect with admin to discuss before proceeding. <Link  variant="body2" color="primary" component="span" onClick={() => {navigate('/account/help', { state: { orderId, orderNumber , data } })}} > Connect Now</Link>
       </Typography>
       </StepLayout>
   )

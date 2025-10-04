@@ -2,7 +2,7 @@
 // import { returnError, returnResponse } from "../utils/function";
 
 import api from "../axiosConfig";
-import { ChatPayload, SendMessageRequest } from "../types/chat";
+import {  SendMessageRequest } from "../types/chat";
 import { returnResponse } from "../utils/function";
 
 
@@ -17,9 +17,9 @@ export interface SendMessageResponse {
 }
 
 
-export const getUserChatService = async (ticketId: string): Promise<ChatPayload[]> => {
+export const getUserChatService = async (id: string) => {
   try {
-   const response = await api.get(`/api/v1/chat/conversations/${ticketId}/messages`);
+   const response = await api.get(`/api/v1/chat/conversations/${id}/messages`);
     return returnResponse(response);
   } catch (error) {
     throw error;

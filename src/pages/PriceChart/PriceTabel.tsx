@@ -63,7 +63,7 @@ export default function PriceTable({  subtotal, taxes, taxRate, totalAmount, fil
 
   return (
     <StyledTableContainer>
-      <Table sx={{ minWidth: 650 }} aria-label="price breakdown table">
+      <Table  aria-label="price breakdown table">
         <StyledTableHead>
           <TableRow>
             <TableCell>File</TableCell>

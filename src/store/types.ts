@@ -1,4 +1,4 @@
-import { User } from '../types';
+import { Pagination, User } from '../types';
 import { Notification } from '../types/notification';
 import { Color, FileDataDB, Material, ModelDimensions, Pricing, Technology } from '../types/uploadFiles';
 import {
@@ -25,9 +25,10 @@ export interface RootState {
 }
 
 
-
+  
 export interface NotificationState {
   notifications: Notification[];
+  pagination: Pagination | null;
   loading: boolean;
   length: number;
   error: string | null;

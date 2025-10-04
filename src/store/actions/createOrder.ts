@@ -28,7 +28,7 @@ const createOrder = async ({
         }
 
         // Navigate to the upload page with the new order ID
-        navigate(`/get-quotes/${response.data.data._id}/upload-stl`);
+        navigate(`/get-quotes/${response.data.data._id}/${response.data.data.order_number}/upload-stl`);
 
       
     } catch (error) {

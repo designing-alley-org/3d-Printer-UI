@@ -27,7 +27,6 @@ interface CardProps {
 export default function Delivery({
   item,
   deliveryName,
-  serviceType,
   deliveryCost,
   active,
   commit,

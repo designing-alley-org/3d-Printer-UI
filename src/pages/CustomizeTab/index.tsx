@@ -51,7 +51,7 @@ import { PrintEstimator } from '../../utils/PrintEstimator';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
-  const { orderId } = useParams();
+  const { orderId, orderNumber } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [printerData, setPrinterData] = useState<IPrinter[]>([]);
@@ -101,7 +101,7 @@ const CustomizeTab: React.FC = () => {
         setIsPageLoading(true);
         const response = await getAllFilesByOrderId(orderId);
         if (response.length === 0)
-          navigate(`/get-quotes/${orderId}/upload-stl`);
+          navigate(`/get-quotes/${orderId}/${orderNumber}/upload-stl`);
         dispatch(setFiles(response as FileDataDB[]));
       } catch (error) {
         console.error('Error fetching order files:', error);
@@ -322,7 +322,7 @@ const CustomizeTab: React.FC = () => {
   };
 
   const handelNext = async () => {
-    await updateTotalWeightService(orderId as string, navigate);
+    await updateTotalWeightService(orderId as string, orderNumber as string, navigate);
   };
 
   return (
@@ -331,8 +331,8 @@ const CustomizeTab: React.FC = () => {
       stepText="Customize"
       stepDescription="Customize your design files by selecting materials, colors, and printers."
       onClick={handelNext}
-      orderId={orderId}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/upload-stl`)}
+      orderNo={orderNumber}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/${orderNumber}/upload-stl`)}
       isLoading={false}
       isPageLoading={isPageLoading}
       isDisabled={isAllCoustomized ? false : true}

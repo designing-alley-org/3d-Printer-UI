@@ -1,12 +1,13 @@
-import { Box, Typography, Card, CardMedia, Chip } from "@mui/material";
+import { Box, Typography, Card, CardMedia, Chip } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TableViewIcon from '@mui/icons-material/TableView';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attachment } from "../../types/chat";
-
-
+import { Attachment } from '../../types/chat';
+import { useEffect, useState } from 'react';
+import PriceTable, { PriceTableProps } from '../../pages/PriceChart/PriceTabel';
+import { getCheckoutDetailsService } from '../../services/order';
 
 const getFileIcon = (type: string) => {
   switch (type.toLowerCase()) {
@@ -24,6 +25,7 @@ const getFileIcon = (type: string) => {
       return <DescriptionIcon color="action" />;
   }
 };
+
 
 
 
@@ -50,29 +52,43 @@ const FileUI = ({ type, url, filename, size }: Attachment) => (
     onClick={() => window.open(url, '_blank')}
     deleteIcon={<DownloadIcon />}
     onDelete={() => window.open(url, '_blank')}
-    sx={{ 
-      m: 0.5, 
+    sx={{
+      m: 0.5,
       maxWidth: 200,
       '& .MuiChip-label': {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        maxWidth: 120
-      }
+        maxWidth: 120,
+      },
     }}
   />
 );
 
-const MessageUI = ({ message, date, isSender, attachments = [] }: { 
-  message: string; 
-  date: string; 
+const MessageUI = ({
+  message,
+  date,
+  isSender,
+  attachments = [],
+}: {
+  message: string;
+  date: string;
   isSender: boolean;
   attachments?: Attachment[];
+
 }) => {
-  const imageAttachments = attachments.filter(att => att.type === 'image');
-  const fileAttachments = attachments.filter(att => att.type !== 'image');
+  // Separate image and file attachments
+  const imageAttachments = attachments.filter((att) => att.type === 'image');
+  const fileAttachments = attachments.filter((att) => att.type !== 'image');
+
+  
 
   return (
-    <Box display="flex" flexDirection="column" alignItems={isSender ? 'flex-end' : 'flex-start'}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems={isSender ? 'flex-end' : 'flex-start'}
+    >
+      
       {/* Message Text */}
       {message && (
         <Box
@@ -82,10 +98,10 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
           borderRadius={0.5}
           maxWidth="70%"
           mb={0.5}
-          sx={{ 
-              wordBreak: 'break-word',
-              border:  isSender ?  'none' : '1px solid #C5C5C5',
-              borderRadius: '8px',
+          sx={{
+            wordBreak: 'break-word',
+            border: isSender ? 'none' : '1px solid #C5C5C5',
+            borderRadius: '8px',
           }}
         >
           {message}
@@ -94,10 +110,10 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
 
       {/* Image Attachments */}
       {imageAttachments.length > 0 && (
-        <Box 
-          display="flex" 
-          flexWrap="wrap" 
-          maxWidth="70%" 
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          maxWidth="70%"
           minWidth={100}
           mb={0.5}
           justifyContent={isSender ? 'flex-end' : 'flex-start'}
@@ -110,11 +126,11 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
 
       {/* File Attachments */}
       {fileAttachments.length > 0 && (
-        <Box 
-          display="flex" 
+        <Box
+          display="flex"
           flexDirection={'column'}
-          flexWrap="wrap" 
-          maxWidth="70%" 
+          flexWrap="wrap"
+          maxWidth="70%"
           mb={0.5}
           justifyContent={isSender ? 'flex-end' : 'flex-start'}
         >
@@ -126,14 +142,19 @@ const MessageUI = ({ message, date, isSender, attachments = [] }: {
 
       {/* Date and Sender */}
       <Box fontSize="0.75rem" color="text.secondary" mb={2}>
-        {date} 
-        <Typography component={'span'} ml={1} color="primary" fontWeight={400} fontSize={'0.75rem'}>
-            - {isSender ? 'You' : 'Admin'}
+        {date}
+        <Typography
+          component={'span'}
+          ml={1}
+          color="primary"
+          fontWeight={400}
+          fontSize={'0.75rem'}
+        >
+          - {isSender ? 'You' : 'Admin'}
         </Typography>
       </Box>
     </Box>
   );
-}
-
+};
 
 export default MessageUI;

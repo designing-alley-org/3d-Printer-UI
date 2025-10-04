@@ -69,9 +69,8 @@ export const QuerySlice = createSlice({
       .addCase(createQuery.pending, (state) => {
         state.error = null;
       })
-      .addCase(createQuery.fulfilled, (state, action) => {
+      .addCase(createQuery.fulfilled, (state) => {
         state.error = null;
-        state.helpTickets.push(action.payload);
       })
       .addCase(createQuery.rejected, (state, action) => {
         state.error = action.payload as string;
@@ -82,3 +81,15 @@ export const QuerySlice = createSlice({
 export const { clearError, clearHelpTickets } = QuerySlice.actions;
 
 export default QuerySlice.reducer;
+
+// // "data": {
+//         "_id": "68dfc6541100191de4d9a8d1",
+//         "type": "Negotiation",
+//         "subject": "Negotiation regarding",
+//         "userId": "686ba3d42d905a26520b7193",
+//         "status": "Open",
+//         "createdAt": "2025-10-03T12:49:24.279Z",
+//         "updatedAt": "2025-10-03T12:49:24.279Z",
+//         "__v": 0,
+//         "order_number": null
+//     }

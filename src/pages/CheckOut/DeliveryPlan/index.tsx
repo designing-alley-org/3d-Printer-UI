@@ -29,7 +29,7 @@ const DeliveryPlan: React.FC = () => {
 
   // Hooks
   const navigate = useNavigate();
-  const { orderId } = useParams<{ orderId: string }>();
+  const { orderId, orderNumber } = useParams<{ orderId: string, orderNumber: string }>();
 
   // Fetch delivery rates when order and address are available
   useEffect(() => {
@@ -51,7 +51,7 @@ const DeliveryPlan: React.FC = () => {
             (selectedDeliveryPlan as any)?.ratedShipmentDetails[0]
               ?.totalNetCharge || 0,
       });
-      navigate(`/get-quotes/${orderId}/checkout/payment`);
+      navigate(`/get-quotes/${orderId}/${orderNumber}/checkout/payment`);
     } catch (err) {
       console.error('Error updating order:', err);
     } finally {
@@ -66,8 +66,8 @@ const DeliveryPlan: React.FC = () => {
       stepText="Checkout"
       stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={handleProceed}
-      orderId={orderId}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/checkout`)}
+      orderNo={orderNumber}
+      onClickBack={() => navigate(`/get-quotes/${orderId}/${orderNumber}/checkout`)}
       isLoading={false}
       isPageLoading={isLoading}
       isDisabled={!selectedDeliveryPlan || isLoading}

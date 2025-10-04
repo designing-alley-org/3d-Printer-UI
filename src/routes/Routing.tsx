@@ -49,7 +49,7 @@ const Routing: React.FC = () => {
 
         {/* Quote Process Routes */}
 
-        <Route path={`${ROUTES.GET_QUOTES}/:orderId`}>
+        <Route path={`${ROUTES.GET_QUOTES}/:orderId/:orderNumber`}>
           <Route
             path={ROUTES.UPLOAD_STL}
             element={<ProtectedRoute component={<UploadStl />} />}

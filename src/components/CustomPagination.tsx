@@ -14,19 +14,12 @@ import {
 import { styled } from '@mui/material/styles';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Pagination as PaginationType } from '../types';
 
-// Types
-interface PaginationData {
-  currentPage: number;
-  totalPages: number;
-  totalOrders?: number;
-  ordersPerPage?: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
-}
+
 
 interface ReusablePaginationProps {
-  pagination: PaginationData;
+  pagination: PaginationType;
   onPageChange: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
   showPageSizeSelector?: boolean;
@@ -133,8 +126,8 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
   const {
     currentPage,
     totalPages,
-    totalOrders = 0,
-    ordersPerPage = 10,
+    totalItems = 0,
+    itemsPerPage = 10,
   } = pagination;
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
@@ -151,8 +144,8 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
   };
 
   // Calculate items range for current page
-  const startItem = totalOrders === 0 ? 0 : (currentPage - 1) * ordersPerPage + 1;
-  const endItem = Math.min(currentPage * ordersPerPage, totalOrders);
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   // Don't render pagination if there's only one page or no items
   if (totalPages <= 1 && !showPageSizeSelector) {
@@ -177,9 +170,9 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
       {showItemsInfo && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <InfoText>
-            {totalOrders === 0
+            {totalItems === 0
               ? `No ${itemName} found`
-              : `Showing ${startItem}-${endItem} of ${totalOrders} ${itemName}`
+              : `Showing ${startItem}-${endItem} of ${totalItems} ${itemName}`
             }
           </InfoText>
         </Box>
@@ -214,7 +207,7 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
           <InfoText>Show:</InfoText>
           <StyledFormControl size="small" disabled={disabled}>
             <Select
-              value={ordersPerPage}
+              value={itemsPerPage}
               onChange={handlePageSizeChange}
               displayEmpty
             >

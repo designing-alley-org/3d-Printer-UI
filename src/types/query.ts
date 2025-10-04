@@ -9,6 +9,6 @@ interface Help {
   type: string;
   subject: string;
   createdAt: string;
-  orderId: string;
+  order_number: string;
   status: string;
 }

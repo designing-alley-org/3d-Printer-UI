@@ -70,7 +70,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getCurrentUser(dispatch);
-      await dispatch(getNotifications())
+      await dispatch(getNotifications({}))
     };
     fetchData();
   }, []);
