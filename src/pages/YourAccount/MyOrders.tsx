@@ -237,7 +237,7 @@ export const MyOrders = () => {
           }}
         >
           <CustomTextField
-            label="Search Orders by ID"
+            label="Search Orders by Number"
             size="small"
             variant="outlined"
             isSearch={true}

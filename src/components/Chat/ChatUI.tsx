@@ -201,7 +201,12 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
         {type === 'Negotiation' && (
           <Box mb={2}>
             {
-            isLoading ? <CircularProgress size={20} color="primary" /> :
+            isLoading ? 
+            <Box display={'flex'} justifyContent={'center'}>
+              <CircularProgress size={20} color="primary" />
+            </Box>
+            
+             :
             <PriceTable
               subtotal={data?.subtotal || 0}
               taxes={data?.taxes || 0}
