@@ -9,9 +9,9 @@ import { NotificationState } from '../types';
 // Async thunk for fetching notifications
 export const getNotifications = createAsyncThunk(
   'notifications/getNotifications',
-  async (_, { rejectWithValue }) => {
+  async ({ page, limit }: { page?: number; limit?: number }, { rejectWithValue }) => {
     try {
-      const response = await fetchNotifications();
+      const response = await fetchNotifications({ page, limit });
       return response.data;
     } catch (error: any) {
       toast.error('Failed to fetch notifications');
@@ -55,7 +55,9 @@ const notificationSlice = createSlice({
       })
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.loading = false;
-        state.notifications = action.payload.notifications;
+        state.notifications = [...state.notifications, ...action.payload.notifications];
+        state.error = null;
+        state.pagination = action.payload.pagination;
         state.length = action.payload.length;
       })
       .addCase(getNotifications.rejected, (state, action) => {

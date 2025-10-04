@@ -8,13 +8,13 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
   Chip,
   useTheme,
+  CircularProgress,
 } from '@mui/material';
-import {
-  Close,
-} from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 import CustomButton from '../../stories/button/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import { formatChatTime } from '../../utils/function';
@@ -22,19 +22,23 @@ import LoadingScreen from '../LoadingScreen';
 import NoDataFound from '../NoDataFound';
 import { Notification } from '../../types/notification';
 
-
 interface NotificationDropDownProps {
   notifications: Notification[];
   loading: boolean;
+  error: string;
   onClose: () => void;
-  unreadCount: number;
+  unreadCount?: number;
+  fetchMore: () => void; // 👈 new prop to fetch next page
+  hasMore: boolean; // 👈 new prop to check if more pages exist
 }
 
 const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
   notifications,
   loading,
   onClose,
-  unreadCount
+  unreadCount = 0,
+  fetchMore,
+  hasMore,
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -62,6 +66,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
           navigate('/account/orders');
           break;
         case 'ticket':
+          console.log('Ticket notification clicked');
           navigate(`/account/help?conversationId=${data.conversationId}`);
           break;
         default:
@@ -69,10 +74,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
       }
       onClose();
     }
-    // Here you would also mark the notification as read in your state/store
   };
-
-
 
   return (
     <Card
@@ -83,7 +85,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: '16px',
         overflow: 'hidden',
-        p: '0',
+        p: 0,
       }}
     >
       {/* Header */}
@@ -115,16 +117,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
             />
           )}
         </Box>
-        <IconButton
-          size="small"
-          onClick={onClose}
-          sx={{
-            color: 'inherit',
-            '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.1)',
-            },
-          }}
-        >
+        <IconButton size="small" onClick={onClose} sx={{ color: 'inherit' }}>
           <Close />
         </IconButton>
       </Box>
@@ -132,87 +125,122 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
       <Divider />
 
       {/* Content */}
-      <Box sx={{ maxHeight: '350px', overflow: 'auto' }}>
-        {loading ? (
+      <Box
+        id="scrollableDropdown"
+        sx={{ maxHeight: '350px', overflow: 'auto' }}
+      >
+        {loading && notifications.length === 0 ? (
           <LoadingScreen
             title="Loading Notifications..."
             description="Please wait while we fetch your notifications."
           />
         ) : notifications.length > 0 ? (
-          <List sx={{ p: 0 }}>
-            {notifications.slice(0, 15).map((notification, index) => (
-              <React.Fragment key={notification.id}>
-                <ListItem
-                 onClick={() => handleClick(notification)} 
-                  sx={{
-                    py: 1.5,
-                    px: 2,
-                    cursor: 'pointer',
-                    bgcolor: notification.isRead
-                      ? 'transparent'
-                      : theme.palette.action.hover,
-                    '&:hover': {
-                      bgcolor: theme.palette.action.selected,
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight={notification.isRead ? 400 : 600}
-                        color={
-                          notification.isRead
-                            ? theme.palette.text.secondary
-                            : theme.palette.text.primary
-                        }
-                        noWrap
-                      >
-                        {notification.message}
-                      </Typography>
-                    }
-                    secondary={
-                      <Box display="flex" justifyContent={"space-between"} alignItems="center">
-                        <Typography
-                          variant="body2"
-                          color={theme.palette.text.primary}
-                          sx={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            mb: 0.5,
-                            fontSize: 12
-                          }}
-                        >
-                          Category: <Typography component="span" fontSize={12} color={getNotificationColor(notification.type)}>{notification.title}</Typography>
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          color={theme.palette.text.primary}
-                          
-                        >
-                          {formatChatTime(notification.timestamp)}
-                        </Typography>
-                      </Box>
-                    }
-                  />
-                  {!notification.isRead && (
-                    <Box
+          <InfiniteScroll
+            dataLength={notifications.length}
+            next={fetchMore}
+            hasMore={hasMore}
+            loader={
+              <Typography sx={{ textAlign: 'center', p: 2 }}>
+                <CircularProgress size={20} color="primary" />
+              </Typography>
+            }
+            endMessage={
+              <Typography
+                variant="body1"
+                sx={{ textAlign: 'center', padding: '8px' }}
+              >
+                No more notifications
+              </Typography>
+            }
+            scrollableTarget="scrollableDropdown"
+          >
+            <List sx={{ p: 0 }}>
+              {notifications.map((notification, index) => (
+                <React.Fragment key={index}>
+                  <React.Fragment key={notification.id}>
+                    <ListItem
+                      onClick={() => handleClick(notification)}
                       sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        bgcolor: theme.palette.primary.main,
-                        ml: 1,
+                        py: 1.5,
+                        px: 2,
+                        cursor: 'pointer',
+                        bgcolor: notification.isRead
+                          ? 'transparent'
+                          : theme.palette.action.hover,
+                        '&:hover': {
+                          bgcolor: theme.palette.action.selected,
+                        },
                       }}
-                    />
-                  )}
-                </ListItem>
-                {index < notifications.slice(0, 5).length - 1 && <Divider />}
-              </React.Fragment>
-            ))}
-          </List>
+                    >
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="subtitle2"
+                            fontWeight={notification.isRead ? 400 : 600}
+                            color={
+                              notification.isRead
+                                ? theme.palette.text.secondary
+                                : theme.palette.text.primary
+                            }
+                            noWrap
+                          >
+                            {notification.message}
+                          </Typography>
+                        }
+                        secondary={
+                          <Box
+                            display="flex"
+                            justifyContent={'space-between'}
+                            alignItems="center"
+                          >
+                            <Typography
+                              variant="body2"
+                              color={theme.palette.text.primary}
+                              sx={{
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                                mb: 0.5,
+                                fontSize: 12,
+                              }}
+                            >
+                              Category:{' '}
+                              <Typography
+                                component="span"
+                                fontSize={12}
+                                color={getNotificationColor(notification.type)}
+                              >
+                                {notification.title}
+                              </Typography>
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              color={theme.palette.text.primary}
+                            >
+                              {formatChatTime(notification.timestamp)}
+                            </Typography>
+                          </Box>
+                        }
+                      />
+                      {!notification.isRead && (
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            bgcolor: theme.palette.primary.main,
+                            ml: 1,
+                          }}
+                        />
+                      )}
+                    </ListItem>
+                      <Divider />
+                  </React.Fragment>
+                </React.Fragment>
+              ))}
+            </List>
+          </InfiniteScroll>
         ) : (
           <NoDataFound
             text="No Notifications"
@@ -237,12 +265,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
               variant="contained"
               size="small"
               onClick={onClose}
-              sx={{
-                flex: 1,
-                borderRadius: '8px',
-                textTransform: 'none',
-                fontWeight: 600,
-              }}
+              sx={{ flex: 1, borderRadius: '8px' }}
             >
               Close
             </CustomButton>
