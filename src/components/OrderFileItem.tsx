@@ -15,6 +15,7 @@ import NoDataFound from './NoDataFound';
 import { formatDate, formatText } from '../utils/function';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes/routes-constants';
+import { ORDER_STATUS } from '../constant/orderStatus';
 
 interface Props {
   order: any;
@@ -38,12 +39,8 @@ const handelGoBack = (order: any, navigate: NavigateFunction) => {
   const orderStatus = order?.order_status;
 
   switch (orderStatus) {
-    case 'pending':
-    case 'created':
+    case ORDER_STATUS.PENDING_CUSTOMISATION:
       navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.UPLOAD_STL}`);
-      break;
-    case 'files_uploaded':
-      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CUSTOMIZE}`);
       break;
     case 'price':
       navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.PRICE}`);
