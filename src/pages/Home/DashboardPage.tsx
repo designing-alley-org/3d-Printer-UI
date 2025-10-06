@@ -37,7 +37,7 @@ const DashboardPage = () => {
       description: 'Monitor your active orders',
       icon: <TrackIcon sx={{ fontSize: 40 }} />,
       isPrimary: false,
-      path: '/account/my-orders?status=processing',
+      path: '/account/my-orders?status=active',
     },
     // {
     //   id: 3,

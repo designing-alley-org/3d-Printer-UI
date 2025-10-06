@@ -20,6 +20,7 @@ const QUANTITY_LIMITS = {
 
 interface Props {
   file: FileData;
+  isDeleteLoading?: boolean;
   onRemove: (fileId: string) => void;
   onUpdateQuantity: (fileId: string, quantity: number) => void;
   selectedUnit: string;
@@ -30,7 +31,7 @@ interface Props {
 }
 
 const STlFileList: React.FC<Props> = React.memo(
-  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions }) => {
+  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions, isDeleteLoading }) => {
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
         let newQuantity = file.quantity;
@@ -211,7 +212,7 @@ const STlFileList: React.FC<Props> = React.memo(
               }}
             />
           </Box>
-          <IconButton aria-label="Remove file" onClick={handleRemove}>
+          <IconButton aria-label="Remove file" onClick={handleRemove} disabled={file.isUploading || isDeleteLoading}>
             <DeleteOutlineRoundedIcon />
           </IconButton>
         </CardActions>

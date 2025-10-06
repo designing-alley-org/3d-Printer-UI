@@ -29,13 +29,13 @@ const getOrderService = async (orderId: string) => {
     }
   };
 
-const getAllOrdersService = async ({ page, limit, orderId, status }: { page?: number, limit?: number, orderId?: string, status?: string } = {}) => {
+const getAllOrdersService = async ({ page, limit, orderNumber, status }: { page?: number, limit?: number, orderNumber?: string, status?: string } = {}) => {
     try {
         const params: any = {};
         
         if (page !== undefined) params.page = page;
         if (limit !== undefined) params.limit = limit;
-        if (orderId) params.orderId = orderId;
+        if (orderNumber) params.orderNumber = orderNumber;
         if (status) params.status = status;
 
         const response = await api.get('/get-all-orders', { params });
@@ -346,6 +346,16 @@ const getCheckoutDetailsService = async ({
   }
 };
 
+const updateIncompleteOrdersService = async (orderId: string) => {
+    try {
+        const response = await api.patch(`/update-incomplete-orders/${orderId}`);
+        return returnResponse(response);
+    } catch (error) {
+        toast.error(returnError(error));
+        throw error;
+    }
+}
+
 
 export { 
     createOrderService, 
@@ -358,5 +368,6 @@ export {
     getOrderSummaryService,
     getCMT_DataService,
     getUserOrderIdsService,
-    getCheckoutDetailsService
+    getCheckoutDetailsService,
+    updateIncompleteOrdersService
 };

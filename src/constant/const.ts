@@ -1,6 +1,3 @@
-
-
-
 const hideInput : string[] = ['Closed', 'Resolved']
 
 

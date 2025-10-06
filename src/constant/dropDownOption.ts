@@ -23,3 +23,12 @@ export const filterStatus: Option[] = [
   { id: 5, value: 'shipped', label: 'Shipped' },
   { id: 6, value: 'delivered', label: 'Delivered' },
 ];
+
+// New filter options based on ORDER_STATUS_GROUPS
+export const filterStatusGroups: Option[] = [
+  { id: 1, value: 'all', label: 'All' },
+  { id: 2, value: 'pending', label: 'Pending' },
+  { id: 3, value: 'active', label: 'Active' },
+  { id: 4, value: 'completed', label: 'Completed' },
+  { id: 5, value: 'failed', label: 'Failed' },
+];

@@ -73,10 +73,11 @@ export const updateFileInCustomization = async (
     toast.success(activeFile.fileName + ' save successfully');
 
     return returnResponse(response);
-  } catch (error) {
+  } catch (error :any) {
     if (imageFileKey) {
       await deleteFromS3(imageFileKey);
     }
+    toast.error(error.response?.data?.message);
     throw error;
   } finally {
     setIsLoading(false);
