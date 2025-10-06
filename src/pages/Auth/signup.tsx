@@ -9,8 +9,6 @@ import { Formik, Form } from 'formik';
 import { signupValidationSchema } from '../../validation';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-
-// Importing icons
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 const RegisterForm: React.FC = () => {
@@ -35,186 +33,225 @@ const RegisterForm: React.FC = () => {
 
   return (
     <Container
+      disableGutters
+      maxWidth={false}
       sx={{
-        minWidth: '100%',
-        background: theme.palette.primary.main,
+        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
+        backgroundColor: theme.palette.primary.main,
+        padding: 2,
       }}
     >
       <Paper
-        elevation={3}
+        elevation={6}
         sx={{
-          p: 4,
-          borderRadius: '24px',
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
+          alignItems: 'stretch',
           width: '100%',
-          maxWidth: '400px',
-          textAlign: 'center',
+          maxWidth: '900px',
+          overflow: 'hidden',
+          backgroundColor: theme.palette.background.paper,
         }}
       >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={signupValidationSchema}
-          onSubmit={handleSubmit}
+        {/*  IMAGE SECTION */}
+        <Box
+          component="img"
+          src="/img/printer.png" // same image as in Login page
+          alt="3D Printer"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            width: { md: '50%' },
+            height: 'auto',
+            objectFit: 'cover',
+          }}
+        />
+
+        {/*  FORM SECTION */}
+        <Box
+          sx={{
+            flex: 1,
+            p: { xs: 4, sm: 6 },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            backgroundColor: 'background.paper',
+          }}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => (
-            <Form>
-              {/* Logo/Icon Section */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  mb: 3,
-                }}
-              >
-                <Box
+          <Formik
+            initialValues={initialValues}
+            validationSchema={signupValidationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ values, errors, touched, handleChange, handleBlur }) => (
+              <Form>
+                {/* Logo/Icon */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                  <Box
+                    sx={{
+                      backgroundColor: 'primary.main',
+                      borderRadius: '50%',
+                      width: 60,
+                      height: 60,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <PrintOutlinedIcon
+                      sx={{ fontSize: '2rem', color: 'primary.contrastText' }}
+                    />
+                  </Box>
+                </Box>
+
+                {/* Title */}
+                <Typography
+                  variant="h5"
                   sx={{
+                    fontWeight: 600,
+                    color: 'text.primary',
+                    mb: 1,
+                    textAlign: 'center',
+                  }}
+                >
+                  3D Print Your Future
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mb: 4,
+                    color: 'text.secondary',
+                    textAlign: 'center',
+                  }}
+                >
+                  Professional 3D Printing Service
+                </Typography>
+
+                {/* Error Display */}
+                {error && (
+                  <Box sx={{ mb: 2 }}>
+                    <Alert severity="error" sx={{ borderRadius: 2 }}>
+                      {error}
+                    </Alert>
+                  </Box>
+                )}
+
+                {/* Name Field */}
+                <Box sx={{ mb: 2 }}>
+                  <CustomTextField
+                    fullWidth
+                    name="name"
+                    type="text"
+                    value={values.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="Full Name"
+                    error={touched.name && !!errors.name}
+                    helperText={touched.name ? errors.name : undefined}
+                  />
+                </Box>
+
+                {/* Email Field */}
+                <Box sx={{ mb: 2 }}>
+                  <CustomTextField
+                    fullWidth
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="Email Address"
+                    error={touched.email && !!errors.email}
+                    helperText={touched.email ? errors.email : undefined}
+                  />
+                </Box>
+
+                {/* Password Field */}
+                <Box sx={{ mb: 3 }}>
+                  <CustomTextField
+                    fullWidth
+                    name="password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="Password"
+                    error={touched.password && !!errors.password}
+                    helperText={touched.password ? errors.password : undefined}
+                  />
+                </Box>
+
+                {/* Register Button */}
+                <CustomButton
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={loading}
+                  loading={loading}
+                  sx={{
+                    mb: 2,
+                    height: 48,
                     backgroundColor: 'primary.main',
-                    borderRadius: '50%',
-                    width: '60px',
-                    height: '60px',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                  }}
+                >
+                  Sign Up
+                </CustomButton>
+
+                {/* Google Sign Up Button */}
+                <CustomButton
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleGoogleSignUp}
+                  sx={{
+                    mb: 2,
+                    height: 48,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  <PrintOutlinedIcon
-                    sx={{ fontSize: '2rem', color: 'white' }}
+                  <img
+                    src="/Icon/Google-icon.svg"
+                    alt="Google Icon"
+                    style={{
+                      marginRight: '8px',
+                      width: '20px',
+                      height: '20px',
+                    }}
                   />
-                </Box>
-              </Box>
+                  Sign up with Google
+                </CustomButton>
 
-              {/* Title and Subtitle */}
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: 600,
-                  fontSize: '1.5rem',
-                  color: 'secondary.main',
-                  mb: 1,
-                }}
-              >
-                3D Print Your Future
-              </Typography>
-
-              <Typography
-                sx={{
-                  mb: 4,
-                  color: 'text.secondary',
-                  fontSize: '0.9rem',
-                }}
-              >
-                Professional 3D Printing Service
-              </Typography>
-
-              {/* Backend Error Display */}
-              {error && (
-                <Box sx={{ mb: 2 }}>
-                  <Alert severity="error" sx={{ borderRadius: '8px' }}>
-                    {error}
-                  </Alert>
-                </Box>
-              )}
-
-              {/* Name Field */}
-              <Box sx={{ mb: 2, textAlign: 'left' }}>
-                <CustomTextField
-                  fullWidth
-                  name="name"
-                  type="text"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Full Name"
-                  error={touched.name && !!errors.name}
-                  helperText={touched.name ? errors.name : undefined}
-                  variant="outlined"
-                />
-              </Box>
-
-              {/* Email Field */}
-              <Box sx={{ mb: 2, textAlign: 'left' }}>
-                <CustomTextField
-                  fullWidth
-                  name="email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Email Address"
-                  error={touched.email && !!errors.email}
-                  helperText={touched.email ? errors.email : undefined}
-                  variant="outlined"
-                />
-              </Box>
-
-              {/* Password Field */}
-              <Box sx={{ mb: 3, textAlign: 'left' }}>
-                <CustomTextField
-                  fullWidth
-                  name="password"
-                  type="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Password"
-                  error={touched.password && !!errors.password}
-                  helperText={touched.password ? errors.password : undefined}
-                  variant="outlined"
-                />
-              </Box>
-
-              {/* Sign Up Button */}
-              <CustomButton
-                type="submit"
-                fullWidth
-                variant="contained"
-                disabled={loading}
-                loading={loading}
-                sx={{
-                  mb: 2,
-                }}
-              >
-                Sign Up
-              </CustomButton>
-
-              {/* Google Sign Up Button */}
-              <CustomButton
-                fullWidth
-                variant="outlined"  
-                onClick={handleGoogleSignUp}
-                sx={{
-                  mb: 1,
-                }}
-              >
-                <img
-                  src="/Icon/Google-icon.svg"
-                  alt="Google Icon"
-                  style={{ marginRight: '8px', width: '20px', height: '20px' }}
-                />
-                
-                Sing Up in with Google
-              </CustomButton>
-
-              {/* Login Link */}
-              <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
-                Already have an account?{' '}
-                <Link
-                  to="/login"
-                  style={{
-                    fontWeight: 'bold',
-                    color: '#006BCD',
-                    textDecoration: 'none',
+                {/* Login Link */}
+                <Typography
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '0.875rem',
+                    color: 'text.secondary',
                   }}
                 >
-                  Login.
-                </Link>
-              </Typography>
-            </Form>
-          )}
-        </Formik>
+                  Already have an account?{' '}
+                  <Link
+                    to="/login"
+                    style={{
+                      fontWeight: 'bold',
+                      color: theme.palette.primary.main,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Login.
+                  </Link>
+                </Typography>
+              </Form>
+            )}
+          </Formik>
+        </Box>
       </Paper>
     </Container>
   );

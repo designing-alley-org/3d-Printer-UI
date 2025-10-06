@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Typography, Paper, Alert, useTheme } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Alert,
+  useTheme,
+} from '@mui/material';
 import toast from 'react-hot-toast';
 import { ROUTES } from '../../routes/routes-constants';
 import { sendPasswordResetService } from '../../services/user';
@@ -8,21 +15,20 @@ import { Formik, Form } from 'formik';
 import { forgotPasswordValidationSchema } from '../../validation';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-
-// Importing icons
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 
 const ForgetPassword: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const theme = useTheme();
+
   const initialValues = {
     email: '',
   };
 
   const handleForgotSubmit = async (values: typeof initialValues) => {
     try {
-      setError(''); // Clear previous errors
+      setError('');
       const res = await sendPasswordResetService(values.email);
       if (res.data.message) {
         toast.success(res.data.message);
@@ -35,135 +41,168 @@ const ForgetPassword: React.FC = () => {
 
   return (
     <Container
+      disableGutters
+      maxWidth={false}
       sx={{
-        minWidth: '100%',
-        background: theme.palette.primary.main,
+        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
+        backgroundColor: theme.palette.primary.main,
+        padding: 2,
       }}
     >
       <Paper
-        elevation={3}
+        elevation={6}
         sx={{
-          p: 4,
-          borderRadius: '24px',
-          background: 'background.paper',
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          justifyContent: 'space-between',
+          alignItems: 'stretch',
           width: '100%',
-          maxWidth: '400px',
-          textAlign: 'center'
+          maxWidth: '900px',
+          overflow: 'hidden',
+          backgroundColor: theme.palette.background.paper,
         }}
       >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={forgotPasswordValidationSchema}
-          onSubmit={handleForgotSubmit}
+        {/*  IMAGE SECTION */}
+        <Box
+          component="img"
+          src="/img/printer.png"
+          alt="3D Printer Illustration"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            width: { md: '50%' },
+            height: 'auto',
+            objectFit: 'cover',
+          }}
+        />
+
+        {/*  FORM SECTION */}
+        <Box
+          sx={{
+            flex: 1,
+            p: { xs: 4, sm: 6 },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            backgroundColor: 'background.paper',
+          }}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => (
-            <Form>
-              {/* Logo/Icon Section */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  mb: 3
-                }}
-              >
-                <Box
+          <Formik
+            initialValues={initialValues}
+            validationSchema={forgotPasswordValidationSchema}
+            onSubmit={handleForgotSubmit}
+          >
+            {({ values, errors, touched, handleChange, handleBlur }) => (
+              <Form>
+                {/* Logo/Icon */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                  <Box
+                    sx={{
+                      backgroundColor: 'primary.main',
+                      borderRadius: '50%',
+                      width: 60,
+                      height: 60,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <PrintOutlinedIcon
+                      sx={{ fontSize: '2rem', color: 'primary.contrastText' }}
+                    />
+                  </Box>
+                </Box>
+
+                {/* Title */}
+                <Typography
+                  variant="h5"
                   sx={{
-                    backgroundColor: 'primary.main',
-                    borderRadius: '50%',
-                    width: '60px',
-                    height: '60px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    fontWeight: 600,
+                    color: 'text.primary',
+                    mb: 1,
+                    textAlign: 'center',
                   }}
                 >
-                  <PrintOutlinedIcon
-                    sx={{ fontSize: '2rem', color: 'white' }}
+                  Forgot Password
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mb: 4,
+                    color: 'text.secondary',
+                    textAlign: 'center',
+                  }}
+                >
+                  Enter your email address to reset your password.
+                </Typography>
+
+                {/* Error Message */}
+                {error && (
+                  <Box sx={{ mb: 2 }}>
+                    <Alert severity="error" sx={{ borderRadius: 2 }}>
+                      {error}
+                    </Alert>
+                  </Box>
+                )}
+
+                {/* Email Field */}
+                <Box sx={{ mb: 3 }}>
+                  <CustomTextField
+                    fullWidth
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="Enter your email address"
+                    error={touched.email && !!errors.email}
+                    helperText={touched.email ? errors.email : undefined}
                   />
                 </Box>
-              </Box>
 
-              {/* Title and Subtitle */}
-              <Typography
-                variant='h5'
-                sx={{
-                  fontWeight: 600,
-                  fontSize: '1.5rem',
-                  color: '#2A2D2F',
-                  mb: 1
-                }}
-              >
-                Forgot Password
-              </Typography>
-
-              <Typography
-                sx={{
-                  mb: 4,
-                  color: 'text.secondary',
-                  fontSize: '0.9rem'
-                }}
-              >
-                Enter your email address to reset your password.
-              </Typography>
-
-              {/* Backend Error Display */}
-              {error && (
-                <Box sx={{ mb: 2 }}>
-                  <Alert severity="error" sx={{ borderRadius: '8px' }}>
-                    {error}
-                  </Alert>
-                </Box>
-              )}
-
-              {/* Email Field */}
-              <Box sx={{ mb: 3, textAlign: 'left' }}>
-                <CustomTextField
+                {/* Submit Button */}
+                <CustomButton
+                  type="submit"
                   fullWidth
-                  name="email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter your email address"
-                  error={touched.email && !!errors.email}
-                  helperText={touched.email ? errors.email : undefined}
-                  variant="outlined"
-                />
-              </Box>
-
-              {/* Submit Button */}
-              <CustomButton
-                type='submit'
-                fullWidth
-                variant="contained"
-                sx={{
-                  mb: 2,
-                }}
-              >
-                Submit
-              </CustomButton>
-
-              {/* Back to Login Link */}
-              <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
-                Back to{' '}
-                <Link
-                  to={ROUTES.LOGIN}
-                  style={{
-                    fontWeight: 'bold',
-                    color: theme.palette.customColors.linkBlue,
-                    textDecoration: 'none'
+                  variant="contained"
+                  sx={{
+                    mb: 2,
+                    height: 48,
+                    backgroundColor: 'primary.main',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
                   }}
                 >
-                  Login
-                </Link>
-              </Typography>
-            </Form>
-          )}
-        </Formik>
+                  Submit
+                </CustomButton>
+
+                {/* Back to Login */}
+                <Typography
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '0.875rem',
+                    color: 'text.secondary',
+                  }}
+                >
+                  Back to{' '}
+                  <Link
+                    to={ROUTES.LOGIN}
+                    style={{
+                      fontWeight: 'bold',
+                      color: theme.palette.primary.main,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Login
+                  </Link>
+                </Typography>
+              </Form>
+            )}
+          </Formik>
+        </Box>
       </Paper>
     </Container>
   );
