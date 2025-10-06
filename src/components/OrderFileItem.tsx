@@ -3,6 +3,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Chip,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -12,10 +13,10 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import DeliveryDetail from './DeliveryDetail';
 import FilesList from './FilesList';
 import NoDataFound from './NoDataFound';
-import { formatDate, formatText } from '../utils/function';
+import { formatDate } from '../utils/function';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes/routes-constants';
-import { ORDER_STATUS } from '../constant/orderStatus';
+import { ORDER_STATUS, ORDER_STATUS_COLORS } from '../constant/orderStatus';
 
 interface Props {
   order: any;
@@ -40,20 +41,69 @@ const handelGoBack = (order: any, navigate: NavigateFunction) => {
 
   switch (orderStatus) {
     case ORDER_STATUS.PENDING_CUSTOMISATION:
-      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.UPLOAD_STL}`);
+      navigate(
+        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.UPLOAD_STL}`
+      );
       break;
     case 'price':
-      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.PRICE}`);
+      navigate(
+        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.PRICE}`
+      );
       break;
     case 'checkout':
-      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}`);
+      navigate(
+        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}`
+      );
       break;
     case 'address_select':
-      navigate(`/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}/${ROUTES.DELIVERY_PLAN}`);
+      navigate(
+        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}/${ROUTES.DELIVERY_PLAN}`
+      );
       break;
     default:
       navigate('/your-account/my-orders');
   }
+};
+
+const renderStatusChip = (status: string) => {
+  const statusColors =
+    ORDER_STATUS_COLORS[status as keyof typeof ORDER_STATUS_COLORS];
+
+  // Default colors if status not found
+  const defaultColors = {
+    backgroundColor: '#E0E0E0',
+    color: 'primary',
+  };
+
+  const colors = statusColors || defaultColors;
+
+  return (
+    <Box
+      sx={{
+        backgroundColor: colors.backgroundColor,
+        color: 'primary',
+        fontWeight: 600,
+        fontSize: '0.75rem',
+        height: '20px',
+        borderRadius: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 1,
+        paddingX: 1.5,
+      }}
+    >
+      <Box
+        height={10}
+        width={10}
+        sx={{
+          borderRadius: '50%',
+          backgroundColor: 'primary.main',
+        }}
+      />
+      {status || 'N/A'}
+    </Box>
+  );
 };
 
 const OrderFileItem = ({
@@ -120,12 +170,15 @@ const OrderFileItem = ({
                 {' '}
                 {order.numberOfFiles} File
               </Typography>
-              <Typography
-                variant="body2"
-                color={theme.palette.customColors.lightTextOverDark}
-              >
-                Status: {formatText(order.order_status) || 'N/A'}
-              </Typography>
+              <Box display="flex" alignItems="center" gap={1}>
+                <Typography
+                  variant="body2"
+                  color={theme.palette.customColors.lightTextOverDark}
+                >
+                  Status:
+                </Typography>
+                {renderStatusChip(order.order_status)}
+              </Box>
             </Box>
           </Box>
         </CardContent>
