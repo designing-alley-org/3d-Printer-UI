@@ -14,7 +14,7 @@ import { debounce } from '../../utils/function';
 import LoadingScreen from '../../components/LoadingScreen';
 import toast from 'react-hot-toast';
 import { returnRequestService } from '../../services/fedex';
-import { filterStatus } from '../../constant/dropDownOption';
+import { filterStatusGroups } from '../../constant/dropDownOption';
 import { Pagination } from '../../types';
 
 // Interfaces remain the same...
@@ -39,7 +39,7 @@ interface OrderResponse {
 export const MyOrders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status');
-  const orderId = searchParams.get('orderId'); 
+  const orderNumber = searchParams.get('orderNumber'); 
 
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,14 +47,14 @@ export const MyOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
-  // UPDATED: Initialize searchQuery state from the URL's orderId param
-  const [searchQuery, setSearchQuery] = useState(orderId || ''); 
+  // UPDATED: Initialize searchQuery state from the URL's orderNumber param
+  const [searchQuery, setSearchQuery] = useState(orderNumber || ''); 
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   const selectedStatusOption =
-    filterStatus.find(
+    filterStatusGroups.find(
       (option) => option.value.toLowerCase() === status?.toLowerCase()
-    ) || filterStatus[0];
+    ) || filterStatusGroups[0];
 
   // ... Return modal state remains the same ...
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
@@ -67,7 +67,7 @@ export const MyOrders = () => {
   const fetchOrders = async (
     page: number = currentPage,
     limit: number = pageSize,
-    orderId?: string | null, // Allow null
+    orderNumber?: string | null, // Allow null
     status?: string | null  // Allow null
   ) => {
     try {
@@ -77,19 +77,23 @@ export const MyOrders = () => {
       const params: {
         page: number;
         limit: number;
-        orderId?: string;
+        orderNumber?: string;
         status?: string;
       } = {
         page,
         limit,
       };
 
-      if (orderId && orderId.trim()) {
-        params.orderId = orderId.trim();
+      if (orderNumber && orderNumber.trim()) {
+        params.orderNumber = orderNumber.trim();
       }
 
       if (status && status.trim()) {
-        params.status = status.trim();
+        // Map status groups to backend format
+        const statusGroup = status.trim().toLowerCase();
+        if (statusGroup !== 'all') {
+          params.status = statusGroup;
+        }
       }
 
       const response = await getAllOrdersService(params);
@@ -115,9 +119,9 @@ export const MyOrders = () => {
     debounce((query: string) => {
       const newSearchParams = new URLSearchParams(searchParams);
       if (query.trim()) {
-        newSearchParams.set('orderId', query);
+        newSearchParams.set('orderNumber', query);
       } else {
-        newSearchParams.delete('orderId');
+        newSearchParams.delete('orderNumber');
       }
       // Use replace to avoid adding unnecessary entries to browser history
       setSearchParams(newSearchParams, { replace: true });
@@ -146,7 +150,9 @@ export const MyOrders = () => {
     if (value.value === 'all') {
       newSearchParams.delete('status');
     } else {
-      newSearchParams.set('status', value.value.toLowerCase());
+      // Map status group to individual statuses for backend
+      const statusGroup = value.value.toLowerCase();
+      newSearchParams.set('status', statusGroup);
     }
     setSearchParams(newSearchParams);
   };
@@ -155,7 +161,7 @@ export const MyOrders = () => {
   useEffect(() => {
     const run = async () => {
       if (status) {
-        const isValidStatus = filterStatus.some(
+        const isValidStatus = filterStatusGroups.some(
           (option) => option.value.toLowerCase() === status.toLowerCase()
         );
         if (!isValidStatus) {
@@ -166,13 +172,13 @@ export const MyOrders = () => {
         }
       }
       // Fetch using values directly from URL params
-      await fetchOrders(currentPage, pageSize, orderId, status);
+      await fetchOrders(currentPage, pageSize, orderNumber, status);
     };
 
     run();
   }, [
     status,
-    orderId, // NEW dependency
+    orderNumber, // NEW dependency
     pageSize,
     currentPage,
     searchParams,
@@ -245,7 +251,7 @@ export const MyOrders = () => {
             onChange={handleSearchChange}
           />
           <SingleSelectDropdown
-            options={filterStatus}
+            options={filterStatusGroups}
             defaultValue={selectedStatusOption}
             sx={{
               width: '200px',
