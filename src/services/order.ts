@@ -346,6 +346,16 @@ const getCheckoutDetailsService = async ({
   }
 };
 
+const updateIncompleteOrdersService = async (orderId: string) => {
+    try {
+        const response = await api.patch(`/update-incomplete-orders/${orderId}`);
+        return returnResponse(response);
+    } catch (error) {
+        toast.error(returnError(error));
+        throw error;
+    }
+}
+
 
 export { 
     createOrderService, 
@@ -358,5 +368,6 @@ export {
     getOrderSummaryService,
     getCMT_DataService,
     getUserOrderIdsService,
-    getCheckoutDetailsService
+    getCheckoutDetailsService,
+    updateIncompleteOrdersService
 };

@@ -37,7 +37,7 @@ const ORDER_STATUS_COLORS = Object.freeze({
     backgroundColor: '#FFC71E',
   },
   [ORDER_STATUS.INCOMPLETE_ORDER]: {
-    backgroundColor: '#FF9800',
+    backgroundColor: '#FFB349',
   },
   [ORDER_STATUS.ORDER_PLACED]: {
     backgroundColor: '#4ECDC4',

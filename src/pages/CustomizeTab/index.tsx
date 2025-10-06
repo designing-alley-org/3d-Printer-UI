@@ -36,6 +36,7 @@ import {
 } from '../../services/filesService';
 import {
   getCMT_DataService,
+  updateIncompleteOrdersService,
   updateTotalWeightService,
 } from '../../services/order';
 import { RootState } from '../../store/types';
@@ -321,9 +322,13 @@ const CustomizeTab: React.FC = () => {
     );
   };
 
-  const handelNext = async () => {
-    await updateTotalWeightService(orderId as string, orderNumber as string, navigate);
-  };
+const handelNext = async () => {
+  await Promise.all([
+    updateIncompleteOrdersService(orderId as string),
+    updateTotalWeightService(orderId as string, orderNumber as string, navigate)
+  ]);
+};
+
 
   return (
     <StepLayout
