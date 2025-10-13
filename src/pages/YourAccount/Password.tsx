@@ -7,7 +7,6 @@ import {
   CardContent,
   CardHeader,
   Container,
-  Typography,
 } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import { Formik, Form, FormikHelpers } from 'formik';

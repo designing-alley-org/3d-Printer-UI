@@ -45,19 +45,9 @@ const handelGoBack = (order: any, navigate: NavigateFunction) => {
         `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.UPLOAD_STL}`
       );
       break;
-    case 'price':
+    case ORDER_STATUS.INCOMPLETE_ORDER:
       navigate(
         `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.PRICE}`
-      );
-      break;
-    case 'checkout':
-      navigate(
-        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}`
-      );
-      break;
-    case 'address_select':
-      navigate(
-        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT}/${ROUTES.DELIVERY_PLAN}`
       );
       break;
     default:

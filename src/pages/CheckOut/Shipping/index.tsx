@@ -111,7 +111,6 @@ const ShippingDetails = () => {
   const handleNext = async () => {
     await updateOrderService(orderId as string, {
       address: addressId,
-      order_status: 'address_select',
     });
     navigate(`/get-quotes/${orderId}/${orderNumber}/checkout/select-delivery`);
   };

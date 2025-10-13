@@ -279,7 +279,7 @@ const PaymentDetails: React.FC = () => {
                     Taxes
                   </Typography>
                   <Typography variant="body2">
-                    $
+                    $ 18
                     {/* {((quoteData?.tax / 100) * quoteData.totalPrice)?.toFixed(2)} */}
                   </Typography>
                 </Box>
@@ -296,6 +296,7 @@ const PaymentDetails: React.FC = () => {
                   Total
                 </Typography>
                 <Typography variant="h6" color="primary.main">
+                  900.00
                   {/* $
                   {(
                     Number(quoteData.totalPrice) +
