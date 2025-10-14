@@ -49,8 +49,6 @@ export interface FileData {
   unit: string;
   thumbnailUrl?: string;
   uploadProgress?: number;
-  isUploading?: boolean;
-  isUploaded?: boolean;
 }
 
 export type FileDataDB = Omit<

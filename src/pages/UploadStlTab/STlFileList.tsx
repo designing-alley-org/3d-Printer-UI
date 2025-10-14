@@ -24,6 +24,7 @@ interface Props {
   onRemove: (fileId: string) => void;
   onUpdateQuantity: (fileId: string, quantity: number) => void;
   selectedUnit: string;
+  isProcessingFiles?: boolean;
   convertDimensions: (
     dimensions: ModelDimensions,
     unit: string
@@ -31,7 +32,7 @@ interface Props {
 }
 
 const STlFileList: React.FC<Props> = React.memo(
-  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions, isDeleteLoading }) => {
+  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions, isDeleteLoading, isProcessingFiles }) => {
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
         let newQuantity = file.quantity;
@@ -108,7 +109,7 @@ const STlFileList: React.FC<Props> = React.memo(
                   transform: 'scale(3)',
                 }}
               />
-            ) : file.isUploading ? (
+            ) : isProcessingFiles ? (
               <Typography>{file.uploadProgress}%</Typography>
             ) : (
               <Typography
@@ -202,7 +203,7 @@ const STlFileList: React.FC<Props> = React.memo(
             <CustomButton
               children={<Plus color="#ffff" size={15} />}
               onClick={() => handleQuantityChange('increase')}
-              disabled={file.quantity >= QUANTITY_LIMITS.MAX}
+              disabled={file.quantity >= QUANTITY_LIMITS.MAX || isProcessingFiles}
               aria-label="Increase quantity"
               variant="contained"
               sx={{
@@ -212,7 +213,7 @@ const STlFileList: React.FC<Props> = React.memo(
               }}
             />
           </Box>
-          <IconButton aria-label="Remove file" onClick={handleRemove} disabled={file.isUploading || isDeleteLoading}>
+          <IconButton aria-label="Remove file" onClick={handleRemove} disabled={isProcessingFiles || isDeleteLoading}>
             <DeleteOutlineRoundedIcon />
           </IconButton>
         </CardActions>

@@ -83,8 +83,6 @@ const UploadStl = () => {
     quantity: 1,
     unit: selectedUnit.toLowerCase(),
     uploadProgress: 0,
-    isUploading: false,
-    isUploaded: false,
   });
 
   const updateFileStatus = useCallback(
@@ -124,7 +122,6 @@ const UploadStl = () => {
       await uploadFileSequentially({ ...baseFileData, dimensions });
     } catch (error) {
       console.error('Error processing file:', error);
-      updateFileStatus(baseFileData._id, { isUploading: false });
     }
   };
 
@@ -213,7 +210,7 @@ const UploadStl = () => {
 
     try {
       setIsProcessingFiles(true);
-      updateFileStatus(fileData._id, { isUploading: true, uploadProgress: 0 });
+      updateFileStatus(fileData._id, {  uploadProgress: 0 });
 
       // Generate thumbnail using utility
       const stlInfo = await stlParser.parseSTL(fileData.file);
@@ -245,8 +242,6 @@ const UploadStl = () => {
       );
 
       updateFileStatus(fileData._id, {
-        isUploading: false,
-        isUploaded: true,
         uploadProgress: 100,
         file: undefined,
         fileUrl: response?.data?.fileUrl || fileData.fileUrl,
@@ -260,7 +255,7 @@ const UploadStl = () => {
       return response;
     } catch (error) {
       console.error('Error uploading file:', error);
-      updateFileStatus(fileData._id, { isUploading: false, uploadProgress: 0 });
+      updateFileStatus(fileData._id, { uploadProgress: 0 });
       throw error;
     } finally {
       setIsProcessingFiles(false);
@@ -366,6 +361,7 @@ const UploadStl = () => {
         onUpdateQuantity={handleUpdateQuantity}
         selectedUnit={selectedUnit}
         convertDimensions={convertDimensions}
+        isProcessingFiles={isProcessingFiles}
       />
     ));
 
