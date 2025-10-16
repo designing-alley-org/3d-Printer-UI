@@ -36,7 +36,6 @@ const UploadStl = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [isProcessingFiles, setIsProcessingFiles] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  
 
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width: 600px)');
@@ -99,9 +98,9 @@ const UploadStl = () => {
     try {
       const stlInfo = await stlParser.parseSTL(file);
       return {
-        length: stlInfo.dimensions.length,
-        width: stlInfo.dimensions.width,
-        height: stlInfo.dimensions.height,
+        length: stlInfo.dimensions.length?.toFixed(3) as unknown as number,
+        width: stlInfo.dimensions.width?.toFixed(3) as unknown as number,
+        height: stlInfo.dimensions.height?.toFixed(3) as unknown as number,
       };
     } catch (error) {
       console.error('Error extracting STL dimensions:', error);
@@ -133,8 +132,23 @@ const UploadStl = () => {
       const validFiles = Array.from(fileList).filter(validateAndShowError);
       if (!validFiles.length) return;
 
-      for (const file of validFiles) {
-        await processSingleFile(file);
+      // STEP 1: Add all files to UI immediately
+      const initialFilesData = validFiles.map(createFileData);
+      setFiles((prev) => [...prev, ...initialFilesData]);
+
+      // STEP 2: Sequentially process and upload them
+      for (const fileData of initialFilesData) {
+        try {
+          const dimensions = await extractSTLDimensions(fileData.file as File);
+          updateFileStatus(fileData._id, { dimensions });
+
+          await uploadFileSequentially({
+            ...fileData,
+            dimensions,
+          });
+        } catch (error) {
+          console.error('Error processing file:', error);
+        }
       }
 
       if (fileInputRef.current) {
@@ -166,8 +180,8 @@ const UploadStl = () => {
         });
 
         toast.success('File removed successfully');
-      } catch (error:any) {
-        toast.error(error.response?.data?.message)
+      } catch (error: any) {
+        toast.error(error.response?.data?.message);
         console.error('Error removing file:', error);
       } finally {
         setIsDeleteLoading(false);
@@ -210,7 +224,7 @@ const UploadStl = () => {
 
     try {
       setIsProcessingFiles(true);
-      updateFileStatus(fileData._id, {  uploadProgress: 0 });
+      updateFileStatus(fileData._id, { uploadProgress: 0 });
 
       // Generate thumbnail using utility
       const stlInfo = await stlParser.parseSTL(fileData.file);

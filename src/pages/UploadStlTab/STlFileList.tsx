@@ -75,7 +75,7 @@ const STlFileList: React.FC<Props> = React.memo(
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
-          width: { xs: '100%', sm: '268px' },
+          width: { xs: '100%', sm: '290px' },
         }}
       >
         {/* Thumbnail Section */}
@@ -153,9 +153,7 @@ const STlFileList: React.FC<Props> = React.memo(
               </Typography>
             </Box>
             <Typography variant="body1" fontWeight="700">
-              {`${displayDimensions.height.toFixed(2)} × ${displayDimensions.width.toFixed(
-                2
-              )} × ${displayDimensions.length.toFixed(2)} `}
+              {`${displayDimensions.height} × ${displayDimensions.width} × ${displayDimensions.length} `}
               {selectedUnit}
             </Typography>
           </Box>
