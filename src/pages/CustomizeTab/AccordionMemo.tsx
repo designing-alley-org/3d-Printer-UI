@@ -30,6 +30,7 @@ import {
 import { RootState } from '../../store/types';
 import {
   setRevertDimensions,
+  setScalingFactor,
   updateDimensionsValue,
   updateUnit,
   UpdateValueById,
@@ -49,6 +50,7 @@ const Accordion: React.FC<AccordionProps> = ({
   printerMessage,
   file,
 }) => {
+
   const { activeFileId, reverseDimensions } = useSelector(
     (state: RootState) => state.customization
   );
@@ -204,10 +206,21 @@ const Accordion: React.FC<AccordionProps> = ({
 
           <Grid size={12}>
             <Slider
-              size="small"
-              defaultValue={70}
+              size="medium"
+              value={file?.scalingFactor || 1}
               aria-label="Small"
+              min={1}
+              max={10}
+              step={1}
+              marks
               valueLabelDisplay="auto"
+              onChange={(_event, newValue) => {
+                if (typeof newValue === 'number' && file) {
+                  dispatch(
+                    setScalingFactor({ id: file._id, scalingFactor: newValue })
+                  );
+                }
+              }}
             />
             <Box
               sx={{

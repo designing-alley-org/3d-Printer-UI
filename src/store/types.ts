@@ -43,6 +43,7 @@ export interface FileDetailsState {
     _id: string;
     unit: string;
     dimensions: ModelDimensions;
+    scalingFactor: number;
   }[];
   activeFileId: string | null;
 }

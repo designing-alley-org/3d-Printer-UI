@@ -22,7 +22,9 @@ export const CustomizationSlice = createSlice({
         _id: file._id,
         unit: file.unit,
         dimensions: file.dimensions,
+        scalingFactor: file.scalingFactor || 1,
       }));
+
       state.activeFileId =
         action.payload.length > 0 ? action.payload[0]._id : null;
     },
@@ -49,20 +51,25 @@ export const CustomizationSlice = createSlice({
     },
 
     setRevertDimensions: (state, action: PayloadAction<{ _id: string }>) => {
-      const fileIndex = state.files.findIndex(
-        (file) => file._id === action.payload._id
-      );
-      const originalData = state.reverseDimensions.find(
-        (dim) => dim._id === action.payload._id
-      );
+      const { _id } = action.payload;
+      const fileIndex = state.files.findIndex((file) => file._id === _id);
+      if (fileIndex === -1) return; // file not found
 
-      if (fileIndex !== -1 && originalData) {
-        state.files[fileIndex] = {
-          ...state.files[fileIndex],
-          dimensions: originalData.dimensions,
-          unit: originalData.unit,
-        };
-      }
+      const originalData = state.reverseDimensions.find(
+        (dim) => dim._id === _id
+      );
+      if (!originalData || !originalData.dimensions) return; // no backup found
+
+      const file = state.files[fileIndex];
+
+
+      // Revert only what's safe to restore
+      state.files[fileIndex] = {
+        ...file,
+        dimensions: { ...originalData.dimensions },
+        unit: originalData.unit,
+        scalingFactor: originalData.scalingFactor, // revert to original scaling factor
+      };
     },
 
     UpdateValueById: (
@@ -151,6 +158,37 @@ export const CustomizationSlice = createSlice({
       }
       state.files = [...state.files];
     },
+
+    setScalingFactor: (
+      state,
+      action: PayloadAction<{ id: string; scalingFactor: number }>
+    ) => {
+      const { id, scalingFactor } = action.payload;
+      const file = state.files.find((f) => f._id === id);
+
+      if (!file) return; // no file found, exit early
+
+      const {  dimensions } = file;
+      const previousScalingFactor = file.scalingFactor ?? 1;
+
+      // Avoid 0 or negative scale (sanity check)
+      if (scalingFactor <= 0) return;
+
+      // Compute relative scaling (new vs old)
+      const relativeScale = scalingFactor / previousScalingFactor;
+
+      // Convert dimensions only for mm unit (extendable for others)
+      if (dimensions) {
+        file.dimensions = {
+          height: dimensions.height * relativeScale,
+          width: dimensions.width * relativeScale,
+          length: dimensions.length * relativeScale,
+        };
+      }
+
+      // Always update scaling factor at the end
+      file.scalingFactor = scalingFactor;
+    },
   },
 });
 
@@ -164,6 +202,7 @@ export const {
   UpdateValueById,
   updateUnit,
   updateThumbnail,
+  setScalingFactor,
 } = CustomizationSlice.actions;
 
 export default CustomizationSlice.reducer;

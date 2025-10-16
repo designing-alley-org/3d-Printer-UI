@@ -57,6 +57,7 @@ export type FileDataDB = Omit<
   materialId?: string;
   colorId?: string;
   technologyId?: string;
+  scalingFactor: number;
   printerId?: string;
   infill?: number;
   createdAt: string;
