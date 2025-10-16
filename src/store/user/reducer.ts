@@ -7,7 +7,7 @@ export const UserDetailsSlice = createSlice({
       email: '',
       role: '',
       createdAt: '',
-      updatedAt: ''
+      updatedAt: '',
     },
   },
   reducers: {

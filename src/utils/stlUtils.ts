@@ -29,7 +29,10 @@ export interface ThumbnailOptions {
 
 // Error types for better error handling
 export class STLParseError extends Error {
-  constructor(message: string, public readonly cause?: Error) {
+  constructor(
+    message: string,
+    public readonly cause?: Error
+  ) {
     super(message);
     this.name = 'STLParseError';
   }
@@ -68,7 +71,7 @@ export class STLParser {
           }
 
           let geometry: THREE.BufferGeometry;
-          
+
           // Handle both string and ArrayBuffer results
           if (typeof result === 'string') {
             // ASCII STL format
@@ -81,10 +84,12 @@ export class STLParser {
           const info = this.analyzeGeometry(geometry, file.name);
           resolve(info);
         } catch (error) {
-          reject(new STLParseError(
-            `Failed to parse STL file: ${error instanceof Error ? error.message : 'Unknown error'}`,
-            error instanceof Error ? error : undefined
-          ));
+          reject(
+            new STLParseError(
+              `Failed to parse STL file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+              error instanceof Error ? error : undefined
+            )
+          );
         }
       };
 
@@ -100,14 +105,17 @@ export class STLParser {
   /**
    * Analyze geometry to get dimensions, volume, and other properties
    */
-  private analyzeGeometry(geometry: THREE.BufferGeometry, filename: string): STLInfo {
+  private analyzeGeometry(
+    geometry: THREE.BufferGeometry,
+    filename: string
+  ): STLInfo {
     if (!geometry) {
       throw new STLParseError('Geometry is null or undefined');
     }
 
     geometry.computeBoundingBox();
     const bbox = geometry.boundingBox;
-    
+
     if (!bbox) {
       throw new STLParseError('Failed to compute bounding box');
     }
@@ -117,11 +125,12 @@ export class STLParser {
       length: Math.abs(bbox.max.x - bbox.min.x),
       width: Math.abs(bbox.max.y - bbox.min.y),
       height: Math.abs(bbox.max.z - bbox.min.z),
-      unit: 'mm'
+      unit: 'mm',
     };
 
     // Calculate actual volume (bounding box volume in mm³ -> cm³)
-    const volume = (dimensions.length * dimensions.width * dimensions.height) / 1000;
+    const volume =
+      (dimensions.length * dimensions.width * dimensions.height) / 1000;
 
     // Get vertex and face counts
     const positionAttribute = geometry.getAttribute('position');
@@ -135,10 +144,9 @@ export class STLParser {
       volume: Number(volume.toFixed(3)),
       boundingBox: bbox,
       vertices,
-      faces
+      faces,
     };
   }
-
 
   /**
    * Generate thumbnail image from geometry with enhanced options
@@ -152,7 +160,7 @@ export class STLParser {
       size = 400,
       backgroundColor = 'transparent',
       lightIntensity = 0.8,
-      cameraDistance = 1.5
+      cameraDistance = 1.5,
     } = options;
 
     return new Promise<string>((resolve, reject) => {
@@ -160,14 +168,14 @@ export class STLParser {
         // Create a scene
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ 
-          antialias: true, 
+        const renderer = new THREE.WebGLRenderer({
+          antialias: true,
           alpha: backgroundColor === 'transparent',
-          preserveDrawingBuffer: true
+          preserveDrawingBuffer: true,
         });
 
         renderer.setSize(size, size);
-        
+
         if (backgroundColor !== 'transparent') {
           renderer.setClearColor(new THREE.Color(backgroundColor), 1);
         } else {
@@ -178,17 +186,19 @@ export class STLParser {
         const material = new THREE.MeshPhongMaterial({
           color: new THREE.Color(color),
           shininess: 30,
-          transparent: backgroundColor === 'transparent'
+          transparent: backgroundColor === 'transparent',
         });
-        
+
         const mesh = new THREE.Mesh(geometry, material);
 
         // Center mesh
         geometry.computeBoundingBox();
         const bbox = geometry.boundingBox;
-        
+
         if (!bbox) {
-          reject(new STLParseError('Failed to compute bounding box for thumbnail'));
+          reject(
+            new STLParseError('Failed to compute bounding box for thumbnail')
+          );
           return;
         }
 
@@ -200,13 +210,19 @@ export class STLParser {
 
         // Enhanced lighting setup
         scene.add(new THREE.AmbientLight(0x404040, 0.4));
-        
-        const directionalLight = new THREE.DirectionalLight(0xffffff, lightIntensity);
+
+        const directionalLight = new THREE.DirectionalLight(
+          0xffffff,
+          lightIntensity
+        );
         directionalLight.position.set(1, 1, 1);
         scene.add(directionalLight);
-        
+
         // Add fill light
-        const fillLight = new THREE.DirectionalLight(0xffffff, lightIntensity * 0.3);
+        const fillLight = new THREE.DirectionalLight(
+          0xffffff,
+          lightIntensity * 0.3
+        );
         fillLight.position.set(-1, -1, -1);
         scene.add(fillLight);
 
@@ -228,16 +244,18 @@ export class STLParser {
         // Cleanup to prevent memory leaks
         renderer.dispose();
         material.dispose();
-        
+
         // Don't dispose geometry as it might be used elsewhere
         scene.clear();
 
         resolve(dataURL);
       } catch (error) {
-        reject(new STLParseError(
-          `Failed to generate thumbnail: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          error instanceof Error ? error : undefined
-        ));
+        reject(
+          new STLParseError(
+            `Failed to generate thumbnail: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            error instanceof Error ? error : undefined
+          )
+        );
       }
     });
   }
@@ -250,13 +268,13 @@ export class STLParser {
     targetUnit: 'mm' | 'cm' | 'inches'
   ): STLDimensions {
     const sourceUnit = dimensions.unit || 'mm';
-    
+
     if (sourceUnit === targetUnit) {
       return { ...dimensions, unit: targetUnit };
     }
 
     let conversionFactor = 1;
-    
+
     // Convert to mm first, then to target unit
     switch (sourceUnit) {
       case 'cm':
@@ -291,7 +309,7 @@ export class STLParser {
       length: Number((dimensions.length * finalFactor).toFixed(3)),
       width: Number((dimensions.width * finalFactor).toFixed(3)),
       height: Number((dimensions.height * finalFactor).toFixed(3)),
-      unit: targetUnit
+      unit: targetUnit,
     };
   }
 }
@@ -312,7 +330,8 @@ export const STLUtils = {
       return { isValid: false, error: 'File is empty' };
     }
 
-    if (file.size > 100 * 1024 * 1024) { // 100MB limit
+    if (file.size > 100 * 1024 * 1024) {
+      // 100MB limit
       return { isValid: false, error: 'File is too large (maximum 100MB)' };
     }
 
@@ -324,7 +343,6 @@ export const STLUtils = {
     return { isValid: true };
   },
 
- 
   /**
    * Estimate print time (very rough estimation)
    */
@@ -333,13 +351,12 @@ export const STLUtils = {
     const baseTime = volume * (infill / 20);
     const hours = Math.floor(baseTime);
     const minutes = Math.floor((baseTime - hours) * 60);
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}m`;
     }
     return `${minutes}m`;
   },
-
 
   /**
    * Convert data URL to File
@@ -354,7 +371,7 @@ export const STLUtils = {
       u8arr[n] = bstr.charCodeAt(n);
     }
     return new File([u8arr], filename, { type: mime });
-  }
+  },
 };
 
 /**

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Typography, Grid, Box, useTheme } from '@mui/material';
+import { Typography, Grid, Box, useTheme, Slider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import SingleSelectDropdown, {
   Option,
@@ -81,14 +81,14 @@ const Accordion: React.FC<AccordionProps> = ({
 
   const handleChange =
     (field: 'height' | 'width' | 'length') =>
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(event.target.value.replace(/[^\d.]/g, ''));
-        if (value) {
-          dispatch(
-            updateDimensionsValue({ id: file?._id as string, key: field, value })
-          );
-        }
-      };
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = Number(event.target.value.replace(/[^\d.]/g, ''));
+      if (value) {
+        dispatch(
+          updateDimensionsValue({ id: file?._id as string, key: field, value })
+        );
+      }
+    };
 
   const options = useMemo(
     () =>
@@ -114,7 +114,7 @@ const Accordion: React.FC<AccordionProps> = ({
           }}
         >
           <Ruler
-            fontSize='small'
+            fontSize="small"
             style={{ transform: 'rotate(100deg)' }}
             color={theme.palette.primary.main}
           />
@@ -203,6 +203,12 @@ const Accordion: React.FC<AccordionProps> = ({
           </Grid>
 
           <Grid size={12}>
+            <Slider
+              size="small"
+              defaultValue={70}
+              aria-label="Small"
+              valueLabelDisplay="auto"
+            />
             <Box
               sx={{
                 display: 'flex',
@@ -254,7 +260,7 @@ const Accordion: React.FC<AccordionProps> = ({
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <TechnologyIcon
-              fontSize='small'
+              fontSize="small"
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
             <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
@@ -288,7 +294,7 @@ const Accordion: React.FC<AccordionProps> = ({
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <MaterialIcon
-              fontSize='small'
+              fontSize="small"
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
             <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
@@ -322,7 +328,7 @@ const Accordion: React.FC<AccordionProps> = ({
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <ColorIcon
-              fontSize='small'
+              fontSize="small"
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
             <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
@@ -347,14 +353,13 @@ const Accordion: React.FC<AccordionProps> = ({
               .find((opt: any) => opt.id === file?.colorId)}
             titleHelper="Select Color"
             sx={{ width: '100%' }}
-            
           />
         </Grid>
 
         <Grid size={6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <InfillIcon
-              fontSize='small'
+              fontSize="small"
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
             <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
@@ -376,7 +381,7 @@ const Accordion: React.FC<AccordionProps> = ({
         <Grid size={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <PrinterIcon
-              fontSize='small'
+              fontSize="small"
               style={{ marginRight: '8px', color: theme.palette.primary.main }}
             />
             <Typography variant="h6" color="primary.main" fontSize={'1rem'}>
@@ -395,7 +400,6 @@ const Accordion: React.FC<AccordionProps> = ({
       </Grid>
 
       {/* Current Weight */}
-
     </Box>
   );
 };

@@ -3,22 +3,28 @@ import OrderSuccessfulIcon from '../../assets/icons/order-successful.png';
 
 const OrderSuccessful = () => {
   return (
-    <Box width={'100%'} height={'100vh'} display="flex" justifyContent="center" alignItems="center">
-    <Paper
-    elevation={3}
-    sx={{
-      transform: 'translateY(-20%)',
-      padding: 4,
-      borderRadius: '1rem',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      backgroundColor: '#f5f5f5',
-      height: 'calc(100vh - 20rem)',
-    }}
+    <Box
+      width={'100%'}
+      height={'100vh'}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
     >
+      <Paper
+        elevation={3}
+        sx={{
+          transform: 'translateY(-20%)',
+          padding: 4,
+          borderRadius: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          backgroundColor: '#f5f5f5',
+          height: 'calc(100vh - 20rem)',
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -40,7 +46,7 @@ const OrderSuccessful = () => {
             Visit Your Account to view order details.
           </Typography>
         </Box>
-    </Paper>
+      </Paper>
     </Box>
   );
 };

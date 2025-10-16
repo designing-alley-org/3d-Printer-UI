@@ -36,7 +36,9 @@ const ColorDropdown: React.FC<ColorDropdownProps> = ({
   error = false,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selected, setSelected] = useState<ColorOption | undefined>(defaultValue);
+  const [selected, setSelected] = useState<ColorOption | undefined>(
+    defaultValue
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -88,7 +90,7 @@ const ColorDropdown: React.FC<ColorDropdownProps> = ({
                 mr: 1,
               }}
             />
-            <span style={{fontSize: '.875rem',}}>{selected.label}</span>
+            <span style={{ fontSize: '.875rem' }}>{selected.label}</span>
           </Box>
         ) : (
           <span>{titleHelper}</span>

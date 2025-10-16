@@ -1,12 +1,6 @@
-import {
-  Card as MuiCard,
-  CardContent,
-  Typography,
-  Box,
-} from '@mui/material';
+import { Card as MuiCard, CardContent, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { selectDeliveryData } from '../../../store/Address/deliveryDetails';
-
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Commit } from '../../../types/address';
@@ -45,7 +39,6 @@ export default function Delivery({
     setName(name);
   };
 
-
   const isSelected = active === index;
 
   return (
@@ -65,7 +58,9 @@ export default function Delivery({
         color: isSelected ? '#FFFFFF' : 'none',
       }}
     >
-      <CardContent sx={{ padding: '1rem', '&:last-child': { paddingBottom: '1rem' } }}>
+      <CardContent
+        sx={{ padding: '1rem', '&:last-child': { paddingBottom: '1rem' } }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -74,43 +69,45 @@ export default function Delivery({
           }}
         >
           <Typography
-            sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main', fontSize:{ xs: '1rem', md: '1.25rem' } }}
+            sx={{
+              fontWeight: 'bold',
+              color: isSelected ? '#FFFFFF' : 'primary.main',
+              fontSize: { xs: '1rem', md: '1.25rem' },
+            }}
           >
             {deliveryName}
           </Typography>
-           <Typography
-          sx={{ fontWeight: 'bold', color: isSelected ? '#FFFFFF' : 'primary.main', fontSize:{ xs: '1rem', md: '1.25rem' } }}
-        >
-          ${deliveryCost.toFixed(2)}
-        </Typography>
+          <Typography
+            sx={{
+              fontWeight: 'bold',
+              color: isSelected ? '#FFFFFF' : 'primary.main',
+              fontSize: { xs: '1rem', md: '1.25rem' },
+            }}
+          >
+            ${deliveryCost.toFixed(2)}
+          </Typography>
         </Box>
-         <Box
+        <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
         >
-          <Typography
-          variant='body2'
-          >
-           Faster delivery with reliable tracking
+          <Typography variant="body2">
+            Faster delivery with reliable tracking
           </Typography>
-           <Typography
-          variant='body2'
-          sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-        >
-         <AccessTimeIcon fontSize='small' /> 
-          {commit?.commitMessageDetails ? `${commit.commitMessageDetails}` : 'Delivery time not specified'}
-        </Typography>
+          <Typography
+            variant="body2"
+            sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+          >
+            <AccessTimeIcon fontSize="small" />
+            {commit?.commitMessageDetails
+              ? `${commit.commitMessageDetails}`
+              : 'Delivery time not specified'}
+          </Typography>
         </Box>
-      
       </CardContent>
-     
     </MuiCard>
   );
 }
-
-
-
-

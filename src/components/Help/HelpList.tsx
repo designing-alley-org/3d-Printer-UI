@@ -5,16 +5,16 @@ import { motion } from 'framer-motion';
 import { formatDate } from '../../utils/function';
 import { useSearchParams } from 'react-router-dom';
 
-interface  Props {
-    onClick?: (id: string) => void;
-    id?: string;
-    type?: string;
-    subject?: string;
-    createdAt?: string;
-    orderNumber?: string;
-    status?: string;
-    isOpen?: boolean;
-    conversationId?: string;
+interface Props {
+  onClick?: (id: string) => void;
+  id?: string;
+  type?: string;
+  subject?: string;
+  createdAt?: string;
+  orderNumber?: string;
+  status?: string;
+  isOpen?: boolean;
+  conversationId?: string;
 }
 
 function statusHexColor(status: string) {
@@ -34,20 +34,25 @@ function statusHexColor(status: string) {
   }
 }
 
-const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , conversationId }: Props) => {
-
+const HelpList = ({
+  type,
+  subject,
+  createdAt,
+  orderNumber,
+  status,
+  isOpen,
+  conversationId,
+}: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const isChatOpen = searchParams.get('conversationId') === conversationId;
-
 
   const handelClick = () => {
     if (isChatOpen) {
       setSearchParams({});
     } else {
-      setSearchParams({ conversationId: conversationId  || '' } );
+      setSearchParams({ conversationId: conversationId || '' });
     }
-  }
-
+  };
 
   return (
     <Card
@@ -57,11 +62,11 @@ const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , con
         border: isOpen ? '1px solid #F0F4FF' : '1px solid #F0F4FF',
       }}
     >
-      <CardContent 
-        sx={{ 
-          display: 'flex', 
+      <CardContent
+        sx={{
+          display: 'flex',
           flexDirection: 'column',
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
         onClick={handelClick}
       >
@@ -81,22 +86,33 @@ const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , con
             />
           </motion.div>
         </Box>
-        <Box display={'flex'} flexDirection={{ xs: 'column', sm: 'row' }} justifyContent={'space-between'}>
+        <Box
+          display={'flex'}
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          justifyContent={'space-between'}
+        >
           <Typography variant="body2" color="secondary">
             Created On: {formatDate(createdAt || '', false)}
           </Typography>
-          <Box display={'flex'} gap={2} flexDirection={{ xs: 'column', sm: 'row' }} mt={{ xs: 1, sm: 0 }}>
-           {orderNumber && <Typography variant="body2" color="text.secondary">
-              Order No:
-              <Typography
-                variant="body2"
-                color="primary.main"
-                component={'span'}
-                ml={1}
-              >
-                {orderNumber}
+          <Box
+            display={'flex'}
+            gap={2}
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            mt={{ xs: 1, sm: 0 }}
+          >
+            {orderNumber && (
+              <Typography variant="body2" color="text.secondary">
+                Order No:
+                <Typography
+                  variant="body2"
+                  color="primary.main"
+                  component={'span'}
+                  ml={1}
+                >
+                  {orderNumber}
+                </Typography>
               </Typography>
-            </Typography>}
+            )}
             <Typography>
               Status:
               <Typography
@@ -115,8 +131,7 @@ const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , con
                     backgroundColor: statusHexColor(status || ''),
                     display: 'inline-block',
                     mr: 0.5,
-                    '&:hover': { transform: 'scale(1.2)'
-                  },
+                    '&:hover': { transform: 'scale(1.2)' },
                   }}
                 />
                 {status}
@@ -127,22 +142,24 @@ const HelpList = ({  type, subject, createdAt, orderNumber, status, isOpen , con
       </CardContent>
       <motion.div
         initial={{ height: 0, opacity: 0 }}
-        animate={{ 
-          height: isOpen ? 'auto' : 0, 
-          opacity: isOpen ? 1 : 0 
+        animate={{
+          height: isOpen ? 'auto' : 0,
+          opacity: isOpen ? 1 : 0,
         }}
-        transition={{ 
-          duration: 0.3, 
+        transition={{
+          duration: 0.3,
           ease: 'easeInOut',
-          opacity: { duration: 0.2 }
+          opacity: { duration: 0.2 },
         }}
         style={{ overflow: 'hidden' }}
       >
-        <CardContent 
-          sx={{ pt: 0 }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <ChatUI isOpen={isOpen} status={status || ''} type={type}  orderNumber={orderNumber || ''}/>
+        <CardContent sx={{ pt: 0 }} onClick={(e) => e.stopPropagation()}>
+          <ChatUI
+            isOpen={isOpen}
+            status={status || ''}
+            type={type}
+            orderNumber={orderNumber || ''}
+          />
         </CardContent>
       </motion.div>
     </Card>

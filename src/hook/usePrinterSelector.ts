@@ -5,7 +5,10 @@ import { FileDataDB } from '../types/uploadFiles';
 import { UpdateValueById } from '../store/customizeFilesDetails/CustomizationSlice';
 import { RootState } from '../store/types';
 
-export function usePrinterSelector(printersData: IPrinter[], file?: FileDataDB) {
+export function usePrinterSelector(
+  printersData: IPrinter[],
+  file?: FileDataDB
+) {
   const [open, setOpen] = useState(false);
   const [selectedPrinter, setSelectedPrinter] = useState<IPrinter | null>(null);
   const [searchValue, setSearchValue] = useState('');

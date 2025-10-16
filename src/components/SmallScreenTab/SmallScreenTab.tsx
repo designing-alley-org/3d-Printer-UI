@@ -11,7 +11,13 @@ interface SmallScreenTabProps {
   forAccount?: boolean;
 }
 
-const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmallScreen, data, activeTab, forAccount=false }) => {
+const SmallScreenTab: React.FC<SmallScreenTabProps> = ({
+  onTabChange,
+  navtabSmallScreen,
+  data,
+  activeTab,
+  forAccount = false,
+}) => {
   const [isSmallScreenTab, setIsSmallScreenTab] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -19,7 +25,10 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
   // Handle clicking outside the wrapper
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
         setIsSmallScreenTab(false);
       }
     };
@@ -50,11 +59,15 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
   };
 
   const toggleDropdown = () => {
-    setIsSmallScreenTab(prev => !prev);
+    setIsSmallScreenTab((prev) => !prev);
   };
 
   return (
-    <Wrapper ref={wrapperRef} onClick={toggleDropdown} style={{ position: 'relative' }}>
+    <Wrapper
+      ref={wrapperRef}
+      onClick={toggleDropdown}
+      style={{ position: 'relative' }}
+    >
       <img src={navtabSmallScreen} alt="tab" />
       {isSmallScreenTab && (
         <Box
@@ -90,7 +103,9 @@ const SmallScreenTab: React.FC<SmallScreenTabProps> = ({ onTabChange, navtabSmal
               }}
               onClick={(e) => {
                 e.stopPropagation(); // Prevent the wrapper's onClick from firing
-                forAccount ? handleTabClickPath(item.path) : handleTabClick(index + 1);
+                forAccount
+                  ? handleTabClickPath(item.path)
+                  : handleTabClick(index + 1);
               }}
             >
               {forAccount ? item?.label : item}

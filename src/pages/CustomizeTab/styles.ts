@@ -33,10 +33,10 @@ export const Heading = styled.section`
 `;
 
 export const Files = styled.article<{ isLoading: boolean }>`
-  pointer-events: ${props => (props.isLoading ? 'none' : 'auto')};
-  opacity: ${props => (props.isLoading ? 0.6 : 1)};
+  pointer-events: ${(props) => (props.isLoading ? 'none' : 'auto')};
+  opacity: ${(props) => (props.isLoading ? 0.6 : 1)};
   width: 35%;
-  background: #2A3F7F;
+  background: #2a3f7f;
   border-top-left-radius: 23px;
   border-bottom-left-radius: 23px;
 
@@ -71,7 +71,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
     .header {
       padding: 0 0.5rem;
       .file {
-        margin:
+        margin:;
       }
       .count {
         width: 1rem;
@@ -80,7 +80,7 @@ export const Files = styled.article<{ isLoading: boolean }>`
         font-size: 0.8rem;
       }
     }
-      .file-list{
+    .file-list {
       width: 100%;
       display: flex;
       overflow-y: scroll;
@@ -95,12 +95,12 @@ export const Files = styled.article<{ isLoading: boolean }>`
         border-radius: 0.25rem;
       }
       .upload-file {
-      width: 14.5rem;
-      display: flex;
-      height: 5rem;
-      margin: 3px 5px;
-    }
+        width: 14.5rem;
+        display: flex;
+        height: 5rem;
+        margin: 3px 5px;
       }
+    }
   }
 `;
 
@@ -135,9 +135,9 @@ export const Model = styled.section`
   align-items: center;
   position: relative;
   border-radius: 20px;
-  border: 1px solid #F6F6F6;
-  box-shadow: 0px 2px 2px 0px #CDE1FF;
-  background: #ffffff;  
+  border: 1px solid #f6f6f6;
+  box-shadow: 0px 2px 2px 0px #cde1ff;
+  background: #ffffff;
   // .view-model {
   //   position: absolute;
   //   bottom: 4px;
@@ -182,14 +182,17 @@ export const Model = styled.section`
   // }
 `;
 
-export const ModelName = styled.section<{ isActive: boolean, textColor: string }>`
+export const ModelName = styled.section<{
+  isActive: boolean;
+  textColor: string;
+}>`
   display: flex;
   justify-content: center;
   margin-top: 0.8rem;
   margin-left: 0.4rem;
-  color: ${props => props.isActive ? props.textColor : '#ffffff'};
+  color: ${(props) => (props.isActive ? props.textColor : '#ffffff')};
   font-size: 1rem;
-  font-weight: ${props => props.isActive ? 'bold' : 'normal'};
+  font-weight: ${(props) => (props.isActive ? 'bold' : 'normal')};
 
   @media (max-width: 768px) {
     margin-top: 0.4rem;

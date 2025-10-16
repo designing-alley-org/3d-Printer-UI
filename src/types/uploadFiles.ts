@@ -17,14 +17,13 @@ export type Pricing = {
   taxRate_percent: number;
 };
 
-
 export type Costs = {
   energy: number;
   labor: number;
   material: number;
   operational: number;
   total: number;
-}
+};
 
 export type DeliveryWeight = {
   weight: number;

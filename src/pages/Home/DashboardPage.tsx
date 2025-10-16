@@ -50,9 +50,8 @@ const DashboardPage = () => {
   ];
 
   const handleClick = async (path: string) => {
-
     // Handle the click event, e.g., navigate to the specified path
-    if (path == "/place-order") {
+    if (path == '/place-order') {
       await createOrder({
         setActiveTabs: (tabs: number[]) => console.log('Active Tabs:', tabs),
         setIsSaving: (isSaving: boolean) => console.log('Is Saving:', isSaving),
@@ -62,7 +61,6 @@ const DashboardPage = () => {
     }
 
     navigate(path);
-
   };
 
   return (
@@ -113,9 +111,9 @@ const DashboardPage = () => {
                 height: '100%',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease-in-out',
-                backgroundColor:  theme.palette.background.paper,
-                color:  theme.palette.text.primary,
-                boxShadow:  '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                 '&:hover': {
                   transform: 'translateY(-4px)',
                   backgroundColor: theme.palette.primary.main,

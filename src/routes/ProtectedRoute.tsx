@@ -19,7 +19,6 @@ export const ProtectedRoute: React.FC<Props> = ({ component }) => {
         return;
       }
 
-
       // If the user is authenticated, stop loading
       setIsCheckingSession(false);
     };

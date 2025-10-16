@@ -17,8 +17,6 @@ interface Props {
   tag?: string;
 }
 
-
-
 const NotificationCard = ({ tag }: Props) => {
   const theme = useTheme();
 

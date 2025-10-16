@@ -1,4 +1,3 @@
-
 //  Define all main statuses
 const ORDER_STATUS = Object.freeze({
   PENDING_CUSTOMISATION: 'Pending Customisation',
@@ -28,8 +27,6 @@ const ORDER_STATUS_GROUPS = Object.freeze({
   COMPLETED: [ORDER_STATUS.DELIVERED],
   FAILED: [ORDER_STATUS.FAILED_DELIVERY],
 });
-
-
 
 // Define colors for each order status
 const ORDER_STATUS_COLORS = Object.freeze({
@@ -62,8 +59,4 @@ const ORDER_STATUS_COLORS = Object.freeze({
   },
 });
 
-export {
-  ORDER_STATUS,
-  ORDER_STATUS_GROUPS,
-  ORDER_STATUS_COLORS,
-}
+export { ORDER_STATUS, ORDER_STATUS_GROUPS, ORDER_STATUS_COLORS };

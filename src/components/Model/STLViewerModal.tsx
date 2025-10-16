@@ -26,22 +26,19 @@ interface STLViewerModalProps {
 
 const STLViewerModal: React.FC<STLViewerModalProps> = ({
   open,
-  color="#c0c0c0 ",
+  color = '#c0c0c0 ',
   stlGeometry,
   isDownloading,
   downloadProgress,
   error,
   onClose,
   fileName,
-  dimensions
+  dimensions,
 }) => {
-
   const [showWireframe, setShowWireframe] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
 
-
-  const isZoomNeeded =  dimensions.height < 2 && dimensions.length < 2;
-
+  const isZoomNeeded = dimensions.height < 2 && dimensions.length < 2;
 
   return (
     <ResponsiveModal

@@ -1,7 +1,5 @@
 import { Color, Material, Technology } from './uploadFiles';
 
-
-
 export type BuildVolume = {
   x: number;
   y: number;

@@ -1,13 +1,13 @@
 import React from 'react';
-import { 
-  Typography, 
-  Stack, 
-  Chip, 
-  Radio, 
-  IconButton, 
-  useMediaQuery, 
+import {
+  Typography,
+  Stack,
+  Chip,
+  Radio,
+  IconButton,
+  useMediaQuery,
   Card,
-  CardContent
+  CardContent,
 } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
@@ -55,84 +55,87 @@ const ListAddress: React.FC<ListAddressProps> = ({
   };
 
   return (
-  <Card  sx={{ mb: 1.5, mr:1, cursor: showRadio ? 'pointer' : 'default' }} onClick={showRadio ? handleRadioChange : undefined}>
-    <CardContent sx={{ padding: isSmallScreen ? '8px' : '12px' }}>
-      <Stack
-      direction="row"
-      justifyContent="space-between"
-      alignItems="center"
+    <Card
+      sx={{ mb: 1.5, mr: 1, cursor: showRadio ? 'pointer' : 'default' }}
       onClick={showRadio ? handleRadioChange : undefined}
     >
-      <Stack spacing={0.5} sx={{ flex: 1 }}>
-        <Typography
-          variant={isSmallScreen ? "body1" : "h6"}
-          color="text.primary"
-          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+      <CardContent sx={{ padding: isSmallScreen ? '8px' : '12px' }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          onClick={showRadio ? handleRadioChange : undefined}
         >
-          {address.personName}
-          {selectedAddressId === address._id && (
-            <Chip
-              label="Default Selected"
-              size="small"
-              sx={{
-                borderRadius: "0.3rem",
-                fontSize: "0.6rem",
-                height: "1.5rem",
-              }}
-            />
-          )}
-        </Typography>
+          <Stack spacing={0.5} sx={{ flex: 1 }}>
+            <Typography
+              variant={isSmallScreen ? 'body1' : 'h6'}
+              color="text.primary"
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            >
+              {address.personName}
+              {selectedAddressId === address._id && (
+                <Chip
+                  label="Default Selected"
+                  size="small"
+                  sx={{
+                    borderRadius: '0.3rem',
+                    fontSize: '0.6rem',
+                    height: '1.5rem',
+                  }}
+                />
+              )}
+            </Typography>
 
-        <Typography
-          variant="body2"
-          sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
-        >
-          {address.phoneNumber}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
-        >
-          {address.city}, {address.countryCode}, {address.postalCode}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: isSmallScreen ? "0.6rem" : undefined }}
-        >
-          {address.streetLines}
-        </Typography>
-      </Stack>
+            <Typography
+              variant="body2"
+              sx={{ fontSize: isSmallScreen ? '0.6rem' : undefined }}
+            >
+              {address.phoneNumber}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ fontSize: isSmallScreen ? '0.6rem' : undefined }}
+            >
+              {address.city}, {address.countryCode}, {address.postalCode}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ fontSize: isSmallScreen ? '0.6rem' : undefined }}
+            >
+              {address.streetLines}
+            </Typography>
+          </Stack>
 
-      <Stack direction="row" alignItems="center" spacing={1}>
-        {showEdit && (
-          <IconButton
-            size={isSmallScreen ? "small" : "medium"}
-            onClick={handleEditClick}
-            sx={{
-              color: 'primary.main',
-              '&:hover': {
-                backgroundColor: 'primary.light',
-                color: 'primary.dark',
-              },
-            }}
-          >
-            <Edit fontSize={isSmallScreen ? "small" : "medium"} />
-          </IconButton>
-        )}
-        
-        {showRadio && (
-          <Radio
-            checked={selectedAddressId === address._id}
-            onChange={handleRadioChange}
-            value={address._id}
-            name="address"
-            color="primary"
-          />
-        )}
-      </Stack>
-    </Stack>
-    </CardContent>
-  </Card>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            {showEdit && (
+              <IconButton
+                size={isSmallScreen ? 'small' : 'medium'}
+                onClick={handleEditClick}
+                sx={{
+                  color: 'primary.main',
+                  '&:hover': {
+                    backgroundColor: 'primary.light',
+                    color: 'primary.dark',
+                  },
+                }}
+              >
+                <Edit fontSize={isSmallScreen ? 'small' : 'medium'} />
+              </IconButton>
+            )}
+
+            {showRadio && (
+              <Radio
+                checked={selectedAddressId === address._id}
+                onChange={handleRadioChange}
+                value={address._id}
+                name="address"
+                color="primary"
+              />
+            )}
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 

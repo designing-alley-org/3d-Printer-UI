@@ -15,7 +15,10 @@ export const addressValidationSchema = Yup.object({
     .matches(/^[A-Z]{2}$/, 'Enter a valid country code (e.g., GB)')
     .required('Country code is required'),
   postalCode: Yup.string()
-    .matches(/^(GIR 0AA|[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2})$/i, 'Enter a valid UK postal code')
+    .matches(
+      /^(GIR 0AA|[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2})$/i,
+      'Enter a valid UK postal code'
+    )
     .required('Postal code is required'),
   phoneNumber: Yup.string()
     .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')

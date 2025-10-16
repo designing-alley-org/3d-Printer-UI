@@ -155,9 +155,13 @@ function VerifyEmail() {
               }}
             >
               {isSuccess ? (
-                <CheckCircleIcon sx={{ fontSize: '3rem', color: theme.palette.success.main }} />
+                <CheckCircleIcon
+                  sx={{ fontSize: '3rem', color: theme.palette.success.main }}
+                />
               ) : (
-                <ErrorIcon sx={{ fontSize: '3rem', color: theme.palette.warning.main }} />
+                <ErrorIcon
+                  sx={{ fontSize: '3rem', color: theme.palette.warning.main }}
+                />
               )}
               <Typography
                 sx={{

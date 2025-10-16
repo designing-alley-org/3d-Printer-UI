@@ -22,7 +22,6 @@ all the routings will be listed here
 
 - **`public/`**: Contains static files like the HTML file and favicon.
 - **`src/`**: Holds the core application code:
-
   - **`components/`**: Contains reusable UI components like `Header` and `Footer`.
   - **`hooks/`**: Contains custom hooks such as `useFetch` for handling data fetching.
   - **`pages/`**: Contains pages of the app like `HomePage` and `AboutPage`.

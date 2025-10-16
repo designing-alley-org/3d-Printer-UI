@@ -54,4 +54,3 @@ export const filterStatusGroups: Option[] = [
   // Failed group
   { id: 10, value: 'Failed Delivery', label: 'Failed Delivery' },
 ];
-

@@ -3,7 +3,7 @@ import { authReducer } from './auth/reducer';
 import { registerReducer } from './auth/registerReducer';
 import { printerReducer } from './printer/printerReducer';
 import userReducer from './user/reducer';
-import  specificationReducer  from './customizeFilesDetails/SpecificationReducer';
+import specificationReducer from './customizeFilesDetails/SpecificationReducer';
 import addressReducer from './Address/address.reducer.ts';
 import DeliveryReducer from './Address/deliveryDetails.ts';
 import { CustomizationSlice } from './customizeFilesDetails/CustomizationSlice.ts';
@@ -23,7 +23,7 @@ const store = configureStore({
     delivery: DeliveryReducer,
     query: queryReducer,
     chat: chatReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
   },
 });
 

@@ -29,7 +29,7 @@ export {
   arrow_dropdown_blue,
   notificationIcon,
   arrowRight,
-  navtabSmallScreen
+  navtabSmallScreen,
 };
 
 // Data for Tab
@@ -40,14 +40,14 @@ export const tabData = [
     path: 'dashboard',
   },
   { id: 1, label: 'GET QUOTE', path: ROUTES.GET_QUOTES },
-  { id: 4, label: ''}, // This is created for notification... 
+  { id: 4, label: '' }, // This is created for notification...
   { id: 3, label: 'YOUR ACCOUNT', path: ROUTES.ACCOUNT },
 ];
 
 export const DesktoptabData = [
   { id: 1, label: 'Get Quote', path: ROUTES.GET_QUOTES },
   { id: 2, label: 'Account', path: ROUTES.ACCOUNT },
-  { id: 3, label: 'Logout', path: "" },
+  { id: 3, label: 'Logout', path: '' },
 ];
 
 export const accTab = [
@@ -61,8 +61,7 @@ export const notificationTab = [
   { id: 1, label: 'ONGOING ORDER' },
   { id: 2, label: 'PLACED ORDER' },
   { id: 3, label: 'MY DISPUTES' },
- ];
- 
+];
 
 export const sizeOption = [
   {
@@ -87,9 +86,6 @@ export const uploadDimBtnData = [
     name: 'IN',
   },
 ];
-
-
-
 
 export const PrinterData = [
   {
@@ -128,4 +124,3 @@ export const PrinterData = [
     ],
   },
 ];
-

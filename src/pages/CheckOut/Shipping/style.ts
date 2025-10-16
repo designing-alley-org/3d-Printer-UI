@@ -20,13 +20,12 @@ export const SubHeader = styled.div`
 `;
 
 export const Wrapper = styled.section`
-  border: 1px solid #F0F4FF;
+  border: 1px solid #f0f4ff;
   padding: 1rem !important;
   border-radius: 1.3rem;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 24px;
-  box-shadow: 2px 2px 4px 0px #3B3E4929;
-
+  box-shadow: 2px 2px 4px 0px #3b3e4929;
 
   @media (max-width: 600px) {
     border-radius: 0.5rem;
@@ -44,8 +43,8 @@ export const Wrapper = styled.section`
       margin-right: 0.3rem;
       justify-content: space-between;
       align-items: start;
-      border: 1px solid #3E424733;
-      box-shadow: 2px 2px 4px 0px #3B3E4929;
+      border: 1px solid #3e424733;
+      box-shadow: 2px 2px 4px 0px #3b3e4929;
       border-radius: 0.5rem;
       padding: 0.5rem 1rem;
       padding: 0.5rem;
@@ -61,7 +60,7 @@ export const Wrapper = styled.section`
         top: 0.7rem;
         right: 1.8rem;
       }
-      
+
       .address {
         cursor: pointer;
         position: relative;
@@ -110,7 +109,7 @@ export const Wrapper = styled.section`
 `;
 
 export const AddNewAddressButton = styled.div`
-  border: 1px dashed #2A3F7F;
+  border: 1px dashed #2a3f7f;
   border-radius: 12px;
   padding: 1.2rem;
   text-align: center;
@@ -118,15 +117,15 @@ export const AddNewAddressButton = styled.div`
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 1rem;
-  
+
   &:hover {
     background: rgba(30, 113, 255, 0.02);
-    border-color: #2A2D2F;
+    border-color: #2a2d2f;
   }
-  
+
   @media (max-width: 600px) {
     padding: 1rem;
-    
+
     .add-text {
       font-size: 0.9rem;
     }

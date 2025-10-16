@@ -322,13 +322,16 @@ const CustomizeTab: React.FC = () => {
     );
   };
 
-const handelNext = async () => {
-  await Promise.all([
-    updateIncompleteOrdersService(orderId as string),
-    updateTotalWeightService(orderId as string, orderNumber as string, navigate)
-  ]);
-};
-
+  const handelNext = async () => {
+    await Promise.all([
+      updateIncompleteOrdersService(orderId as string),
+      updateTotalWeightService(
+        orderId as string,
+        orderNumber as string,
+        navigate
+      ),
+    ]);
+  };
 
   return (
     <StepLayout
@@ -337,7 +340,9 @@ const handelNext = async () => {
       stepDescription="Customize your design files by selecting materials, colors, and printers."
       onClick={handelNext}
       orderNo={orderNumber}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/${orderNumber}/upload-stl`)}
+      onClickBack={() =>
+        navigate(`/get-quotes/${orderId}/${orderNumber}/upload-stl`)
+      }
       isLoading={false}
       isPageLoading={isPageLoading}
       isDisabled={isAllCoustomized ? false : true}
@@ -507,7 +512,11 @@ const handelNext = async () => {
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: 'primary.main', fontSize: '1rem' }}
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '1rem',
+                  }}
                 >
                   Current Weight :{' '}
                   <span>

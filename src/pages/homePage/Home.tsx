@@ -2,11 +2,9 @@ import styled from 'styled-components';
 import Layout from '../../components/Layout/index';
 
 const Home: React.FC = () => {
-  
   return (
     <Wrapper>
-      <Layout>
-      </Layout>
+      <Layout></Layout>
     </Wrapper>
   );
 };

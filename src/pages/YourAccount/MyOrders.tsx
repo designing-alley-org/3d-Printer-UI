@@ -4,8 +4,7 @@ import CustomPagination from '../../components/CustomPagination';
 import NoDataFound from '../../components/NoDataFound';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import CustomTextField from '../../stories/inputs/CustomTextField';
-import SingleSelectDropdown, {
-} from '../../stories/Dropdown/SingleSelectDropdown';
+import SingleSelectDropdown from '../../stories/Dropdown/SingleSelectDropdown';
 import OrderFileItem from '../../components/OrderFileItem';
 import CreateReturnModel from '../../components/Model/CreateReturnModel';
 import { ReturnFormValues } from '../../validation/returnValidation';
@@ -28,27 +27,24 @@ interface Order {
   createdAt: string;
 }
 
-
-
 interface OrderResponse {
   orders: Order[];
   pagination: Pagination | null;
 }
 
-
 export const MyOrders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get('status');
-  const orderNumber = searchParams.get('orderNumber'); 
+  const orderNumber = searchParams.get('orderNumber');
 
   const [ordersData, setOrdersData] = useState<OrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  
+
   // UPDATED: Initialize searchQuery state from the URL's orderNumber param
-  const [searchQuery, setSearchQuery] = useState(orderNumber || ''); 
+  const [searchQuery, setSearchQuery] = useState(orderNumber || '');
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   const selectedStatusOption =
@@ -62,13 +58,12 @@ export const MyOrders = () => {
   const [returnShipmentId, setReturnShipmentId] = useState<string>('');
   const [isSubmittingReturn, setIsSubmittingReturn] = useState(false);
 
-
   // Fetch orders function remains the same
   const fetchOrders = async (
     page: number = currentPage,
     limit: number = pageSize,
     orderNumber?: string | null, // Allow null
-    status?: string | null  // Allow null
+    status?: string | null // Allow null
   ) => {
     try {
       setIsLoading(true);
@@ -144,7 +139,7 @@ export const MyOrders = () => {
     setPageSize(newPageSize);
     setCurrentPage(1);
   };
-  
+
   const handleStatusFilterChange = (value: any) => {
     const newSearchParams = new URLSearchParams(searchParams);
     if (value.value === 'all') {
@@ -184,7 +179,7 @@ export const MyOrders = () => {
     searchParams,
     setSearchParams,
   ]);
-  
+
   // ... other functions (handleViewDetails, handleSubmitReturn, etc.) remain the same ...
   const handleViewDetails = (orderId: string) => {
     setSelectedOrderId(selectedOrderId === orderId ? null : orderId);

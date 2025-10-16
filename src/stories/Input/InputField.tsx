@@ -49,7 +49,9 @@ export const InputField = ({
       <div className="input-wrapper">
         <input
           id={id}
-          type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
+          type={
+            type === 'password' ? (showPassword ? 'text' : 'password') : type
+          }
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}

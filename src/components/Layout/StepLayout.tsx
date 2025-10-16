@@ -1,9 +1,4 @@
-import {
-  Box,
-  Container,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, Container, Typography, useMediaQuery } from '@mui/material';
 import React from 'react';
 import StepLayoutSkleton from '../skeleton/StepLayoutSkleton';
 import CustomButton from '../../stories/button/CustomButton';
@@ -74,7 +69,7 @@ const StepLayout = ({
             sx={{ fontWeight: 600 }}
             color="primary.main"
           >
-            Order No: {orderNo|| 'N/A'}
+            Order No: {orderNo || 'N/A'}
           </Typography>
         </Box>
       )}
@@ -90,40 +85,44 @@ const StepLayout = ({
         {isPageLoading ? <StepLayoutSkleton /> : children}
       </Box>
 
-     {!isButtonsHide && <Box
-        sx={{
-          textAlign: 'center',
-          display: 'flex',
-          gap: isSmallScreen ? '0.5rem' : '1rem',
-          justifyContent: isSmallScreen ? 'center' : 'flex-end',
-          flexDirection: isSmallScreen ? 'column' : 'row',
-          alignItems: 'center',
-          mt: isSmallScreen ? 2 : 0,
-        }}
-      >
-      {!(stepNumber === 1 ) &&  <CustomButton
-          variant="outlined"
-          onClick={onClickBack}
-          disabled={ isBackDisabled ? true : false}
-          children="Go Back"
+      {!isButtonsHide && (
+        <Box
           sx={{
-            width: isSmallScreen ? '100%' : 'auto',
-            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 2rem',
+            textAlign: 'center',
+            display: 'flex',
+            gap: isSmallScreen ? '0.5rem' : '1rem',
+            justifyContent: isSmallScreen ? 'center' : 'flex-end',
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: 'center',
+            mt: isSmallScreen ? 2 : 0,
           }}
-        />}
-        <CustomButton
-          variant="contained"
-          size="large"
-          children={buttonLabel || 'Next'}
-          onClick={onClick}
-          disabled={isDisabled || isLoading}
-          loading={isLoading}
-          sx={{
-            width: isSmallScreen ? '100%' : 'auto',
-            padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 3rem',
-          }}
-        />
-      </Box>}
+        >
+          {!(stepNumber === 1) && (
+            <CustomButton
+              variant="outlined"
+              onClick={onClickBack}
+              disabled={isBackDisabled ? true : false}
+              children="Go Back"
+              sx={{
+                width: isSmallScreen ? '100%' : 'auto',
+                padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 2rem',
+              }}
+            />
+          )}
+          <CustomButton
+            variant="contained"
+            size="large"
+            children={buttonLabel || 'Next'}
+            onClick={onClick}
+            disabled={isDisabled || isLoading}
+            loading={isLoading}
+            sx={{
+              width: isSmallScreen ? '100%' : 'auto',
+              padding: isSmallScreen ? '0.7rem 1.5rem' : '0.5rem 3rem',
+            }}
+          />
+        </Box>
+      )}
     </Container>
   );
 };

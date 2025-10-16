@@ -1,10 +1,5 @@
 import styled from 'styled-components';
 
-
-
-
-
-
 export const MainWrapper = styled.main`
   margin: 0rem;
   .heading {
@@ -20,7 +15,6 @@ export const MainWrapper = styled.main`
     color: white;
     padding-bottom: 1.5rem;
   }
-  
 
   @media (max-width: 768px) {
     margintop: 3rem;
@@ -48,8 +42,6 @@ export const MainWrapper = styled.main`
     h1 {
       font-size: 1rem;
     }
-
-   
   }
 `;
 export const OrderWrap = styled.section`

@@ -1,6 +1,13 @@
 import { Pagination, User } from '../types';
 import { Notification } from '../types/notification';
-import { Color, FileDataDB, Material, ModelDimensions, Pricing, Technology } from '../types/uploadFiles';
+import {
+  Color,
+  FileDataDB,
+  Material,
+  ModelDimensions,
+  Pricing,
+  Technology,
+} from '../types/uploadFiles';
 import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -9,8 +16,6 @@ import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
 } from './auth/action_types';
-
-
 
 export interface RootState {
   auth: AuthState;
@@ -24,8 +29,6 @@ export interface RootState {
   notification: NotificationState;
 }
 
-
-  
 export interface NotificationState {
   notifications: Notification[];
   pagination: Pagination | null;
@@ -33,7 +36,6 @@ export interface NotificationState {
   length: number;
   error: string | null;
 }
-
 
 export interface FileDetailsState {
   files: FileDataDB[];
@@ -59,9 +61,7 @@ export interface SpecificationState {
   pricing: Pricing | null;
 }
 
-
-
-export interface user{
+export interface user {
   id: string;
   email: string;
   name: string;
@@ -96,8 +96,6 @@ export type AuthActionTypes =
   | LoginSuccessAction
   | LoginFailureAction;
 
-
-
 export interface RegisterState {
   loading: boolean;
   success: boolean;
@@ -122,36 +120,27 @@ export type RegisterActionTypes =
   | RegisterSuccessAction
   | RegisterFailureAction;
 
+//====================== STL FILE ========================
 
-  //====================== STL FILE ========================
+export interface FileState {
+  id: string;
+  file: File;
+  name: string;
+  size: string;
+  progress: number;
+}
 
+export interface FileReducerState {
+  files: FileState[];
+  activeFileId: string | null;
+}
 
-  export interface FileState {
-    id: string;
-    file: File;
-    name: string;
-    size: string;
-    progress: number;
-  }
-  
-  export interface FileReducerState {
-    files: FileState[];
-    activeFileId: string | null;
-  }
+export interface UserReducerState {
+  user: User | null;
+}
 
-  export interface UserReducerState{
-    user: User | null;
-  }
-  
-   
-  
-  
-  
-  export type UserActionTypes =
-    | AddUserAction;
+export type UserActionTypes = AddUserAction;
 
-
-  
 export interface IPrinterDetails {
   printerName: string;
   Model: string;

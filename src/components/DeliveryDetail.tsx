@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { trackByTrackingNumberService } from '../services/fedex';
 import { formatText } from '../utils/function';
 
-
 interface DeliveryDetailProps {
   shipment: any;
   return: any;

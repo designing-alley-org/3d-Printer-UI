@@ -4,7 +4,6 @@ import ResponsiveModal from './ResponsiveModal';
 import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
 import CustomButton from '../../stories/button/CustomButton';
 
-
 interface EditEmailModalProps {
   open: boolean;
   onClose: () => void;
@@ -39,14 +38,14 @@ const EditEmailModal: React.FC<EditEmailModalProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
 
     // Clear error when user starts typing
     if (errors[name as keyof { email: string }]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: undefined,
       }));
@@ -79,18 +78,10 @@ const EditEmailModal: React.FC<EditEmailModalProps> = ({
 
   const actions = (
     <Stack direction="row" spacing={2}>
-      <CustomButton
-        variant="outlined"
-        onClick={handleClose}
-        disabled={loading}
-      >
+      <CustomButton variant="outlined" onClick={handleClose} disabled={loading}>
         Cancel
       </CustomButton>
-      <CustomButton
-        variant="contained"
-        onClick={handleSave}
-        loading={loading}
-      >
+      <CustomButton variant="contained" onClick={handleSave} loading={loading}>
         Save Changes
       </CustomButton>
     </Stack>

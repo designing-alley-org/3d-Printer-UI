@@ -1,10 +1,6 @@
 // authReducer.ts
 import { AuthActionTypes, AuthState } from '../types';
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-} from './action_types';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from './action_types';
 
 const initialState: AuthState = {
   loading: false,

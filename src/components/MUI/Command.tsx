@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   Box,
   Typography,
@@ -12,63 +12,60 @@ import {
   InputAdornment,
   List,
   ListItemButton,
-  DialogProps
-} from "@mui/material"
-import {
-  Search as SearchIcon,
-} from "@mui/icons-material"
-
+  DialogProps,
+} from '@mui/material';
+import { Search as SearchIcon } from '@mui/icons-material';
 
 function Command({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <Box
       {...props}
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        width: "100%",
-        overflow: "hidden",
-        bgcolor: "background.paper",
-        color: "text.primary",
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden',
+        bgcolor: 'background.paper',
+        color: 'text.primary',
       }}
     >
       {children}
     </Box>
-  )
+  );
 }
 
 interface CommandDialogProps extends Omit<DialogProps, 'children'> {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 function CommandDialog({ children, ...props }: CommandDialogProps) {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const containerStyles = {
-    "& .MuiDialog-container": {
-      alignItems: "flex-start",
-      paddingTop: "20vh",
+    '& .MuiDialog-container': {
+      alignItems: 'flex-start',
+      paddingTop: '20vh',
     },
-    "& .MuiPaper-root": {
+    '& .MuiPaper-root': {
       padding: 0,
-      overflow: "hidden",
-      width: "100%",
+      overflow: 'hidden',
+      width: '100%',
       maxWidth: 740,
       borderRadius: 0.5,
     },
-  }
+  };
 
   const drawerStyles = {
-    "& .MuiPaper-root": {
-      height: "60%",
+    '& .MuiPaper-root': {
+      height: '60%',
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
       padding: 0,
-      overflow: "hidden",
+      overflow: 'hidden',
     },
-  }
+  };
 
   const content = <Command>{children}</Command>;
 
@@ -77,23 +74,24 @@ function CommandDialog({ children, ...props }: CommandDialogProps) {
       <Drawer anchor="bottom" {...props} sx={drawerStyles}>
         {content}
       </Drawer>
-    )
+    );
   }
 
   return (
     <Dialog {...props} sx={containerStyles}>
       {content}
     </Dialog>
-  )
+  );
 }
 
-interface CommandInputProps extends Omit<React.ComponentProps<typeof TextField>, 'onChange'> {
+interface CommandInputProps
+  extends Omit<React.ComponentProps<typeof TextField>, 'onChange'> {
   setSearchValue: (value: string) => void;
 }
 
 function CommandInput({ setSearchValue, ...props }: CommandInputProps) {
   return (
-    <Box sx={{ p: 1.5, borderBottom: 1, borderColor: "divider" }}>
+    <Box sx={{ p: 1.5, borderBottom: 1, borderColor: 'divider' }}>
       <TextField
         fullWidth
         variant="standard"
@@ -103,7 +101,7 @@ function CommandInput({ setSearchValue, ...props }: CommandInputProps) {
           disableUnderline: true,
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon sx={{ color: "text.secondary" }} />
+              <SearchIcon sx={{ color: 'text.secondary' }} />
             </InputAdornment>
           ),
         }}
@@ -111,24 +109,27 @@ function CommandInput({ setSearchValue, ...props }: CommandInputProps) {
         {...props}
       />
     </Box>
-  )
+  );
 }
 
-function CommandList({ children, ...props }: React.ComponentProps<typeof List>) {
+function CommandList({
+  children,
+  ...props
+}: React.ComponentProps<typeof List>) {
   return (
     <List
       {...props}
       sx={{
         maxHeight: 450,
-        overflowY: "auto",
-        overflowX: "hidden",
+        overflowY: 'auto',
+        overflowX: 'hidden',
         p: 1,
         ...props.sx,
       }}
     >
       {children}
     </List>
-  )
+  );
 }
 
 function CommandEmpty({ ...props }: React.ComponentProps<typeof Typography>) {
@@ -136,15 +137,19 @@ function CommandEmpty({ ...props }: React.ComponentProps<typeof Typography>) {
     <Typography
       variant="body2"
       textAlign="center"
-      sx={{ p: 4, color: "text.secondary" }}
+      sx={{ p: 4, color: 'text.secondary' }}
       {...props}
     >
       No Data found.
     </Typography>
-  )
+  );
 }
 
-function CommandItem({ onSelect, children, ...props }: { onSelect: () => void } & React.ComponentProps<typeof ListItemButton>) {
+function CommandItem({
+  onSelect,
+  children,
+  ...props
+}: { onSelect: () => void } & React.ComponentProps<typeof ListItemButton>) {
   return (
     <ListItemButton
       onClick={onSelect}
@@ -156,21 +161,19 @@ function CommandItem({ onSelect, children, ...props }: { onSelect: () => void } 
         alignItems: 'center',
         p: 1.5,
         mb: 0.5,
-        ...props.sx
+        ...props.sx,
       }}
     >
       {children}
     </ListItemButton>
-  )
+  );
 }
-
-
 
 export {
-    Command,
-    CommandDialog,
-    CommandInput,
-    CommandList,
-    CommandEmpty,
-    CommandItem,
-}
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandItem,
+};

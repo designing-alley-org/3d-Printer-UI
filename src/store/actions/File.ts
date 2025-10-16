@@ -1,9 +1,5 @@
 import { updateFile } from '../../services/filesService';
-import {
-  deleteFromS3,
-  getSignedUrl,
-  uploadFromS3,
-} from '../../services/s3';
+import { deleteFromS3, getSignedUrl, uploadFromS3 } from '../../services/s3';
 import { FileDataDB, UpdateFileData } from '../../types/uploadFiles';
 import { returnResponse, returnS3Key } from '../../utils/function';
 import { stlParser, STLUtils } from '../../utils/stlUtils';
@@ -21,17 +17,20 @@ export const updateFileInCustomization = async (
   activeFile: FileDataDB,
   dispatch: any
 ) => {
-    let imageFileKey = '';
+  let imageFileKey = '';
   try {
     setIsLoading(true);
 
     // step : 1 Generate Thumbnail
 
-    const thumbnailDataUrl = await stlParser.generateThumbnail(stlGeometry as THREE.BufferGeometry, {
-      size: 400,
-      color: colorHexcode || '#ffffff',
-      backgroundColor: 'transparent',
-    });
+    const thumbnailDataUrl = await stlParser.generateThumbnail(
+      stlGeometry as THREE.BufferGeometry,
+      {
+        size: 400,
+        color: colorHexcode || '#ffffff',
+        backgroundColor: 'transparent',
+      }
+    );
 
     // step : 2 covert dataUrl to file object
 
@@ -61,19 +60,17 @@ export const updateFileInCustomization = async (
       thumbnailUrl: imageSignedUrl.storeUrl,
     });
 
-   // step : 6 successfully updated so delete old thumbnail from s3
-    await deleteFromS3(
-        returnS3Key(
-            activeFile.thumbnailUrl || ''
-        )
-    );
+    // step : 6 successfully updated so delete old thumbnail from s3
+    await deleteFromS3(returnS3Key(activeFile.thumbnailUrl || ''));
 
-    dispatch(updateThumbnail({ id: fileId, thumbnailUrl: imageSignedUrl.storeUrl }));
+    dispatch(
+      updateThumbnail({ id: fileId, thumbnailUrl: imageSignedUrl.storeUrl })
+    );
 
     toast.success(activeFile.fileName + ' save successfully');
 
     return returnResponse(response);
-  } catch (error :any) {
+  } catch (error: any) {
     if (imageFileKey) {
       await deleteFromS3(imageFileKey);
     }

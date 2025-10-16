@@ -1,4 +1,4 @@
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 
 interface StyledNumberInputProps extends TextFieldProps {
   value: number | string;

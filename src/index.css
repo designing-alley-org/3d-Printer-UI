@@ -3,10 +3,10 @@
 
 /* Global CSS Variables */
 :root {
-  --primary-bg: #FCFDFF;
-  --text-black: #2A2D2F;
-  --border-color: #D7D7D7;
-  --card-border: #EDEDED;
+  --primary-bg: #fcfdff;
+  --text-black: #2a2d2f;
+  --border-color: #d7d7d7;
+  --card-border: #ededed;
 }
 
 /* Reset & Box Sizing */

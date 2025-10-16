@@ -26,9 +26,6 @@ const getFileIcon = (type: string) => {
   }
 };
 
-
-
-
 const ImageUI = ({ attachment }: { attachment: Attachment }) => (
   <Card sx={{ maxWidth: 200, m: 0.5 }}>
     <CardMedia
@@ -74,13 +71,10 @@ const MessageUI = ({
   date: string;
   isSender: boolean;
   attachments?: Attachment[];
-
 }) => {
   // Separate image and file attachments
   const imageAttachments = attachments.filter((att) => att.type === 'image');
   const fileAttachments = attachments.filter((att) => att.type !== 'image');
-
-  
 
   return (
     <Box
@@ -88,7 +82,6 @@ const MessageUI = ({
       flexDirection="column"
       alignItems={isSender ? 'flex-end' : 'flex-start'}
     >
-      
       {/* Message Text */}
       {message && (
         <Box

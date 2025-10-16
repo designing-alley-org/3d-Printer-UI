@@ -12,8 +12,8 @@
 
 .button-icon:hover {
   background-color: #f0f0f0;
-  border-color: #cccccc; 
-  transform: scale(1.2); 
+  border-color: #cccccc;
+  transform: scale(1.2);
 }
 
 .button-icon--small {

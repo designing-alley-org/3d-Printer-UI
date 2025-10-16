@@ -1,7 +1,6 @@
-
 export interface HelpPayload {
   conversationId: string;
-  help: Help
+  help: Help;
 }
 
 interface Help {

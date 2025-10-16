@@ -1,11 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import {
-  Box,
-  Typography,
-  Card,
-  CardActions,
-  IconButton,
-} from '@mui/material';
+import { Box, Typography, Card, CardActions, IconButton } from '@mui/material';
 import { Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
@@ -32,7 +26,15 @@ interface Props {
 }
 
 const STlFileList: React.FC<Props> = React.memo(
-  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions, isDeleteLoading, isProcessingFiles }) => {
+  ({
+    file,
+    onRemove,
+    onUpdateQuantity,
+    selectedUnit,
+    convertDimensions,
+    isDeleteLoading,
+    isProcessingFiles,
+  }) => {
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
         let newQuantity = file.quantity;
@@ -201,7 +203,9 @@ const STlFileList: React.FC<Props> = React.memo(
             <CustomButton
               children={<Plus color="#ffff" size={15} />}
               onClick={() => handleQuantityChange('increase')}
-              disabled={file.quantity >= QUANTITY_LIMITS.MAX || isProcessingFiles}
+              disabled={
+                file.quantity >= QUANTITY_LIMITS.MAX || isProcessingFiles
+              }
               aria-label="Increase quantity"
               variant="contained"
               sx={{
@@ -211,7 +215,11 @@ const STlFileList: React.FC<Props> = React.memo(
               }}
             />
           </Box>
-          <IconButton aria-label="Remove file" onClick={handleRemove} disabled={isProcessingFiles || isDeleteLoading}>
+          <IconButton
+            aria-label="Remove file"
+            onClick={handleRemove}
+            disabled={isProcessingFiles || isDeleteLoading}
+          >
             <DeleteOutlineRoundedIcon />
           </IconButton>
         </CardActions>
