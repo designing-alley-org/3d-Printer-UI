@@ -48,7 +48,7 @@ import {
 
 import { updateFileInCustomization } from '../../store/actions/File';
 import { IPrinter } from '../../types/printer';
-import { PrintEstimator } from '../../utils/PrintEstimator';
+import { createPrintEstimator } from '../../utils/PrintEstimator';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -176,39 +176,56 @@ const CustomizeTab: React.FC = () => {
       infill > 0
     ) {
       try {
-        const estimator = new PrintEstimator(
+        // const estimator = new PrintEstimator(
+        //   printer,
+        //   material,
+        //   pricing as Pricing
+        // );
+        const estimator = createPrintEstimator(
+          'FDM', // 'FDM', 'SLA', etc.
           printer,
           material,
           pricing as Pricing
         );
-        const result = await estimator.getEstimates({
+
+        const estimates = await estimator.getEstimates({
           modelGeometry: stlGeometry as any,
-          printer: printer,
-          material: material,
-          infillPercent: infill,
+          printer,
+          material,
+          infillPercent: 20,
           scale: 1.0,
         });
-        if (result) {
-          dispatch(
-            UpdateValueById({
-              id: activeFileId as string,
-              data: {
-                weight: {
-                  value: result.weight_g,
-                  unit: 'gm',
-                },
-                print_totalTime_s: result.totalTime_s,
-                costs: result.costs,
-              },
-            })
-          );
-        }
-        return result;
+
+        console.log('Estimates:', estimates);
+
+        // const result = await estimator.getEstimates({
+        //   modelGeometry: stlGeometry as any,
+        //   printer: printer,
+        //   material: material,
+        //   infillPercent: infill,
+        //   scale: activeFile?.scalingFactor || 1,
+        // });
+        // if (result) {
+        //   dispatch(
+        //     UpdateValueById({
+        //       id: activeFileId as string,
+        //       data: {
+        //         weight: {
+        //           value: result.weight_g,
+        //           unit: 'gm',
+        //         },
+        //         print_totalTime_s: result.totalTime_s,
+        //         costs: result.costs,
+        //       },
+        //     })
+        //   );
+        // }
+        return estimates;
       } catch (error) {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry, infill, material, printer]);
+  }, [stlGeometry, infill, material, printer, activeFile?.scalingFactor]);
 
   // Calculate weight when geometry or material density changes
   useEffect(() => {

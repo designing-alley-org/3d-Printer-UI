@@ -84,9 +84,7 @@ export interface Material {
   code: string;
   density: number;
   cost_gbp_per_kg: number;
-  extrusionTemp_C: number;
-  bedTemp_C: number;
-  unit: string;
+   unit: string;
   createdAt: string;
   updatedAt: string;
   __v: number;

@@ -20,15 +20,17 @@ export interface IPrinter {
   imageURL?: string;
   buildVolume_mm: BuildVolume;
 
-  nozzleDiameter_mm: number;
-  defaultLayerHeight_mm: number;
-  maxPrintSpeed_mm_s: number;
-  maxVolumetricFlow_mm3s: number;
-  powerConsumption_watts: number;
-  heatingTime_min: number;
-  maxAcceleration_mm_s2: number;
-  maxBedHeat?: number;
-  heatSinkSize?: number;
+  specifications: Record<string, any>;
+  //
+  // nozzleDiameter_mm: number;
+  // defaultLayerHeight_mm: number;
+  // maxPrintSpeed_mm_s: number;
+  // maxVolumetricFlow_mm3s: number;
+  // powerConsumption_watts: number;
+  // heatingTime_min: number;
+  // maxAcceleration_mm_s2: number;
+  // maxBedHeat?: number;
+  // heatSinkSize?: number;
 
   createdBy: string; // User ID
 
