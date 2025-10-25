@@ -31,11 +31,10 @@ export abstract class BasePrintEstimator {
     modelGeometry,
     printer,
     material,
-    infillPercent,
+    infillPercent = 20,
     scale = 1.0,
   }: EstimateOptions): Promise<EstimateResult> {
 
-    // console.log('Model Geometry:', modelGeometry);
     console.log('Scale Factor:', scale);
     console.log('Infill Percent:', infillPercent);
     console.log('Printer:', printer);
@@ -143,7 +142,7 @@ export abstract class BasePrintEstimator {
   ): EstimateResult['costs'] {
     const materialCost_gbp = (weight_g / 1000) * this.material.cost_gbp_per_kg;
     const energyCost_gbp =
-      (this.printerProfile?.specifications.powerConsumption_watts / 1000) *
+      (this.printerProfile?.specifications?.powerConsumption_watts / 1000) *
       totalTime_hr *
       this.pricing.electricityCost_gbp_per_kwh;
     const operationalCost_gbp =
@@ -162,6 +161,7 @@ export abstract class BasePrintEstimator {
 }
 
 // FDM (Fused Deposition Modeling) Estimator
+// ONLY FDM uses infill parameter
 export class FDMEstimator extends BasePrintEstimator {
   protected _calculateEstimates({
     modelData,
@@ -169,7 +169,7 @@ export class FDMEstimator extends BasePrintEstimator {
     scaledDimensions,
     printer,
     material,
-    infillPercent,
+    infillPercent, // ← USED HERE
   }: {
     modelData: ModelProperties;
     scaledVolume_mm3: number;
@@ -191,9 +191,19 @@ export class FDMEstimator extends BasePrintEstimator {
     const interiorVolume_mm3 = Math.max(0, scaledVolume_mm3 - shellVolume_mm3);
     const infillVolume_mm3 = interiorVolume_mm3 * (infillPercent / 100);
     
-    // Total material volume
+    // Total material volume (shell + infill)
     const materialVolume_mm3 = shellVolume_mm3 + infillVolume_mm3;
     const weight_g = materialVolume_mm3 * (material.density / 1000);
+
+    console.log('FDM Calculation:', {
+      scaledVolume_mm3,
+      shellVolume_mm3,
+      interiorVolume_mm3,
+      infillPercent,
+      infillVolume_mm3,
+      materialVolume_mm3,
+      weight_g
+    });
 
     // Calculate layers
     const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.defaultLayerHeight_mm);
@@ -231,12 +241,14 @@ export class FDMEstimator extends BasePrintEstimator {
 }
 
 // SLA (Stereolithography) Estimator
+// Prints SOLID parts - no infill
 export class SLAEstimator extends BasePrintEstimator {
   protected _calculateEstimates({
     scaledVolume_mm3,
     scaledDimensions,
     printer,
     material,
+    // infillPercent is IGNORED for SLA
   }: {
     modelData: ModelProperties;
     scaledVolume_mm3: number;
@@ -246,8 +258,14 @@ export class SLAEstimator extends BasePrintEstimator {
     infillPercent: number;
     scale: number;
   }): Omit<EstimateResult, 'formattedTime'> {
-    // SLA prints are typically solid (no infill)
+    // SLA prints are ALWAYS solid (100% material usage)
     const weight_g = scaledVolume_mm3 * (material.density / 1000);
+
+    console.log('SLA Calculation (solid print):', {
+      scaledVolume_mm3,
+      weight_g,
+      note: 'Infill parameter ignored - SLA prints are solid'
+    });
 
     // Calculate layers
     const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.layerThickness_mm);
@@ -269,12 +287,14 @@ export class SLAEstimator extends BasePrintEstimator {
 }
 
 // DLP (Digital Light Processing) Estimator
+// Prints SOLID parts - no infill
 export class DLPEstimator extends BasePrintEstimator {
   protected _calculateEstimates({
     scaledVolume_mm3,
     scaledDimensions,
     printer,
     material,
+    // infillPercent is IGNORED for DLP
   }: {
     modelData: ModelProperties;
     scaledVolume_mm3: number;
@@ -284,7 +304,15 @@ export class DLPEstimator extends BasePrintEstimator {
     infillPercent: number;
     scale: number;
   }): Omit<EstimateResult, 'formattedTime'> {
+    // DLP prints are ALWAYS solid
     const weight_g = scaledVolume_mm3 * (material.density / 1000);
+
+    console.log('DLP Calculation (solid print):', {
+      scaledVolume_mm3,
+      weight_g,
+      note: 'Infill parameter ignored - DLP prints are solid'
+    });
+
     const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.layerThickness_mm);
 
     // DLP exposes entire layer at once - faster than SLA
@@ -302,12 +330,14 @@ export class DLPEstimator extends BasePrintEstimator {
 }
 
 // SLS (Selective Laser Sintering) Estimator
+// Prints SOLID parts - no infill (uses powder bed)
 export class SLSEstimator extends BasePrintEstimator {
   protected _calculateEstimates({
     scaledVolume_mm3,
     scaledDimensions,
     printer,
     material,
+    // infillPercent is IGNORED for SLS
   }: {
     modelData: ModelProperties;
     scaledVolume_mm3: number;
@@ -317,8 +347,15 @@ export class SLSEstimator extends BasePrintEstimator {
     infillPercent: number;
     scale: number;
   }): Omit<EstimateResult, 'formattedTime'> {
-    // SLS uses powder - accounts for material in build chamber
+    // SLS uses powder - prints solid parts
     const weight_g = scaledVolume_mm3 * (material.density / 1000);
+
+    console.log('SLS Calculation (solid print):', {
+      scaledVolume_mm3,
+      weight_g,
+      note: 'Infill parameter ignored - SLS prints are solid'
+    });
+
     const layers = Math.ceil(scaledDimensions.z / printer.specifications?.layerThickness_mm);
 
     // Estimate scan area per layer (simplified)
@@ -339,12 +376,14 @@ export class SLSEstimator extends BasePrintEstimator {
 }
 
 // MJF (Multi Jet Fusion) Estimator
+// Prints SOLID parts - no infill
 export class MJFEstimator extends BasePrintEstimator {
   protected _calculateEstimates({
     scaledVolume_mm3,
     scaledDimensions,
     printer,
     material,
+    // infillPercent is IGNORED for MJF
   }: {
     modelData: ModelProperties;
     scaledVolume_mm3: number;
@@ -354,7 +393,15 @@ export class MJFEstimator extends BasePrintEstimator {
     infillPercent: number;
     scale: number;
   }): Omit<EstimateResult, 'formattedTime'> {
+    // MJF prints solid parts
     const weight_g = scaledVolume_mm3 * (material.density / 1000);
+
+    console.log('MJF Calculation (solid print):', {
+      scaledVolume_mm3,
+      weight_g,
+      note: 'Infill parameter ignored - MJF prints are solid'
+    });
+
     const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.layerThickness_mm);
 
     // MJF is faster - prints entire layer quickly
@@ -368,6 +415,11 @@ export class MJFEstimator extends BasePrintEstimator {
 
     return { weight_g, totalTime_s, layers, costs };
   }
+}
+
+// Helper function to check if technology supports infill
+export function technologySupportsInfill(technology: string): boolean {
+  return technology.toUpperCase() === 'FDM';
 }
 
 // Factory function to get correct estimator

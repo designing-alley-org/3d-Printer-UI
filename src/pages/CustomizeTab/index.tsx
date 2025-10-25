@@ -187,12 +187,9 @@ const CustomizeTab: React.FC = () => {
       material?.density &&
       material?.density > 0 &&
       printer &&
-      infill &&
-      technologies &&
-      infill > 0
+      technologies 
     ) {
       try {
-      
         const estimator = createPrintEstimator(
           technologies.code,
           printer,
