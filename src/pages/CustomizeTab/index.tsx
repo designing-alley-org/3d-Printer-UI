@@ -26,7 +26,7 @@ import {
 } from '../../../public/Icon/MUI_Coustom_icon/index';
 
 import { filterPrinterAction } from '../../store/actions/filterPrinterAction';
-import { FileDataDB, Pricing, UpdateFileData } from '../../types/uploadFiles';
+import { FileDataDB, Pricing, Technology, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
@@ -73,6 +73,9 @@ const CustomizeTab: React.FC = () => {
   const materials = useSelector(
     (state: RootState) => state.specification.materials
   );
+  const technologie = useSelector(
+    (state: RootState) => state.specification.technologies
+  )
 
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
@@ -90,6 +93,7 @@ const CustomizeTab: React.FC = () => {
     weight,
     costs,
     print_totalTime_s,
+    scalingFactor
   } = file || {};
 
   useEffect(() => {
@@ -155,6 +159,17 @@ const CustomizeTab: React.FC = () => {
     return '#ffffff';
   }, [colorId, colors]);
 
+  const technologies = useMemo(() => {
+    if (technologyId && technologie.length > 0) {
+      const selectedTechnology = technologie.find(
+        (tech: Technology) => tech._id === technologyId
+      );
+      return selectedTechnology ? selectedTechnology : null;
+    }
+    return null;
+  }, [technologyId]);
+
+
   // get Printer profiles based on selected printer
   const printer = useMemo(() => {
     if (printerId && printerData.length > 0) {
@@ -173,59 +188,48 @@ const CustomizeTab: React.FC = () => {
       material?.density > 0 &&
       printer &&
       infill &&
+      technologies &&
       infill > 0
     ) {
       try {
-        // const estimator = new PrintEstimator(
-        //   printer,
-        //   material,
-        //   pricing as Pricing
-        // );
+      
         const estimator = createPrintEstimator(
-          'FDM', // 'FDM', 'SLA', etc.
+          technologies.code,
           printer,
           material,
           pricing as Pricing
         );
 
-        const estimates = await estimator.getEstimates({
+        const result = await estimator.getEstimates({
           modelGeometry: stlGeometry as any,
           printer,
           material,
-          infillPercent: 20,
-          scale: 1.0,
+          infillPercent: infill,
+          scale: scalingFactor || 1,
         });
 
-        console.log('Estimates:', estimates);
 
-        // const result = await estimator.getEstimates({
-        //   modelGeometry: stlGeometry as any,
-        //   printer: printer,
-        //   material: material,
-        //   infillPercent: infill,
-        //   scale: activeFile?.scalingFactor || 1,
-        // });
-        // if (result) {
-        //   dispatch(
-        //     UpdateValueById({
-        //       id: activeFileId as string,
-        //       data: {
-        //         weight: {
-        //           value: result.weight_g,
-        //           unit: 'gm',
-        //         },
-        //         print_totalTime_s: result.totalTime_s,
-        //         costs: result.costs,
-        //       },
-        //     })
-        //   );
-        // }
-        return estimates;
+        if (result) {
+          dispatch(
+            UpdateValueById({
+              id: activeFileId as string,
+              data: {
+                weight: {
+                  value: result.weight_g,
+                  unit: 'gm',
+                },
+                print_totalTime_s: result.totalTime_s,
+                costs: result.costs,
+              },
+            })
+          );
+        }
+        return result;
       } catch (error) {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry, infill, material, printer, activeFile?.scalingFactor]);
+  }, [stlGeometry, infill, material, printer, technologies, scalingFactor]);
 
   // Calculate weight when geometry or material density changes
   useEffect(() => {
@@ -517,6 +521,7 @@ const CustomizeTab: React.FC = () => {
                   downloadProgress={downloadProgress}
                   printerData={printerData}
                   printerMessage={printerMessage}
+                  technologies={technologies || undefined}
                 />
               </div>
               <Box

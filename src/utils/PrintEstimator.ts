@@ -31,9 +31,16 @@ export abstract class BasePrintEstimator {
     modelGeometry,
     printer,
     material,
-    infillPercent = 20,
+    infillPercent,
     scale = 1.0,
   }: EstimateOptions): Promise<EstimateResult> {
+
+    // console.log('Model Geometry:', modelGeometry);
+    console.log('Scale Factor:', scale);
+    console.log('Infill Percent:', infillPercent);
+    console.log('Printer:', printer);
+    console.log('Material:', material);
+
     if (!modelGeometry?.attributes?.position?.array) {
       throw new Error('Valid model geometry with position attributes is required.');
     }

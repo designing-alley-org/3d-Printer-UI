@@ -82,6 +82,7 @@ export interface Material {
   _id: string;
   name: string;
   code: string;
+  relatedTechnologie: string;
   density: number;
   cost_gbp_per_kg: number;
    unit: string;

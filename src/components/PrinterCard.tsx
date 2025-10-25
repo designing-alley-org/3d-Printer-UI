@@ -56,7 +56,7 @@ export const PrinterInfo = ({ printer }: { printer: IPrinter }) => (
           Build Volume:{' '}
           {`${printer.buildVolume_mm.x} x ${printer.buildVolume_mm.y} x ${printer.buildVolume_mm.z} mm`}
         </Typography>
-        <Typography
+        {/* <Typography
           variant="body2"
           sx={{ display: 'flex', alignItems: 'center' }}
         >
@@ -65,8 +65,8 @@ export const PrinterInfo = ({ printer }: { printer: IPrinter }) => (
           {printer.maxPrintSpeed_mm_s
             ? `${printer.maxPrintSpeed_mm_s} mm/s`
             : 'N/A'}
-        </Typography>
-        <Typography
+        </Typography> */}
+        {/* <Typography
           variant="body2"
           sx={{ display: 'flex', alignItems: 'center' }}
         >
@@ -75,7 +75,7 @@ export const PrinterInfo = ({ printer }: { printer: IPrinter }) => (
           {printer.nozzleDiameter_mm
             ? `${printer.nozzleDiameter_mm} mm`
             : 'N/A'}
-        </Typography>
+        </Typography> */}
         <Typography
           variant="body2"
           sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}
