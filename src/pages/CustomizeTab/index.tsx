@@ -190,6 +190,7 @@ const CustomizeTab: React.FC = () => {
       technologies 
     ) {
       try {
+
         const estimator = createPrintEstimator(
           technologies.code,
           printer,
@@ -197,11 +198,14 @@ const CustomizeTab: React.FC = () => {
           pricing as Pricing
         );
 
+        const isFDM = technologies.code === 'FDM';
+
+
         const result = await estimator.getEstimates({
           modelGeometry: stlGeometry as any,
           printer,
           material,
-          infillPercent: infill,
+          infillPercent: isFDM ? infill  : 100,
           scale: scalingFactor || 1,
         });
 
@@ -226,14 +230,14 @@ const CustomizeTab: React.FC = () => {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry, infill, material, printer, technologies, scalingFactor]);
+  }, [stlGeometry, material, printer, technologies, scalingFactor, infill]);
 
   // Calculate weight when geometry or material density changes
   useEffect(() => {
-    if (stlGeometry && material?.density && infill) {
+    if (stlGeometry && material?.density && printer && technologies) {
       processGeometry();
     }
-  }, [processGeometry]);
+  }, [stlGeometry, material, printer, technologies, processGeometry, infill]);
 
   const isAllCoustomized = useMemo(() => {
     if (files.length === 0) return false;
@@ -276,7 +280,8 @@ const CustomizeTab: React.FC = () => {
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    if (colorId && materialId && technologyId && printerId && infill)
+    if (technologies?.code === 'FDM' && infill) return false;
+    if (colorId && materialId && technologyId && printerId)
       return false;
     return true;
   }, [file]);

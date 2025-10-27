@@ -228,6 +228,7 @@ const UploadStl = () => {
 
       // Generate thumbnail using utility
       const stlInfo = await stlParser.parseSTL(fileData.file);
+
       const thumbnailDataUrl = await stlParser.generateThumbnail(
         stlInfo.geometry,
         {
