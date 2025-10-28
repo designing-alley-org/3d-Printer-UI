@@ -39,7 +39,6 @@ const UploadInput: React.FC<UploadInputProps> = ({ onFileChange }) => {
             justifyContent: 'center',
             background: '#fff',
             cursor: 'pointer',
-            
           }}
         >
           <Upload
@@ -53,7 +52,7 @@ const UploadInput: React.FC<UploadInputProps> = ({ onFileChange }) => {
           <Typography variant="h6" fontWeight={600} color="text.primary">
             Upload your design file
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Drag & Drop or Click to Upload. Supports STL files up to 50 MB.
           </Typography>
         </Box>

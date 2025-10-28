@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updatePassword } from '../../store/actions/updatePassword';
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Container,
-} from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Container } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import { Formik, Form, FormikHelpers } from 'formik';
-import { changePasswordValidationSchema, forgotPasswordValidationSchema } from '../../validation/authValidation';
+import {
+  changePasswordValidationSchema,
+  forgotPasswordValidationSchema,
+} from '../../validation/authValidation';
 import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
 
 interface FormState {
@@ -52,16 +49,16 @@ const Password = () => {
   return (
     <Container
       sx={{
-        p:0,
+        p: 0,
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
       }}
     >
-        {/* Email update */}
+      {/* Email update */}
 
       <Card sx={{ marginTop: '1rem' }}>
-       <CardHeader 
+        <CardHeader
           title="Email Settings"
           subheader="Manage your account email address"
         />
@@ -98,7 +95,7 @@ const Password = () => {
                     placeholder="Enter your new email"
                     required
                     sx={{ mb: 2 }}
-                  />  
+                  />
 
                   <CustomButton
                     children={'Update Email'}

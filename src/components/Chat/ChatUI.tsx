@@ -96,7 +96,8 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   };
 
@@ -200,22 +201,19 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
         {/* If type is Negotiation */}
         {type === 'Negotiation' && (
           <Box mb={2}>
-            {
-            isLoading ? 
-            <Box display={'flex'} justifyContent={'center'}>
-              <CircularProgress size={20} color="primary" />
-            </Box>
-            
-             :
-            <PriceTable
-              subtotal={data?.subtotal || 0}
-              taxes={data?.taxes || 0}
-              taxRate={data?.taxRate || 0}
-              totalAmount={data?.totalAmount || 0}
-              fileTable={data?.fileTable || []}
-            />
-            }
-
+            {isLoading ? (
+              <Box display={'flex'} justifyContent={'center'}>
+                <CircularProgress size={20} color="primary" />
+              </Box>
+            ) : (
+              <PriceTable
+                subtotal={data?.subtotal || 0}
+                taxes={data?.taxes || 0}
+                taxRate={data?.taxRate || 0}
+                totalAmount={data?.totalAmount || 0}
+                fileTable={data?.fileTable || []}
+              />
+            )}
           </Box>
         )}
         <Box ref={messagesEndRef}>
@@ -228,8 +226,8 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
               attachments={msg?.attachments || []}
             />
           ))}
-        {/* Empty div to scroll to bottom */}
-       </Box>
+          {/* Empty div to scroll to bottom */}
+        </Box>
       </Box>
 
       {/* Input */}

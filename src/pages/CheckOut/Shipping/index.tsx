@@ -94,7 +94,7 @@ const ShippingDetails = () => {
       resetForm();
 
       // Refresh address list
-      const response = await getAddress({ setAddressLoading: () => { } });
+      const response = await getAddress({ setAddressLoading: () => {} });
       if (response?.data?.data) {
         dispatch(addAddress(response.data.data));
       }
@@ -122,7 +122,9 @@ const ShippingDetails = () => {
       stepDescription="Complete your order by providing your address, selecting a delivery plan, and making the payment."
       onClick={handleNext}
       orderNo={orderNumber}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/${orderNumber}/price`)}
+      onClickBack={() =>
+        navigate(`/get-quotes/${orderId}/${orderNumber}/price`)
+      }
       isLoading={false}
       isPageLoading={isPageLoading}
       isDisabled={!addressId}
@@ -302,187 +304,190 @@ const ShippingDetails = () => {
                     isSubmitting,
                   }) => (
                     console.log('Formik Values:', errors),
-                    <Form id="address-form">
-                      <Box
-                        sx={{
-                          display: 'grid',
-                          gap: '1rem',
-                          gridTemplateColumns: {
-                            xs: '1fr',
-                            md: 'repeat(2, 1fr)',
-                          },
-                        }}
-                      >
-                        <CustomInputLabelField
-                          label="Full Name"
-                          name="personName"
-                          placeholder="Enter full name"
-                          value={values.personName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={
-                            touched.personName && Boolean(errors.personName)
-                          }
-                          helperText={
-                            touched.personName && errors.personName
-                              ? String(errors.personName)
-                              : ''
-                          }
-                          required
-                        />
-
-                        <CustomInputLabelField
-                          label="Phone Number"
-                          name="phoneNumber"
-                          placeholder="Enter phone number"
-                          value={values.phoneNumber}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={
-                            touched.phoneNumber && Boolean(errors.phoneNumber)
-                          }
-                          helperText={
-                            touched.phoneNumber && errors.phoneNumber
-                              ? String(errors.phoneNumber)
-                              : ''
-                          }
-                          onlyNumber
-                          required
-                        />
-
-                        <CustomInputLabelField
-                          label="City"
-                          name="city"
-                          placeholder="Enter city"
-                          value={values.city}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={touched.city && Boolean(errors.city)}
-                          helperText={
-                            touched.city && errors.city
-                              ? String(errors.city)
-                              : ''
-                          }
-                          required
-                        />
-
-                        <CustomInputLabelField
-                          label="Postal Code"
-                          name="postalCode"
-                          placeholder="Enter Postal code eg.(EC1Y 8SY)"
-                          value={values.postalCode}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={
-                            touched.postalCode && Boolean(errors.postalCode)
-                          }
-                          helperText={
-                            touched.postalCode && errors.postalCode
-                              ? String(errors.postalCode)
-                              : ''
-                          }
-                          required
-                        />
-
-                        <CustomInputLabelField
-                          label="Country Code"
-                          name="countryCode"
-                          placeholder="Enter Country code (eg. GB)"
-                          value={values.countryCode}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={
-                            touched.countryCode && Boolean(errors.countryCode)
-                          }
-                          helperText={
-                            touched.countryCode && errors.countryCode
-                              ? String(errors.countryCode)
-                              : ''
-                          }
-                          required
-                        />
-
-                        <CustomInputLabelField
-                          label="Email"
-                          name="email"
-                          placeholder="Enter email"
-                          value={values.email}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={touched.email && Boolean(errors.email)}
-                          helperText={
-                            touched.email && errors.email
-                              ? String(errors.email)
-                              : ''
-                          }
-                          required
-                        />
-
-
-
-                        <CustomInputLabelField
-                          label="Street Address"
-                          name="streetLines"
-                          placeholder="Enter street address"
-                          value={values.streetLines}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={
-                            touched.streetLines && Boolean(errors.streetLines)
-                          }
-                          helperText={
-                            touched.streetLines && errors.streetLines
-                              ? String(errors.streetLines)
-                              : ''
-                          }
-                          required
-                        />
-                        <Box>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              marginBottom: '0.3rem',
-                              fontWeight: 500,
-                              color: '#333',
-                            }}
-                          >
-                            Address Type{' '}
-                            <span style={{ color: '#FF0000' }}>*</span>
-                          </Typography>
-                          <SingleSelectDropdown
-                            titleHelper="Type"
-                            onChange={(option) => {
-                              handleChange({
-                                target: {
-                                  name: 'addressType',
-                                  value: option.value,
-                                },
-                              } as any);
-                            }}
-                            error={touched.addressType && Boolean(errors.addressType)}
-                            className="dropdown"
-                            options={addressLabelOptions}
-                          />
-                        </Box>
-                      </Box>
-
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          marginTop: '2rem',
-                        }}
-                      >
-                        <CustomButton
-                          variant="contained"
-                          loading={isSubmitting}
-                          fullWidth
-                          type="submit"
+                    (
+                      <Form id="address-form">
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gap: '1rem',
+                            gridTemplateColumns: {
+                              xs: '1fr',
+                              md: 'repeat(2, 1fr)',
+                            },
+                          }}
                         >
-                          Add Now
-                        </CustomButton>
-                      </Box>
-                    </Form>
+                          <CustomInputLabelField
+                            label="Full Name"
+                            name="personName"
+                            placeholder="Enter full name"
+                            value={values.personName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched.personName && Boolean(errors.personName)
+                            }
+                            helperText={
+                              touched.personName && errors.personName
+                                ? String(errors.personName)
+                                : ''
+                            }
+                            required
+                          />
+
+                          <CustomInputLabelField
+                            label="Phone Number"
+                            name="phoneNumber"
+                            placeholder="Enter phone number"
+                            value={values.phoneNumber}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched.phoneNumber && Boolean(errors.phoneNumber)
+                            }
+                            helperText={
+                              touched.phoneNumber && errors.phoneNumber
+                                ? String(errors.phoneNumber)
+                                : ''
+                            }
+                            onlyNumber
+                            required
+                          />
+
+                          <CustomInputLabelField
+                            label="City"
+                            name="city"
+                            placeholder="Enter city"
+                            value={values.city}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.city && Boolean(errors.city)}
+                            helperText={
+                              touched.city && errors.city
+                                ? String(errors.city)
+                                : ''
+                            }
+                            required
+                          />
+
+                          <CustomInputLabelField
+                            label="Postal Code"
+                            name="postalCode"
+                            placeholder="Enter Postal code eg.(EC1Y 8SY)"
+                            value={values.postalCode}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched.postalCode && Boolean(errors.postalCode)
+                            }
+                            helperText={
+                              touched.postalCode && errors.postalCode
+                                ? String(errors.postalCode)
+                                : ''
+                            }
+                            required
+                          />
+
+                          <CustomInputLabelField
+                            label="Country Code"
+                            name="countryCode"
+                            placeholder="Enter Country code (eg. GB)"
+                            value={values.countryCode}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched.countryCode && Boolean(errors.countryCode)
+                            }
+                            helperText={
+                              touched.countryCode && errors.countryCode
+                                ? String(errors.countryCode)
+                                : ''
+                            }
+                            required
+                          />
+
+                          <CustomInputLabelField
+                            label="Email"
+                            name="email"
+                            placeholder="Enter email"
+                            value={values.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={touched.email && Boolean(errors.email)}
+                            helperText={
+                              touched.email && errors.email
+                                ? String(errors.email)
+                                : ''
+                            }
+                            required
+                          />
+
+                          <CustomInputLabelField
+                            label="Street Address"
+                            name="streetLines"
+                            placeholder="Enter street address"
+                            value={values.streetLines}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            error={
+                              touched.streetLines && Boolean(errors.streetLines)
+                            }
+                            helperText={
+                              touched.streetLines && errors.streetLines
+                                ? String(errors.streetLines)
+                                : ''
+                            }
+                            required
+                          />
+                          <Box>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                marginBottom: '0.3rem',
+                                fontWeight: 500,
+                                color: '#333',
+                              }}
+                            >
+                              Address Type{' '}
+                              <span style={{ color: '#FF0000' }}>*</span>
+                            </Typography>
+                            <SingleSelectDropdown
+                              titleHelper="Type"
+                              onChange={(option) => {
+                                handleChange({
+                                  target: {
+                                    name: 'addressType',
+                                    value: option.value,
+                                  },
+                                } as any);
+                              }}
+                              error={
+                                touched.addressType &&
+                                Boolean(errors.addressType)
+                              }
+                              className="dropdown"
+                              options={addressLabelOptions}
+                            />
+                          </Box>
+                        </Box>
+
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: '2rem',
+                          }}
+                        >
+                          <CustomButton
+                            variant="contained"
+                            loading={isSubmitting}
+                            fullWidth
+                            type="submit"
+                          >
+                            Add Now
+                          </CustomButton>
+                        </Box>
+                      </Form>
+                    )
                   )}
                 </Formik>
               </Box>

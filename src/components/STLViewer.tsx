@@ -24,9 +24,9 @@ interface STLMeshProps {
   showWireframe: boolean;
 }
 
-const STLViewer: React.FC<STLViewerProps> = ({ 
-  geometry, 
-  color = '#ff6b35', 
+const STLViewer: React.FC<STLViewerProps> = ({
+  geometry,
+  color = '#ff6b35',
   size = 400,
   autoRotate = false,
   showWireframe = false,
@@ -34,19 +34,19 @@ const STLViewer: React.FC<STLViewerProps> = ({
   backgroundColor = 'transparent',
   cameraPosition = [100, 100, 100],
   enableControls = true,
-  defaultZoom = 75
+  defaultZoom = 75,
 }) => {
   if (!geometry) {
     return (
-      <div 
-        style={{ 
-          width: size, 
-          height: size, 
-          display: 'flex', 
-          alignItems: 'center', 
+      <div
+        style={{
+          width: size,
+          height: size,
+          display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#f0f0f0',
-          border: '2px dashed #ccc'
+          border: '2px dashed #ccc',
         }}
       >
         <p>No 3D model to display</p>
@@ -55,20 +55,25 @@ const STLViewer: React.FC<STLViewerProps> = ({
   }
 
   // Create a mesh component from the geometry
-  const STLMesh: React.FC<STLMeshProps> = ({ geometry, color, autoRotate, showWireframe }) => {
+  const STLMesh: React.FC<STLMeshProps> = ({
+    geometry,
+    color,
+    autoRotate,
+    showWireframe,
+  }) => {
     const meshRef = useRef<THREE.Mesh>(null);
-    
+
     useEffect(() => {
       if (meshRef.current && geometry) {
         // Center the geometry
         geometry.computeBoundingBox();
-        
+
         if (geometry.boundingBox) {
           const center = new THREE.Vector3();
           geometry.boundingBox.getCenter(center);
           geometry.translate(-center.x, -center.y, -center.z);
         }
-        
+
         // Compute normals for proper lighting
         geometry.computeVertexNormals();
       }
@@ -83,8 +88,8 @@ const STLViewer: React.FC<STLViewerProps> = ({
 
     return (
       <mesh ref={meshRef} geometry={geometry}>
-        <meshPhongMaterial 
-          color={new THREE.Color(color)} 
+        <meshPhongMaterial
+          color={new THREE.Color(color)}
           shininess={30}
           transparent={false}
           wireframe={showWireframe}
@@ -97,25 +102,29 @@ const STLViewer: React.FC<STLViewerProps> = ({
     <div style={{ width: size * 1.4, height: size }}>
       <Canvas
         camera={{ position: cameraPosition, fov: defaultZoom }}
-        style={{ 
-          width: '100%', 
+        style={{
+          width: '100%',
           height: '100%',
-          backgroundColor: backgroundColor !== 'transparent' ? backgroundColor : undefined
+          backgroundColor:
+            backgroundColor !== 'transparent' ? backgroundColor : undefined,
         }}
       >
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 5]} intensity={lightIntensity} />
-        <pointLight position={[-10, -10, -5]} intensity={lightIntensity * 0.3} />
-        
-        <STLMesh 
+        <pointLight
+          position={[-10, -10, -5]}
+          intensity={lightIntensity * 0.3}
+        />
+
+        <STLMesh
           geometry={geometry}
           color={color}
           autoRotate={autoRotate}
           showWireframe={showWireframe}
         />
-        
+
         {enableControls && (
-          <OrbitControls 
+          <OrbitControls
             enablePan={true}
             enableZoom={true}
             enableRotate={true}
@@ -123,7 +132,7 @@ const STLViewer: React.FC<STLViewerProps> = ({
             autoRotateSpeed={2.0}
           />
         )}
-        
+
         <Environment preset="studio" />
       </Canvas>
     </div>

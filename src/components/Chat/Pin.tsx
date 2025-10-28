@@ -72,7 +72,7 @@ export default function Pin({ onImageSelect, onDocumentSelect }: PinProps) {
         style={{ display: 'none' }}
         onChange={handleDocumentChange}
       />
-      
+
       <SpeedDial
         ariaLabel="Attachment options"
         sx={{

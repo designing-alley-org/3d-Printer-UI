@@ -9,60 +9,51 @@ import { Pagination } from '../../types';
 // Async thunk for fetching user chat
 export const getUserChat = createAsyncThunk(
   'chat/getUserChat',
-  async (id : string, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const data = await getUserChatService(id);
       return { id, messages: data };
     } catch (error: any) {
       toast.error(returnError(error) || 'Failed to fetch chat messages');
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch chat messages');
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch chat messages'
+      );
     }
   }
 );
-
 
 // Async thunk for sending a message
 export const sendMessage = createAsyncThunk(
   'chat/sendMessage',
   async (messageData: SendMessageRequest, { rejectWithValue }) => {
     const uploadedS3Keys: string[] = []; // Track uploaded files for cleanup on error
-    
+
     try {
       let messageType: MessageType = 'text';
       let attachments: any[] = [];
-
-
 
       // Handle image uploads if selectedImages provided
       if (messageData.selectedImages && messageData.selectedImages.length > 0) {
         const imageAttachments = await Promise.all(
           messageData.selectedImages.map(async (file) => {
             try {
-              const s3URL = await getSignedUrl(
-                file.name,
-                'image',
-                file.type
-              );
-              
+              const s3URL = await getSignedUrl(file.name, 'image', file.type);
+
               // Upload file to S3
-              await uploadFromS3(
-                file,
-                s3URL.url,
-                (progress) => {
-                  if (messageData.setUploadProgress) {
-                    messageData.setUploadProgress(progress);
-                  }
+              await uploadFromS3(file, s3URL.url, (progress) => {
+                if (messageData.setUploadProgress) {
+                  messageData.setUploadProgress(progress);
                 }
-              );
-              
+              });
+
               // Track uploaded file key for potential cleanup
               uploadedS3Keys.push(s3URL.key);
-              
+
               return {
                 type: 'image',
                 url: s3URL.storeUrl,
                 filename: file.name,
-                size: file.size
+                size: file.size,
               };
             } catch (error) {
               console.error(`Error uploading image ${file.name}:`, error);
@@ -70,7 +61,7 @@ export const sendMessage = createAsyncThunk(
             }
           })
         );
-        
+
         attachments = [...attachments, ...imageAttachments];
         messageType = 'image';
       }
@@ -86,26 +77,22 @@ export const sendMessage = createAsyncThunk(
                 isSTLFile ? 'stl' : 'document',
                 file.type
               );
-              
+
               // Upload file to S3
-              await uploadFromS3(
-                file,
-                s3URL.url,
-                (progress) => {
-                  if (messageData.setUploadProgress) {
-                    messageData.setUploadProgress(progress);
-                  }
+              await uploadFromS3(file, s3URL.url, (progress) => {
+                if (messageData.setUploadProgress) {
+                  messageData.setUploadProgress(progress);
                 }
-              );
-              
+              });
+
               // Track uploaded file key for potential cleanup
               uploadedS3Keys.push(s3URL.key);
-              
+
               return {
                 type: file.name.split('.').pop()?.toLowerCase() || 'file',
                 url: s3URL.storeUrl,
                 filename: file.name,
-                size: file.size
+                size: file.size,
               };
             } catch (error) {
               console.error(`Error uploading file ${file.name}:`, error);
@@ -113,7 +100,7 @@ export const sendMessage = createAsyncThunk(
             }
           })
         );
-        
+
         attachments = [...attachments, ...fileAttachments];
         // If no images, set messageType to 'file'
         if (messageType === 'text') {
@@ -123,7 +110,7 @@ export const sendMessage = createAsyncThunk(
 
       // Prepare message data for API (remove selectedImages and selectedFiles)
       const { selectedImages, selectedFiles, ...apiMessageData } = messageData;
-      
+
       // Add attachments and messageType to the API call
       const finalMessageData = {
         ...apiMessageData,
@@ -135,11 +122,11 @@ export const sendMessage = createAsyncThunk(
       return { ticketId: messageData.conversationId, message: data };
     } catch (error: any) {
       console.error('Error in sendMessage:', error);
-      
+
       // Cleanup uploaded files from S3 if message sending failed
       if (uploadedS3Keys.length > 0) {
         console.log('Cleaning up uploaded files from S3...');
-        
+
         // Delete uploaded files from S3
         await Promise.all(
           uploadedS3Keys.map(async (key) => {
@@ -152,9 +139,11 @@ export const sendMessage = createAsyncThunk(
           })
         );
       }
-      
+
       toast.error(returnError(error) || 'Failed to send message');
-      return rejectWithValue(error.response?.data?.message || 'Failed to send message');
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to send message'
+      );
     }
   }
 );
@@ -192,7 +181,7 @@ export const ChatSlice = createSlice({
     // Action to add auto-response messages (for simulation)
     addAutoResponse: (state, action) => {
       const { message } = action.payload;
-      state.chatData.push(message); 
+      state.chatData.push(message);
     },
   },
   extraReducers: (builder) => {
@@ -232,6 +221,11 @@ export const ChatSlice = createSlice({
   },
 });
 
-export const { clearError, setCurrentTicketId, clearChatData, addAutoResponse } = ChatSlice.actions;
+export const {
+  clearError,
+  setCurrentTicketId,
+  clearChatData,
+  addAutoResponse,
+} = ChatSlice.actions;
 
 export default ChatSlice.reducer;

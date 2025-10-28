@@ -10,7 +10,7 @@ export interface ChatPayload {
   attachments?: Attachment[];
 }
 
-export type MessageType = "text" | "image" | "file" | "system";
+export type MessageType = 'text' | 'image' | 'file' | 'system';
 
 export type Attachment = {
   type: string;
@@ -27,7 +27,7 @@ export type Attachment = {
 export interface SendMessageRequest
   extends Omit<
     ChatPayload,
-    "_id" | "createdAt" | "updatedAt" | "sender" | "readBy"
+    '_id' | 'createdAt' | 'updatedAt' | 'sender' | 'readBy'
   > {
   selectedImages?: File[];
   selectedFiles?: File[];

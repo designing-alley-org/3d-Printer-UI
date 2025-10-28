@@ -11,13 +11,21 @@ const Image: React.FC<ImageProps> = ({ src, alt, className }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div className={className} style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div
+      className={className}
+      style={{ position: 'relative', width: '100%', height: '100%' }}
+    >
       {!imageLoaded && (
         <Skeleton
           variant="rectangular"
           width="100%"
           height="100%"
-          style={{ borderRadius: '10px', position: 'absolute', top: 0, left: 0 }}
+          style={{
+            borderRadius: '10px',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
         />
       )}
       <img
@@ -30,7 +38,7 @@ const Image: React.FC<ImageProps> = ({ src, alt, className }) => {
           borderRadius: '10px',
           display: imageLoaded ? 'block' : 'none',
         }}
-        className='image'
+        className="image"
       />
     </div>
   );

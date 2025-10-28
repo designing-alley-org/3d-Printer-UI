@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   TextField,
   IconButton,
   InputAdornment,
   TextFieldProps,
-} from "@mui/material";
-import { Search, Visibility, VisibilityOff } from "@mui/icons-material";
+} from '@mui/material';
+import { Search, Visibility, VisibilityOff } from '@mui/icons-material';
 
-interface CustomTextFieldProps extends Omit<TextFieldProps, "variant"> {
-  variant?: TextFieldProps["variant"];
+interface CustomTextFieldProps extends Omit<TextFieldProps, 'variant'> {
+  variant?: TextFieldProps['variant'];
   borderRadius?: string;
   onlyNumber?: boolean;
   inputStyle?: number; // ✅ style preset selector
@@ -19,12 +19,19 @@ interface CustomTextFieldProps extends Omit<TextFieldProps, "variant"> {
 const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { onlyNumber, onChange,isSearch = false , inputStyle, disable = false , ...rest} = props;
-  const isPasswordField = props.type === "password";
+  const {
+    onlyNumber,
+    onChange,
+    isSearch = false,
+    inputStyle,
+    disable = false,
+    ...rest
+  } = props;
+  const isPasswordField = props.type === 'password';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onlyNumber) {
-      e.target.value = e.target.value.replace(/\D/g, "");
+      e.target.value = e.target.value.replace(/\D/g, '');
     }
 
     if (onChange) {
@@ -37,30 +44,30 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
   switch (inputStyle) {
     case 1:
       styleOverrides = {
-        "& .MuiOutlinedInput-root": {
-          height: "2.5rem",
-          width: "4rem",
+        '& .MuiOutlinedInput-root': {
+          height: '2.5rem',
+          width: '4rem',
         },
-        "& .MuiOutlinedInput-input": {
-          padding: "0.5rem 0.75rem",
+        '& .MuiOutlinedInput-input': {
+          padding: '0.5rem 0.75rem',
         },
       };
       break;
     case 2:
       styleOverrides = {
-        "& .MuiOutlinedInput-root": {
-          height: "2.5rem",
+        '& .MuiOutlinedInput-root': {
+          height: '2.5rem',
         },
-        "& .MuiOutlinedInput-input": {
-          padding: "0.5rem 0.75rem",
+        '& .MuiOutlinedInput-input': {
+          padding: '0.5rem 0.75rem',
         },
       };
       break;
     default:
       styleOverrides = {
-        "& .MuiOutlinedInput-root": {
-          backgroundColor: "#FFFFFF",
-          borderRadius: props.borderRadius || "32px",
+        '& .MuiOutlinedInput-root': {
+          backgroundColor: '#FFFFFF',
+          borderRadius: props.borderRadius || '32px',
         },
       };
       break;
@@ -69,7 +76,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
   return (
     <TextField
       {...rest}
-      type={isPasswordField && !showPassword ? "password" : "text"}
+      type={isPasswordField && !showPassword ? 'password' : 'text'}
       sx={{
         ...styleOverrides,
         ...props.sx, // allow consumer overrides
@@ -88,16 +95,17 @@ const CustomTextField: React.FC<CustomTextFieldProps> = (props) => {
               {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
-        ) : (
-          // props.InputProps?.endAdornment
-         isSearch ?  <InputAdornment position="end">
+        ) : // props.InputProps?.endAdornment
+        isSearch ? (
+          <InputAdornment position="end">
             {isSearch && (
               <IconButton edge="end" tabIndex={-1}>
                 <Search />
               </IconButton>
             )}
-          </InputAdornment> :
-            props.InputProps?.endAdornment
+          </InputAdornment>
+        ) : (
+          props.InputProps?.endAdornment
         ),
       }}
     />

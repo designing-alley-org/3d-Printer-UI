@@ -1,11 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import {
-  Box,
-  Typography,
-  Card,
-  CardActions,
-  IconButton,
-} from '@mui/material';
+import { Box, Typography, Card, CardActions, IconButton } from '@mui/material';
 import { Minus, Plus } from 'lucide-react';
 import CustomButton from '../../stories/button/CustomButton';
 import CustomTextField from '../../stories/inputs/CustomTextField';
@@ -24,6 +18,7 @@ interface Props {
   onRemove: (fileId: string) => void;
   onUpdateQuantity: (fileId: string, quantity: number) => void;
   selectedUnit: string;
+  isProcessingFiles?: boolean;
   convertDimensions: (
     dimensions: ModelDimensions,
     unit: string
@@ -31,7 +26,15 @@ interface Props {
 }
 
 const STlFileList: React.FC<Props> = React.memo(
-  ({ file, onRemove, onUpdateQuantity, selectedUnit, convertDimensions, isDeleteLoading }) => {
+  ({
+    file,
+    onRemove,
+    onUpdateQuantity,
+    selectedUnit,
+    convertDimensions,
+    isDeleteLoading,
+    isProcessingFiles,
+  }) => {
     const handleQuantityChange = useCallback(
       (operation: 'set' | 'increase' | 'decrease', value?: number) => {
         let newQuantity = file.quantity;
@@ -74,7 +77,7 @@ const STlFileList: React.FC<Props> = React.memo(
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
-          width: { xs: '100%', sm: '268px' },
+          width: { xs: '100%', sm: '290px' },
         }}
       >
         {/* Thumbnail Section */}
@@ -108,7 +111,7 @@ const STlFileList: React.FC<Props> = React.memo(
                   transform: 'scale(3)',
                 }}
               />
-            ) : file.isUploading ? (
+            ) : isProcessingFiles ? (
               <Typography>{file.uploadProgress}%</Typography>
             ) : (
               <Typography
@@ -152,9 +155,7 @@ const STlFileList: React.FC<Props> = React.memo(
               </Typography>
             </Box>
             <Typography variant="body1" fontWeight="700">
-              {`${displayDimensions.height.toFixed(2)} × ${displayDimensions.width.toFixed(
-                2
-              )} × ${displayDimensions.length.toFixed(2)} `}
+              {`${displayDimensions.height} × ${displayDimensions.width} × ${displayDimensions.length} `}
               {selectedUnit}
             </Typography>
           </Box>
@@ -202,7 +203,9 @@ const STlFileList: React.FC<Props> = React.memo(
             <CustomButton
               children={<Plus color="#ffff" size={15} />}
               onClick={() => handleQuantityChange('increase')}
-              disabled={file.quantity >= QUANTITY_LIMITS.MAX}
+              disabled={
+                file.quantity >= QUANTITY_LIMITS.MAX || isProcessingFiles
+              }
               aria-label="Increase quantity"
               variant="contained"
               sx={{
@@ -212,7 +215,11 @@ const STlFileList: React.FC<Props> = React.memo(
               }}
             />
           </Box>
-          <IconButton aria-label="Remove file" onClick={handleRemove} disabled={file.isUploading || isDeleteLoading}>
+          <IconButton
+            aria-label="Remove file"
+            onClick={handleRemove}
+            disabled={isProcessingFiles || isDeleteLoading}
+          >
             <DeleteOutlineRoundedIcon />
           </IconButton>
         </CardActions>

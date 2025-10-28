@@ -21,7 +21,7 @@ const Index: React.FC = () => {
   const { pathname } = useLocation();
   const user = useSelector((state: any) => state.user);
   const userId = user?.user?._id;
-   const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
   const isDashboard = pathname.includes(ROUTES.DASHBOARD);
 
   // Set active tab based on path
@@ -70,15 +70,21 @@ const Index: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       await getCurrentUser(dispatch);
-      await dispatch(getNotifications({}))
+      await dispatch(getNotifications({}));
     };
     fetchData();
   }, []);
 
   return (
-    <Box width={'100%'} height="100vh" display="flex" flexDirection="column" sx={{
-      backgroundColor: isDashboard ? 'primary.main' : '#FCFDFF',
-    }}>
+    <Box
+      width={'100%'}
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      sx={{
+        backgroundColor: isDashboard ? 'primary.main' : '#FCFDFF',
+      }}
+    >
       <Box position="sticky" top={0} zIndex={1000}>
         <DesktopNav activeTabs={activeTabs} />
       </Box>

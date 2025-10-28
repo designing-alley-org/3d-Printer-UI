@@ -27,5 +27,5 @@ export const Wrapper = styled.section`
   }
   img {
     width: 1rem;
-}
+  }
 `;

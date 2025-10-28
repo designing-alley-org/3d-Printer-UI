@@ -18,7 +18,6 @@ export default function PrinterSelector({
   printersData: IPrinter[];
   file: FileDataDB | undefined;
 }) {
-  
   const {
     open,
     setOpen,
@@ -31,7 +30,9 @@ export default function PrinterSelector({
   } = usePrinterSelector(printersData, file);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+    >
       <Button
         variant="outlined"
         onClick={() => setOpen(true)}

@@ -27,104 +27,104 @@ const DesktopNav = ({ activeTabs }: ITab) => {
   const { pathname } = useLocation();
   const isDashboard = pathname.includes(ROUTES.DASHBOARD);
 
-  const handleNavigation = (id:number, path: string) => {
-    if(id === 3) {
+  const handleNavigation = (id: number, path: string) => {
+    if (id === 3) {
       localStorage.clear();
       navigate('/login');
       return;
     }
     navigate(path);
-  }
+  };
 
   return (
-    <StyledAppBar position="static" elevation={0} isDashboard={isDashboard} >
+    <StyledAppBar position="static" elevation={0} isDashboard={isDashboard}>
       <Container maxWidth="xl">
-       <Toolbar
-        sx={{
-          justifyContent: 'space-between',
-          minHeight: '60px !important',
-          px: { xs: 2, md: 4 },
-        }}
-      >
-        {/* Logo/Brand Section */}
-        <Box
+        <Toolbar
           sx={{
-            backgroundColor: 'primary.contrastText',
-            borderRadius: '50%',
-            mr: 2,
-            width: '40px',
-            height: '40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => navigate('/dashboard')}
-        >
-          <PrintOutlinedIcon
-            sx={{ fontSize: '1.8rem', color: 'primary.main' }}
-          />
-        </Box>
-        <Typography
-          onClick={() => navigate('/dashboard')}
-          variant="h6"
-          sx={{
-            fontWeight: 700,
-            color: 'primary.contrastText',
-            fontSize: { xs: '1rem', md: '1.25rem' },
-            display: { xs: 'none', sm: 'block' },
-            cursor: 'pointer',
+            justifyContent: 'space-between',
+            minHeight: '60px !important',
+            px: { xs: 2, md: 4 },
           }}
         >
-          3D Print Your Future
-        </Typography>
-
-        {/* Navigation Links */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: { xs: 1 },
-            ml: 'auto',
-          }}
-        >
-          {/* Notification Section */}
-          <Box sx={{ mx: { xs: 1, md: 2 } }}>
-            <NotificationBox />
-          </Box>
-
-          {DesktoptabData.map((item) => (
-            <NavButton
-              key={item.id}
-              isDashboard={isDashboard}
-              active={activeTabs === item.id}
-              onClick={() => handleNavigation(item.id, item.path)}
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                fontSize: { md: '0.775rem', lg: '0.875rem' },
-                px: { md: 2, lg: 3 },
-              }}
-            >
-              {item.label}
-            </NavButton>
-          ))}
-        </Box>
-
-        {/* Mobile Menu Button (if needed for future mobile nav) */}
-        {isMobile && (
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="menu"
+          {/* Logo/Brand Section */}
+          <Box
             sx={{
-              display: { xs: 'flex', md: 'none' },
-              color: theme.palette.primary.main,
+              backgroundColor: 'primary.contrastText',
+              borderRadius: '50%',
+              mr: 2,
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={() => navigate('/dashboard')}
+          >
+            <PrintOutlinedIcon
+              sx={{ fontSize: '1.8rem', color: 'primary.main' }}
+            />
+          </Box>
+          <Typography
+            onClick={() => navigate('/dashboard')}
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              color: 'primary.contrastText',
+              fontSize: { xs: '1rem', md: '1.25rem' },
+              display: { xs: 'none', sm: 'block' },
+              cursor: 'pointer',
             }}
           >
-            {/* Add menu icon here if needed */}
-          </IconButton>
-        )}
-      </Toolbar>
+            3D Print Your Future
+          </Typography>
+
+          {/* Navigation Links */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: { xs: 1 },
+              ml: 'auto',
+            }}
+          >
+            {/* Notification Section */}
+            <Box sx={{ mx: { xs: 1, md: 2 } }}>
+              <NotificationBox />
+            </Box>
+
+            {DesktoptabData.map((item) => (
+              <NavButton
+                key={item.id}
+                isDashboard={isDashboard}
+                active={activeTabs === item.id}
+                onClick={() => handleNavigation(item.id, item.path)}
+                sx={{
+                  display: { xs: 'none', md: 'flex' },
+                  fontSize: { md: '0.775rem', lg: '0.875rem' },
+                  px: { md: 2, lg: 3 },
+                }}
+              >
+                {item.label}
+              </NavButton>
+            ))}
+          </Box>
+
+          {/* Mobile Menu Button (if needed for future mobile nav) */}
+          {isMobile && (
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              sx={{
+                display: { xs: 'flex', md: 'none' },
+                color: theme.palette.primary.main,
+              }}
+            >
+              {/* Add menu icon here if needed */}
+            </IconButton>
+          )}
+        </Toolbar>
       </Container>
     </StyledAppBar>
   );

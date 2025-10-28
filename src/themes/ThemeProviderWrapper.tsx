@@ -1,11 +1,15 @@
 // src/ThemeProviderWrapper.js
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme";
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './theme';
 
-export default function ThemeProviderWrapper({ children } :{ children: React.ReactNode }) {
+export default function ThemeProviderWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline /> 
+      <CssBaseline />
       {children}
     </ThemeProvider>
   );

@@ -9,23 +9,29 @@ const messages = [
     message: "Sure, I'd be happy to assist you. Can you provide your order ID?",
     createdAt: '2025-09-20T10:02:00',
     isSender: false,
-   attachments: [
+    attachments: [
       {
-        type: "pdf",
-        url: "https://s3.amazonaws.com/mybucket/invoice-68c8204a027a67fcc8c395cd.pdf"
+        type: 'pdf',
+        url: 'https://s3.amazonaws.com/mybucket/invoice-68c8204a027a67fcc8c395cd.pdf',
       },
-       { type: "pdf", url: "https://s3.amazonaws.com/mybucket/invoice.pdf" }
-    ]
+      { type: 'pdf', url: 'https://s3.amazonaws.com/mybucket/invoice.pdf' },
+    ],
   },
   {
     message: "Yes, it's 68c8204a027a67fcc8c395cd.",
     createdAt: '2025-09-20T10:05:00',
     isSender: true,
     attachments: [
-      { type: "pdf", url: "https://s3.amazonaws.com/mybucket/invoice.pdf" },
-      { type: "doc", url: "https://s3.amazonaws.com/mybucket/specifications.docx" },
-      { type: "xlsx", url: "https://s3.amazonaws.com/mybucket/order-summary.xlsx" }
-    ]
+      { type: 'pdf', url: 'https://s3.amazonaws.com/mybucket/invoice.pdf' },
+      {
+        type: 'doc',
+        url: 'https://s3.amazonaws.com/mybucket/specifications.docx',
+      },
+      {
+        type: 'xlsx',
+        url: 'https://s3.amazonaws.com/mybucket/order-summary.xlsx',
+      },
+    ],
   },
   {
     message: 'Thank you! Let me check the details for you.',
@@ -43,12 +49,12 @@ const messages = [
     createdAt: '2025-09-20T10:08:00',
     isSender: false,
     attachments: [
-      { type: "image", url: "https://s3.amazonaws.com/mybucket/product1.jpg" },
-      { type: "image", url: "https://s3.amazonaws.com/mybucket/product2.jpg" },
-      { type: "image", url: "https://s3.amazonaws.com/mybucket/product3.jpg" },
-      { type: "image", url: "https://s3.amazonaws.com/mybucket/product4.jpg" },
-      { type: "image", url: "https://s3.amazonaws.com/mybucket/product5.jpg" }
-    ]
+      { type: 'image', url: 'https://s3.amazonaws.com/mybucket/product1.jpg' },
+      { type: 'image', url: 'https://s3.amazonaws.com/mybucket/product2.jpg' },
+      { type: 'image', url: 'https://s3.amazonaws.com/mybucket/product3.jpg' },
+      { type: 'image', url: 'https://s3.amazonaws.com/mybucket/product4.jpg' },
+      { type: 'image', url: 'https://s3.amazonaws.com/mybucket/product5.jpg' },
+    ],
   },
   {
     message: 'Yes, can you confirm the delivery address?',
@@ -103,4 +109,4 @@ const messages = [
   },
 ];
 
-export { messages };    
+export { messages };

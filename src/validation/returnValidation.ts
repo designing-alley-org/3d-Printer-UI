@@ -5,7 +5,10 @@ export const returnValidationSchema = Yup.object({
     .required('Return reason is required')
     .test('word-count', 'Return reason must be at least 10 words', (value) => {
       if (!value) return false;
-      const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
+      const wordCount = value
+        .trim()
+        .split(/\s+/)
+        .filter((word) => word.length > 0).length;
       return wordCount >= 10;
     })
     .max(500, 'Return reason must not exceed 500 characters'),

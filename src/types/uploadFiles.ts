@@ -17,14 +17,13 @@ export type Pricing = {
   taxRate_percent: number;
 };
 
-
 export type Costs = {
   energy: number;
   labor: number;
   material: number;
   operational: number;
   total: number;
-}
+};
 
 export type DeliveryWeight = {
   weight: number;
@@ -49,8 +48,6 @@ export interface FileData {
   unit: string;
   thumbnailUrl?: string;
   uploadProgress?: number;
-  isUploading?: boolean;
-  isUploaded?: boolean;
 }
 
 export type FileDataDB = Omit<
@@ -60,6 +57,7 @@ export type FileDataDB = Omit<
   materialId?: string;
   colorId?: string;
   technologyId?: string;
+  scalingFactor: number;
   printerId?: string;
   infill?: number;
   createdAt: string;
@@ -84,11 +82,10 @@ export interface Material {
   _id: string;
   name: string;
   code: string;
+  relatedTechnologie: string;
   density: number;
   cost_gbp_per_kg: number;
-  extrusionTemp_C: number;
-  bedTemp_C: number;
-  unit: string;
+   unit: string;
   createdAt: string;
   updatedAt: string;
   __v: number;

@@ -4,7 +4,14 @@ import { AppDispatch } from '../../store/store';
 import { register } from '../../store/auth/registerActions';
 import { RootState } from '../../store/types';
 import { useNavigate, Link } from 'react-router-dom';
-import { Box, Container, Typography, Paper, Alert, useTheme } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Alert,
+  useTheme,
+} from '@mui/material';
 import { Formik, Form } from 'formik';
 import { signupValidationSchema } from '../../validation';
 import CustomButton from '../../stories/button/CustomButton';

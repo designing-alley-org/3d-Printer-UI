@@ -34,8 +34,11 @@ const WelcomePage = () => {
       <Card
         sx={{
           textAlign: 'center',
+          padding: { xs: 2, sm: 4, md: 10 },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           width: '90%',
-          minHeight: 'calc(100vh - 200px)',
           boxShadow: '2px 2px 4px 0px #0000003D',
           borderRadius: '24px',
         }}
@@ -85,7 +88,7 @@ const WelcomePage = () => {
           </Typography>
 
           {/* Steps */}
-            {/* <Stack
+          {/* <Stack
               direction={{ xs: 'column', sm: 'row' }}
               spacing={{ xs: 1, sm: 2 }}
               justifyContent="center"
@@ -125,18 +128,16 @@ const WelcomePage = () => {
 
         {/* Button */}
         <CardActionArea sx={{ mt: { xs: 2, sm: 4 } }}>
-        <CardActions sx={{ justifyContent: 'center', pb: 4 }}>
-
+          <CardActions sx={{ justifyContent: 'center', pb: 4 }}>
             <CustomButton
-            variant="contained"
-            size="large"
-            onClick={handleSave}
-            loading={isSaving}
-          >
-            Get Started Now
-          </CustomButton>
-        </CardActions>
-
+              variant="contained"
+              size="large"
+              onClick={handleSave}
+              loading={isSaving}
+            >
+              Get Started Now
+            </CustomButton>
+          </CardActions>
         </CardActionArea>
       </Card>
     </>

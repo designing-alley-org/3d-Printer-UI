@@ -2,7 +2,6 @@ import { Container } from '@mui/material';
 import AccountLayout from './AccountLayout';
 
 const Account = () => {
-
   return (
     <Container
       maxWidth="lg"

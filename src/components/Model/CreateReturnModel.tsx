@@ -65,7 +65,7 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
 
     const currentImages = formik.values.imageFiles;
     const newFiles = Array.from(files);
-    
+
     // Check if adding new files would exceed the limit
     if (currentImages.length + newFiles.length > 5) {
       alert('Maximum 5 images allowed');
@@ -85,9 +85,11 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
   };
 
   const handleImageRemove = (index: number) => {
-    const updatedImageFiles = formik.values.imageFiles.filter((_, i) => i !== index);
+    const updatedImageFiles = formik.values.imageFiles.filter(
+      (_, i) => i !== index
+    );
     const updatedImages = formik.values.images.filter((_, i) => i !== index);
-    
+
     // Clean up URL to prevent memory leaks
     if (formik.values.images[index]) {
       URL.revokeObjectURL((formik.values.images[index] as ImagePreview).url);
@@ -102,16 +104,15 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
   };
 
   const getWordCount = (text: string) => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
   };
 
   const actions = (
     <Stack direction="row" spacing={2}>
-      <CustomButton
-        variant="outlined"
-        onClick={handleClose}
-        disabled={loading}
-      >
+      <CustomButton variant="outlined" onClick={handleClose} disabled={loading}>
         Cancel
       </CustomButton>
       <CustomButton
@@ -119,7 +120,7 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
         onClick={() => formik.handleSubmit()}
         loading={loading}
         disabled={
-          formik.values.imageFiles.length < 2 || 
+          formik.values.imageFiles.length < 2 ||
           getWordCount(formik.values.returnReason) < 10 ||
           loading
         }
@@ -193,7 +194,9 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             placeholder="Please provide a detailed reason for your return request (minimum 10 words)..."
-            error={!!(formik.touched.returnReason && formik.errors.returnReason)}
+            error={
+              !!(formik.touched.returnReason && formik.errors.returnReason)
+            }
             helperText={
               formik.touched.returnReason && formik.errors.returnReason
                 ? String(formik.errors.returnReason)
@@ -211,7 +214,12 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
 
         {/* Image Upload Section */}
         <Box mb={3}>
-          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            mb={2}
+          >
             <Typography
               variant="body1"
               sx={{
@@ -229,7 +237,7 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
               variant="outlined"
             />
           </Box>
-          
+
           <Box display="flex" alignItems="center" mb={2}>
             <Typography
               variant="body2"
@@ -265,7 +273,12 @@ const CreateReturnModel: React.FC<CreateReturnModelProps> = ({
           {formik.touched.images && formik.errors.images && (
             <Typography
               variant="caption"
-              sx={{ color: '#d32f2f', fontSize: '0.75rem', mb: 2, display: 'block' }}
+              sx={{
+                color: '#d32f2f',
+                fontSize: '0.75rem',
+                mb: 2,
+                display: 'block',
+              }}
             >
               {String(formik.errors.images)}
             </Typography>

@@ -1,11 +1,11 @@
-import SvgIcon from '@mui/material/SvgIcon'
+import SvgIcon from '@mui/material/SvgIcon';
 
-const ColorIcon = (props:any) => {
+const ColorIcon = (props: any) => {
   return (
     <SvgIcon {...props} viewBox="0 0 21 23">
       <path d="M7.52461 0.625977L19.8996 13L9.99961 22.9L0.0996094 13L8.58561 4.51498L6.10961 2.03998L7.52461 0.625977ZM3.92961 12H16.0716L10.0016 5.92998L3.92961 12ZM18.7496 17.39L20.0646 19.05C20.6456 19.783 20.6456 20.897 20.0646 21.63C19.9097 21.8319 19.7109 21.9959 19.4832 22.1097C19.2556 22.2235 19.0051 22.2841 18.7506 22.287C18.2206 22.287 17.7506 22.027 17.4366 21.63C16.8556 20.897 16.8556 19.783 17.4366 19.05L18.7496 17.39Z" />
     </SvgIcon>
-  )
-}
+  );
+};
 
-export default ColorIcon
+export default ColorIcon;

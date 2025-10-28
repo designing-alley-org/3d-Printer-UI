@@ -93,7 +93,7 @@ const Routing: React.FC = () => {
             element={<ProtectedRoute component={<MyProfile />} />}
           />
           <Route
-            path={`${ROUTES.MY_ORDERS}/*`} 
+            path={`${ROUTES.MY_ORDERS}/*`}
             element={<ProtectedRoute component={<MyOrders />} />}
           />
 

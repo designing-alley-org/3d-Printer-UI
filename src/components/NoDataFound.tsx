@@ -1,7 +1,13 @@
 import { Box, Typography } from '@mui/material';
 import { SearchX } from 'lucide-react';
 
-const NoDataFound = ({ text, description }: { text: string; description?: string }) => {
+const NoDataFound = ({
+  text,
+  description,
+}: {
+  text: string;
+  description?: string;
+}) => {
   return (
     <Box
       display="flex"

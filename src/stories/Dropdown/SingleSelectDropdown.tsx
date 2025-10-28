@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
   SxProps,
-  Theme
+  Theme,
 } from '@mui/material';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -38,10 +38,12 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
   sx,
   titleHelper,
   style,
-  error = false
+  error = false,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selected, setSelected] = useState<Option>(defaultValue || { id: '', label: '', value: '' });
+  const [selected, setSelected] = useState<Option>(
+    defaultValue || { id: '', label: '', value: '' }
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -83,19 +85,21 @@ const SingleSelectDropdown: React.FC<SingleSelectDropdownProps> = ({
           ...style,
         }}
       >
-        <span style={{ fontSize: fontSize }}>{selected.label ? selected.label : titleHelper}</span>
-       
+        <span style={{ fontSize: fontSize }}>
+          {selected.label ? selected.label : titleHelper}
+        </span>
+
         {open ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
       </Button>
-       <Typography
-          variant="caption"
-          sx={{
-            color: error ? 'error.main' : 'text.secondary',
-            marginLeft: 'auto',
-          }}
-        >
-          {error ? 'Please select an option' : ''}
-        </Typography>
+      <Typography
+        variant="caption"
+        sx={{
+          color: error ? 'error.main' : 'text.secondary',
+          marginLeft: 'auto',
+        }}
+      >
+        {error ? 'Please select an option' : ''}
+      </Typography>
       <Menu
         anchorEl={anchorEl}
         open={open}

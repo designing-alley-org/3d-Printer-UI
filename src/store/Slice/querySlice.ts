@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createHelpService, getAllUserQueryService } from '../../services/query';
+import {
+  createHelpService,
+  getAllUserQueryService,
+} from '../../services/query';
 import { HelpFormData } from '../../validation/helpQuery';
 import { HelpPayload } from '../../types/query';
 
@@ -11,19 +14,23 @@ export const getAllUserQuery = createAsyncThunk(
       const data = await getAllUserQueryService();
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch help tickets');
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch help tickets'
+      );
     }
   }
 );
 
 export const createQuery = createAsyncThunk(
   'query/createQuery',
-  async (payload: HelpFormData , { rejectWithValue }) => {
+  async (payload: HelpFormData, { rejectWithValue }) => {
     try {
       const data = await createHelpService(payload);
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to create help ticket');
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to create help ticket'
+      );
     }
   }
 );

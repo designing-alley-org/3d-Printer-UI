@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Typography, MenuItem, Select, FormControl, FormHelperText } from '@mui/material';
+import {
+  Box,
+  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  FormHelperText,
+} from '@mui/material';
 import CustomTextField from './CustomTextField';
 
 interface CustomInputLabelFieldProps {
@@ -52,21 +59,24 @@ const CustomInputLabelField: React.FC<CustomInputLabelFieldProps> = ({
     { value: 'JP', label: 'Japan' },
   ];
 
-  const options = isSelect && name === 'countryCode' ? countries : selectOptions;
+  const options =
+    isSelect && name === 'countryCode' ? countries : selectOptions;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', ...sx }}>
-      <Typography 
-        variant="body1" 
-        sx={{ 
-          fontWeight: 500, 
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', ...sx }}
+    >
+      <Typography
+        variant="body1"
+        sx={{
+          fontWeight: 500,
           color: '#333',
-          fontSize: '0.9rem'
+          fontSize: '0.9rem',
         }}
       >
         {label} {required && <span style={{ color: '#d32f2f' }}>*</span>}
       </Typography>
-      
+
       {isSelect ? (
         <FormControl fullWidth error={error}>
           <Select

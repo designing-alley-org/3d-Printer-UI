@@ -70,7 +70,7 @@
 }
 
 /* Adjust input padding when password toggle is present */
-input[type="password"],
-input[type="text"] {
+input[type='password'],
+input[type='text'] {
   padding-right: 40px;
 }

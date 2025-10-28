@@ -16,8 +16,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Pagination as PaginationType } from '../types';
 
-
-
 interface ReusablePaginationProps {
   pagination: PaginationType;
   onPageChange: (page: number) => void;
@@ -42,34 +40,34 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
     fontSize: '0.875rem',
     fontWeight: 500,
     transition: 'all 0.2s ease-in-out',
-    
+
     '&:hover': {
       backgroundColor: theme.palette.customColors.primaryLight,
       borderColor: theme.palette.customColors.primaryDark,
       color: theme.palette.customColors.primaryDark,
     },
-    
+
     '&.Mui-selected': {
       backgroundColor: theme.palette.customColors.primaryDark,
       color: theme.palette.customColors.primaryLight,
       borderColor: theme.palette.customColors.primaryDark,
-      
+
       '&:hover': {
         backgroundColor: theme.palette.customColors.primaryDark,
         opacity: 0.9,
       },
     },
-    
+
     '&.Mui-disabled': {
       backgroundColor: '#F5F5F5',
       color: theme.palette.customColors.textLight,
       borderColor: theme.palette.divider,
     },
   },
-  
+
   '& .MuiPaginationItem-previousNext': {
     fontSize: '0.75rem',
-    
+
     '& .MuiSvgIcon-root': {
       fontSize: '16px',
     },
@@ -78,27 +76,27 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: 80,
-  
+
   '& .MuiOutlinedInput-root': {
     borderRadius: '8px',
     height: '40px',
     fontSize: '0.875rem',
     backgroundColor: theme.palette.background.paper,
-    
+
     '& fieldset': {
       borderColor: theme.palette.divider,
     },
-    
+
     '&:hover fieldset': {
       borderColor: theme.palette.customColors.primaryDark,
     },
-    
+
     '&.Mui-focused fieldset': {
       borderColor: theme.palette.customColors.primaryDark,
       borderWidth: '1px',
     },
   },
-  
+
   '& .MuiSelect-select': {
     padding: '8px 12px',
     color: theme.palette.customColors.textDark,
@@ -122,7 +120,7 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
   disabled = false,
 }) => {
   const theme = useTheme();
-  
+
   const {
     currentPage,
     totalPages,
@@ -130,7 +128,10 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
     itemsPerPage = 10,
   } = pagination;
 
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
     if (!disabled) {
       onPageChange(page);
     }
@@ -172,8 +173,7 @@ const CustomPagination: React.FC<ReusablePaginationProps> = ({
           <InfoText>
             {totalItems === 0
               ? `No ${itemName} found`
-              : `Showing ${startItem}-${endItem} of ${totalItems} ${itemName}`
-            }
+              : `Showing ${startItem}-${endItem} of ${totalItems} ${itemName}`}
           </InfoText>
         </Box>
       )}

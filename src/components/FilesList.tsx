@@ -206,7 +206,7 @@ const FilesList = ({ file }: Props) => {
                             verticalAlign: 'middle',
                           }}
                         ></span>
-                      {file.color?.name || 'N/A'}
+                        {file.color?.name || 'N/A'}
                       </Box>
                     </TableCell>
                   </TableRow>

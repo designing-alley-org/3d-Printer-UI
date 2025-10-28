@@ -7,7 +7,6 @@ import {
   Help as HelpOutlineIcon,
 } from '@mui/icons-material';
 
-
 import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -61,59 +60,58 @@ const AccountLayout = () => {
     <>
       {/* Tabs for large screens */}
 
-    <Tabs
-  value={activeTab}
-  onChange={(_, newValue) => {
-    const tab = accTab.find((t) => t.id === newValue);
-    if (tab) handlePath(tab.path);
-  }}
-  variant="scrollable"
-  scrollButtons="auto"  
-  allowScrollButtonsMobile
-  sx={{
-    margin: '16px 0',
-    width: '100%',
-    padding: '8px',
-    bgcolor: 'primary.main',
-    borderRadius: '50px',
-    overflowX: 'auto',
+      <Tabs
+        value={activeTab}
+        onChange={(_, newValue) => {
+          const tab = accTab.find((t) => t.id === newValue);
+          if (tab) handlePath(tab.path);
+        }}
+        variant="scrollable"
+        scrollButtons="auto"
+        allowScrollButtonsMobile
+        sx={{
+          margin: '16px 0',
+          width: '100%',
+          padding: '8px',
+          bgcolor: 'primary.main',
+          borderRadius: '50px',
+          overflowX: 'auto',
 
-    '& .MuiTab-root': {
-      color: '#fff',
-      transition: 'all 0.3s ease',
-    },
-    '& .Mui-selected': {
-      backgroundColor: '#fff !important',
-      color: '#05123B',
-      borderRadius: '50px',
-    },
-    '& .MuiTabs-indicator': {
-      display: 'none',
-    },
-  }}
->
-  {accTab.map((item) => (
-    <Tab
-      key={item.id}
-      sx={{
-        minWidth: 'auto',
-        flexGrow: 1,
-      }}
-      label={
-        <Box display="flex" alignItems="center" gap={1}>
-          {getTabIcon(item.icon)}
-          {item.label}
-        </Box>
-      }
-      value={item.id}
-    />
-  ))}
-</Tabs>
+          '& .MuiTab-root': {
+            color: '#fff',
+            transition: 'all 0.3s ease',
+          },
+          '& .Mui-selected': {
+            backgroundColor: '#fff !important',
+            color: '#05123B',
+            borderRadius: '50px',
+          },
+          '& .MuiTabs-indicator': {
+            display: 'none',
+          },
+        }}
+      >
+        {accTab.map((item) => (
+          <Tab
+            key={item.id}
+            sx={{
+              minWidth: 'auto',
+              flexGrow: 1,
+            }}
+            label={
+              <Box display="flex" alignItems="center" gap={1}>
+                {getTabIcon(item.icon)}
+                {item.label}
+              </Box>
+            }
+            value={item.id}
+          />
+        ))}
+      </Tabs>
 
-
-       <Box sx={{ padding: '1rem 0' }}>
-         <Outlet context={{ handleLogout }} />
-       </Box>
+      <Box sx={{ padding: '1rem 0' }}>
+        <Outlet context={{ handleLogout }} />
+      </Box>
     </>
   );
 };

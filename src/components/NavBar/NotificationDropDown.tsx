@@ -235,7 +235,7 @@ const NotificationDropDown: React.FC<NotificationDropDownProps> = ({
                         />
                       )}
                     </ListItem>
-                      <Divider />
+                    <Divider />
                   </React.Fragment>
                 </React.Fragment>
               ))}

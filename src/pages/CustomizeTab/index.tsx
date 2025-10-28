@@ -26,7 +26,7 @@ import {
 } from '../../../public/Icon/MUI_Coustom_icon/index';
 
 import { filterPrinterAction } from '../../store/actions/filterPrinterAction';
-import { FileDataDB, Pricing, UpdateFileData } from '../../types/uploadFiles';
+import { FileDataDB, Pricing, Technology, UpdateFileData } from '../../types/uploadFiles';
 import StepLayout from '../../components/Layout/StepLayout';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatText } from '../../utils/function';
@@ -48,7 +48,7 @@ import {
 
 import { updateFileInCustomization } from '../../store/actions/File';
 import { IPrinter } from '../../types/printer';
-import { PrintEstimator } from '../../utils/PrintEstimator';
+import { createPrintEstimator } from '../../utils/PrintEstimator';
 
 const CustomizeTab: React.FC = () => {
   const dispatch = useDispatch();
@@ -73,6 +73,9 @@ const CustomizeTab: React.FC = () => {
   const materials = useSelector(
     (state: RootState) => state.specification.materials
   );
+  const technologie = useSelector(
+    (state: RootState) => state.specification.technologies
+  )
 
   const { activeFileId, files } = useSelector(
     (state: RootState) => state.customization
@@ -90,6 +93,7 @@ const CustomizeTab: React.FC = () => {
     weight,
     costs,
     print_totalTime_s,
+    scalingFactor
   } = file || {};
 
   useEffect(() => {
@@ -155,6 +159,17 @@ const CustomizeTab: React.FC = () => {
     return '#ffffff';
   }, [colorId, colors]);
 
+  const technologies = useMemo(() => {
+    if (technologyId && technologie.length > 0) {
+      const selectedTechnology = technologie.find(
+        (tech: Technology) => tech._id === technologyId
+      );
+      return selectedTechnology ? selectedTechnology : null;
+    }
+    return null;
+  }, [technologyId]);
+
+
   // get Printer profiles based on selected printer
   const printer = useMemo(() => {
     if (printerId && printerData.length > 0) {
@@ -172,22 +187,29 @@ const CustomizeTab: React.FC = () => {
       material?.density &&
       material?.density > 0 &&
       printer &&
-      infill &&
-      infill > 0
+      technologies 
     ) {
       try {
-        const estimator = new PrintEstimator(
+
+        const estimator = createPrintEstimator(
+          technologies.code,
           printer,
           material,
           pricing as Pricing
         );
+
+        const isFDM = technologies.code === 'FDM';
+
+
         const result = await estimator.getEstimates({
           modelGeometry: stlGeometry as any,
-          printer: printer,
-          material: material,
-          infillPercent: infill,
-          scale: 1.0,
+          printer,
+          material,
+          infillPercent: isFDM ? infill  : 100,
+          scale: scalingFactor || 1,
         });
+
+
         if (result) {
           dispatch(
             UpdateValueById({
@@ -208,14 +230,14 @@ const CustomizeTab: React.FC = () => {
         console.error('Error processing STL geometry:', error);
       }
     }
-  }, [stlGeometry, infill, material, printer]);
+  }, [stlGeometry, material, printer, technologies, scalingFactor, infill]);
 
   // Calculate weight when geometry or material density changes
   useEffect(() => {
-    if (stlGeometry && material?.density && infill) {
+    if (stlGeometry && material?.density && printer && technologies) {
       processGeometry();
     }
-  }, [processGeometry]);
+  }, [stlGeometry, material, printer, technologies, processGeometry, infill]);
 
   const isAllCoustomized = useMemo(() => {
     if (files.length === 0) return false;
@@ -258,7 +280,8 @@ const CustomizeTab: React.FC = () => {
   // Check if all required fields are filled for the active file
   const isApplyButtonDisabled = useMemo(() => {
     if (!activeFile) return true;
-    if (colorId && materialId && technologyId && printerId && infill)
+    if (technologies?.code === 'FDM' && infill) return false;
+    if (colorId && materialId && technologyId && printerId)
       return false;
     return true;
   }, [file]);
@@ -322,13 +345,16 @@ const CustomizeTab: React.FC = () => {
     );
   };
 
-const handelNext = async () => {
-  await Promise.all([
-    updateIncompleteOrdersService(orderId as string),
-    updateTotalWeightService(orderId as string, orderNumber as string, navigate)
-  ]);
-};
-
+  const handelNext = async () => {
+    await Promise.all([
+      updateIncompleteOrdersService(orderId as string),
+      updateTotalWeightService(
+        orderId as string,
+        orderNumber as string,
+        navigate
+      ),
+    ]);
+  };
 
   return (
     <StepLayout
@@ -337,7 +363,9 @@ const handelNext = async () => {
       stepDescription="Customize your design files by selecting materials, colors, and printers."
       onClick={handelNext}
       orderNo={orderNumber}
-      onClickBack={() => navigate(`/get-quotes/${orderId}/${orderNumber}/upload-stl`)}
+      onClickBack={() =>
+        navigate(`/get-quotes/${orderId}/${orderNumber}/upload-stl`)
+      }
       isLoading={false}
       isPageLoading={isPageLoading}
       isDisabled={isAllCoustomized ? false : true}
@@ -495,6 +523,7 @@ const handelNext = async () => {
                   downloadProgress={downloadProgress}
                   printerData={printerData}
                   printerMessage={printerMessage}
+                  technologies={technologies || undefined}
                 />
               </div>
               <Box
@@ -507,7 +536,11 @@ const handelNext = async () => {
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 600, color: 'primary.main', fontSize: '1rem' }}
+                  sx={{
+                    fontWeight: 600,
+                    color: 'primary.main',
+                    fontSize: '1rem',
+                  }}
                 >
                   Current Weight :{' '}
                   <span>

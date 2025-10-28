@@ -38,7 +38,10 @@ const ResponsiveModal: React.FC<ResponsiveModalProps> = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleClose = (_event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => {
+  const handleClose = (
+    _event?: {},
+    reason?: 'backdropClick' | 'escapeKeyDown'
+  ) => {
     if (disableBackdropClick && reason === 'backdropClick') {
       return;
     }
@@ -88,9 +91,7 @@ const ResponsiveModal: React.FC<ResponsiveModalProps> = ({
           </Box>
 
           {/* Content */}
-          <Box sx={{ mb: actions ? 2 : 0 }}>
-            {children}
-          </Box>
+          <Box sx={{ mb: actions ? 2 : 0 }}>{children}</Box>
 
           {/* Actions */}
           {actions && (
@@ -148,15 +149,11 @@ const ResponsiveModal: React.FC<ResponsiveModalProps> = ({
           </IconButton>
         </DialogTitle>
       )}
-      
-      <DialogContent sx={{ pt: title ? 1 : 3 }}>
-        {children}
-      </DialogContent>
-      
+
+      <DialogContent sx={{ pt: title ? 1 : 3 }}>{children}</DialogContent>
+
       {actions && (
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          {actions}
-        </DialogActions>
+        <DialogActions sx={{ px: 3, pb: 2 }}>{actions}</DialogActions>
       )}
     </Dialog>
   );

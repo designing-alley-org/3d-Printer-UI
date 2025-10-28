@@ -17,11 +17,9 @@ import { getAddress } from '../../store/actions/getAddress';
 import NoDataFound from '../../components/NoDataFound';
 import ListAddress from '../../components/ListAddress/ListAddress';
 import { setDefaultAddressService } from '../../services/address';
-import {  EditProfileModal } from '../../components/Model';
+import { EditProfileModal } from '../../components/Model';
 import LoadingScreen from '../../components/LoadingScreen';
-import {
-  updateUserService,
-} from '../../services/user';
+import { updateUserService } from '../../services/user';
 import { addUserDetails } from '../../store/user/reducer';
 import { editUser } from '../../types';
 import { useDispatch } from 'react-redux';
@@ -90,18 +88,18 @@ const MyProfile = () => {
         <CardActions>
           <CustomButton
             children={
-            <Tooltip title="Edit Profile" placement="top">
-              <IconButton>
-                <CreateOutlinedIcon
-                  fontSize="small"
-                  sx={{ marginRight: '4px' }}
-                />
-              </IconButton>
-            </Tooltip>
-          }
-          sx={{
-            '&:hover': { backgroundColor: 'transparent' },
-          }}
+              <Tooltip title="Edit Profile" placement="top">
+                <IconButton>
+                  <CreateOutlinedIcon
+                    fontSize="small"
+                    sx={{ marginRight: '4px' }}
+                  />
+                </IconButton>
+              </Tooltip>
+            }
+            sx={{
+              '&:hover': { backgroundColor: 'transparent' },
+            }}
             onClick={() => setEditModalOpen(true)}
           />
         </CardActions>

@@ -1,8 +1,8 @@
 // theme.ts
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 // 1️⃣ Extend MUI's Palette types to include customColors
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
   interface Palette {
     customColors: {
       primaryDark: string;
@@ -39,60 +39,60 @@ declare module "@mui/material/styles" {
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2A3F7F", // Primary Dark
-      contrastText: "#FFFFFF",
+      main: '#2A3F7F', // Primary Dark
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: "#2A2D2F", // Text Dark
+      main: '#2A2D2F', // Text Dark
     },
     text: {
-      primary: "#2A2D2F", // Text Dark
-      secondary: "#5F6368", // Text Light
+      primary: '#2A2D2F', // Text Dark
+      secondary: '#5F6368', // Text Light
     },
-    divider: "#D7D7D7", // Divider Color
+    divider: '#D7D7D7', // Divider Color
     background: {
-      default: "#F5F5F5", // App background
-      paper: "#FFFFFF", // Card background
+      default: '#F5F5F5', // App background
+      paper: '#FFFFFF', // Card background
     },
     success: {
-      main: "#00C247",
+      main: '#00C247',
     },
     warning: {
-      main: "#EA1701",
+      main: '#EA1701',
     },
     info: {
-      main: "#3B82F6",
+      main: '#3B82F6',
     },
 
     // Custom non-standard colors
     customColors: {
-      primaryDark: "#2A3F7F",
-      primarySecondary: "#242425",
-      primaryLight: "#FFFFFF",
-      textDark: "#2A2D2F",
-      textLight: "#5F6368",
-      lightTextOverDark: "#DDDDDD",
-      linkBlue: "#006BCD",
-      success: "#00C247",
-      pending: "#DEA300",
-      warning: "#EA1701",
-      inProgress: "#3B82F6",
+      primaryDark: '#2A3F7F',
+      primarySecondary: '#242425',
+      primaryLight: '#FFFFFF',
+      textDark: '#2A2D2F',
+      textLight: '#5F6368',
+      lightTextOverDark: '#DDDDDD',
+      linkBlue: '#006BCD',
+      success: '#00C247',
+      pending: '#DEA300',
+      warning: '#EA1701',
+      inProgress: '#3B82F6',
     },
   },
 
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h5: {
-      fontSize: "1.5rem",
+      fontSize: '1.5rem',
       fontWeight: 700,
-      color: "#2A2D2F",
+      color: '#2A2D2F',
     },
     body1: {
-      fontSize: "0.875rem",
-      color: "#5F6368",
+      fontSize: '0.875rem',
+      color: '#5F6368',
     },
     button: {
-      textTransform: "none",
+      textTransform: 'none',
       fontWeight: 600,
     },
   },
@@ -105,28 +105,27 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: "2px 2px 4px 0px #3B3E4929",
-          border: "1px solid #F0F4FF",
-          borderRadius: "12px",
-          padding: "3px",
+          boxShadow: '2px 2px 4px 0px #3B3E4929',
+          border: '1px solid #F0F4FF',
+          borderRadius: '12px',
+          padding: '3px',
         },
-
       },
     },
     MuiTextField: {
       styleOverrides: {
         root: {
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "8px",
-            "& fieldset": {
-              borderColor: "#D7D7D7",
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '8px',
+            '& fieldset': {
+              borderColor: '#D7D7D7',
             },
-            "&:hover fieldset": {
-              borderColor: "#2A3F7F",
+            '&:hover fieldset': {
+              borderColor: '#2A3F7F',
             },
-            "&.Mui-focused fieldset": {
-              borderColor: "#2A3F7F",
-              borderWidth: "2px",
+            '&.Mui-focused fieldset': {
+              borderColor: '#2A3F7F',
+              borderWidth: '2px',
             },
           },
         },
@@ -135,23 +134,23 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: "32px",
-          padding: "10px 16px",
+          borderRadius: '32px',
+          padding: '10px 16px',
         },
       },
     },
-     MuiTable: {
+    MuiTable: {
       styleOverrides: {
         root: {
-          borderCollapse: "collapse", // optional: cleaner look
+          borderCollapse: 'collapse', // optional: cleaner look
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         root: {
-          borderColor: "#C5C5C5",
-          borderBottom: "1px solid #C5C5C5", 
+          borderColor: '#C5C5C5',
+          borderBottom: '1px solid #C5C5C5',
         },
       },
     },
@@ -159,7 +158,7 @@ const theme = createTheme({
     //   styleOverrides: {
     //     root: {
     //       "&:last-child td, &:last-child th": {
-    //         border: 0, 
+    //         border: 0,
     //       },
     //     },
     //   },

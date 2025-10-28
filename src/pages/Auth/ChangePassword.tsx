@@ -177,7 +177,9 @@ const ChangePassword: React.FC = () => {
                 fullWidth
                 type="password"
                 value={form.confirmPassword}
-                onChange={(e) => handleChange('confirmPassword')(e.target.value)}
+                onChange={(e) =>
+                  handleChange('confirmPassword')(e.target.value)
+                }
                 placeholder="Confirm Password"
                 variant="outlined"
               />

@@ -7,20 +7,25 @@ interface ImagePreviewProps {
   files: File[];
   onRemove: (index: number) => void;
   onRemoveAll: () => void;
-  isSending: Boolean
+  isSending: Boolean;
 }
 
-const ImagePreview = ({ files, onRemove, onRemoveAll, isSending }: ImagePreviewProps) => {
+const ImagePreview = ({
+  files,
+  onRemove,
+  onRemoveAll,
+  isSending,
+}: ImagePreviewProps) => {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   // Create object URLs for preview
   useEffect(() => {
-    const urls = files.map(file => URL.createObjectURL(file));
+    const urls = files.map((file) => URL.createObjectURL(file));
     setImageUrls(urls);
-    
+
     // Cleanup function to revoke object URLs
     return () => {
-      urls.forEach(url => URL.revokeObjectURL(url));
+      urls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [files]);
 
@@ -85,7 +90,7 @@ const ImagePreview = ({ files, onRemove, onRemoveAll, isSending }: ImagePreviewP
                 },
               }}
             >
-              <Trash/>
+              <Trash />
             </IconButton>
           </Box>
         ))}

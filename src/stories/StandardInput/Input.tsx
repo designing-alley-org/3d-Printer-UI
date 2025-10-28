@@ -21,8 +21,16 @@ export default function Input({
   const hasError = !!errors[name];
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap:isSmallScreen ? '0.3rem' : '0.5rem' }}>
-      <Typography variant={isSmallScreen ? 'caption' : 'body1'}>{label}</Typography>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: isSmallScreen ? '0.3rem' : '0.5rem',
+      }}
+    >
+      <Typography variant={isSmallScreen ? 'caption' : 'body1'}>
+        {label}
+      </Typography>
       <TextField
         {...register(name, { required: true })}
         aria-invalid={hasError ? 'true' : 'false'}

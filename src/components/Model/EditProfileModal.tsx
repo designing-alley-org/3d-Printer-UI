@@ -5,8 +5,6 @@ import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
 import CustomButton from '../../stories/button/CustomButton';
 import { editUser, User } from '../../types';
 
-
-
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
@@ -22,7 +20,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   onSave,
   loading = false,
 }) => {
-
   const [formData, setFormData] = useState<editUser>({
     name: '',
     phone_no: '',
@@ -44,14 +41,14 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name as keyof editUser]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: undefined,
       }));
@@ -88,18 +85,10 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
   const actions = (
     <Stack direction="row" spacing={2}>
-      <CustomButton
-        variant="outlined"
-        onClick={handleClose}
-        disabled={loading}
-      >
+      <CustomButton variant="outlined" onClick={handleClose} disabled={loading}>
         Cancel
       </CustomButton>
-      <CustomButton
-        variant="contained"
-        onClick={handleSave}
-        loading={loading}
-      >
+      <CustomButton variant="contained" onClick={handleSave} loading={loading}>
         Save Changes
       </CustomButton>
     </Stack>
@@ -115,7 +104,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
       disableBackdropClick={loading}
     >
       <Box sx={{ width: '100%' }}>
-
         <CustomInputLabelField
           label="Full Name"
           name="name"
@@ -127,9 +115,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           required
         />
 
-
-        <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 2 }} spacing={1}>
-           <CustomInputLabelField
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          sx={{ mt: 2 }}
+          spacing={1}
+        >
+          <CustomInputLabelField
             label="Extension (Optional)"
             name="phone_ext"
             value={formData.phone_ext || ''}

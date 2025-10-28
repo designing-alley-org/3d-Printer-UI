@@ -67,8 +67,6 @@ const updateFilesQuantity = async (
   }
 };
 
-
-
 const stlFileDownloadAndParse = async ({
   url,
   setIsDownloading,
@@ -84,7 +82,9 @@ const stlFileDownloadAndParse = async ({
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Failed to fetch STL file: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch STL file: ${response.status} ${response.statusText}`
+      );
     }
 
     const contentLength = response.headers.get('content-length');
@@ -117,7 +117,9 @@ const stlFileDownloadAndParse = async ({
       } else {
         // If no content-length, show indeterminate progress
         setDownloadProgress(50);
-        console.warn('Content-Length header is missing; cannot compute download progress.');
+        console.warn(
+          'Content-Length header is missing; cannot compute download progress.'
+        );
       }
     }
 
@@ -149,7 +151,8 @@ const stlFileDownloadAndParse = async ({
     setStlGeometry(geometry);
   } catch (error) {
     console.error('Error downloading/parsing STL file:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error occurred';
     setError(errorMessage);
     setDownloadProgress(0); // Reset progress on error
     setStlGeometry(null);

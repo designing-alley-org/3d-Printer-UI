@@ -6,7 +6,6 @@ const DashboardLayout = () => {
   const isFirstTimeLogin =
     isFirstTimeLoginString === 'true' || isFirstTimeLoginString === null;
 
-
   return <>{isFirstTimeLogin ? <WelcomePage /> : <DashboardPage />}</>;
 };
 

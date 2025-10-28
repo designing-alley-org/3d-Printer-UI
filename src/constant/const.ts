@@ -1,5 +1,3 @@
-const hideInput : string[] = ['Closed', 'Resolved']
+const hideInput: string[] = ['Closed', 'Resolved'];
 
-
-
-export {  hideInput };
+export { hideInput };

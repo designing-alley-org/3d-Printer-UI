@@ -10,7 +10,7 @@ interface FilePreviewProps {
   files: File[];
   onRemove: (index: number) => void;
   onRemoveAll: () => void;
-  isSending: Boolean
+  isSending: Boolean;
 }
 
 const getFileIcon = (fileName: string) => {
@@ -41,7 +41,12 @@ const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-const FilePreview = ({ files, onRemove, onRemoveAll, isSending }: FilePreviewProps) => {
+const FilePreview = ({
+  files,
+  onRemove,
+  onRemoveAll,
+  isSending,
+}: FilePreviewProps) => {
   if (files.length === 0) return null;
 
   return (
@@ -58,7 +63,13 @@ const FilePreview = ({ files, onRemove, onRemoveAll, isSending }: FilePreviewPro
       }}
     >
       {/* Header with file count and remove all button */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <Typography variant="body2" color="text.secondary">
           {files.length} file{files.length > 1 ? 's' : ''} selected:
         </Typography>
@@ -95,7 +106,9 @@ const FilePreview = ({ files, onRemove, onRemoveAll, isSending }: FilePreviewPro
             }}
           >
             {/* File icon */}
-            <Box sx={{ display: 'flex', alignItems: 'center', minWidth: '24px' }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', minWidth: '24px' }}
+            >
               {getFileIcon(file.name)}
             </Box>
 

@@ -1,6 +1,13 @@
 import { useRef, useState } from 'react';
 
-import { Badge, Box, IconButton, useMediaQuery, useTheme, ClickAwayListener } from '@mui/material';
+import {
+  Badge,
+  Box,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+  ClickAwayListener,
+} from '@mui/material';
 import { Bell } from 'lucide-react';
 import NotificationDropDown from './NotificationDropDown';
 import { useDispatch } from 'react-redux';
@@ -23,7 +30,7 @@ interface Notification {
 // const fetchNotifications = async (): Promise<Notification[]> => {
 //   // Simulate API delay
 //   await new Promise(resolve => setTimeout(resolve, 500));
-  
+
 //   return [
 //     {
 //       id: 1,
@@ -75,10 +82,11 @@ const NotificationBox = () => {
   const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
 
+  const { notifications, loading, error, pagination } = useSelector(
+    (state: RootState) => state.notification
+  );
 
-  const {notifications, loading, error, pagination } = useSelector((state:RootState) => state.notification);
-
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleBellClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -89,7 +97,7 @@ const NotificationBox = () => {
     setShowNotification(false);
   };
 
-    const fetchMore = () => {
+  const fetchMore = () => {
     if (pagination?.hasNextPage) {
       dispatch(getNotifications({ page: pagination.currentPage + 1 }));
     }
@@ -115,8 +123,8 @@ const NotificationBox = () => {
             top="3rem"
             left={isMobile ? '-15rem' : '-18rem'}
             zIndex={1000}
-          > 
-          <NotificationDropDown
+          >
+            <NotificationDropDown
               notifications={notifications}
               loading={loading}
               error={error || ''}

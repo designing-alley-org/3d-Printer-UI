@@ -1,6 +1,5 @@
-import { IPrinter } from "./printer";
-import { Material } from "./uploadFiles";
-
+import { IPrinter } from './printer';
+import { Material } from './uploadFiles';
 
 export interface ModelGeometry {
   attributes: {

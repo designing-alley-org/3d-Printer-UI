@@ -1,18 +1,15 @@
-
-
-
 export type Commit = {
-  commitMessageDetails : string;
-  label:string;
-  saturdayDelivery:boolean;
-}
+  commitMessageDetails: string;
+  label: string;
+  saturdayDelivery: boolean;
+};
 
 export type RatedShipmentDetails = {
-  currency:string;
-  rateType:string;
-  totalBaseCharge:number;
-  totalNetCharge:number;
-}
+  currency: string;
+  rateType: string;
+  totalBaseCharge: number;
+  totalNetCharge: number;
+};
 
 export interface DeliveryData {
   commit: Commit;

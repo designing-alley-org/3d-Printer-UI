@@ -45,7 +45,7 @@ const StyledButton = styled(Button, {
         color: '#fff',
         '&:hover': { backgroundColor: '#155bbf' },
       };
- 
+
     case 'outlined':
       return {
         ...commonStyles,
@@ -97,7 +97,7 @@ const StyledButton = styled(Button, {
         border: '2px solid #89b7ff',
         '&:hover': { backgroundColor: '#8ab6ff', borderColor: '#6da5f7' },
       };
-    case 'icon-rounded' :
+    case 'icon-rounded':
       return {
         borderRadius: '50%',
         minWidth: '2rem',
@@ -118,7 +118,7 @@ const StyledButton = styled(Button, {
   }
 });
 
-export default function   MUIButton({
+export default function MUIButton({
   btnVariant = 'primary',
   onClick,
   fullWidth = false,

@@ -23,10 +23,18 @@ export default function FormikInput({
   error,
 }: FormikInputProps) {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-  
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: isSmallScreen ? '0.3rem' : '0.5rem' }}>
-      <Typography variant={isSmallScreen ? 'caption' : 'body1'}>{label}</Typography>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: isSmallScreen ? '0.3rem' : '0.5rem',
+      }}
+    >
+      <Typography variant={isSmallScreen ? 'caption' : 'body1'}>
+        {label}
+      </Typography>
       <TextField
         name={name}
         value={value}
