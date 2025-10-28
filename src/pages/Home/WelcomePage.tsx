@@ -34,8 +34,11 @@ const WelcomePage = () => {
       <Card
         sx={{
           textAlign: 'center',
+          padding: { xs: 2, sm: 4, md: 10 },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           width: '90%',
-          minHeight: 'calc(100vh - 200px)',
           boxShadow: '2px 2px 4px 0px #0000003D',
           borderRadius: '24px',
         }}
