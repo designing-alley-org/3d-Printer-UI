@@ -155,7 +155,7 @@ const STlFileList: React.FC<Props> = React.memo(
               </Typography>
             </Box>
             <Typography variant="body1" fontWeight="700">
-              {`${displayDimensions.height} × ${displayDimensions.width} × ${displayDimensions.length} `}
+              {`${displayDimensions.height_mm} × ${displayDimensions.width_mm} × ${displayDimensions.length_mm} `}
               {selectedUnit}
             </Typography>
           </Box>

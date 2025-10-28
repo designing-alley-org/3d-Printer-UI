@@ -1,7 +1,7 @@
 export interface ModelDimensions {
-  height: number;
-  width: number;
-  length: number;
+  height_mm: number;
+  width_mm: number;
+  length_mm: number;
 }
 
 export type Weight = {
