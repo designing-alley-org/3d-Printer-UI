@@ -39,11 +39,12 @@ export default function PrinterSelector({
         disabled={isDisabled}
         sx={{
           width: '100%',
+          padding: '7px 15px',
           justifyContent: 'space-between',
-          borderRadius: 0.5,
+          borderRadius: 0.4,
           color: selectedPrinter ? 'text.primary' : 'text.secondary',
           borderColor: 'divider',
-          fontSize: '.875rem',
+          fontSize: '.75rem',
         }}
       >
         {selectedPrinter

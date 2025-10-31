@@ -390,7 +390,7 @@ const Accordion: React.FC<AccordionProps> = ({
           />
         </Grid>}
 
-        <Grid size={12}>
+        <Grid size={technologies?.code === 'FDM' ? 12 : 6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <PrinterIcon
               fontSize="small"
