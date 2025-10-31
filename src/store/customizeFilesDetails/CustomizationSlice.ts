@@ -115,16 +115,16 @@ export const CustomizationSlice = createSlice({
       if (file.unit === 'mm' && action.payload.unit === 'inch') {
         const conversionFactor = 0.0393701;
         convertedDimensions = {
-          height: convertedDimensions.height * conversionFactor,
-          width: convertedDimensions.width * conversionFactor,
-          length: convertedDimensions.length * conversionFactor,
+          height_mm: convertedDimensions.height_mm * conversionFactor,
+          width_mm: convertedDimensions.width_mm * conversionFactor,
+          length_mm: convertedDimensions.length_mm * conversionFactor,
         };
       } else if (file.unit === 'inch' && action.payload.unit === 'mm') {
         const conversionFactor = 25.4;
         convertedDimensions = {
-          height: convertedDimensions.height * conversionFactor,
-          width: convertedDimensions.width * conversionFactor,
-          length: convertedDimensions.length * conversionFactor,
+          height_mm: convertedDimensions.height_mm * conversionFactor,
+          width_mm: convertedDimensions.width_mm * conversionFactor,
+          length_mm: convertedDimensions.length_mm * conversionFactor,
         };
       }
 
@@ -180,9 +180,9 @@ export const CustomizationSlice = createSlice({
       // Convert dimensions only for mm unit (extendable for others)
       if (dimensions) {
         file.dimensions = {
-          height: dimensions.height * relativeScale,
-          width: dimensions.width * relativeScale,
-          length: dimensions.length * relativeScale,
+          height_mm: dimensions.height_mm * relativeScale,
+          width_mm: dimensions.width_mm * relativeScale,
+          length_mm: dimensions.length_mm * relativeScale,
         };
       }
 
