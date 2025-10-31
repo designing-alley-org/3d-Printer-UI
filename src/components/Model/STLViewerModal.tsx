@@ -38,7 +38,7 @@ const STLViewerModal: React.FC<STLViewerModalProps> = ({
   const [showWireframe, setShowWireframe] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
 
-  const isZoomNeeded = dimensions.height < 2 && dimensions.length < 2;
+  const isZoomNeeded = dimensions.height_mm < 2 && dimensions.length_mm < 2;
 
   return (
     <ResponsiveModal

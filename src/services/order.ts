@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 import api from '../axiosConfig';
 import { getSignedUrl, uploadFromS3, deleteFromS3 } from './s3';
 import { createFile } from './filesService';
-import { FileData } from '../types/uploadFiles';
+import { FileData, ModelDimensions } from '../types/uploadFiles';
 import { returnError, returnResponse } from '../utils/function';
 import { addDataSpec } from '../store/customizeFilesDetails/SpecificationReducer';
 
@@ -170,7 +170,7 @@ const uploadFilesService = async (
   orderId: string,
   stlFile: File,
   stlImage: File,
-  dimensions: { length: number; width: number; height: number },
+  dimensions: ModelDimensions,
   quantity: number,
   setProgress: (progress: number) => void,
   unit: string,

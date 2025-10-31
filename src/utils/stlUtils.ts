@@ -1,12 +1,10 @@
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { ModelDimensions } from '../types/uploadFiles';
 
 // TypeScript interfaces for better type safety
-export interface STLDimensions {
-  length: number;
-  width: number;
-  height: number;
-  unit?: 'mm' | 'cm' | 'inches';
+export interface STLDimensions extends ModelDimensions {
+unit: 'mm' | 'cm' | 'inches';
 }
 
 export interface STLInfo {
@@ -122,15 +120,15 @@ export class STLParser {
 
     // Calculate dimensions in mm
     const dimensions: STLDimensions = {
-      length: Math.abs(bbox.max.x - bbox.min.x),
-      width: Math.abs(bbox.max.y - bbox.min.y),
-      height: Math.abs(bbox.max.z - bbox.min.z),
+      length_mm: Math.abs(bbox.max.x - bbox.min.x),
+      width_mm: Math.abs(bbox.max.y - bbox.min.y),
+      height_mm: Math.abs(bbox.max.z - bbox.min.z),
       unit: 'mm',
     };
 
     // Calculate actual volume (bounding box volume in mm³ -> cm³)
     const volume =
-      (dimensions.length * dimensions.width * dimensions.height) / 1000;
+      (dimensions.length_mm * dimensions.width_mm * dimensions.height_mm) / 1000;
 
     // Get vertex and face counts
     const positionAttribute = geometry.getAttribute('position');
@@ -306,9 +304,9 @@ export class STLParser {
     const finalFactor = conversionFactor * toTargetFactor;
 
     return {
-      length: Number((dimensions.length * finalFactor).toFixed(3)),
-      width: Number((dimensions.width * finalFactor).toFixed(3)),
-      height: Number((dimensions.height * finalFactor).toFixed(3)),
+      length_mm: Number((dimensions.length_mm * finalFactor).toFixed(3)),
+      width_mm: Number((dimensions.width_mm * finalFactor).toFixed(3)),
+      height_mm: Number((dimensions.height_mm * finalFactor).toFixed(3)),
       unit: targetUnit,
     };
   }

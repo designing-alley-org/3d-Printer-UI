@@ -27,7 +27,7 @@ import {
 import toast from 'react-hot-toast';
 import { Upload } from 'lucide-react';
 
-const INITIAL_DIMENSIONS: ModelDimensions = { height: 0, width: 0, length: 0 };
+const INITIAL_DIMENSIONS: ModelDimensions = { height_mm: 0, width_mm: 0, length_mm: 0 };
 
 const UploadStl = () => {
   const [selectedUnit, setSelectedUnit] = useState<string>('MM');
@@ -98,9 +98,9 @@ const UploadStl = () => {
     try {
       const stlInfo = await stlParser.parseSTL(file);
       return {
-        length: stlInfo.dimensions.length?.toFixed(3) as unknown as number,
-        width: stlInfo.dimensions.width?.toFixed(3) as unknown as number,
-        height: stlInfo.dimensions.height?.toFixed(3) as unknown as number,
+        length_mm: stlInfo.dimensions.length_mm?.toFixed(3) as unknown as number,
+        width_mm: stlInfo.dimensions.width_mm?.toFixed(3) as unknown as number,
+        height_mm: stlInfo.dimensions.height_mm?.toFixed(3) as unknown as number,
       };
     } catch (error) {
       console.error('Error extracting STL dimensions:', error);
@@ -207,9 +207,9 @@ const UploadStl = () => {
       const converted = STLParser.convertDimensions(stlDimensions, targetUnit);
 
       return {
-        height: converted.height,
-        width: converted.width,
-        length: converted.length,
+        height_mm: converted.height_mm,
+        width_mm: converted.width_mm,
+        length_mm: converted.length_mm,
       };
     },
     []

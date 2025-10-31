@@ -84,7 +84,7 @@ const Accordion: React.FC<AccordionProps> = ({
   };
 
   const handleChange =
-    (field: 'height' | 'width' | 'length') =>
+    (field: 'height_mm' | 'width_mm' | 'length_mm') =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(event.target.value.replace(/[^\d.]/g, ''));
       if (value) {
@@ -195,8 +195,8 @@ const Accordion: React.FC<AccordionProps> = ({
               Height
             </Typography>
             <CustomTextField
-              value={file?.dimensions.height}
-              onChange={handleChange('height')}
+              value={file?.dimensions.height_mm}
+              onChange={handleChange('height_mm')}
               inputStyle={2}
             />
           </Grid>
@@ -210,8 +210,8 @@ const Accordion: React.FC<AccordionProps> = ({
               Width
             </Typography>
             <CustomTextField
-              value={file?.dimensions.width}
-              onChange={handleChange('width')}
+              value={file?.dimensions.width_mm}
+              onChange={handleChange('width_mm')}
               inputStyle={2}
             />
           </Grid>
@@ -225,8 +225,8 @@ const Accordion: React.FC<AccordionProps> = ({
               Length
             </Typography>
             <CustomTextField
-              value={file?.dimensions.length}
-              onChange={handleChange('length')}
+              value={file?.dimensions.length_mm}
+              onChange={handleChange('length_mm')}
               inputStyle={2}
             />
           </Grid>
@@ -280,11 +280,11 @@ const Accordion: React.FC<AccordionProps> = ({
                   fontWeight={600}
                   sx={{ color: 'text.secondary', textAlign: 'right', mt: 1 }}
                 >
-                  {activeReverseDimension?.dimensions?.height.toFixed(2)}{' '}
+                  {activeReverseDimension?.dimensions?.height_mm.toFixed(2)}{' '}
                   {activeReverseDimension?.unit} x{' '}
-                  {activeReverseDimension?.dimensions?.width.toFixed(2)}{' '}
+                  {activeReverseDimension?.dimensions?.width_mm.toFixed(2)}{' '}
                   {activeReverseDimension?.unit} x{' '}
-                  {activeReverseDimension?.dimensions?.length.toFixed(2)}{' '}
+                  {activeReverseDimension?.dimensions?.length_mm.toFixed(2)}{' '}
                   {activeReverseDimension?.unit}
                 </Typography>
               )}
@@ -390,7 +390,7 @@ const Accordion: React.FC<AccordionProps> = ({
           />
         </Grid>}
 
-        <Grid size={12}>
+        <Grid size={technologies?.code === 'FDM' ? 12 : 6}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
             <PrinterIcon
               fontSize="small"

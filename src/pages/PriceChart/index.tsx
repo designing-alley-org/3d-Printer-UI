@@ -6,14 +6,15 @@ import { Card, CardContent, CardHeader, Link, Typography } from '@mui/material';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
 
-import PriceTable, { PriceTableProps } from './PriceTabel';
+import PriceTable from './PriceTabel';
 import { useEffect, useState } from 'react';
 
 import { getCheckoutDetailsService } from '../../services/order';
+import { Discount, PriceTableProps } from '../../types/priceChart';
 
 type fetchOrderProps = {
   orderId: string;
-  setData: React.Dispatch<React.SetStateAction<PriceTableProps>>;
+  setData: React.Dispatch<React.SetStateAction<PriceTableProps & { discountAvailable: Discount }>>;
   setIsPageLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -30,11 +31,11 @@ const fetchOrder = async ({
 const PriceChart = () => {
   const navigate = useNavigate();
   const { orderId, orderNumber } = useParams();
-  const [data, setData] = useState<PriceTableProps>({
+  const [data, setData] = useState<PriceTableProps & { discountAvailable: Discount }>({
     subtotal: 0,
     taxes: 0,
     taxRate: 0,
-    totalAmount: 0,
+    discountAvailable:{ orderId: '', code: '', percentage: 0, isUsed: false },
     fileTable: [],
   });
   const isLoading = false;
@@ -85,8 +86,9 @@ const PriceChart = () => {
             subtotal={data?.subtotal || 0}
             taxes={data?.taxes || 0}
             taxRate={data?.taxRate || 0}
-            totalAmount={data?.totalAmount || 0}
+            discountAvailable={data?.discountAvailable}
             fileTable={data?.fileTable || []}
+            useDiscount={true}
           />
         </CardContent>
       </Card>
