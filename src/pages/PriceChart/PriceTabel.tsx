@@ -7,7 +7,8 @@ import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import { styled, Typography } from '@mui/material';
 import { formatCurrency } from '../../utils/function';
-import { FileDataDB } from '../../types/uploadFiles';
+import { PriceTableProps } from '../../types/priceChart';
+import { useMemo } from 'react';
 
 // --- Styled Components for a cleaner look ---
 
@@ -46,25 +47,15 @@ const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export type PriceTableProps = {
-  subtotal: number;
-  taxes: number;
-  taxRate: number;
-  totalAmount: number;
-  fileTable: (FileDataDB & {
-    fileId: string;
-    pricePerUnit: number;
-    totalPrice: number;
-  })[];
-};
 
 export default function PriceTable({
   subtotal,
-  taxes,
   taxRate,
-  totalAmount,
   fileTable,
+  discountAvailable,
+  useDiscount = false,
 }: PriceTableProps) {
+
   if (fileTable.length === 0) {
     return (
       <Typography variant="body1" align="center">
@@ -72,6 +63,11 @@ export default function PriceTable({
       </Typography>
     );
   }
+
+  const taxes = useMemo(()=>{
+    const isDiscount =  (taxRate / 100) * subtotal
+    return isDiscount
+  },[])
 
   return (
     <StyledTableContainer>
@@ -121,6 +117,26 @@ export default function PriceTable({
             <TableCell align="right">{formatCurrency(subtotal)}</TableCell>
           </StyledFooterTableRow>
 
+         {useDiscount && discountAvailable && 
+         <StyledFooterTableRow>
+            <TableCell>
+              <Typography variant="body1" fontWeight="600">
+                Discount
+              </Typography>
+            </TableCell>
+            <TableCell align="center">
+              <Typography variant="body1" fontWeight="600">
+                -
+              </Typography>
+            </TableCell>
+            <TableCell align="right">
+              <Typography variant="body1" fontWeight="600">
+                -
+              </Typography>
+            </TableCell>
+            <TableCell align="right">{discountAvailable?.percentage}%</TableCell>
+          </StyledFooterTableRow>}
+
           <StyledFooterTableRow>
             <TableCell>
               <Typography variant="body1" fontWeight="600">
@@ -158,7 +174,7 @@ export default function PriceTable({
             </TableCell>
             <TableCell align="right">
               <Typography variant="h6" component="div">
-                {formatCurrency(totalAmount)}
+                {formatCurrency(subtotal + taxes - (discountAvailable?.percentage || 0))}
               </Typography>
             </TableCell>
           </StyledFooterTableRow>
