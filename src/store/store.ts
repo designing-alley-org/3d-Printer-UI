@@ -10,6 +10,7 @@ import { CustomizationSlice } from './customizeFilesDetails/CustomizationSlice.t
 import queryReducer from './Slice/querySlice';
 import chatReducer from './Slice/chatSlice';
 import notificationReducer from './Slice/notificationSlice.ts';
+import  discountSliceReducer  from './Slice/discountSlicer.ts';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     query: queryReducer,
     chat: chatReducer,
     notification: notificationReducer,
+    discount: discountSliceReducer,
   },
 });
 

@@ -70,6 +70,7 @@ const RightSideList = () => {
                 status={ticket.help.status}
                 conversationId={ticket.conversationId}
                 isOpen={conversationId === ticket.conversationId}
+                helpId={ticket.help._id}
               />
             ))
           )}

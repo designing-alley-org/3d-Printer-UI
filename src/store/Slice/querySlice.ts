@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   createHelpService,
   getAllUserQueryService,
+  resolveHelpService
 } from '../../services/query';
 import { HelpFormData } from '../../validation/helpQuery';
 import { HelpPayload } from '../../types/query';
@@ -30,6 +31,20 @@ export const createQuery = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Failed to create help ticket'
+      );
+    }
+  }
+);
+
+export const resolveQuery = createAsyncThunk(
+  'query/resolveQuery',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const data = await resolveHelpService(id);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to resolve help ticket'
       );
     }
   }
@@ -81,6 +96,19 @@ export const QuerySlice = createSlice({
       })
       .addCase(createQuery.rejected, (state, action) => {
         state.error = action.payload as string;
+      })
+      .addCase(resolveQuery.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(resolveQuery.fulfilled, (state, action) => {
+        state.error = null;
+        const status = 'Resolved';
+        state.helpTickets = state.helpTickets.map((ticket) =>
+          ticket._id === action.meta.arg ? { ...ticket, status } : ticket
+        );
+      })
+      .addCase(resolveQuery.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
@@ -89,14 +117,3 @@ export const { clearError, clearHelpTickets } = QuerySlice.actions;
 
 export default QuerySlice.reducer;
 
-// // "data": {
-//         "_id": "68dfc6541100191de4d9a8d1",
-//         "type": "Negotiation",
-//         "subject": "Negotiation regarding",
-//         "userId": "686ba3d42d905a26520b7193",
-//         "status": "Open",
-//         "createdAt": "2025-10-03T12:49:24.279Z",
-//         "updatedAt": "2025-10-03T12:49:24.279Z",
-//         "__v": 0,
-//         "order_number": null
-//     }

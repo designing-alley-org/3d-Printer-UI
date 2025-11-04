@@ -17,15 +17,20 @@ import {
 } from '../../store/Slice/chatSlice';
 import { hideInput } from '../../constant/const';
 import { markNotificationAsRead } from '../../store/Slice/notificationSlice';
-import PriceTable, { PriceTableProps } from '../../pages/PriceChart/PriceTabel';
+import PriceTable from '../../pages/PriceChart/PriceTabel';
 import { getCheckoutDetailsService } from '../../services/order';
 import { useSearchParams } from 'react-router-dom';
+import NegotiationTabel from '../NegotiationTabel';
+import { acceptDiscount } from '../../store/Slice/discountSlicer';
+import { resolveQuery } from '../../store/Slice/querySlice';
+import { PriceTableProps } from '../../types/priceChart';
 
 interface ChatUIProps {
   isOpen: boolean | undefined;
   status: string;
   type: string | undefined;
   orderNumber: string | undefined;
+  helpId: string | undefined;
 }
 
 type fetchOrderProps = {
@@ -44,7 +49,7 @@ const fetchOrder = async ({
   setIsLoading(false);
 };
 
-const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
+const ChatUI = ({ isOpen, status, type, orderNumber, helpId }: ChatUIProps) => {
   const [messageInput, setMessageInput] = useState('');
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -64,15 +69,15 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
     subtotal: 0,
     taxes: 0,
     taxRate: 0,
-    totalAmount: 0,
     fileTable: [],
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (orderNumber) fetchOrder({ orderNumber, setData, setIsLoading });
-  }, [orderNumber]);
+    if (orderNumber && isOpen)
+      fetchOrder({ orderNumber, setData, setIsLoading });
+  }, [orderNumber, isOpen]);
 
   useEffect(() => {
     if (!conversationId || !user?._id || !Array.isArray(messages)) return;
@@ -182,6 +187,26 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
     setSelectedFiles([]);
   };
 
+  const handelAcceptDiscount = async () => {
+    await dispatch(
+      acceptDiscount(data.discountAvailable!._id)
+    ).unwrap();
+
+    await dispatch(
+      resolveQuery(helpId)
+    ).unwrap();
+
+    await dispatch(
+      sendMessage({
+        conversationId,
+        message: 'Accepted the discount',
+        messageType: 'text', // This will be determined in the dispatch based on files
+        selectedImages: undefined,
+        selectedFiles: undefined,
+      })
+    ).unwrap();
+  };
+
   if (loading && messages.length === 0) {
     return <LoadingScreen />;
   }
@@ -208,9 +233,7 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
             ) : (
               <PriceTable
                 subtotal={data?.subtotal || 0}
-                taxes={data?.taxes || 0}
                 taxRate={data?.taxRate || 0}
-                totalAmount={data?.totalAmount || 0}
                 fileTable={data?.fileTable || []}
               />
             )}
@@ -228,6 +251,19 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
           ))}
           {/* Empty div to scroll to bottom */}
         </Box>
+
+        {type === 'Negotiation' && data.discountAvailable && (
+          <Box
+            mt={2}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'end',
+            }}
+          >
+            <NegotiationTabel data={data} onAccept={handelAcceptDiscount} />
+          </Box>
+        )}
       </Box>
 
       {/* Input */}
