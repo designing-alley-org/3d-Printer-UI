@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -31,6 +32,7 @@ import ScaleOutlinedIcon from '@mui/icons-material/ScaleOutlined';
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import { downloadFileFromS3Service } from '../services/order';
 import { FileDataOrder } from '../types/uploadFiles';
+import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 interface Props {
   file: FileDataOrder;
@@ -40,6 +42,7 @@ const FilesList = ({ file }: Props) => {
   const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [fileDownloadProgress, setFileDownloadProgress] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleViewClick = () => {
     setIsTableExpanded(!isTableExpanded);
@@ -71,7 +74,7 @@ const FilesList = ({ file }: Props) => {
             />
             <Typography variant="h6" color="primary.main" gutterBottom>
               {' '}
-              {file?.fileName?.split(' ')[0]}.stl
+              {file?.fileName?.split(' ')[0]}
             </Typography>
           </Box>
           {/* Right */}
@@ -132,13 +135,16 @@ const FilesList = ({ file }: Props) => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
+            style={{ overflow: 'hidden', display: 'flex', gap: '20px', marginTop: '10px',
+              flexDirection: isMobile ? 'column' : 'row'
+             }}
           >
             <TableContainer
               sx={{
                 mt: 2,
-                backgroundColor: 'background.paper',
-                borderRadius: '8px',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 0.4,
               }}
             >
               <Table aria-label="files table">
@@ -159,11 +165,11 @@ const FilesList = ({ file }: Props) => {
                       Scale
                     </TableCell>
                     <TableCell align="right">
-                      {file?.dimensions?.height?.toFixed(3) +
+                      {file?.dimensions?.height_mm?.toFixed(3) +
                         ' x ' +
-                        file?.dimensions?.width?.toFixed(3) +
+                        file?.dimensions?.width_mm?.toFixed(3) +
                         ' x ' +
-                        file?.dimensions?.length?.toFixed(3) +
+                        file?.dimensions?.length_mm?.toFixed(3) +
                         ' ' +
                         (file.unit || 'N/A')}
                     </TableCell>
@@ -219,13 +225,17 @@ const FilesList = ({ file }: Props) => {
                       {file.printer?.name || 'N/A'}
                     </TableCell>
                   </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {' '}
-                      <InfillIcon sx={{ fontSize: 15 }} /> Infill
-                    </TableCell>
-                    <TableCell align="right">{file.infill || 'N/A'}</TableCell>
-                  </TableRow>
+                  {file?.technology?.code === 'FDM' && (
+                    <TableRow>
+                      <TableCell>
+                        {' '}
+                        <InfillIcon sx={{ fontSize: 15 }} /> Infill
+                      </TableCell>
+                      <TableCell align="right">
+                        {file.infill || 'N/A'}
+                      </TableCell>
+                    </TableRow>
+                  )}
                   {file?.weight?.value && (
                     <TableRow>
                       <TableCell>
@@ -233,7 +243,7 @@ const FilesList = ({ file }: Props) => {
                         <ScaleOutlinedIcon sx={{ fontSize: 15 }} /> Weight
                       </TableCell>
                       <TableCell align="right">
-                        {file?.weight?.value +
+                        {file?.weight?.value?.toFixed(2) +
                           ' ' +
                           (file?.weight?.unit || 'N/A') || 'N/A'}
                       </TableCell>
@@ -251,6 +261,20 @@ const FilesList = ({ file }: Props) => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Box
+              alt="Preview"
+              src={file?.thumbnailUrl}
+              sx={{
+                width: isMobile ? '100%' :  '48%',
+                height: 'auto',
+                mt: isMobile ? 0 : 2,
+                borderRadius: 0.4,
+                objectFit: 'cover',
+                backgroundColor: '#f5f5f5',
+                border: '1px solid #e0e0e0',
+              }}
+              component="img"
+            />
           </motion.div>
         )}
       </AnimatePresence>
