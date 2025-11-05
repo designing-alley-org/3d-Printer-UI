@@ -14,7 +14,7 @@ const RightSideList = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const { helpTickets, loading, error } = useSelector(
+  const { helpTickets, loading } = useSelector(
     (state: RootState) => state.query
   );
 
@@ -41,19 +41,6 @@ const RightSideList = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           {loading ? (
             <LoadingScreen title="Loading help tickets..." />
-          ) : error ? (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '200px',
-              }}
-            >
-              <Typography color="error" variant="body2">
-                Error loading help tickets: {error}
-              </Typography>
-            </Box>
           ) : !helpTickets.length ? (
             <NoDataFound
               text="No Help Tickets Found"

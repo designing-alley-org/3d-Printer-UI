@@ -6,9 +6,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import { styled, Typography } from '@mui/material';
+import { useMemo } from 'react';
 import { formatCurrency } from '../../utils/function';
 import { PriceTableProps } from '../../types/priceChart';
-import { useMemo } from 'react';
 
 // --- Styled Components ---
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
@@ -35,7 +35,6 @@ const StyledDataRow = styled(TableRow)(({ theme }) => ({
 
 const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   '&:last-child td': {
-    borderBottom: 1,
     borderTop: `1px solid ${theme.palette.divider}`,
   },
   '& td:first-of-type': {
@@ -44,15 +43,15 @@ const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// --- Main Component ---
 export default function PriceTable({
-  subtotal,
+  subtotal,                
   taxRate,
   fileTable,
-  discountAvailable,
-  useDiscount = false,
+  discountAvailable,        
+  useDiscount = false,      
 }: PriceTableProps) {
-  // ✅ Guard: Empty data
+
+  // Guard: Empty data
   if (!fileTable || fileTable.length === 0) {
     return (
       <Typography variant="body1" align="center">
@@ -61,20 +60,52 @@ export default function PriceTable({
     );
   }
 
-  // ✅ Calculate taxes
-  const taxes = useMemo(() => (subtotal * taxRate) / 100, [subtotal, taxRate]);
+  // Derive line totals safely (fallback if totalPrice isn't provided)
+  const rowsWithTotals = useMemo(() => {
+    return fileTable.map((row) => {
+      const total =
+        typeof row.totalPrice === 'number'
+          ? row.totalPrice
+          : (row.quantity ?? 0) * (row.pricePerUnit ?? 0);
+      return { ...row, _totalPrice: total };
+    });
+  }, [fileTable]);
 
-  // ✅ Calculate discount & total
+  // Compute subtotal from rows if not provided as prop
+  const computedSubtotal = useMemo(() => {
+    if (typeof subtotal === 'number') return subtotal;
+    return rowsWithTotals.reduce((acc, r) => acc + (r._totalPrice || 0), 0);
+  }, [rowsWithTotals, subtotal]);
+
+  // Is discount applied? (both enabled and accepted)
+  const isDiscountApplied = useMemo(() => {
+    return Boolean(
+      useDiscount &&
+      discountAvailable?.isUserAccepted &&
+      (discountAvailable?.percentage ?? 0) > 0
+    );
+  }, [useDiscount, discountAvailable?.isUserAccepted, discountAvailable?.percentage]);
+
+  // Discount amount
   const discountAmount = useMemo(() => {
-    if (!useDiscount || !discountAvailable?.percentage) return 0;
-    return (subtotal * discountAvailable.percentage) / 100;
-  }, [useDiscount, discountAvailable?.percentage, subtotal]);
+    if (!isDiscountApplied) return 0;
+    return (computedSubtotal * (discountAvailable!.percentage as number)) / 100;
+  }, [isDiscountApplied, computedSubtotal, discountAvailable?.percentage]);
 
-  const totalAmount = useMemo(() => subtotal + taxes - discountAmount, [
-    subtotal,
-    taxes,
-    discountAmount,
-  ]);
+  // Effective subtotal (after discount if applied)
+  const discountedSubtotal = useMemo(() => {
+    return computedSubtotal - discountAmount;
+  }, [computedSubtotal, discountAmount]);
+
+  // Taxes on discounted subtotal
+  const taxes = useMemo(() => {
+    return (discountedSubtotal * (taxRate ?? 0)) / 100;
+  }, [discountedSubtotal, taxRate]);
+
+  // Grand total
+  const totalAmount = useMemo(() => {
+    return discountedSubtotal + taxes;
+  }, [discountedSubtotal, taxes]);
 
   // --- Render ---
   return (
@@ -90,14 +121,14 @@ export default function PriceTable({
         </StyledTableHead>
 
         <TableBody>
-          {fileTable.map((row) => (
+          {rowsWithTotals.map((row) => (
             <StyledDataRow key={row.fileId}>
               <TableCell component="th" scope="row">
                 {row.fileName}
               </TableCell>
               <TableCell align="center">{row.quantity}</TableCell>
               <TableCell align="right">{formatCurrency(row.pricePerUnit)}</TableCell>
-              <TableCell align="right">{formatCurrency(row.totalPrice)}</TableCell>
+              <TableCell align="right">{formatCurrency(row._totalPrice)}</TableCell>
             </StyledDataRow>
           ))}
         </TableBody>
@@ -108,20 +139,18 @@ export default function PriceTable({
             <TableCell>Subtotal</TableCell>
             <TableCell align="center">-</TableCell>
             <TableCell align="right">-</TableCell>
-            <TableCell align="right">{formatCurrency(subtotal)}</TableCell>
+            <TableCell align="right">{formatCurrency(computedSubtotal)}</TableCell>
           </StyledFooterTableRow>
 
-          {/* Discount */}
-          {useDiscount && discountAvailable?.percentage ? (
+          {/* Discount (only if applied) */}
+          {isDiscountApplied && (
             <StyledFooterTableRow>
-              <TableCell>Discount ({discountAvailable.percentage}%)</TableCell>
+              <TableCell>Discount ({discountAvailable!.percentage}%)</TableCell>
               <TableCell align="center">-</TableCell>
               <TableCell align="right">-</TableCell>
-              <TableCell align="right">
-                -{formatCurrency(discountAmount)}
-              </TableCell>
+              <TableCell align="right">-{formatCurrency(discountAmount)}</TableCell>
             </StyledFooterTableRow>
-          ) : null}
+          )}
 
           {/* Taxes */}
           <StyledFooterTableRow>

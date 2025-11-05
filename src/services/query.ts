@@ -28,6 +28,10 @@ export const deleteHelpService = async (
 export const resolveHelpService = async (
   id: string
 ): Promise<{ message: string }> => {
-    const response = await api.put(`/api/v1/help-tickets/resolve-ticket/${id}`);
+    const response = await api.put(`/api/v1/help-tickets/resolve-ticket/${id}`,
+      {
+        status: 'Resolved',
+      }
+    );
     return returnResponse(response);
 };

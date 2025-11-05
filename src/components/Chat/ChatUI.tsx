@@ -22,7 +22,7 @@ import { getCheckoutDetailsService } from '../../services/order';
 import { useSearchParams } from 'react-router-dom';
 import NegotiationTabel from '../NegotiationTabel';
 import { acceptDiscount } from '../../store/Slice/discountSlicer';
-import { resolveQuery } from '../../store/Slice/querySlice';
+import { resolveQuery, updateHelpStatus } from '../../store/Slice/querySlice';
 import { PriceTableProps } from '../../types/priceChart';
 
 interface ChatUIProps {
@@ -193,18 +193,23 @@ const ChatUI = ({ isOpen, status, type, orderNumber, helpId }: ChatUIProps) => {
     ).unwrap();
 
     await dispatch(
-      resolveQuery(helpId)
+      resolveQuery(helpId || '')
     ).unwrap();
 
     await dispatch(
-      sendMessage({
-        conversationId,
-        message: 'Accepted the discount',
-        messageType: 'text', // This will be determined in the dispatch based on files
-        selectedImages: undefined,
-        selectedFiles: undefined,
+      updateHelpStatus({
+        conversationId: conversationId || '',
+        status: 'Resolved',
       })
-    ).unwrap();
+    );
+
+    setData((prevData) => ({
+      ...prevData,
+      discountAvailable: prevData.discountAvailable
+        ? { ...prevData.discountAvailable, isUserAccepted: true }
+        : prevData.discountAvailable,
+    }));
+    
   };
 
   if (loading && messages.length === 0) {
@@ -258,7 +263,7 @@ const ChatUI = ({ isOpen, status, type, orderNumber, helpId }: ChatUIProps) => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'end',
+              justifyContent: 'start',
             }}
           >
             <NegotiationTabel data={data} onAccept={handelAcceptDiscount} />

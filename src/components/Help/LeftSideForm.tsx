@@ -156,7 +156,7 @@ const LeftSideForm: React.FC = () => {
       helpers.resetForm({ values: emptyValues });
     } catch (error) {
       console.error('Error creating query:', error);
-      toast.error('Failed to submit query. Please try again.');
+      toast.error(error as string);
     } finally {
       helpers.setSubmitting(false);
     }

@@ -72,6 +72,15 @@ export const QuerySlice = createSlice({
     clearHelpTickets: (state) => {
       state.helpTickets = [];
     },
+    updateHelpStatus: (state, action) => {
+      const { conversationId, status } = action.payload;
+      state.helpTickets = state.helpTickets.map((ticket) =>
+        ticket.conversationId === conversationId ? {
+          ...ticket,
+          status: status
+        } : ticket
+      );
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -113,7 +122,7 @@ export const QuerySlice = createSlice({
   },
 });
 
-export const { clearError, clearHelpTickets } = QuerySlice.actions;
+export const { clearError, clearHelpTickets, updateHelpStatus } = QuerySlice.actions;
 
 export default QuerySlice.reducer;
 
