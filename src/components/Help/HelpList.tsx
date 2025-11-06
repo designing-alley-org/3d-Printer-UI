@@ -15,6 +15,7 @@ interface Props {
   status?: string;
   isOpen?: boolean;
   conversationId?: string;
+  helpId?: string;
 }
 
 function statusHexColor(status: string) {
@@ -42,6 +43,7 @@ const HelpList = ({
   status,
   isOpen,
   conversationId,
+  helpId
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const isChatOpen = searchParams.get('conversationId') === conversationId;
@@ -159,6 +161,7 @@ const HelpList = ({
             status={status || ''}
             type={type}
             orderNumber={orderNumber || ''}
+            helpId={helpId || ''}
           />
         </CardContent>
       </motion.div>

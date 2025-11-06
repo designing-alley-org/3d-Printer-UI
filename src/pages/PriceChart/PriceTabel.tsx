@@ -6,14 +6,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
 import { styled, Typography } from '@mui/material';
+import { useMemo } from 'react';
 import { formatCurrency } from '../../utils/function';
 import { PriceTableProps } from '../../types/priceChart';
-import { useMemo } from 'react';
 
-// --- Styled Components for a cleaner look ---
-
+// --- Styled Components ---
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-  borderRadius: '8px',
+  borderRadius: 8,
   border: `1px solid ${theme.palette.divider}`,
   boxShadow: 'none',
 }));
@@ -27,9 +26,7 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
   },
 }));
 
-// Style the TableRow in the body to set the color for all cells inside it
 const StyledDataRow = styled(TableRow)(({ theme }) => ({
-  // Target all TableCell components within this row
   '& .MuiTableCell-root': {
     color: theme.palette.primary.main,
     fontWeight: 500,
@@ -38,7 +35,6 @@ const StyledDataRow = styled(TableRow)(({ theme }) => ({
 
 const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   '&:last-child td': {
-    borderBottom: 1,
     borderTop: `1px solid ${theme.palette.divider}`,
   },
   '& td:first-of-type': {
@@ -47,7 +43,6 @@ const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
 export default function PriceTable({
   subtotal,
   taxRate,
@@ -55,8 +50,8 @@ export default function PriceTable({
   discountAvailable,
   useDiscount = false,
 }: PriceTableProps) {
-
-  if (fileTable.length === 0) {
+  // Guard: Empty data
+  if (!fileTable || fileTable.length === 0) {
     return (
       <Typography variant="body1" align="center">
         No files available to display pricing.
@@ -64,11 +59,63 @@ export default function PriceTable({
     );
   }
 
-  const taxes = useMemo(()=>{
-    const isDiscount =  (taxRate / 100) * subtotal
-    return isDiscount
-  },[])
+  // Derive line totals safely (fallback if totalPrice isn't provided)
+  const rowsWithTotals = useMemo(() => {
+    return fileTable.map((row) => {
+      const total =
+        typeof row.totalPrice === 'number'
+          ? row.totalPrice
+          : (row.quantity ?? 0) * (row.pricePerUnit ?? 0);
+      return { ...row, _totalPrice: total };
+    });
+  }, [fileTable]);
 
+  const isExpiredCode = discountAvailable?.expiryDate
+    ? new Date(discountAvailable?.expiryDate) < new Date()
+    : false;
+
+  // Compute subtotal from rows if not provided as prop
+  const computedSubtotal = useMemo(() => {
+    if (typeof subtotal === 'number') return subtotal;
+    return rowsWithTotals.reduce((acc, r) => acc + (r._totalPrice || 0), 0);
+  }, [rowsWithTotals, subtotal]);
+
+  // Is discount applied? (both enabled and accepted)
+  const isDiscountApplied = useMemo(() => {
+    if (isExpiredCode && !discountAvailable?.isUsed) return false;
+    return Boolean(
+      useDiscount &&
+        discountAvailable?.isUserAccepted &&
+        (discountAvailable?.percentage ?? 0) > 0
+    );
+  }, [
+    useDiscount,
+    discountAvailable?.isUserAccepted,
+    discountAvailable?.percentage,
+  ]);
+
+  // Discount amount
+  const discountAmount = useMemo(() => {
+    if (!isDiscountApplied) return 0;
+    return (computedSubtotal * (discountAvailable!.percentage as number)) / 100;
+  }, [isDiscountApplied, computedSubtotal, discountAvailable?.percentage]);
+
+  // Effective subtotal (after discount if applied)
+  const discountedSubtotal = useMemo(() => {
+    return computedSubtotal - discountAmount;
+  }, [computedSubtotal, discountAmount]);
+
+  // Taxes on discounted subtotal
+  const taxes = useMemo(() => {
+    return (discountedSubtotal * (taxRate ?? 0)) / 100;
+  }, [discountedSubtotal, taxRate]);
+
+  // Grand total
+  const totalAmount = useMemo(() => {
+    return discountedSubtotal + taxes;
+  }, [discountedSubtotal, taxes]);
+
+  // --- Render ---
   return (
     <StyledTableContainer>
       <Table aria-label="price breakdown table">
@@ -80,9 +127,9 @@ export default function PriceTable({
             <TableCell align="right">Total</TableCell>
           </TableRow>
         </StyledTableHead>
+
         <TableBody>
-          {fileTable?.map((row) => (
-            // Use the new StyledDataRow component here
+          {rowsWithTotals.map((row) => (
             <StyledDataRow key={row.fileId}>
               <TableCell component="th" scope="row">
                 {row.fileName}
@@ -92,92 +139,72 @@ export default function PriceTable({
                 {formatCurrency(row.pricePerUnit)}
               </TableCell>
               <TableCell align="right">
-                {formatCurrency(row.totalPrice)}
+                {formatCurrency(row._totalPrice)}
               </TableCell>
             </StyledDataRow>
           ))}
         </TableBody>
+
         <TableFooter>
+          {/* Subtotal */}
           <StyledFooterTableRow>
-            <TableCell>
-              <Typography variant="body1" fontWeight="600">
-                Subtotal
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
+            <TableCell>Subtotal</TableCell>
+            <TableCell align="center">-</TableCell>
+            <TableCell align="right">-</TableCell>
             <TableCell align="right">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
+              {formatCurrency(computedSubtotal)}
             </TableCell>
-            <TableCell align="right">{formatCurrency(subtotal)}</TableCell>
           </StyledFooterTableRow>
 
-         {useDiscount && discountAvailable && 
-         <StyledFooterTableRow>
-            <TableCell>
-              <Typography variant="body1" fontWeight="600">
-                Discount
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
-            <TableCell align="right">{discountAvailable?.percentage}%</TableCell>
-          </StyledFooterTableRow>}
+          {/* Discount (only if applied) */}
+          {isDiscountApplied && (
+            <StyledFooterTableRow>
+              <TableCell>Discount ({discountAvailable!.percentage}%)</TableCell>
+              <TableCell align="center">-</TableCell>
+              <TableCell align="right">-</TableCell>
+              <TableCell align="right">
+                -{formatCurrency(discountAmount)}
+              </TableCell>
+            </StyledFooterTableRow>
+          )}
 
+          {/* Taxes */}
           <StyledFooterTableRow>
-            <TableCell>
-              <Typography variant="body1" fontWeight="600">
-                Taxes ({taxRate}%)
-              </Typography>
-            </TableCell>
-            <TableCell align="center">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
+            <TableCell>Taxes ({taxRate}%)</TableCell>
+            <TableCell align="center">-</TableCell>
+            <TableCell align="right">-</TableCell>
             <TableCell align="right">{formatCurrency(taxes)}</TableCell>
           </StyledFooterTableRow>
 
+          {/* Total */}
           <StyledFooterTableRow>
             <TableCell>
               <Typography variant="h6" component="div">
                 Total Amount
               </Typography>
             </TableCell>
-            <TableCell align="center">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="body1" fontWeight="600">
-                -
-              </Typography>
-            </TableCell>
+            <TableCell align="center">-</TableCell>
+            <TableCell align="right">-</TableCell>
             <TableCell align="right">
               <Typography variant="h6" component="div">
-                {formatCurrency(subtotal + taxes - (discountAvailable?.percentage || 0))}
+                {formatCurrency(totalAmount)}
               </Typography>
             </TableCell>
           </StyledFooterTableRow>
+
+          {/* Expired Discount Show and it not used */}
+          {isExpiredCode && !discountAvailable?.isUsed && (
+            <StyledFooterTableRow>
+              <TableCell />
+              <TableCell align="center" sx={{
+                color:'red'
+              }}>
+                Oops! This discount code has expired and can’t be used anymore.
+              </TableCell>
+              <TableCell align="right" />
+              <TableCell align="right" />
+            </StyledFooterTableRow>
+          )}
         </TableFooter>
       </Table>
     </StyledTableContainer>

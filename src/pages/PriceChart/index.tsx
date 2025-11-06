@@ -38,9 +38,12 @@ const PriceChart = () => {
     discountAvailable:{ orderId: '', code: '', percentage: 0, isUsed: false },
     fileTable: [],
   });
+
   const isLoading = false;
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
   const isDisabled = false;
+
+
 
   useEffect(() => {
     if (orderId) fetchOrder({ orderId, setData, setIsPageLoading });

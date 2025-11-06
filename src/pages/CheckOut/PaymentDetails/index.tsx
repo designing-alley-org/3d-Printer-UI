@@ -19,8 +19,10 @@ import toast from 'react-hot-toast';
 import api from '../../../axiosConfig';
 import CustomButton from '../../../stories/button/CustomButton';
 import { getOrderSummaryService } from '../../../services/order';
-import { formatText } from '../../../utils/function';
+import { formatCurrency, formatText } from '../../../utils/function';
 import { DeliveryService } from '../../../types/uploadFiles';
+import { Order } from '../../../types/order';
+import { applyDiscountApi } from '../../../services/discount';
 
 interface AddressData {
   _id: string;
@@ -38,7 +40,7 @@ const PaymentDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [files, setFiles] = useState<any[]>([]);
+  const [order, setOrder] = useState<Order | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<AddressData>();
   const [deliveryService, setDeliveryService] =
     useState<DeliveryService | null>(null);
@@ -59,7 +61,7 @@ const PaymentDetails: React.FC = () => {
         setError
       );
       if (summary) {
-        setFiles(summary.files);
+        setOrder(summary);
         setSelectedAddress(summary.order.address);
         setDeliveryService(summary.order.delivery_service);
       }
@@ -71,10 +73,17 @@ const PaymentDetails: React.FC = () => {
   const handlePayment = async () => {
     try {
       setIsSaving(true);
-
-      const response = await api.post(`/checkout/${orderId}`);
-      if (response.status === 200 && response.data.url) {
-        window.location.href = response.data.url;
+      if(order?.discount && order.discount.applicable && order.discount._id){
+        await applyDiscountApi(order.discount._id);
+      }
+      const response = await api.post(`/checkout/create-payment`,{
+        discountId : order?.discount && order.discount.applicable ? order.discount._id : null,
+        orderId: orderId,
+      });
+      if (response.data.data.url) {
+        console.log('Payment URL:', response.data.data.url);
+        console.log('Full Response:', response.data);
+        window.location.href = response.data.data.url;
       } else {
         throw new Error('Invalid payment URL received');
       }
@@ -164,7 +173,7 @@ const PaymentDetails: React.FC = () => {
                 </Typography>
               </Box>
               <List dense>
-                {files?.map((file, index) => (
+                {order?.files?.map((file, index) => (
                   <ListItem key={file.fileId || index} disableGutters>
                     <ListItemIcon sx={{ minWidth: 'auto', mr: 1.5 }}>
                       <Chip
@@ -267,12 +276,28 @@ const PaymentDetails: React.FC = () => {
                     }}
                   >
                     <Typography variant="body2" color="primary.main">
-                      Price
+                      Subtotal
                     </Typography>
                     <Typography variant="body2">
-                      {/* ${quoteData.totalPrice?.toFixed(2)} */}
+                      {formatCurrency(order?.subtotal || 0)}
                     </Typography>
                   </Box>
+                  {order?.discount && order.discount.applicable ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        mb: 1,
+                      }}
+                    >
+                      <Typography variant="body2" color="primary.main">
+                        Discount ({order.discount.percentage}%)
+                      </Typography> 
+                      <Typography variant="body2">
+                        - {formatCurrency(order.discount.discountAmount)}
+                      </Typography>
+                    </Box>
+                  ) : null}
                   <Box
                     sx={{
                       display: 'flex',
@@ -295,11 +320,10 @@ const PaymentDetails: React.FC = () => {
                     }}
                   >
                     <Typography variant="body2" color="primary.main">
-                      Taxes
+                      Taxes ({order?.taxRate ?? 0}%)
                     </Typography>
                     <Typography variant="body2">
-                      $ 18
-                      {/* {((quoteData?.tax / 100) * quoteData.totalPrice)?.toFixed(2)} */}
+                      {formatCurrency((order?.taxes as number) || 0)}
                     </Typography>
                   </Box>
                 </Box>
@@ -315,13 +339,11 @@ const PaymentDetails: React.FC = () => {
                   Total
                 </Typography>
                 <Typography variant="h6" color="primary.main">
-                  900.00
-                  {/* $
-                  {(
-                    Number(quoteData.totalPrice) +
-                    Number(deliveryService?.service_price || 0) +
-                    (Number(quoteData?.tax) * quoteData.totalPrice) / 100
-                  )?.toFixed(2)} */}
+                  {formatCurrency(
+                    (order?.subtotal || 0) +
+                      (deliveryService?.service_price || 0) +
+                      (order?.taxes || 0) - (order?.discount?.discountAmount || 0)
+                  )}
                 </Typography>
               </Box>
             </Box>

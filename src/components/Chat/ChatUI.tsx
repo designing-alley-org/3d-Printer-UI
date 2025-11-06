@@ -17,34 +17,41 @@ import {
 } from '../../store/Slice/chatSlice';
 import { hideInput } from '../../constant/const';
 import { markNotificationAsRead } from '../../store/Slice/notificationSlice';
-import PriceTable, { PriceTableProps } from '../../pages/PriceChart/PriceTabel';
+import PriceTable from '../../pages/PriceChart/PriceTabel';
 import { getCheckoutDetailsService } from '../../services/order';
 import { useSearchParams } from 'react-router-dom';
+import NegotiationTabel from '../NegotiationTabel';
+import { acceptDiscount } from '../../store/Slice/discountSlicer';
+import { resolveQuery, updateHelpStatus } from '../../store/Slice/querySlice';
+import { PriceTableProps } from '../../types/priceChart';
 
 interface ChatUIProps {
   isOpen: boolean | undefined;
   status: string;
   type: string | undefined;
   orderNumber: string | undefined;
+  helpId: string | undefined;
 }
 
 type fetchOrderProps = {
   orderNumber: string;
   setData: React.Dispatch<React.SetStateAction<PriceTableProps>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  conversationId?: string;
 };
 
 const fetchOrder = async ({
   orderNumber,
   setData,
   setIsLoading,
+  conversationId,
 }: fetchOrderProps) => {
-  const response = await getCheckoutDetailsService({ orderNumber });
+  const response = await getCheckoutDetailsService({ orderNumber, conversationId });
   setData(response);
   setIsLoading(false);
 };
 
-const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
+const ChatUI = ({ isOpen, status, type, orderNumber, helpId }: ChatUIProps) => {
   const [messageInput, setMessageInput] = useState('');
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -64,15 +71,15 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
     subtotal: 0,
     taxes: 0,
     taxRate: 0,
-    totalAmount: 0,
     fileTable: [],
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (orderNumber) fetchOrder({ orderNumber, setData, setIsLoading });
-  }, [orderNumber]);
+    if (orderNumber && isOpen && conversationId)
+      fetchOrder({ orderNumber, setData, setIsLoading, conversationId });
+  }, [orderNumber, isOpen, conversationId]);
 
   useEffect(() => {
     if (!conversationId || !user?._id || !Array.isArray(messages)) return;
@@ -182,6 +189,31 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
     setSelectedFiles([]);
   };
 
+  const handelAcceptDiscount = async () => {
+    await dispatch(
+      acceptDiscount(data.discountAvailable!._id)
+    ).unwrap();
+
+    await dispatch(
+      resolveQuery(helpId || '')
+    ).unwrap();
+
+    await dispatch(
+      updateHelpStatus({
+        conversationId: conversationId || '',
+        status: 'Resolved',
+      })
+    );
+
+    setData((prevData) => ({
+      ...prevData,
+      discountAvailable: prevData.discountAvailable
+        ? { ...prevData.discountAvailable, isUserAccepted: true }
+        : prevData.discountAvailable,
+    }));
+    
+  };
+
   if (loading && messages.length === 0) {
     return <LoadingScreen />;
   }
@@ -208,9 +240,7 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
             ) : (
               <PriceTable
                 subtotal={data?.subtotal || 0}
-                taxes={data?.taxes || 0}
                 taxRate={data?.taxRate || 0}
-                totalAmount={data?.totalAmount || 0}
                 fileTable={data?.fileTable || []}
               />
             )}
@@ -228,6 +258,19 @@ const ChatUI = ({ isOpen, status, type, orderNumber }: ChatUIProps) => {
           ))}
           {/* Empty div to scroll to bottom */}
         </Box>
+
+        {type === 'Negotiation' && data.discountAvailable && (
+          <Box
+            mt={2}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'start',
+            }}
+          >
+            <NegotiationTabel data={data} onAccept={handelAcceptDiscount} />
+          </Box>
+        )}
       </Box>
 
       {/* Input */}
