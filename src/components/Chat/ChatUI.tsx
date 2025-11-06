@@ -37,14 +37,16 @@ type fetchOrderProps = {
   orderNumber: string;
   setData: React.Dispatch<React.SetStateAction<PriceTableProps>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  conversationId?: string;
 };
 
 const fetchOrder = async ({
   orderNumber,
   setData,
   setIsLoading,
+  conversationId,
 }: fetchOrderProps) => {
-  const response = await getCheckoutDetailsService({ orderNumber });
+  const response = await getCheckoutDetailsService({ orderNumber, conversationId });
   setData(response);
   setIsLoading(false);
 };
@@ -75,9 +77,9 @@ const ChatUI = ({ isOpen, status, type, orderNumber, helpId }: ChatUIProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (orderNumber && isOpen)
-      fetchOrder({ orderNumber, setData, setIsLoading });
-  }, [orderNumber, isOpen]);
+    if (orderNumber && isOpen && conversationId)
+      fetchOrder({ orderNumber, setData, setIsLoading, conversationId });
+  }, [orderNumber, isOpen, conversationId]);
 
   useEffect(() => {
     if (!conversationId || !user?._id || !Array.isArray(messages)) return;

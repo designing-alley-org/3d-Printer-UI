@@ -354,15 +354,18 @@ const getUserOrderIdsService = async () => {
 const getCheckoutDetailsService = async ({
   orderId,
   orderNumber,
+  conversationId
 }: {
   orderId?: string;
   orderNumber?: string;
+  conversationId?: string;
 }) => {
   try {
     const response = await api.get(`/checkout-details`, {
       params: {
         ...(orderId && { orderId }),
         ...(orderNumber && { orderNumber }),
+        ...(conversationId && { conversationId }),
       },
     });
 

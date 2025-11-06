@@ -1,4 +1,4 @@
-import  { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   Box,
   Table,
@@ -42,7 +42,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
   onAccept,
 }) => {
   const { taxRate, useDiscount = true, discountAvailable, fileTable } = data;
-  const { loading , error } = useSelector((state: RootState) => state.discount);
+  const { loading, error } = useSelector((state: RootState) => state.discount);
 
   const subtotal = fileTable.reduce((sum, file) => sum + file.totalPrice, 0);
 
@@ -145,7 +145,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                     borderBottom: '1px solid #C5C5C5',
                     py: 2,
                   }}
-                   align="right"
+                  align="right"
                 >
                   -
                 </TableCell>
@@ -161,8 +161,6 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                 </TableCell>
               </TableRow>
 
-
-
               {/* Negotiation Discount */}
               {useDiscount && discountAvailable && (
                 <TableRow>
@@ -177,7 +175,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                       borderBottom: '1px solid #C5C5C5',
                       py: 2,
                     }}
-                     align="right"
+                    align="right"
                   >
                     -
                   </TableCell>
@@ -192,7 +190,6 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                 </TableRow>
               )}
 
-             
               {/* Tax */}
               <TableRow>
                 <TableCell
@@ -211,7 +208,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                     borderBottom: '1px solid #C5C5C5',
                     py: 2,
                   }}
-                   align="right"
+                  align="right"
                 >
                   -
                 </TableCell>
@@ -240,7 +237,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                 >
                   Final Total
                 </TableCell>
-                <TableCell sx={{ color: '#fff', py: 2 }}  align="right">
+                <TableCell sx={{ color: '#fff', py: 2 }} align="right">
                   -
                 </TableCell>
                 <TableCell
@@ -295,7 +292,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
               </Typography>
             </Typography>
           </Box>
-          {!data?.discountAvailable?.isUserAccepted && isCodeExpired && (
+          {isCodeExpired && !data?.discountAvailable?.isUsed && (
             <Box
               sx={{
                 mt: 1,
@@ -311,7 +308,10 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
                 sx={{ ml: 1 }}
                 fontWeight={500}
               >
-                Code is expired or not accepted yet.
+                {data?.discountAvailable?.isUserAccepted &&
+                !data?.discountAvailable?.isUsed &&
+                   'Code is expired or not used yet.'
+                  }
               </Typography>
             </Box>
           )}
@@ -331,7 +331,7 @@ const NegotiationTabel: React.FC<NegotiationTabelProps> = ({
             }}
           >
             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              User has accepted the discount offer for this order.
+              I accept this.
             </Typography>
           </Box>
         ) : (

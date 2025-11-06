@@ -44,13 +44,12 @@ const StyledFooterTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function PriceTable({
-  subtotal,                
+  subtotal,
   taxRate,
   fileTable,
-  discountAvailable,        
-  useDiscount = false,      
+  discountAvailable,
+  useDiscount = false,
 }: PriceTableProps) {
-
   // Guard: Empty data
   if (!fileTable || fileTable.length === 0) {
     return (
@@ -71,6 +70,10 @@ export default function PriceTable({
     });
   }, [fileTable]);
 
+  const isExpiredCode = discountAvailable?.expiryDate
+    ? new Date(discountAvailable?.expiryDate) < new Date()
+    : false;
+
   // Compute subtotal from rows if not provided as prop
   const computedSubtotal = useMemo(() => {
     if (typeof subtotal === 'number') return subtotal;
@@ -79,12 +82,17 @@ export default function PriceTable({
 
   // Is discount applied? (both enabled and accepted)
   const isDiscountApplied = useMemo(() => {
+    if (isExpiredCode && !discountAvailable?.isUsed) return false;
     return Boolean(
       useDiscount &&
-      discountAvailable?.isUserAccepted &&
-      (discountAvailable?.percentage ?? 0) > 0
+        discountAvailable?.isUserAccepted &&
+        (discountAvailable?.percentage ?? 0) > 0
     );
-  }, [useDiscount, discountAvailable?.isUserAccepted, discountAvailable?.percentage]);
+  }, [
+    useDiscount,
+    discountAvailable?.isUserAccepted,
+    discountAvailable?.percentage,
+  ]);
 
   // Discount amount
   const discountAmount = useMemo(() => {
@@ -127,8 +135,12 @@ export default function PriceTable({
                 {row.fileName}
               </TableCell>
               <TableCell align="center">{row.quantity}</TableCell>
-              <TableCell align="right">{formatCurrency(row.pricePerUnit)}</TableCell>
-              <TableCell align="right">{formatCurrency(row._totalPrice)}</TableCell>
+              <TableCell align="right">
+                {formatCurrency(row.pricePerUnit)}
+              </TableCell>
+              <TableCell align="right">
+                {formatCurrency(row._totalPrice)}
+              </TableCell>
             </StyledDataRow>
           ))}
         </TableBody>
@@ -139,7 +151,9 @@ export default function PriceTable({
             <TableCell>Subtotal</TableCell>
             <TableCell align="center">-</TableCell>
             <TableCell align="right">-</TableCell>
-            <TableCell align="right">{formatCurrency(computedSubtotal)}</TableCell>
+            <TableCell align="right">
+              {formatCurrency(computedSubtotal)}
+            </TableCell>
           </StyledFooterTableRow>
 
           {/* Discount (only if applied) */}
@@ -148,7 +162,9 @@ export default function PriceTable({
               <TableCell>Discount ({discountAvailable!.percentage}%)</TableCell>
               <TableCell align="center">-</TableCell>
               <TableCell align="right">-</TableCell>
-              <TableCell align="right">-{formatCurrency(discountAmount)}</TableCell>
+              <TableCell align="right">
+                -{formatCurrency(discountAmount)}
+              </TableCell>
             </StyledFooterTableRow>
           )}
 
@@ -175,6 +191,20 @@ export default function PriceTable({
               </Typography>
             </TableCell>
           </StyledFooterTableRow>
+
+          {/* Expired Discount Show and it not used */}
+          {isExpiredCode && !discountAvailable?.isUsed && (
+            <StyledFooterTableRow>
+              <TableCell />
+              <TableCell align="center" sx={{
+                color:'red'
+              }}>
+                Oops! This discount code has expired and can’t be used anymore.
+              </TableCell>
+              <TableCell align="right" />
+              <TableCell align="right" />
+            </StyledFooterTableRow>
+          )}
         </TableFooter>
       </Table>
     </StyledTableContainer>
