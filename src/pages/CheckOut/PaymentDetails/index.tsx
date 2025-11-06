@@ -21,7 +21,8 @@ import CustomButton from '../../../stories/button/CustomButton';
 import { getOrderSummaryService } from '../../../services/order';
 import { formatCurrency, formatText } from '../../../utils/function';
 import { DeliveryService } from '../../../types/uploadFiles';
-import { Files, Order } from '../../../types/order';
+import { Order } from '../../../types/order';
+import { applyDiscountApi } from '../../../services/discount';
 
 interface AddressData {
   _id: string;
@@ -72,10 +73,17 @@ const PaymentDetails: React.FC = () => {
   const handlePayment = async () => {
     try {
       setIsSaving(true);
-
-      const response = await api.post(`/checkout/${orderId}`);
-      if (response.status === 200 && response.data.url) {
-        window.location.href = response.data.url;
+      if(order?.discount && order.discount.applicable && order.discount._id){
+        await applyDiscountApi(order.discount._id);
+      }
+      const response = await api.post(`/checkout/create-payment`,{
+        discountId : order?.discount && order.discount.applicable ? order.discount._id : null,
+        orderId: orderId,
+      });
+      if (response.data.data.url) {
+        console.log('Payment URL:', response.data.data.url);
+        console.log('Full Response:', response.data);
+        window.location.href = response.data.data.url;
       } else {
         throw new Error('Invalid payment URL received');
       }
@@ -334,7 +342,7 @@ const PaymentDetails: React.FC = () => {
                   {formatCurrency(
                     (order?.subtotal || 0) +
                       (deliveryService?.service_price || 0) +
-                      (order?.taxes || 0)
+                      (order?.taxes || 0) - (order?.discount?.discountAmount || 0)
                   )}
                 </Typography>
               </Box>
