@@ -18,3 +18,20 @@ export interface DeliveryData {
   serviceName: string;
   serviceType: string;
 }
+
+
+export interface Address {
+  _id: string;
+  userId: string;
+  addressType: 'home' | 'office' | 'workshop' | 'other';
+  personName: string;
+  phoneNumber: string;
+  email: string;
+  streetLines: string[];
+  city: string;
+  postalCode: string;
+  countryCode: string;
+  createdAt: Date;
+  updatedAt: Date;
+  companyName?: string | null | undefined;
+}

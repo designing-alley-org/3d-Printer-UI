@@ -19,8 +19,9 @@ import toast from 'react-hot-toast';
 import api from '../../../axiosConfig';
 import CustomButton from '../../../stories/button/CustomButton';
 import { getOrderSummaryService } from '../../../services/order';
-import { formatText } from '../../../utils/function';
+import { formatCurrency, formatText } from '../../../utils/function';
 import { DeliveryService } from '../../../types/uploadFiles';
+import { Files, Order } from '../../../types/order';
 
 interface AddressData {
   _id: string;
@@ -38,7 +39,7 @@ const PaymentDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [files, setFiles] = useState<any[]>([]);
+  const [order, setOrder] = useState<Order | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<AddressData>();
   const [deliveryService, setDeliveryService] =
     useState<DeliveryService | null>(null);
@@ -59,7 +60,7 @@ const PaymentDetails: React.FC = () => {
         setError
       );
       if (summary) {
-        setFiles(summary.files);
+        setOrder(summary);
         setSelectedAddress(summary.order.address);
         setDeliveryService(summary.order.delivery_service);
       }
@@ -164,7 +165,7 @@ const PaymentDetails: React.FC = () => {
                 </Typography>
               </Box>
               <List dense>
-                {files?.map((file, index) => (
+                {order?.files?.map((file, index) => (
                   <ListItem key={file.fileId || index} disableGutters>
                     <ListItemIcon sx={{ minWidth: 'auto', mr: 1.5 }}>
                       <Chip
@@ -267,12 +268,28 @@ const PaymentDetails: React.FC = () => {
                     }}
                   >
                     <Typography variant="body2" color="primary.main">
-                      Price
+                      Subtotal
                     </Typography>
                     <Typography variant="body2">
-                      {/* ${quoteData.totalPrice?.toFixed(2)} */}
+                      {formatCurrency(order?.subtotal || 0)}
                     </Typography>
                   </Box>
+                  {order?.discount && order.discount.applicable ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        mb: 1,
+                      }}
+                    >
+                      <Typography variant="body2" color="primary.main">
+                        Discount ({order.discount.percentage}%)
+                      </Typography> 
+                      <Typography variant="body2">
+                        - {formatCurrency(order.discount.discountAmount)}
+                      </Typography>
+                    </Box>
+                  ) : null}
                   <Box
                     sx={{
                       display: 'flex',
@@ -295,11 +312,10 @@ const PaymentDetails: React.FC = () => {
                     }}
                   >
                     <Typography variant="body2" color="primary.main">
-                      Taxes
+                      Taxes ({order?.taxRate ?? 0}%)
                     </Typography>
                     <Typography variant="body2">
-                      $ 18
-                      {/* {((quoteData?.tax / 100) * quoteData.totalPrice)?.toFixed(2)} */}
+                      {formatCurrency((order?.taxes as number) || 0)}
                     </Typography>
                   </Box>
                 </Box>
@@ -315,13 +331,11 @@ const PaymentDetails: React.FC = () => {
                   Total
                 </Typography>
                 <Typography variant="h6" color="primary.main">
-                  900.00
-                  {/* $
-                  {(
-                    Number(quoteData.totalPrice) +
-                    Number(deliveryService?.service_price || 0) +
-                    (Number(quoteData?.tax) * quoteData.totalPrice) / 100
-                  )?.toFixed(2)} */}
+                  {formatCurrency(
+                    (order?.subtotal || 0) +
+                      (deliveryService?.service_price || 0) +
+                      (order?.taxes || 0)
+                  )}
                 </Typography>
               </Box>
             </Box>
