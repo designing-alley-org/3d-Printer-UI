@@ -1,6 +1,7 @@
 //  Define all main statuses
 const ORDER_STATUS = Object.freeze({
   PENDING_CUSTOMISATION: 'Pending Customisation',
+  PAYMENT_PENDING: 'Payment Pending',
   INCOMPLETE_ORDER: 'Incomplete Order',
   FAILED_PAYMENT: 'Failed Payment',
   ORDER_PLACED: 'Order Placed',
@@ -17,6 +18,7 @@ const ORDER_STATUS_GROUPS = Object.freeze({
     ORDER_STATUS.PENDING_CUSTOMISATION,
     ORDER_STATUS.INCOMPLETE_ORDER,
     ORDER_STATUS.FAILED_PAYMENT,
+    ORDER_STATUS.PAYMENT_PENDING,
   ],
   ACTIVE: [
     ORDER_STATUS.ORDER_PLACED,

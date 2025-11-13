@@ -3,7 +3,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Chip,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -17,6 +16,8 @@ import { formatDate } from '../utils/function';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes/routes-constants';
 import { ORDER_STATUS, ORDER_STATUS_COLORS } from '../constant/orderStatus';
+import { ORDER_STATUS_GROUPS } from '../constant/orderStatus';
+
 
 interface Props {
   order: any;
@@ -48,6 +49,11 @@ const handelGoBack = (order: any, navigate: NavigateFunction) => {
     case ORDER_STATUS.INCOMPLETE_ORDER:
       navigate(
         `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.PRICE}`
+      );
+      break;
+    case ORDER_STATUS.PAYMENT_PENDING:
+      navigate(
+        `/${ROUTES.GET_QUOTES}/${order._id}/${order.order_number}/${ROUTES.CHECKOUT + '/' + ROUTES.PAYMENT}`
       );
       break;
     default:
@@ -104,6 +110,7 @@ const OrderFileItem = ({
 }: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const isGoBackVisible = ORDER_STATUS_GROUPS.PENDING.includes(order.order_status);
 
   return (
     <>
@@ -174,7 +181,7 @@ const OrderFileItem = ({
         </CardContent>
         <CardActions>
           <CustomButton
-            sx={buttonStyle(theme)}
+            sx={{ ...buttonStyle(theme), mr: 2, display: isGoBackVisible ? 'block' : 'none' }}
             children={'Go to Back'}
             onClick={(e) => {
               e.stopPropagation();

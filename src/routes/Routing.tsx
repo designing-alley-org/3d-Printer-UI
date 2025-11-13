@@ -115,7 +115,7 @@ const Routing: React.FC = () => {
 
         {/* Order Success */}
         <Route
-          path={ROUTES.ORDER_SUCCESSFUL}
+          path={`${ROUTES.ORDER_SUCCESSFUL}/:orderNumber`}
           element={<ProtectedRoute component={<OrderSuccessful />} />}
         />
       </Route>
