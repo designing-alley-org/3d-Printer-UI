@@ -17,8 +17,10 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CustomButton from '../../stories/button/CustomButton';
 import { formatCurrency } from '../../utils/function';
 import { Invoice } from '../../types/invoice.type';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { generateInvoiceService } from '../../services/order';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 export default function InvoiceModal({
   open = true,
@@ -31,6 +33,7 @@ export default function InvoiceModal({
 }) {
   const [invoice, setInvoice] = useState<Invoice | null>();
   const [loading, setLoading] = useState<boolean>(true);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   const fetchInvoiceData = async ({ orderId }: { orderId: string }) => {
     await generateInvoiceService(orderId || '')
@@ -45,6 +48,63 @@ export default function InvoiceModal({
   useEffect(() => {
     if (open && orderId) fetchInvoiceData({ orderId });
   }, [open, orderId]);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!invoiceRef.current || !invoice) return;
+
+    try {
+      // Hide buttons before capture
+      const buttons = invoiceRef.current.querySelectorAll('button');
+      buttons.forEach((btn) => {
+        (btn as HTMLElement).style.display = 'none';
+      });
+
+      // Capture the invoice content
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+      });
+
+      // Show buttons again
+      buttons.forEach((btn) => {
+        (btn as HTMLElement).style.display = '';
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 10;
+
+      pdf.addImage(
+        imgData,
+        'PNG',
+        imgX,
+        imgY,
+        imgWidth * ratio,
+        imgHeight * ratio
+      );
+
+      pdf.save(`Invoice-${invoice.orderNumber || 'document'}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
 
   return (
     <Dialog
@@ -69,7 +129,7 @@ export default function InvoiceModal({
             <Skeleton variant="rectangular" height={400} sx={{ mb: 2 }} />
           </Box>
         ) : (
-          <Box sx={{ p: 3 }}>
+          <Box ref={invoiceRef} sx={{ p: 3 }}>
             <Grid container spacing={2}>
               <Grid size={{ xs: 8 }}>
                 <Box>
@@ -185,7 +245,7 @@ export default function InvoiceModal({
                     </Typography>
                   </Box>
 
-                  {invoice?.discount > 0 && (
+                  {(invoice?.discount ?? 0) > 0 && (
                     <Box
                       sx={{ display: 'flex', justifyContent: 'space-between' }}
                     >
@@ -244,11 +304,15 @@ export default function InvoiceModal({
                 <CustomButton
                   startIcon={<PrintIcon />}
                   variant="outlined"
-                  onClick={() => window.print()}
+                  onClick={handlePrint}
                 >
                   Print
                 </CustomButton>
-                <CustomButton variant="contained" startIcon={<DownloadIcon />}>
+                <CustomButton
+                  variant="contained"
+                  startIcon={<DownloadIcon />}
+                  onClick={handleDownloadPDF}
+                >
                   Download PDF
                 </CustomButton>
               </Grid>
