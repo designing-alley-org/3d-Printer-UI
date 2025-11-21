@@ -17,7 +17,9 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes/routes-constants';
 import { ORDER_STATUS, ORDER_STATUS_COLORS } from '../constant/orderStatus';
 import { ORDER_STATUS_GROUPS } from '../constant/orderStatus';
-
+import InvoiceModal from './Model/invoiceModel';
+import { useState } from 'react';
+import { sampleInvoice } from '../constant/mock.const';
 
 interface Props {
   order: any;
@@ -110,7 +112,13 @@ const OrderFileItem = ({
 }: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const isGoBackVisible = ORDER_STATUS_GROUPS.PENDING.includes(order.order_status);
+  const isGoBackVisible = ORDER_STATUS_GROUPS.PENDING.includes(
+    order.order_status
+  );
+  const showInvoiceButton =
+    ORDER_STATUS_GROUPS.ACTIVE.includes(order.order_status) ||
+    ORDER_STATUS_GROUPS.COMPLETED.includes(order.order_status);
+  const [viewInvoice, setViewInvoice] = useState<boolean>(false);
 
   return (
     <>
@@ -181,7 +189,11 @@ const OrderFileItem = ({
         </CardContent>
         <CardActions>
           <CustomButton
-            sx={{ ...buttonStyle(theme), mr: 2, display: isGoBackVisible ? 'block' : 'none' }}
+            sx={{
+              ...buttonStyle(theme),
+              mr: 2,
+              display: isGoBackVisible ? 'block' : 'none',
+            }}
             children={'Go to Back'}
             onClick={(e) => {
               e.stopPropagation();
@@ -224,7 +236,7 @@ const OrderFileItem = ({
                 ))
               )}
 
-              {order.paymentStatus.status === 'success' && (
+              {/* {order.paymentStatus.status === 'success' && (
                 <Box display="flex" gap={1} justifyContent="end" mt={2}>
                   {order?.shipmentCreated?.status === 'Delivered' &&
                     order?.returnCreated?.created !== true && (
@@ -241,13 +253,33 @@ const OrderFileItem = ({
                       />
                     )}
                 </Box>
+              )} */}
+
+              {showInvoiceButton && (
+                <InvoiceButton onClick={() => setViewInvoice(true)} />
               )}
             </Box>
           </motion.div>
         )}
       </AnimatePresence>
+      <InvoiceModal open={viewInvoice} onClose={() => setViewInvoice(false)} invoice={sampleInvoice} />
     </>
   );
 };
+
+
+function InvoiceButton({ onClick }: { onClick: () => void }) {
+  return (
+    <Box display="flex" gap={1} justifyContent="end" my={2} mr={1}>
+      <CustomButton
+        variant="outlined"
+        sx={{ padding: '8px 36px' }}
+        onClick={onClick}
+      >
+        View Invoice
+      </CustomButton>
+    </Box>
+  );
+}
 
 export default OrderFileItem;

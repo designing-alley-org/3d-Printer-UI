@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Chip, Typography } from '@mui/material';
 import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutlined';
 import TrackingStepper from './TrackingStepper';
 import { useEffect, useState } from 'react';
@@ -15,6 +15,7 @@ const DeliveryDetail = ({
   return: returnInfo,
 }: DeliveryDetailProps) => {
   const [trackingDetails, setTrackingDetails] = useState([]);
+  const [lastStatus, setLastStatus] = useState<string>('');
   const [trackingError, setTrackingError] = useState(null);
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const DeliveryDetail = ({
           shipment?.trackingId,
           setTrackingError
         );
+        setLastStatus(response?.data?.latestStatus || '');
         setTrackingDetails(response?.data?.scanEvents);
       } catch (error) {
         console.error('Error fetching tracking details:', error);
@@ -71,10 +73,13 @@ const DeliveryDetail = ({
               }}
             >
               Status:
-              <Typography
+             <Typography
                 sx={{ color: 'secondary.main', ml: '4px', fontWeight: '500' }}
               >
-                {shipment?.status || 'N/A'}
+                <Chip label={lastStatus || 'N/A'} sx={{
+                  fontSize:12
+                }}/>
+
               </Typography>
             </Typography>
             <Typography

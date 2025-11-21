@@ -101,7 +101,7 @@ export default function TrackingStepper({
   }
 
   return (
-    <Stack sx={{ width: '100%', mt: 2 }}>
+  <Stack sx={{ width: '100%', mt: 2, mb: 2 }} spacing={4}>
       <Stepper
         alternativeLabel
         activeStep={activeStep}
