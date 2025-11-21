@@ -1,18 +1,16 @@
 import { Box, Card, CardContent, CardHeader, Chip, Typography } from '@mui/material';
-import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutlined';
+// import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutlined';
 import TrackingStepper from './TrackingStepper';
 import { useEffect, useState } from 'react';
 import { trackByTrackingNumberService } from '../services/fedex';
-import { formatText } from '../utils/function';
+// import { formatText } from '../utils/function';
 
 interface DeliveryDetailProps {
   shipment: any;
-  return: any;
 }
 
 const DeliveryDetail = ({
   shipment,
-  return: returnInfo,
 }: DeliveryDetailProps) => {
   const [trackingDetails, setTrackingDetails] = useState([]);
   const [lastStatus, setLastStatus] = useState<string>('');
@@ -125,7 +123,7 @@ const DeliveryDetail = ({
         </Box>
         {/* Footer */}
 
-        {returnInfo?.created && (
+        {/* {returnInfo?.created && (
           <Box
             display="flex"
             justifyContent="space-between"
@@ -158,7 +156,6 @@ const DeliveryDetail = ({
               </Typography>
             </Box>
 
-            {/* If pickupConfirmationCode exists */}
             {returnInfo?.pickup?.pickupConfirmationCode && (
               <Box display="flex" flexDirection="column" justifyContent="end">
                 <Typography
@@ -190,7 +187,7 @@ const DeliveryDetail = ({
               </Box>
             )}
           </Box>
-        )}
+        )} */}
       </CardContent>
     </Card>
   );

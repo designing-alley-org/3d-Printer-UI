@@ -19,7 +19,6 @@ import { ORDER_STATUS, ORDER_STATUS_COLORS } from '../constant/orderStatus';
 import { ORDER_STATUS_GROUPS } from '../constant/orderStatus';
 import InvoiceModal from './Model/invoiceModel';
 import { useState } from 'react';
-import { sampleInvoice } from '../constant/mock.const';
 
 interface Props {
   order: any;
@@ -107,7 +106,6 @@ const renderStatusChip = (status: string) => {
 const OrderFileItem = ({
   order,
   onClick,
-  onReturn,
   isExpanded = false,
 }: Props) => {
   const navigate = useNavigate();
@@ -221,7 +219,6 @@ const OrderFileItem = ({
               {order?.shipmentCreated?.created && (
                 <DeliveryDetail
                   shipment={order?.shipmentCreated}
-                  return={order?.returnCreated}
                 />
               )}
 
@@ -262,7 +259,7 @@ const OrderFileItem = ({
           </motion.div>
         )}
       </AnimatePresence>
-      <InvoiceModal open={viewInvoice} onClose={() => setViewInvoice(false)} invoice={sampleInvoice} />
+      <InvoiceModal open={viewInvoice} onClose={() => setViewInvoice(false)} orderId={order._id} />
     </>
   );
 };
