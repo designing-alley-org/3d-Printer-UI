@@ -1,0 +1,325 @@
+import {
+  Dialog,
+  DialogContent,
+  Box,
+  Grid,
+  Typography,
+  Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Skeleton,
+} from '@mui/material';
+import PrintIcon from '@mui/icons-material/Print';
+import DownloadIcon from '@mui/icons-material/Download';
+import CustomButton from '../../stories/button/CustomButton';
+import { formatCurrency } from '../../utils/function';
+import { Invoice } from '../../types/invoice.type';
+import { useEffect, useState, useRef } from 'react';
+import { generateInvoiceService } from '../../services/order';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
+export default function InvoiceModal({
+  open = true,
+  onClose = () => {},
+  orderId,
+}: {
+  open?: boolean;
+  onClose?: () => void;
+  orderId?: string;
+}) {
+  const [invoice, setInvoice] = useState<Invoice | null>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const invoiceRef = useRef<HTMLDivElement>(null);
+
+  const fetchInvoiceData = async ({ orderId }: { orderId: string }) => {
+    await generateInvoiceService(orderId || '')
+      .then((res) => {
+        setInvoice(res);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (open && orderId) fetchInvoiceData({ orderId });
+  }, [open, orderId]);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!invoiceRef.current || !invoice) return;
+
+    try {
+      // Hide buttons before capture
+      const buttons = invoiceRef.current.querySelectorAll('button');
+      buttons.forEach((btn) => {
+        (btn as HTMLElement).style.display = 'none';
+      });
+
+      // Capture the invoice content
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+      });
+
+      // Show buttons again
+      buttons.forEach((btn) => {
+        (btn as HTMLElement).style.display = '';
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 10;
+
+      pdf.addImage(
+        imgData,
+        'PNG',
+        imgX,
+        imgY,
+        imgWidth * ratio,
+        imgHeight * ratio
+      );
+
+      pdf.save(`Invoice-${invoice.orderNumber || 'document'}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 0.4,
+          maxHeight: '95vh',
+          minHeight: '300px',
+        },
+      }}
+      keepMounted
+    >
+      <DialogContent sx={{ p: 0 }}>
+        {loading ? (
+          <Box sx={{ p: 3 }}>
+            <Skeleton variant="text" height={40} width="60%" sx={{ mb: 2 }} />
+            <Skeleton variant="text" height={30} width="40%" sx={{ mb: 2 }} />
+            <Skeleton variant="rectangular" height={400} sx={{ mb: 2 }} />
+          </Box>
+        ) : (
+          <Box ref={invoiceRef} sx={{ p: 3 }}>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 8 }}>
+                <Box>
+                  <Typography variant="h5" sx={{ fontWeight: 800 }}>
+                    {invoice?.company.name}
+                  </Typography>
+                  <Typography variant="body2">
+                    {invoice?.company.address}
+                  </Typography>
+                  <Typography variant="body2">
+                    {invoice?.company.city}
+                  </Typography>
+                  <Typography variant="body2">
+                    Email: {invoice?.company.email}
+                  </Typography>
+                  <Typography variant="body2">
+                    Phone: {invoice?.company.phone}
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid size={{ xs: 4 }} sx={{ textAlign: 'right' }}>
+                <Typography
+                  variant="h4"
+                  sx={{ color: (t) => t.palette.primary.main, fontWeight: 800 }}
+                >
+                  INVOICE
+                </Typography>
+                <Typography variant="body2">
+                  Order Number #: {invoice?.orderNumber}
+                </Typography>
+                <Typography variant="body2">Date: {invoice?.date}</Typography>
+                <Typography variant="body2">
+                  Status: {invoice?.status}
+                </Typography>
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <Divider sx={{ my: 2 }} />
+              </Grid>
+
+              <Grid size={{ xs: 6 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  Bill To:
+                </Typography>
+                <Typography variant="body2">{invoice?.billTo.name}</Typography>
+                <Typography variant="body2">
+                  {invoice?.billTo.addressLine1}
+                </Typography>
+                <Typography variant="body2">
+                  {invoice?.billTo.cityStateZip}
+                </Typography>
+                <Typography variant="body2">{invoice?.billTo.email}</Typography>
+              </Grid>
+
+              <Grid size={{ xs: 12 }} sx={{ textAlign: 'right' }}>
+                <Divider sx={{ my: 2 }} />
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <strong>Description</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong>Qty</strong>
+                      </TableCell>
+                      <TableCell align="right">
+                        <strong>Unit Price</strong>
+                      </TableCell>
+                      <TableCell align="right">
+                        <strong>Total</strong>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {invoice?.items.map((it) => (
+                      <TableRow key={it.id}>
+                        <TableCell sx={{ fontWeight: '700' }}>
+                          {it.description}
+                        </TableCell>
+                        <TableCell align="center">{it.qty}</TableCell>
+                        <TableCell align="right">
+                          {formatCurrency(it.unitPrice)}
+                        </TableCell>
+                        <TableCell align="right" sx={{ fontWeight: '700' }}>
+                          {formatCurrency(it.qty * it.unitPrice)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Grid>
+
+              <Grid size={{ xs: 6 }} />
+              <Grid size={{ xs: 6 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
+                    alignItems: 'stretch',
+                  }}
+                >
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <Typography>Subtotal:</Typography>
+                    <Typography>
+                      {formatCurrency(invoice?.subtotal || 0)}
+                    </Typography>
+                  </Box>
+
+                  {(invoice?.discount ?? 0) > 0 && (
+                    <Box
+                      sx={{ display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      <Typography>Discount:</Typography>
+                      <Typography sx={{ color: 'success.main' }}>
+                        -{formatCurrency(invoice?.discount || 0)}
+                      </Typography>
+                    </Box>
+                  )}
+
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <Typography>Tax ({invoice?.taxPercent}%):</Typography>
+                    <Typography>
+                      {formatCurrency(invoice?.taxAmount || 0)}
+                    </Typography>
+                  </Box>
+
+                  <Divider sx={{ my: 1 }} />
+
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <Typography sx={{ fontWeight: 700 }}>Total:</Typography>
+                    <Typography sx={{ fontWeight: 700 }}>
+                      {formatCurrency(invoice?.total || 0)}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <Divider sx={{ my: 2 }} />
+              </Grid>
+
+              <Grid size={{ xs: 12 }}>
+                <Typography align="center">
+                  Thank you for your business!
+                </Typography>
+                <Typography align="center" variant="body2">
+                  For questions about this invoice, contact us at{' '}
+                  {invoice?.company.email}
+                </Typography>
+              </Grid>
+
+              <Grid
+                size={{ xs: 12 }}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: 2,
+                  mt: 2,
+                }}
+              >
+                <CustomButton
+                  startIcon={<PrintIcon />}
+                  variant="outlined"
+                  onClick={handlePrint}
+                >
+                  Print
+                </CustomButton>
+                <CustomButton
+                  variant="contained"
+                  startIcon={<DownloadIcon />}
+                  onClick={handleDownloadPDF}
+                >
+                  Download PDF
+                </CustomButton>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -1,20 +1,19 @@
-import { Box, Card, CardContent, CardHeader, Typography } from '@mui/material';
-import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutlined';
+import { Box, Card, CardContent, CardHeader, Chip, Typography } from '@mui/material';
+// import SimCardDownloadOutlinedIcon from '@mui/icons-material/SimCardDownloadOutlined';
 import TrackingStepper from './TrackingStepper';
 import { useEffect, useState } from 'react';
 import { trackByTrackingNumberService } from '../services/fedex';
-import { formatText } from '../utils/function';
+// import { formatText } from '../utils/function';
 
 interface DeliveryDetailProps {
   shipment: any;
-  return: any;
 }
 
 const DeliveryDetail = ({
   shipment,
-  return: returnInfo,
 }: DeliveryDetailProps) => {
   const [trackingDetails, setTrackingDetails] = useState([]);
+  const [lastStatus, setLastStatus] = useState<string>('');
   const [trackingError, setTrackingError] = useState(null);
 
   useEffect(() => {
@@ -24,6 +23,7 @@ const DeliveryDetail = ({
           shipment?.trackingId,
           setTrackingError
         );
+        setLastStatus(response?.data?.latestStatus || '');
         setTrackingDetails(response?.data?.scanEvents);
       } catch (error) {
         console.error('Error fetching tracking details:', error);
@@ -71,10 +71,13 @@ const DeliveryDetail = ({
               }}
             >
               Status:
-              <Typography
+             <Typography
                 sx={{ color: 'secondary.main', ml: '4px', fontWeight: '500' }}
               >
-                {shipment?.status || 'N/A'}
+                <Chip label={lastStatus || 'N/A'} sx={{
+                  fontSize:12
+                }}/>
+
               </Typography>
             </Typography>
             <Typography
@@ -120,7 +123,7 @@ const DeliveryDetail = ({
         </Box>
         {/* Footer */}
 
-        {returnInfo?.created && (
+        {/* {returnInfo?.created && (
           <Box
             display="flex"
             justifyContent="space-between"
@@ -153,7 +156,6 @@ const DeliveryDetail = ({
               </Typography>
             </Box>
 
-            {/* If pickupConfirmationCode exists */}
             {returnInfo?.pickup?.pickupConfirmationCode && (
               <Box display="flex" flexDirection="column" justifyContent="end">
                 <Typography
@@ -185,7 +187,7 @@ const DeliveryDetail = ({
               </Box>
             )}
           </Box>
-        )}
+        )} */}
       </CardContent>
     </Card>
   );

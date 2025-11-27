@@ -385,6 +385,17 @@ const updateIncompleteOrdersService = async (orderId: string) => {
   }
 };
 
+
+const generateInvoiceService = async (orderId: string) => {
+  try {
+    const response = await api.get(`/generate-invoice/${orderId}`);
+    return returnResponse(response);
+  } catch (error) {
+    toast.error(returnError(error));
+    throw error;
+  }
+};
+
 export {
   createOrderService,
   getOrderService,
@@ -398,4 +409,5 @@ export {
   getUserOrderIdsService,
   getCheckoutDetailsService,
   updateIncompleteOrdersService,
+  generateInvoiceService,
 };
