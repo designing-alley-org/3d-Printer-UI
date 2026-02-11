@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { LOGIN_SUCCESS } from './action_types';
 import { jwtDecode } from 'jwt-decode';
 
+import { setCookie } from '../../utils/cookies';
+
 const GoogleAuthHandler: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -13,7 +15,7 @@ const GoogleAuthHandler: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
     if (token) {
-      localStorage.setItem('token', token);
+      setCookie('token', token);
       // Decode the token to get user information
       const user = jwtDecode(token);
       dispatch({

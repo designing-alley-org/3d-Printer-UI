@@ -15,6 +15,7 @@ import {
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 import { NavButton, StyledAppBar } from './style';
 import { ROUTES } from '../../routes/routes-constants';
+import { removeCookie } from '../../utils/cookies';
 
 interface ITab {
   activeTabs: number;
@@ -29,7 +30,8 @@ const DesktopNav = ({ activeTabs }: ITab) => {
 
   const handleNavigation = (id: number, path: string) => {
     if (id === 3) {
-      localStorage.clear();
+      removeCookie('token');
+      removeCookie('refreshToken');
       navigate('/login');
       return;
     }

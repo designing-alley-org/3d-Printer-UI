@@ -5,13 +5,15 @@ type Props = {
   component: React.ReactElement | React.ComponentType<any>;
 };
 
+import { getCookie } from '../utils/cookies';
+
 export const ProtectedRoute: React.FC<Props> = ({ component }) => {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthentication = async () => {
-      const token = localStorage.getItem('token');
+      const token = getCookie('token');
 
       if (!token) {
         // No token found in localStorage, redirect to login

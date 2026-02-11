@@ -3,6 +3,7 @@
 import { Dispatch } from 'redux';
 import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE } from './action_types';
 import { AuthActionTypes } from '../types';
+import { setCookie } from '../../utils/cookies';
 import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
 
@@ -15,8 +16,8 @@ export const login =
       const res = await api.post('login', { email, password });
       const token = res.data.token;
       const isFirstTimeLogin = res.data.isFirstTimeLogin;
-      localStorage.setItem('token', token);
-      localStorage.setItem('isFirstTimeLogin', isFirstTimeLogin);
+      setCookie('token', token);
+      setCookie('isFirstTimeLogin', isFirstTimeLogin);
       const user = res.data;
       dispatch({
         type: LOGIN_SUCCESS,

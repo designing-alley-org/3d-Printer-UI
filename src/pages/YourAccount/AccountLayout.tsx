@@ -11,6 +11,7 @@ import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useCallback } from 'react';
+import { removeCookie } from '../../utils/cookies';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
@@ -44,7 +45,8 @@ const AccountLayout = () => {
         success: 'Logged out successfully',
         error: 'Logout failed',
       });
-      localStorage.clear();
+      removeCookie('token');
+      removeCookie('refreshToken');
       window.location.href = '/login';
     } catch (error) {
       toast.error('Logout failed');
