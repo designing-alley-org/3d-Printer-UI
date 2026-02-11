@@ -18,13 +18,8 @@ export const login =
       const isFirstTimeLogin = res.data.isFirstTimeLogin;
       setCookie('token', token);
       setCookie('isFirstTimeLogin', isFirstTimeLogin);
-      const user = res.data;
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: user,
-      });
       toast.success('Login successful! Welcome back!');
-      navigate('/get-quotes');
+      navigate('/dashboard');
     } catch (error: any) {
       dispatch({
         type: LOGIN_FAILURE,

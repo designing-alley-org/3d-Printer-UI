@@ -1,8 +1,24 @@
+import axios from 'axios';
 import { getCookie, removeCookie, setCookie } from './utils/cookies';
 
-// ... (existing axios create)
+// Create an axios instance with the base URL
+const api = axios.create({
+  baseURL: import.meta.env.VITE_AWS_URL as string,
+  withCredentials: true,
+});
 
-// ... (existing request interceptor)
+api.interceptors.request.use(
+  (config) => {
+    const token = getCookie('token'); // Get the token dynamically
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Set up a response interceptor to handle errors
 api.interceptors.response.use(

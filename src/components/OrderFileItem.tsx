@@ -103,11 +103,7 @@ const renderStatusChip = (status: string) => {
   );
 };
 
-const OrderFileItem = ({
-  order,
-  onClick,
-  isExpanded = false,
-}: Props) => {
+const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isGoBackVisible = ORDER_STATUS_GROUPS.PENDING.includes(
@@ -124,53 +120,75 @@ const OrderFileItem = ({
         sx={{
           backgroundColor: 'primary.main',
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'flex-start', md: 'center' },
           justifyContent: 'space-between',
           cursor: 'pointer',
           boxShadow: '2px 2px 4px 0px #0000003D',
-          maxHeight: '85px',
+          maxHeight: { xs: 'auto', md: '85px' },
           overflow: 'hidden',
+          p: { xs: 2, md: 0 },
         }}
         onClick={() => onClick(order._id)}
       >
-        <CardContent>
-          <Box display="flex" alignItems="center">
+        <CardContent
+          sx={{
+            width: '100%',
+            p: { xs: '0 !important', md: '16px !important' },
+          }}
+        >
+          <Box
+            display="flex"
+            alignItems={{ xs: 'flex-start', md: 'center' }}
+            flexDirection={{ xs: 'column', md: 'row' }}
+            gap={{ xs: 2, md: 0 }}
+          >
+            <Box display="flex" alignItems="center" width="100%">
+              <Box
+                width={'40px'}
+                height={'40px'}
+                borderRadius={'50%'}
+                overflow={'hidden'}
+                flexShrink={0}
+                sx={{
+                  backgroundColor: 'primary.contrastText',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <CheckTwoToneIcon fontSize="large" />
+              </Box>
+              <Box ml={2}>
+                <Typography
+                  variant="h6"
+                  color="primary.contrastText"
+                  gutterBottom
+                >
+                  {order.order_number || 'N/A'}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color={theme.palette.customColors.lightTextOverDark}
+                >
+                  Created On: {formatDate(order.createdAt)}
+                </Typography>
+              </Box>
+            </Box>
+
             <Box
-              width={'40px'}
-              height={'40px'}
-              borderRadius={'50%  '}
-              overflow={'hidden'}
-              sx={{
-                backgroundColor: 'primary.contrastText',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              ml={{ xs: 0, md: 4 }}
+              width="100%"
+              display="flex"
+              flexDirection={{ xs: 'row', md: 'column' }}
+              justifyContent="space-between"
+              alignItems={{ xs: 'center', md: 'flex-start' }}
             >
-              <CheckTwoToneIcon fontSize="large" />
-            </Box>
-            <Box ml={2}>
               <Typography
                 variant="h6"
                 color="primary.contrastText"
                 gutterBottom
               >
-                {order.order_number || 'N/A'}
-              </Typography>
-              <Typography
-                variant="body2"
-                color={theme.palette.customColors.lightTextOverDark}
-              >
-                Created On: {formatDate(order.createdAt)}
-              </Typography>
-            </Box>
-            <Box ml={4}>
-              <Typography
-                variant="h6"
-                color="primary.contrastText"
-                gutterBottom
-              >
-                {' '}
                 {order.numberOfFiles} File
               </Typography>
               <Box display="flex" alignItems="center" gap={1}>
@@ -185,12 +203,19 @@ const OrderFileItem = ({
             </Box>
           </Box>
         </CardContent>
-        <CardActions>
+        <CardActions
+          sx={{
+            width: { xs: '100%', md: 'auto' },
+            justifyContent: { xs: 'flex-end', md: 'flex-start' },
+            p: { xs: '16px 0 0 0', md: 1 },
+          }}
+        >
           <CustomButton
             sx={{
               ...buttonStyle(theme),
               mr: 2,
               display: isGoBackVisible ? 'block' : 'none',
+              flex: { xs: 1, md: 'none' },
             }}
             children={'Go to Back'}
             onClick={(e) => {
@@ -199,7 +224,10 @@ const OrderFileItem = ({
             }}
           />
           <CustomButton
-            sx={buttonStyle(theme)}
+            sx={{
+              ...buttonStyle(theme),
+              flex: { xs: 1, md: 'none' },
+            }}
             children={isExpanded ? 'Close' : 'View '}
           />
         </CardActions>
@@ -217,9 +245,7 @@ const OrderFileItem = ({
             <Box mt={2}>
               {/* DeliveryDetail */}
               {order?.shipmentCreated?.created && (
-                <DeliveryDetail
-                  shipment={order?.shipmentCreated}
-                />
+                <DeliveryDetail shipment={order?.shipmentCreated} />
               )}
 
               {order.numberOfFiles === 0 ? (
@@ -228,8 +254,8 @@ const OrderFileItem = ({
                   description="No files have been uploaded for this order."
                 />
               ) : (
-                order.files.map((file: any) => (
-                  <FilesList key={file.id} file={file} />
+                order.files.map((file: any, index: number) => (
+                  <FilesList key={file._id || index} file={file} />
                 ))
               )}
 
@@ -259,11 +285,14 @@ const OrderFileItem = ({
           </motion.div>
         )}
       </AnimatePresence>
-      <InvoiceModal open={viewInvoice} onClose={() => setViewInvoice(false)} orderId={order._id} />
+      <InvoiceModal
+        open={viewInvoice}
+        onClose={() => setViewInvoice(false)}
+        orderId={order._id}
+      />
     </>
   );
 };
-
 
 function InvoiceButton({ onClick }: { onClick: () => void }) {
   return (

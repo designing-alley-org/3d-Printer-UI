@@ -232,12 +232,14 @@ export const MyOrders = () => {
         <CardContent
           sx={{
             display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
             justifyContent: 'space-between',
             alignItems: 'center',
+            gap: 2,
           }}
         >
           <CustomTextField
-            label="Search Orders by Number"
+            label="Search Orders"
             size="small"
             variant="outlined"
             isSearch={true}
@@ -249,7 +251,7 @@ export const MyOrders = () => {
             options={filterStatusGroups}
             defaultValue={selectedStatusOption}
             sx={{
-              width: '200px',
+              width: { xs: '100%', md: '200px' },
             }}
             onChange={handleStatusFilterChange}
           />

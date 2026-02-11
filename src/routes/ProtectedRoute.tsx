@@ -14,14 +14,10 @@ export const ProtectedRoute: React.FC<Props> = ({ component }) => {
   useEffect(() => {
     const checkAuthentication = async () => {
       const token = getCookie('token');
-
       if (!token) {
-        // No token found in localStorage, redirect to login
         navigate('/login');
         return;
       }
-
-      // If the user is authenticated, stop loading
       setIsCheckingSession(false);
     };
 
