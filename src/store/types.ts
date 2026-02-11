@@ -39,12 +39,6 @@ export interface NotificationState {
 
 export interface FileDetailsState {
   files: FileDataDB[];
-  reverseDimensions: {
-    _id: string;
-    unit: string;
-    dimensions: ModelDimensions;
-    scalingFactor: number;
-  }[];
   activeFileId: string | null;
 }
 
