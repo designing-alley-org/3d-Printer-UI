@@ -121,74 +121,59 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
           backgroundColor: 'primary.main',
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
-          alignItems: { xs: 'flex-start', md: 'center' },
+          alignItems: { xs: 'stretch', md: 'center' },
           justifyContent: 'space-between',
           cursor: 'pointer',
           boxShadow: '2px 2px 4px 0px #0000003D',
           maxHeight: { xs: 'auto', md: '85px' },
+          height: { xs: 'auto', md: '85px' },
           overflow: 'hidden',
-          p: { xs: 2, md: 0 },
         }}
         onClick={() => onClick(order._id)}
       >
-        <CardContent
-          sx={{
-            width: '100%',
-            p: { xs: '0 !important', md: '16px !important' },
-          }}
-        >
+        <CardContent>
           <Box
             display="flex"
-            alignItems={{ xs: 'flex-start', md: 'center' }}
-            flexDirection={{ xs: 'column', md: 'row' }}
-            gap={{ xs: 2, md: 0 }}
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            gap={{ xs: 2, sm: 0 }}
           >
-            <Box display="flex" alignItems="center" width="100%">
-              <Box
-                width={'40px'}
-                height={'40px'}
-                borderRadius={'50%'}
-                overflow={'hidden'}
-                flexShrink={0}
-                sx={{
-                  backgroundColor: 'primary.contrastText',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <CheckTwoToneIcon fontSize="large" />
-              </Box>
-              <Box ml={2}>
-                <Typography
-                  variant="h6"
-                  color="primary.contrastText"
-                  gutterBottom
-                >
-                  {order.order_number || 'N/A'}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color={theme.palette.customColors.lightTextOverDark}
-                >
-                  Created On: {formatDate(order.createdAt)}
-                </Typography>
-              </Box>
-            </Box>
-
             <Box
-              ml={{ xs: 0, md: 4 }}
-              width="100%"
-              display="flex"
-              flexDirection={{ xs: 'row', md: 'column' }}
-              justifyContent="space-between"
-              alignItems={{ xs: 'center', md: 'flex-start' }}
+              width={'40px'}
+              height={'40px'}
+              borderRadius={'50%  '}
+              overflow={'hidden'}
+              sx={{
+                backgroundColor: 'primary.contrastText',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
+              <CheckTwoToneIcon fontSize="large" />
+            </Box>
+            <Box ml={{ xs: 0, sm: 2 }}>
               <Typography
                 variant="h6"
                 color="primary.contrastText"
                 gutterBottom
               >
+                {order.order_number || 'N/A'}
+              </Typography>
+              <Typography
+                variant="body2"
+                color={theme.palette.customColors.lightTextOverDark}
+              >
+                Created On: {formatDate(order.createdAt)}
+              </Typography>
+            </Box>
+            <Box ml={{ xs: 0, sm: 4 }}>
+              <Typography
+                variant="h6"
+                color="primary.contrastText"
+                gutterBottom
+              >
+                {' '}
                 {order.numberOfFiles} File
               </Typography>
               <Box display="flex" alignItems="center" gap={1}>
@@ -203,19 +188,12 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
             </Box>
           </Box>
         </CardContent>
-        <CardActions
-          sx={{
-            width: { xs: '100%', md: 'auto' },
-            justifyContent: { xs: 'flex-end', md: 'flex-start' },
-            p: { xs: '16px 0 0 0', md: 1 },
-          }}
-        >
+        <CardActions>
           <CustomButton
             sx={{
               ...buttonStyle(theme),
               mr: 2,
               display: isGoBackVisible ? 'block' : 'none',
-              flex: { xs: 1, md: 'none' },
             }}
             children={'Go to Back'}
             onClick={(e) => {
@@ -224,10 +202,7 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
             }}
           />
           <CustomButton
-            sx={{
-              ...buttonStyle(theme),
-              flex: { xs: 1, md: 'none' },
-            }}
+            sx={buttonStyle(theme)}
             children={isExpanded ? 'Close' : 'View '}
           />
         </CardActions>
@@ -254,8 +229,8 @@ const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
                   description="No files have been uploaded for this order."
                 />
               ) : (
-                order.files.map((file: any, index: number) => (
-                  <FilesList key={file._id || index} file={file} />
+                order.files.map((file: any) => (
+                  <FilesList key={file.id} file={file} />
                 ))
               )}
 

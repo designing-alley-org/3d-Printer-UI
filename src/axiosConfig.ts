@@ -30,7 +30,7 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes('/auth/refresh-token')
+      !originalRequest.url?.includes('refresh-token')
     ) {
       originalRequest._retry = true;
 
@@ -40,7 +40,7 @@ api.interceptors.response.use(
         // Call refresh token endpoint
         // Note: Using a separate axios instance or fetch might be safer to avoid interceptor loops,
         // but checking the URL guards against it.
-        const response = await api.post('/auth/refresh-token', {
+        const response = await api.post('refresh-token', {
           refreshToken,
         });
 
@@ -67,7 +67,7 @@ api.interceptors.response.use(
     // Fallback for other errors or if refresh failed logic above didn't catch (shouldn't happen due to catch block)
     if (
       error.response?.status === 401 &&
-      originalRequest.url?.includes('/auth/refresh-token')
+      originalRequest.url?.includes('refresh-token')
     ) {
       removeCookie('token');
       removeCookie('refreshToken');

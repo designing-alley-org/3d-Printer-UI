@@ -232,10 +232,9 @@ export const MyOrders = () => {
         <CardContent
           sx={{
             display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
             justifyContent: 'space-between',
             alignItems: 'center',
-            gap: 2,
+            gap: 1,
           }}
         >
           <CustomTextField
@@ -250,9 +249,7 @@ export const MyOrders = () => {
           <SingleSelectDropdown
             options={filterStatusGroups}
             defaultValue={selectedStatusOption}
-            sx={{
-              width: { xs: '100%', md: '200px' },
-            }}
+            sx={{ width: '200px' }}
             onChange={handleStatusFilterChange}
           />
         </CardContent>
