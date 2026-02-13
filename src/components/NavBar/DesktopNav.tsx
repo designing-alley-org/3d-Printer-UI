@@ -1,4 +1,3 @@
-import { DesktoptabData } from '../../constants';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NotificationBox from './NotificationBox';
 import {
@@ -7,7 +6,6 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
-  IconButton,
   Container,
   Button,
   Menu,
@@ -22,9 +20,8 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { NavButton, StyledAppBar } from './style';
+import { StyledAppBar } from './style';
 import { ROUTES } from '../../routes/routes-constants';
-import { removeCookie } from '../../utils/cookies';
 import { useState } from 'react';
 import { Person } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,9 +35,7 @@ interface ITab {
 
 const DesktopNav = ({ activeTabs }: ITab) => {
   const navigate = useNavigate();
-  const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { pathname } = useLocation();
   const isDashboard = pathname.includes(ROUTES.DASHBOARD);
   const isMyAccount = pathname.includes(ROUTES.MY_PROFILE);
@@ -160,9 +155,9 @@ const DesktopNav = ({ activeTabs }: ITab) => {
               <MenuItem
                 onClick={() => handleClose('myAccount')}
                 disabled={isMyAccount}
-                sx={{ gap: 1.5 }}
+                sx={{ gap: 1.5, fontSize: '1rem' }}
               >
-                <AccountCircleOutlinedIcon fontSize="small" />
+                <AccountCircleOutlinedIcon fontSize="medium" />
                 My account
               </MenuItem>
               <MenuItem
@@ -170,7 +165,7 @@ const DesktopNav = ({ activeTabs }: ITab) => {
                 disabled={isMyOrders}
                 sx={{ gap: 1.5 }}
               >
-                <ShoppingBagOutlinedIcon fontSize="small" />
+                <ShoppingBagOutlinedIcon fontSize="medium" />
                 My orders
               </MenuItem>
               <MenuItem
@@ -178,11 +173,11 @@ const DesktopNav = ({ activeTabs }: ITab) => {
                 disabled={isPassword}
                 sx={{ gap: 1.5 }}
               >
-                <SettingsOutlinedIcon fontSize="small" />
+                <SettingsOutlinedIcon fontSize="medium" />
                 Settings
               </MenuItem>
               <MenuItem onClick={() => handleClose('logout')} sx={{ gap: 1.5 }}>
-                <LogoutOutlinedIcon fontSize="small" />
+                <LogoutOutlinedIcon fontSize="medium" />
                 Logout
               </MenuItem>
             </Menu>
