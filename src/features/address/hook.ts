@@ -29,6 +29,8 @@ export const useGetAddresses = () => {
   return useQuery<ApiResponse<Address[]>>({
     queryKey: keys.addresses,
     queryFn: getAddresses,
+    staleTime: 5 * 60 * 1000, // 5 minutes - data stays fresh
+    gcTime: 10 * 60 * 1000, // 10 minutes - cache time (formerly cacheTime)
   });
 };
 
