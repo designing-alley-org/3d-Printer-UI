@@ -38,22 +38,6 @@ const AccountLayout = () => {
     }
   };
 
-  const handleLogout = useCallback(async () => {
-    try {
-      await toast.promise(api.get('/logout'), {
-        loading: 'Logging out...',
-        success: 'Logged out successfully',
-        error: 'Logout failed',
-      });
-      removeCookie('token');
-      removeCookie('refreshToken');
-      window.location.href = '/login';
-    } catch (error) {
-      toast.error('Logout failed');
-      console.error('Logout failed', error);
-    }
-  }, []);
-
   const handlePath = (path: string) => {
     navigate(`${path}`);
   };
@@ -112,7 +96,7 @@ const AccountLayout = () => {
       </Tabs>
 
       <Box sx={{ padding: '1rem 0' }}>
-        <Outlet context={{ handleLogout }} />
+        <Outlet />
       </Box>
     </>
   );

@@ -14,7 +14,9 @@ export const ProtectedRoute: React.FC<Props> = ({ component }) => {
   useEffect(() => {
     const checkAuthentication = async () => {
       const token = getCookie('token');
-      if (!token) {
+      const refreshToken = getCookie('refreshToken');
+
+      if (!token && !refreshToken) {
         navigate('/login');
         return;
       }
