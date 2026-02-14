@@ -54,7 +54,7 @@ const FormikPhoneNumber: React.FC<FormikPhoneNumberProps> = ({
       <Box sx={{ display: 'flex', gap: 1 }}>
         <FormControl
           error={Boolean(countryCodeMeta.touched && countryCodeMeta.error)}
-          sx={{ width: '120px' }}
+          sx={{ width: '150px' }}
         >
           <Select
             {...countryCodeField}
@@ -75,16 +75,25 @@ const FormikPhoneNumber: React.FC<FormikPhoneNumberProps> = ({
             }}
             MenuProps={{
               PaperProps: {
-                style: {
-                  maxHeight: 300,
+                sx: {
+                  maxHeight: 700,
+                  borderRadius: '12px',
                 },
               },
             }}
           >
             {countries.map((country) => (
-              <MenuItem key={country.code} value={country.code}>
+              <MenuItem
+                key={country.code}
+                value={country.code}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderRadius: '8px',
+                }}
+              >
                 <span style={{ marginRight: '8px', fontSize: '1.2rem' }}>
-                  {country.flag}
+                  {country.flag} {country.label}
                 </span>
                 +{country.phone}
               </MenuItem>
