@@ -1,13 +1,21 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { createAddress } from '../../../store/actions/createAddress';
+
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import type {
+  AddressFormValues,
+  CreateAddressPayload,
+} from '../../../features/address/type';
 import {
   addAddress,
   setAddressId,
   toggleCreateAddress,
 } from '../../../store/Address/address.reducer';
-import { getAddress } from '../../../store/actions/getAddress';
+import {
+  useCreateAddress,
+  useGetAddresses,
+} from '../../../features/address/hook';
+import { countries } from '../../../constant/countries';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Validation and service
@@ -16,9 +24,9 @@ import { addressValidationSchema } from '../../../validation';
 
 // UI
 import CustomButton from '../../../stories/button/CustomButton';
-import CustomInputLabelField from '../../../stories/inputs/CustomInputLabelField';
+import FormikInput from '../../../stories/inputs/FormikInput';
+import FormikPhoneNumber from '../../../stories/inputs/FormikPhoneNumber';
 import StepLayout from '../../../components/Layout/StepLayout';
-import toast from 'react-hot-toast';
 import { Wrapper, AddNewAddressButton } from './style';
 import { Box, Chip, Radio, Typography, useMediaQuery } from '@mui/material';
 
@@ -27,7 +35,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { X } from 'lucide-react';
 import { updateOrderService } from '../../../services/order';
-import SingleSelectDropdown from '../../../stories/Dropdown/SingleSelectDropdown';
+import FormikSelect from '../../../stories/inputs/FormikSelect';
 import { addressLabelOptions } from '../../../constant/dropDownOption';
 
 const ShippingDetails = () => {
@@ -41,67 +49,75 @@ const ShippingDetails = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const navigate = useNavigate();
 
+  const { mutate: createAddressMutate, isPending: isCreatingAddress } =
+    useCreateAddress();
+  const { data: addressesData, isLoading: isLoadingAddresses } =
+    useGetAddresses();
+
   useEffect(() => {
-    const fetchAddress = async () => {
-      if (!isCreateAddress) {
-        try {
-          const response = await getAddress({
-            setAddressLoading: setIsPageLoading,
-          });
-
-          if (response?.data?.data) {
-            dispatch(addAddress(response.data.data));
-            // Auto-select first address if available
-            if (response.data.data.length > 0 && !addressId) {
-              dispatch(
-                setAddressId(defaultAddress || response.data.data[0]._id)
-              );
-            }
-          }
-        } catch {
-          setIsPageLoading(false);
-        }
-      } else {
-        setIsPageLoading(false);
+    if (addressesData?.data) {
+      dispatch(addAddress(addressesData.data));
+      if (addressesData.data.length > 0 && !addressId) {
+        dispatch(setAddressId(defaultAddress || addressesData.data[0]._id));
       }
-    };
-    fetchAddress();
-  }, [dispatch, isCreateAddress, addressId, defaultAddress]);
+    }
+    setIsPageLoading(isLoadingAddresses);
+  }, [addressesData, dispatch, addressId, defaultAddress, isLoadingAddresses]);
 
-  const getInitialValues = () => ({
+  // Get initial values for form - matches AddressFormValues type from schema
+  const getInitialValues = (): AddressFormValues => ({
+    // Required fields
+    addressType: undefined as any, // Will be selected by user
     personName: '',
+    phoneNumber: '',
+    countryCode: 'GB', // Default to UK
+    email: '',
     streetLines: '',
     city: '',
-    countryCode: '',
     postalCode: '',
-    phoneNumber: '',
-    email: '',
-    addressType: '',
+    // Optional fields
+    companyName: '',
+    stateProvince: '',
   });
 
-  const handleSubmitAddress = async (values: any, { resetForm }: any) => {
-    try {
-      const cleanedValues = {
-        ...values,
-        phoneNumber: values.phoneNumber.replace(/\D/g, ''),
-        postalCode: values.postalCode.trim().toUpperCase(),
-        countryCode: values.countryCode.trim().toUpperCase(),
-      };
-      await createAddress({ ...cleanedValues, orderId });
-      toast.success('Address created successfully');
+  const handleSubmitAddress = (
+    values: AddressFormValues,
+    { resetForm }: any
+  ) => {
+    const selectedCountry = countries.find(
+      (c) => c.code === values.countryCode
+    );
+    const dialCode = selectedCountry ? `+${selectedCountry.phone}` : '+44';
+    const countryName = selectedCountry
+      ? selectedCountry.label
+      : 'United Kingdom';
 
-      dispatch(toggleCreateAddress());
-      resetForm();
+    const payload: CreateAddressPayload = {
+      addressType: values.addressType,
+      personName: values.personName,
+      companyName: values.companyName,
+      phone: {
+        dialCode: dialCode,
+        number: values.phoneNumber,
+      },
+      email: values.email,
+      streetLines: [values.streetLines], // Convert single string to array for backend
+      city: values.city,
+      stateProvince: values.stateProvince,
+      postalCode: values.postalCode.toUpperCase(),
+      country: {
+        name: countryName,
+        isoCode: values.countryCode,
+      },
+      orderId,
+    };
 
-      // Refresh address list
-      const response = await getAddress({ setAddressLoading: () => {} });
-      if (response?.data?.data) {
-        dispatch(addAddress(response.data.data));
-      }
-    } catch (error) {
-      console.error('Error in handleSubmitAddress:', error);
-      toast.error('Failed to create address');
-    }
+    createAddressMutate(payload, {
+      onSuccess: () => {
+        dispatch(toggleCreateAddress());
+        resetForm();
+      },
+    });
   };
 
   const handleCancelForm = () => {
@@ -295,199 +311,98 @@ const ShippingDetails = () => {
                   onSubmit={handleSubmitAddress}
                   enableReinitialize={true}
                 >
-                  {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    isSubmitting,
-                  }) => (
-                    console.log('Formik Values:', errors),
-                    (
-                      <Form id="address-form">
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            gap: '1rem',
-                            gridTemplateColumns: {
-                              xs: '1fr',
-                              md: 'repeat(2, 1fr)',
-                            },
-                          }}
+                  {() => (
+                    <Form id="address-form">
+                      <Box
+                        sx={{
+                          display: 'grid',
+                          gap: '1rem',
+                          gridTemplateColumns: {
+                            xs: '1fr',
+                            md: 'repeat(2, 1fr)',
+                          },
+                        }}
+                      >
+                        <FormikInput
+                          label="Full Name"
+                          name="personName"
+                          placeholder="Enter full name"
+                          required
+                        />
+
+                        <FormikPhoneNumber
+                          label="Phone Number"
+                          name="phoneNumber"
+                          countryCodeName="countryCode"
+                          required
+                        />
+
+                        <FormikInput
+                          label="City"
+                          name="city"
+                          placeholder="Enter city"
+                          required
+                        />
+
+                        <FormikInput
+                          label="Postal Code"
+                          name="postalCode"
+                          placeholder="Enter Postal code eg.(EC1Y 8SY)"
+                          required
+                        />
+
+                        {/* Country Code is handled inside FormikPhoneNumber via countryCodeName, 
+                                but we can also have a separate disabled input or just rely on Phone input's flag selector. 
+                                Since backend requires country.isoCode and we map it from countryCodeName, 
+                                and FormikPhoneNumber updates countryCodeName, we are good. 
+                                But wait, FormikPhoneNumber selects country for PHONE. 
+                                Does it imply address country? Usually yes. 
+                                If we want explicit Country selector for address (defaults to Phone country), we might need another field.
+                                For now, I'll assume Phone Country == Address Country as per common UI patterns unless specified otherwise.
+                                But I should ensure `countryCode` is actually updated by FormikPhoneNumber. 
+                                Yes, it uses `useField(countryCodeName)`.
+                            */}
+
+                        <FormikInput
+                          label="Email"
+                          name="email"
+                          type="email"
+                          placeholder="Enter email"
+                          required
+                        />
+
+                        <FormikInput
+                          label="Street Address"
+                          name="streetLines"
+                          placeholder="Enter street address"
+                          required
+                        />
+                        <FormikSelect
+                          label="Address Type"
+                          name="addressType"
+                          options={addressLabelOptions}
+                          placeholder="Select address type"
+                          required
+                        />
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          marginTop: '2rem',
+                        }}
+                      >
+                        <CustomButton
+                          variant="contained"
+                          loading={isCreatingAddress}
+                          fullWidth
+                          type="submit"
                         >
-                          <CustomInputLabelField
-                            label="Full Name"
-                            name="personName"
-                            placeholder="Enter full name"
-                            value={values.personName}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              touched.personName && Boolean(errors.personName)
-                            }
-                            helperText={
-                              touched.personName && errors.personName
-                                ? String(errors.personName)
-                                : ''
-                            }
-                            required
-                          />
-
-                          <CustomInputLabelField
-                            label="Phone Number"
-                            name="phoneNumber"
-                            placeholder="Enter phone number"
-                            value={values.phoneNumber}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              touched.phoneNumber && Boolean(errors.phoneNumber)
-                            }
-                            helperText={
-                              touched.phoneNumber && errors.phoneNumber
-                                ? String(errors.phoneNumber)
-                                : ''
-                            }
-                            onlyNumber
-                            required
-                          />
-
-                          <CustomInputLabelField
-                            label="City"
-                            name="city"
-                            placeholder="Enter city"
-                            value={values.city}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.city && Boolean(errors.city)}
-                            helperText={
-                              touched.city && errors.city
-                                ? String(errors.city)
-                                : ''
-                            }
-                            required
-                          />
-
-                          <CustomInputLabelField
-                            label="Postal Code"
-                            name="postalCode"
-                            placeholder="Enter Postal code eg.(EC1Y 8SY)"
-                            value={values.postalCode}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              touched.postalCode && Boolean(errors.postalCode)
-                            }
-                            helperText={
-                              touched.postalCode && errors.postalCode
-                                ? String(errors.postalCode)
-                                : ''
-                            }
-                            required
-                          />
-
-                          <CustomInputLabelField
-                            label="Country Code"
-                            name="countryCode"
-                            placeholder="Enter Country code (eg. GB)"
-                            value={values.countryCode}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              touched.countryCode && Boolean(errors.countryCode)
-                            }
-                            helperText={
-                              touched.countryCode && errors.countryCode
-                                ? String(errors.countryCode)
-                                : ''
-                            }
-                            required
-                          />
-
-                          <CustomInputLabelField
-                            label="Email"
-                            name="email"
-                            placeholder="Enter email"
-                            value={values.email}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={touched.email && Boolean(errors.email)}
-                            helperText={
-                              touched.email && errors.email
-                                ? String(errors.email)
-                                : ''
-                            }
-                            required
-                          />
-
-                          <CustomInputLabelField
-                            label="Street Address"
-                            name="streetLines"
-                            placeholder="Enter street address"
-                            value={values.streetLines}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={
-                              touched.streetLines && Boolean(errors.streetLines)
-                            }
-                            helperText={
-                              touched.streetLines && errors.streetLines
-                                ? String(errors.streetLines)
-                                : ''
-                            }
-                            required
-                          />
-                          <Box>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                marginBottom: '0.3rem',
-                                fontWeight: 500,
-                                color: '#333',
-                              }}
-                            >
-                              Address Type{' '}
-                              <span style={{ color: '#FF0000' }}>*</span>
-                            </Typography>
-                            <SingleSelectDropdown
-                              titleHelper="Type"
-                              onChange={(option) => {
-                                handleChange({
-                                  target: {
-                                    name: 'addressType',
-                                    value: option.value,
-                                  },
-                                } as any);
-                              }}
-                              error={
-                                touched.addressType &&
-                                Boolean(errors.addressType)
-                              }
-                              className="dropdown"
-                              options={addressLabelOptions}
-                            />
-                          </Box>
-                        </Box>
-
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginTop: '2rem',
-                          }}
-                        >
-                          <CustomButton
-                            variant="contained"
-                            loading={isSubmitting}
-                            fullWidth
-                            type="submit"
-                          >
-                            Add Now
-                          </CustomButton>
-                        </Box>
-                      </Form>
-                    )
+                          Add Now
+                        </CustomButton>
+                      </Box>
+                    </Form>
                   )}
                 </Formik>
               </Box>

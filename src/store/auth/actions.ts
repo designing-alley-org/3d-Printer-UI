@@ -25,7 +25,6 @@ export const login =
       const isFirstTimeLogin = res.data.isFirstTimeLogin;
       setCookie('token', token);
       setCookie('isFirstTimeLogin', isFirstTimeLogin);
-
       dispatch({ type: LOGIN_SUCCESS, payload: res.data.user });
       toast.success('Login successful! Welcome back!');
       navigate('/dashboard');
@@ -44,11 +43,9 @@ export const logout =
 
     try {
       await api.get('/logout');
-      // Remove cookies after successful API call
       removeCookie('token');
       removeCookie('refreshToken');
       removeCookie('isFirstTimeLogin');
-
       dispatch({ type: LOGOUT_SUCCESS });
       toast.success('Logged out successfully');
       navigate('/login');

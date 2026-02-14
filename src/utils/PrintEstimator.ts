@@ -34,19 +34,15 @@ export abstract class BasePrintEstimator {
     infillPercent = 20,
     scale = 1.0,
   }: EstimateOptions): Promise<EstimateResult> {
-
-    console.log('Scale Factor:', scale);
-    console.log('Infill Percent:', infillPercent);
-    console.log('Printer:', printer);
-    console.log('Material:', material);
-
     if (!modelGeometry?.attributes?.position?.array) {
-      throw new Error('Valid model geometry with position attributes is required.');
+      throw new Error(
+        'Valid model geometry with position attributes is required.'
+      );
     }
 
     const modelData = this._getModelProperties(modelGeometry);
     const scaledVolume_mm3 = modelData.volume_mm3 * Math.pow(scale, 3);
-    
+
     const scaledDimensions = {
       x: modelData.dimensions.x * scale,
       y: modelData.dimensions.y * scale,
@@ -87,26 +83,46 @@ export abstract class BasePrintEstimator {
     z: number;
   } {
     const positions = geometry.attributes.position.array;
-    let minX = Infinity, minY = Infinity, minZ = Infinity;
-    let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      minZ = Infinity;
+    let maxX = -Infinity,
+      maxY = -Infinity,
+      maxZ = -Infinity;
 
     for (let i = 0; i < positions.length; i += 3) {
-      const x = positions[i], y = positions[i + 1], z = positions[i + 2];
-      minX = Math.min(minX, x); maxX = Math.max(maxX, x);
-      minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-      minZ = Math.min(minZ, z); maxZ = Math.max(maxZ, z);
+      const x = positions[i],
+        y = positions[i + 1],
+        z = positions[i + 2];
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+      minZ = Math.min(minZ, z);
+      maxZ = Math.max(maxZ, z);
     }
     return { x: maxX - minX, y: maxY - minY, z: maxZ - minZ };
   }
 
   protected _signedTetraVolume(
-    p0x: number, p0y: number, p0z: number,
-    p1x: number, p1y: number, p1z: number,
-    p2x: number, p2y: number, p2z: number
+    p0x: number,
+    p0y: number,
+    p0z: number,
+    p1x: number,
+    p1y: number,
+    p1z: number,
+    p2x: number,
+    p2y: number,
+    p2z: number
   ): number {
     return (
-      (-p2x * p1y * p0z + p1x * p2y * p0z + p2x * p0y * p1z -
-        p0x * p2y * p1z - p1x * p0y * p2z + p0x * p1y * p2z) / 6.0
+      (-p2x * p1y * p0z +
+        p1x * p2y * p0z +
+        p2x * p0y * p1z -
+        p0x * p2y * p1z -
+        p1x * p0y * p2z +
+        p0x * p1y * p2z) /
+      6.0
     );
   }
 
@@ -117,19 +133,33 @@ export abstract class BasePrintEstimator {
     if (geometry.index?.array) {
       const index = geometry.index.array;
       for (let i = 0; i < index.length; i += 3) {
-        const i0 = index[i] * 3, i1 = index[i + 1] * 3, i2 = index[i + 2] * 3;
+        const i0 = index[i] * 3,
+          i1 = index[i + 1] * 3,
+          i2 = index[i + 2] * 3;
         totalSignedVolume += this._signedTetraVolume(
-          posArray[i0], posArray[i0 + 1], posArray[i0 + 2],
-          posArray[i1], posArray[i1 + 1], posArray[i1 + 2],
-          posArray[i2], posArray[i2 + 1], posArray[i2 + 2]
+          posArray[i0],
+          posArray[i0 + 1],
+          posArray[i0 + 2],
+          posArray[i1],
+          posArray[i1 + 1],
+          posArray[i1 + 2],
+          posArray[i2],
+          posArray[i2 + 1],
+          posArray[i2 + 2]
         );
       }
     } else {
       for (let i = 0; i < posArray.length; i += 9) {
         totalSignedVolume += this._signedTetraVolume(
-          posArray[i], posArray[i + 1], posArray[i + 2],
-          posArray[i + 3], posArray[i + 4], posArray[i + 5],
-          posArray[i + 6], posArray[i + 7], posArray[i + 8]
+          posArray[i],
+          posArray[i + 1],
+          posArray[i + 2],
+          posArray[i + 3],
+          posArray[i + 4],
+          posArray[i + 5],
+          posArray[i + 6],
+          posArray[i + 7],
+          posArray[i + 8]
         );
       }
     }
@@ -148,14 +178,16 @@ export abstract class BasePrintEstimator {
     const operationalCost_gbp =
       totalTime_hr * this.pricing?.printerOperationalCost_gbp_per_hour;
     const laborCost_gbp =
-      (this.pricing.postProcessingTime_min / 60) * this.pricing.laborCost_gbp_per_hour;
+      (this.pricing.postProcessingTime_min / 60) *
+      this.pricing.laborCost_gbp_per_hour;
 
     return {
       material: materialCost_gbp,
       energy: energyCost_gbp,
       operational: operationalCost_gbp,
       labor: laborCost_gbp,
-      total: materialCost_gbp + energyCost_gbp + operationalCost_gbp + laborCost_gbp,
+      total:
+        materialCost_gbp + energyCost_gbp + operationalCost_gbp + laborCost_gbp,
     };
   }
 }
@@ -181,16 +213,17 @@ export class FDMEstimator extends BasePrintEstimator {
   }): Omit<EstimateResult, 'formattedTime'> {
     // Calculate shell thickness (typically 2-4 perimeters)
     const perimeterCount = 3;
-    const shellThickness_mm = perimeterCount * printer?.specifications?.nozzleDiameter_mm;
-    
+    const shellThickness_mm =
+      perimeterCount * printer?.specifications?.nozzleDiameter_mm;
+
     // Estimate shell volume based on surface area approximation
     const surfaceArea_mm2 = this._estimateSurfaceArea(scaledDimensions);
     const shellVolume_mm3 = surfaceArea_mm2 * shellThickness_mm;
-    
+
     // Interior volume for infill
     const interiorVolume_mm3 = Math.max(0, scaledVolume_mm3 - shellVolume_mm3);
     const infillVolume_mm3 = interiorVolume_mm3 * (infillPercent / 100);
-    
+
     // Total material volume (shell + infill)
     const materialVolume_mm3 = shellVolume_mm3 + infillVolume_mm3;
     const weight_g = materialVolume_mm3 * (material.density / 1000);
@@ -202,22 +235,31 @@ export class FDMEstimator extends BasePrintEstimator {
       infillPercent,
       infillVolume_mm3,
       materialVolume_mm3,
-      weight_g
+      weight_g,
     });
 
     // Calculate layers
-    const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.defaultLayerHeight_mm);
+    const layers = Math.ceil(
+      scaledDimensions.z / printer?.specifications?.defaultLayerHeight_mm
+    );
 
     // Estimate print time
     const extrusionLength_mm =
-      materialVolume_mm3 / (printer?.specifications?.nozzleDiameter_mm * printer?.specifications?.defaultLayerHeight_mm);
+      materialVolume_mm3 /
+      (printer?.specifications?.nozzleDiameter_mm *
+        printer?.specifications?.defaultLayerHeight_mm);
 
     // Adjust speed based on model complexity
-    const complexityFactor = Math.max(0.5, Math.min(1.0, 5000 / modelData.triangleCount));
-    const effectiveSpeed_mm_s = printer?.specifications?.maxPrintSpeed_mm_s * complexityFactor * 0.65;
+    const complexityFactor = Math.max(
+      0.5,
+      Math.min(1.0, 5000 / modelData.triangleCount)
+    );
+    const effectiveSpeed_mm_s =
+      printer?.specifications?.maxPrintSpeed_mm_s * complexityFactor * 0.65;
 
     const printTime_s = extrusionLength_mm / effectiveSpeed_mm_s;
-    const volumetricLimitTime_s = materialVolume_mm3 / printer?.specifications?.maxVolumetricFlow_mm3s;
+    const volumetricLimitTime_s =
+      materialVolume_mm3 / printer?.specifications?.maxVolumetricFlow_mm3s;
     const actualPrintTime_s = Math.max(printTime_s, volumetricLimitTime_s);
 
     // Add overhead times
@@ -233,7 +275,11 @@ export class FDMEstimator extends BasePrintEstimator {
     return { weight_g, totalTime_s, layers, costs };
   }
 
-  private _estimateSurfaceArea(dimensions: { x: number; y: number; z: number }): number {
+  private _estimateSurfaceArea(dimensions: {
+    x: number;
+    y: number;
+    z: number;
+  }): number {
     // Rough approximation: rectangular prism surface area
     const { x, y, z } = dimensions;
     return 2 * (x * y + y * z + z * x);
@@ -264,11 +310,13 @@ export class SLAEstimator extends BasePrintEstimator {
     console.log('SLA Calculation (solid print):', {
       scaledVolume_mm3,
       weight_g,
-      note: 'Infill parameter ignored - SLA prints are solid'
+      note: 'Infill parameter ignored - SLA prints are solid',
     });
 
     // Calculate layers
-    const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.layerThickness_mm);
+    const layers = Math.ceil(
+      scaledDimensions.z / printer?.specifications?.layerThickness_mm
+    );
 
     // Layer exposure time + peel time + positioning
     const timePerLayer_s = printer?.specifications?.exposureTime_s + 6; // ~6s for peel and reposition
@@ -310,16 +358,19 @@ export class DLPEstimator extends BasePrintEstimator {
     console.log('DLP Calculation (solid print):', {
       scaledVolume_mm3,
       weight_g,
-      note: 'Infill parameter ignored - DLP prints are solid'
+      note: 'Infill parameter ignored - DLP prints are solid',
     });
 
-    const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.layerThickness_mm);
+    const layers = Math.ceil(
+      scaledDimensions.z / printer?.specifications?.layerThickness_mm
+    );
 
     // DLP exposes entire layer at once - faster than SLA
     const timePerLayer_s = printer?.specifications?.exposureTime_s + 4; // ~4s peel/position
     const printTime_s = layers * timePerLayer_s;
-    const initialLayersTime_s = 5 * printer?.specifications?.exposureTime_s * 2.5;
-    
+    const initialLayersTime_s =
+      5 * printer?.specifications?.exposureTime_s * 2.5;
+
     const totalTime_s = printTime_s + initialLayersTime_s + 240;
     const totalTime_hr = totalTime_s / 3600;
 
@@ -353,20 +404,24 @@ export class SLSEstimator extends BasePrintEstimator {
     console.log('SLS Calculation (solid print):', {
       scaledVolume_mm3,
       weight_g,
-      note: 'Infill parameter ignored - SLS prints are solid'
+      note: 'Infill parameter ignored - SLS prints are solid',
     });
 
-    const layers = Math.ceil(scaledDimensions.z / printer.specifications?.layerThickness_mm);
+    const layers = Math.ceil(
+      scaledDimensions.z / printer.specifications?.layerThickness_mm
+    );
 
     // Estimate scan area per layer (simplified)
-    const avgLayerArea_mm2 = (scaledDimensions.x * scaledDimensions.y) * 0.4;
-    const scanPath_mm = avgLayerArea_mm2 / (printer.specifications?.laserPower_w * 0.05); // Rough hatch spacing
+    const avgLayerArea_mm2 = scaledDimensions.x * scaledDimensions.y * 0.4;
+    const scanPath_mm =
+      avgLayerArea_mm2 / (printer.specifications?.laserPower_w * 0.05); // Rough hatch spacing
 
-    const timePerLayer_s = scanPath_mm / printer.specifications?.scanSpeed_mm_s + 3;
+    const timePerLayer_s =
+      scanPath_mm / printer.specifications?.scanSpeed_mm_s + 3;
     const printTime_s = layers * timePerLayer_s;
-    
+
     // SLS requires long heating/cooling cycles
-    const totalTime_s = printTime_s + 3600 + (layers * 2); // +1hr preheat
+    const totalTime_s = printTime_s + 3600 + layers * 2; // +1hr preheat
     const totalTime_hr = totalTime_s / 3600;
 
     const costs = this._calculateBaseCosts(weight_g, totalTime_hr);
@@ -399,15 +454,18 @@ export class MJFEstimator extends BasePrintEstimator {
     console.log('MJF Calculation (solid print):', {
       scaledVolume_mm3,
       weight_g,
-      note: 'Infill parameter ignored - MJF prints are solid'
+      note: 'Infill parameter ignored - MJF prints are solid',
     });
 
-    const layers = Math.ceil(scaledDimensions.z / printer?.specifications?.layerThickness_mm);
+    const layers = Math.ceil(
+      scaledDimensions.z / printer?.specifications?.layerThickness_mm
+    );
 
     // MJF is faster - prints entire layer quickly
-    const timePerLayer_s = (scaledDimensions.y / printer?.specifications?.printSpeed_mm_s) + 2;
+    const timePerLayer_s =
+      scaledDimensions.y / printer?.specifications?.printSpeed_mm_s + 2;
     const printTime_s = layers * timePerLayer_s;
-    
+
     const totalTime_s = printTime_s + 5400; // +1.5hr heat/cool
     const totalTime_hr = totalTime_s / 3600;
 

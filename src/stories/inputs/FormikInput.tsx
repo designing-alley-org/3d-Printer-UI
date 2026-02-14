@@ -70,7 +70,7 @@ const FormikInput: React.FC<FormikInputProps> = ({
         {...props}
         fullWidth
         placeholder={props.placeholder}
-        type={isPasswordField && !showPassword ? 'password' : type}
+        type={isPasswordField && showPassword ? 'text' : type}
         error={isError}
         helperText={isError ? errorMessage : props.helperText}
         onChange={handleChange}
