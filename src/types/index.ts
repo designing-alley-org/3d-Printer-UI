@@ -33,6 +33,7 @@ export interface User {
   phone_no: string;
   phone_ext: string;
   token?: string;
+  googleId?: string;
 }
 
 export type editUser = Omit<User, 'email' | '_id' | 'token'>;
