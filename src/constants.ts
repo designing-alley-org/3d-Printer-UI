@@ -46,8 +46,8 @@ export const tabData = [
 
 export const DesktoptabData = [
   { id: 1, label: 'Get Quote', path: ROUTES.GET_QUOTES },
-  { id: 2, label: 'Account', path: ROUTES.ACCOUNT },
-  { id: 3, label: 'Logout', path: '' },
+  // { id: 2, label: 'Account', path: ROUTES.ACCOUNT },
+  // { id: 3, label: 'Logout', path: '' },
 ];
 
 export const accTab = [

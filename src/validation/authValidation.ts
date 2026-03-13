@@ -55,3 +55,7 @@ export const changePasswordValidationSchema = Yup.object({
     .oneOf([Yup.ref('new_password')], 'Passwords must match')
     .required('Please confirm your password'),
 });
+
+export type ChangePasswordValue = Yup.InferType<
+  typeof changePasswordValidationSchema
+>;

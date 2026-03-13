@@ -103,11 +103,7 @@ const renderStatusChip = (status: string) => {
   );
 };
 
-const OrderFileItem = ({
-  order,
-  onClick,
-  isExpanded = false,
-}: Props) => {
+const OrderFileItem = ({ order, onClick, isExpanded = false }: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isGoBackVisible = ORDER_STATUS_GROUPS.PENDING.includes(
@@ -124,17 +120,24 @@ const OrderFileItem = ({
         sx={{
           backgroundColor: 'primary.main',
           display: 'flex',
-          alignItems: 'center',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'stretch', md: 'center' },
           justifyContent: 'space-between',
           cursor: 'pointer',
           boxShadow: '2px 2px 4px 0px #0000003D',
-          maxHeight: '85px',
+          maxHeight: { xs: 'auto', md: '85px' },
+          height: { xs: 'auto', md: '85px' },
           overflow: 'hidden',
         }}
         onClick={() => onClick(order._id)}
       >
         <CardContent>
-          <Box display="flex" alignItems="center">
+          <Box
+            display="flex"
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            gap={{ xs: 2, sm: 0 }}
+          >
             <Box
               width={'40px'}
               height={'40px'}
@@ -149,7 +152,7 @@ const OrderFileItem = ({
             >
               <CheckTwoToneIcon fontSize="large" />
             </Box>
-            <Box ml={2}>
+            <Box ml={{ xs: 0, sm: 2 }}>
               <Typography
                 variant="h6"
                 color="primary.contrastText"
@@ -164,7 +167,7 @@ const OrderFileItem = ({
                 Created On: {formatDate(order.createdAt)}
               </Typography>
             </Box>
-            <Box ml={4}>
+            <Box ml={{ xs: 0, sm: 4 }}>
               <Typography
                 variant="h6"
                 color="primary.contrastText"
@@ -217,9 +220,7 @@ const OrderFileItem = ({
             <Box mt={2}>
               {/* DeliveryDetail */}
               {order?.shipmentCreated?.created && (
-                <DeliveryDetail
-                  shipment={order?.shipmentCreated}
-                />
+                <DeliveryDetail shipment={order?.shipmentCreated} />
               )}
 
               {order.numberOfFiles === 0 ? (
@@ -259,11 +260,14 @@ const OrderFileItem = ({
           </motion.div>
         )}
       </AnimatePresence>
-      <InvoiceModal open={viewInvoice} onClose={() => setViewInvoice(false)} orderId={order._id} />
+      <InvoiceModal
+        open={viewInvoice}
+        onClose={() => setViewInvoice(false)}
+        orderId={order._id}
+      />
     </>
   );
 };
-
 
 function InvoiceButton({ onClick }: { onClick: () => void }) {
   return (

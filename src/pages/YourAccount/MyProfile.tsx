@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -13,10 +13,12 @@ import {
 } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import CustomButton from '../../stories/button/CustomButton';
-import { getAddress } from '../../store/actions/getAddress';
 import NoDataFound from '../../components/NoDataFound';
 import ListAddress from '../../components/ListAddress/ListAddress';
-import { setDefaultAddressService } from '../../services/address';
+import {
+  useGetAddresses,
+  useSetDefaultAddress,
+} from '../../features/address/hook';
 import { EditProfileModal } from '../../components/Model';
 import LoadingScreen from '../../components/LoadingScreen';
 import { updateUserService } from '../../services/user';
@@ -29,17 +31,19 @@ const MyProfile = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     useSelector((state: any) => state.user.user.defaultAddress)
   );
-  const [allAddresses, setAllAddresses] = useState([]);
-  const [addressLoading, setAddressLoading] = useState(true);
+  const { data: addressesData, isLoading: addressLoading } = useGetAddresses();
+  const { mutate: setDefaultAddress } = useSetDefaultAddress();
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const user = useSelector((state: any) => state.user);
   const [saveLoading, setSaveLoading] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:768px)');
-
   const dispatch = useDispatch();
 
   const handleAddressSelect = (addressId: string) => {
-    setDefaultAddressService(addressId, setSelectedAddressId);
+    setDefaultAddress(addressId, {
+      onSuccess: () => setSelectedAddressId(addressId),
+    });
   };
 
   const handleSaveProfile = async (updatedUser: editUser) => {
@@ -55,14 +59,7 @@ const MyProfile = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      const response = await getAddress({ setAddressLoading });
-      setAllAddresses(response.data.data);
-    };
-
-    fetchAddresses();
-  }, []);
+  const allAddresses = addressesData?.data || [];
 
   return (
     <Container sx={{ p: { xs: 0.5, sm: 3, md: 0 } }}>

@@ -15,6 +15,9 @@ import {
   REGISTER_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAILURE,
 } from './auth/action_types';
 
 export interface RootState {
@@ -39,12 +42,6 @@ export interface NotificationState {
 
 export interface FileDetailsState {
   files: FileDataDB[];
-  reverseDimensions: {
-    _id: string;
-    unit: string;
-    dimensions: ModelDimensions;
-    scalingFactor: number;
-  }[];
   activeFileId: string | null;
 }
 
@@ -92,10 +89,26 @@ interface LoginFailureAction {
   payload: string;
 }
 
+interface LogoutRequestAction {
+  type: typeof LOGOUT_REQUEST;
+}
+
+interface LogoutSuccessAction {
+  type: typeof LOGOUT_SUCCESS;
+}
+
+interface LogoutFailureAction {
+  type: typeof LOGOUT_FAILURE;
+  payload: string;
+}
+
 export type AuthActionTypes =
   | LoginRequestAction
   | LoginSuccessAction
-  | LoginFailureAction;
+  | LoginFailureAction
+  | LogoutRequestAction
+  | LogoutSuccessAction
+  | LogoutFailureAction;
 
 export interface RegisterState {
   loading: boolean;

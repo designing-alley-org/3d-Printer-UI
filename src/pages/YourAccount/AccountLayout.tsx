@@ -10,15 +10,24 @@ import {
 import api from '../../axiosConfig';
 import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { removeCookie } from '../../utils/cookies';
+import { RootState } from '../../store/store';
 
 const AccountLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const tabs = useMemo(
+    () => (user?.googleId ? accTab.filter((tab) => tab.id !== 5) : accTab),
+    [user?.googleId]
+  );
 
   // Extract activeTab from pathname
   const activeTab =
-    accTab.find((tab) => location.pathname.includes(tab.path))?.id || 1;
+    tabs.find((tab) => location.pathname.includes(tab.path))?.id || 1;
 
   // Helper function to get the appropriate icon
   const getTabIcon = (iconName: string) => {
@@ -37,21 +46,6 @@ const AccountLayout = () => {
     }
   };
 
-  const handleLogout = useCallback(async () => {
-    try {
-      await toast.promise(api.get('/logout'), {
-        loading: 'Logging out...',
-        success: 'Logged out successfully',
-        error: 'Logout failed',
-      });
-      localStorage.clear();
-      window.location.href = '/login';
-    } catch (error) {
-      toast.error('Logout failed');
-      console.error('Logout failed', error);
-    }
-  }, []);
-
   const handlePath = (path: string) => {
     navigate(`${path}`);
   };
@@ -63,7 +57,7 @@ const AccountLayout = () => {
       <Tabs
         value={activeTab}
         onChange={(_, newValue) => {
-          const tab = accTab.find((t) => t.id === newValue);
+          const tab = tabs.find((t) => t.id === newValue);
           if (tab) handlePath(tab.path);
         }}
         variant="scrollable"
@@ -91,7 +85,7 @@ const AccountLayout = () => {
           },
         }}
       >
-        {accTab.map((item) => (
+        {tabs.map((item) => (
           <Tab
             key={item.id}
             sx={{
@@ -110,7 +104,7 @@ const AccountLayout = () => {
       </Tabs>
 
       <Box sx={{ padding: '1rem 0' }}>
-        <Outlet context={{ handleLogout }} />
+        <Outlet />
       </Box>
     </>
   );

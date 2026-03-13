@@ -14,20 +14,21 @@ import { usePrinterSelector } from '../../hook/usePrinterSelector';
 export default function PrinterSelector({
   printersData,
   file,
+  onPrinterSelect,
 }: {
   printersData: IPrinter[];
   file: FileDataDB | undefined;
+  onPrinterSelect?: (printer: IPrinter) => void;
 }) {
   const {
     open,
     setOpen,
     selectedPrinter,
     handleSelect,
-    searchValue,
     setSearchValue,
     filteredPrinters,
     isDisabled,
-  } = usePrinterSelector(printersData, file);
+  } = usePrinterSelector(printersData, file, onPrinterSelect);
 
   return (
     <Box

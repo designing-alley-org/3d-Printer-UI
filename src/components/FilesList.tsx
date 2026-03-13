@@ -60,26 +60,46 @@ const FilesList = ({ file }: Props) => {
         <CardContent
           sx={{
             display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            gap: { xs: 2, sm: 0 },
+            padding: { xs: 2, sm: 3 },
           }}
         >
           {/* Left */}
-          <Box display="flex" alignItems="center" gap={2}>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={2}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
+          >
             <ContentCopyIcon
-              fontSize="large"
+              fontSize={isMobile ? 'small' : 'large'}
               sx={{
                 color: 'primary.main',
+                transform: 'translateY(-7px)',
               }}
             />
-            <Typography variant="h6" color="primary.main" gutterBottom>
-              {' '}
+            <Typography
+              variant="h6"
+              color="primary.main"
+              gutterBottom
+              sx={{
+                fontSize: { xs: '1rem', sm: '1.25rem' },
+                wordBreak: 'break-word',
+              }}
+            >
               {file?.fileName?.split(' ')[0]}
             </Typography>
           </Box>
           {/* Right */}
-          <Box>
-            <Stack direction={'row'} spacing={1}>
+          <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
+            <Stack
+              direction={{ xs: 'row', sm: 'row' }}
+              spacing={1}
+              sx={{ width: '100%' }}
+            >
               {/* Add your file actions here */}
               <CustomButton
                 variant="contained"
@@ -94,7 +114,10 @@ const FilesList = ({ file }: Props) => {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '4px',
+                  width: { xs: '100%', sm: 'auto' },
+                  padding: { xs: '10px 16px', sm: '8px 16px' },
                 }}
               >
                 {isDownloading ? (
@@ -110,8 +133,10 @@ const FilesList = ({ file }: Props) => {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '4px',
-                  padding: '8px 16px',
+                  padding: { xs: '10px 16px', sm: '8px 16px' },
+                  width: { xs: '100%', sm: 'auto' },
                 }}
                 onClick={handleViewClick}
               >
@@ -135,9 +160,13 @@ const FilesList = ({ file }: Props) => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden', display: 'flex', gap: '20px', marginTop: '10px',
-              flexDirection: isMobile ? 'column' : 'row'
-             }}
+            style={{
+              overflow: 'hidden',
+              display: 'flex',
+              gap: '20px',
+              marginTop: '10px',
+              flexDirection: isMobile ? 'column' : 'row',
+            }}
           >
             <TableContainer
               sx={{
@@ -265,7 +294,7 @@ const FilesList = ({ file }: Props) => {
               alt="Preview"
               src={file?.thumbnailUrl}
               sx={{
-                width: isMobile ? '100%' :  '48%',
+                width: isMobile ? '100%' : '48%',
                 height: 'auto',
                 mt: isMobile ? 0 : 2,
                 borderRadius: 0.4,

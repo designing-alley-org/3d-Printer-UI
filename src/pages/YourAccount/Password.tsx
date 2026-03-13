@@ -1,49 +1,39 @@
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { updatePassword } from '../../store/actions/updatePassword';
 import { Box, Card, CardContent, CardHeader, Container } from '@mui/material';
 import CustomButton from '../../stories/button/CustomButton';
 import { Formik, Form, FormikHelpers } from 'formik';
 import {
   changePasswordValidationSchema,
+  ChangePasswordValue,
   forgotPasswordValidationSchema,
 } from '../../validation/authValidation';
-import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
+import FormikInput from '../../stories/inputs/FormikInput';
+import { useUpdateEmail, useUpdatePassword } from '../../features/user/hook';
 
-interface FormState {
-  old_password: string;
-  new_password: string;
-  confirmPassword: string;
-}
-
-const initialValues: FormState = {
+const initialValues: ChangePasswordValue = {
   old_password: '',
   new_password: '',
   confirmPassword: '',
 };
 
 const Password = () => {
-  const [loading, setLoading] = useState(false);
+  const { mutate: updatePasswordMutate, isPending: isUpdatingPassword } =
+    useUpdatePassword();
+  const { mutate: updateEmailMutate, isPending: isUpdatingEmail } =
+    useUpdateEmail();
 
-  const handleSubmit = async (
-    values: FormState,
-    { resetForm }: FormikHelpers<FormState>
+  const handleSubmit = (
+    values: ChangePasswordValue,
+    { resetForm }: FormikHelpers<ChangePasswordValue>
   ) => {
-    try {
-      setLoading(true);
-      const { old_password, new_password } = values;
-      const response = updatePassword(old_password, new_password);
-      await toast.promise(response, {
-        loading: 'Updating...',
-        success: 'Password updated successfully',
-        error: 'Failed to update password',
-      });
-      resetForm();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to update password');
-    } finally {
-      setLoading(false);
-    }
+    const { old_password, new_password } = values;
+    updatePasswordMutate(
+      { old_password, new_password },
+      {
+        onSuccess: () => {
+          resetForm();
+        },
+      }
+    );
   };
 
   return (
@@ -66,32 +56,24 @@ const Password = () => {
           <Formik
             initialValues={{ email: '' }}
             validationSchema={forgotPasswordValidationSchema}
-            onSubmit={async (values, { resetForm }) => {
-              // Handle email update logic here
-              toast.success('Email updated successfully');
-              resetForm();
+            onSubmit={(values, { resetForm }) => {
+              updateEmailMutate(
+                { new_email: values.email },
+                {
+                  onSuccess: () => {
+                    resetForm();
+                  },
+                }
+              );
             }}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              isValid,
-              dirty,
-            }) => (
+            {({ isValid, dirty }) => (
               <Form>
                 <Box maxWidth={500}>
-                  <CustomInputLabelField
+                  <FormikInput
                     label="New Email"
                     name="email"
                     type="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email ? errors.email : undefined}
                     placeholder="Enter your new email"
                     required
                     sx={{ mb: 2 }}
@@ -99,7 +81,8 @@ const Password = () => {
 
                   <CustomButton
                     children={'Update Email'}
-                    disabled={!isValid || !dirty}
+                    disabled={!isValid || !dirty || isUpdatingEmail}
+                    loading={isUpdatingEmail}
                     type="submit"
                     variant="contained"
                   />
@@ -120,64 +103,31 @@ const Password = () => {
             validationSchema={changePasswordValidationSchema}
             onSubmit={handleSubmit}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              isValid,
-              dirty,
-            }) => (
+            {({ isValid, dirty }) => (
               <Form>
                 <Box maxWidth={500}>
-                  <CustomInputLabelField
+                  <FormikInput
                     label="Current Password"
                     name="old_password"
                     type="password"
-                    value={values.old_password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.old_password && Boolean(errors.old_password)}
-                    helperText={
-                      touched.old_password ? errors.old_password : undefined
-                    }
                     placeholder="Enter your current password"
                     required
                     sx={{ mb: 2 }}
                   />
 
-                  <CustomInputLabelField
+                  <FormikInput
                     label="New Password"
                     name="new_password"
                     type="password"
-                    value={values.new_password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.new_password && Boolean(errors.new_password)}
-                    helperText={
-                      touched.new_password ? errors.new_password : undefined
-                    }
                     placeholder="Enter your new password"
                     required
                     sx={{ mb: 2 }}
                   />
 
-                  <CustomInputLabelField
+                  <FormikInput
                     label="Confirm Password"
                     name="confirmPassword"
                     type="password"
-                    value={values.confirmPassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={
-                      touched.confirmPassword && Boolean(errors.confirmPassword)
-                    }
-                    helperText={
-                      touched.confirmPassword
-                        ? errors.confirmPassword
-                        : undefined
-                    }
                     placeholder="Confirm your new password"
                     required
                     sx={{ mb: 2 }}
@@ -185,8 +135,8 @@ const Password = () => {
 
                   <CustomButton
                     children={'Update password'}
-                    disabled={!isValid || !dirty || loading}
-                    loading={loading}
+                    disabled={!isValid || !dirty || isUpdatingPassword}
+                    loading={isUpdatingPassword}
                     type="submit"
                     variant="contained"
                   />

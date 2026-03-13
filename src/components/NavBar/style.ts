@@ -13,16 +13,16 @@ const StyledAppBar = styled(AppBar, {
 
   // borderBottom: `1px solid ${theme.palette.divider}`,
 }));
-const NavButton = styled(Button)<{ active?: boolean; isDashboard?: boolean }>(
-  ({ theme, active }) => ({
-    position: 'relative',
-    color: theme.palette.primary.contrastText,
-    fontWeight: active ? 700 : 500,
-    fontSize: '0.875rem',
-    padding: '12px 24px',
-    minHeight: '60px',
-    borderRadius: 0,
-  })
-);
+const NavButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'active' && prop !== 'isDashboard',
+})<{ active?: boolean; isDashboard?: boolean }>(({ theme, active }) => ({
+  position: 'relative',
+  color: theme.palette.primary.contrastText,
+  fontWeight: active ? 700 : 500,
+  fontSize: '0.875rem',
+  padding: '12px 24px',
+  minHeight: '60px',
+  borderRadius: 0,
+}));
 
 export { StyledAppBar, NavButton };

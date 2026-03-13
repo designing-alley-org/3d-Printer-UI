@@ -39,6 +39,7 @@ export interface DeliveryService {
 export interface FileData {
   _id: string;
   fileName: string;
+  originalDimensions: ModelDimensions;
   dimensions: ModelDimensions;
   fileUrl: string;
   weight?: Weight;
@@ -55,6 +56,7 @@ export type FileDataDB = Omit<
   'fileBlob' | 'file' | 'isUploading' | 'isUploaded' | 'uploadProgress'
 > & {
   materialId?: string;
+  originalDimensions: ModelDimensions;
   colorId?: string;
   technologyId?: string;
   scalingFactor: number;
@@ -85,7 +87,7 @@ export interface Material {
   relatedTechnologie: string;
   density: number;
   cost_gbp_per_kg: number;
-   unit: string;
+  unit: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -137,4 +139,5 @@ export type UpdateFileData = Partial<
   weight?: Weight;
   costs?: Costs;
   print_totalTime_s?: number;
+  scalingFactor?: number;
 };

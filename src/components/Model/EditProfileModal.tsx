@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Box, Stack } from '@mui/material';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import ResponsiveModal from './ResponsiveModal';
-import CustomInputLabelField from '../../stories/inputs/CustomInputLabelField';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import CustomButton from '../../stories/button/CustomButton';
-import { editUser, User } from '../../types';
+import { editUser } from '../../types';
+import FormikInput from '../../stories/inputs/FormikInput';
+import FormikPhoneNumber from '../../stories/inputs/FormikPhoneNumber';
+import { countries } from '../../constant/countries';
 
 interface EditProfileModalProps {
   open: boolean;
@@ -20,129 +25,102 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   onSave,
   loading = false,
 }) => {
-  const [formData, setFormData] = useState<editUser>({
-    name: '',
-    phone_no: '',
-    phone_ext: '',
+  // Helper to find ISO code from dial code (e.g. "+1" -> "US")
+  const getCountryIso = (dialCode?: string) => {
+    if (!dialCode) return 'US'; // Default
+    const cleanCode = dialCode.replace('+', '');
+    const country = countries.find((c) => c.phone === cleanCode);
+    return country ? country.code : 'US';
+  };
+
+  // Helper to find dial code from ISO code (e.g. "US" -> "+1")
+  const getDialCode = (isoCode: string) => {
+    const country = countries.find((c) => c.code === isoCode);
+    return country ? `+${country.phone}` : '';
+  };
+
+  const initialValues = {
+    name: user?.name || '',
+    phone_no: user?.phone_no || '',
+    country_iso: getCountryIso(user?.phone_ext),
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    phone_no: Yup.string()
+      .required('Phone number is required')
+      .test('is-valid-phone', 'Invalid phone number', function (value) {
+        const { country_iso } = this.parent;
+        return isValidPhoneNumber(value || '', country_iso);
+      }),
+    country_iso: Yup.string().required('Country code is required'),
   });
 
-  const [errors, setErrors] = useState<Partial<editUser>>({});
-
-  useEffect(() => {
-    if (user && open) {
-      setFormData({
-        name: user.name || '',
-        phone_no: user.phone_no || '',
-        phone_ext: user.phone_ext || '',
-      });
-    }
-    setErrors({});
-  }, [user, open]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // Clear error when user starts typing
-    if (errors[name as keyof editUser]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
-    }
+  const handleSubmit = (values: typeof initialValues) => {
+    onSave({
+      name: values.name,
+      phone_no: values.phone_no,
+      phone_ext: getDialCode(values.country_iso),
+    });
   };
 
-  const validateForm = (): boolean => {
-    const newErrors: Partial<User> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!formData?.phone_no) {
-      newErrors.phone_no = 'Phone number is required';
-    } else if (!/^\+?[\d\s-()]+$/.test(formData.phone_no)) {
-      newErrors.phone_no = 'Please enter a valid phone number';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSave = () => {
-    if (validateForm()) {
-      onSave(formData);
-    }
-  };
-
-  const handleClose = () => {
-    setErrors({});
-    onClose();
-  };
-
-  const actions = (
+  const actions = (onClose: () => void, submitForm: () => void) => (
     <Stack direction="row" spacing={2}>
-      <CustomButton variant="outlined" onClick={handleClose} disabled={loading}>
+      <CustomButton variant="outlined" onClick={onClose} disabled={loading}>
         Cancel
       </CustomButton>
-      <CustomButton variant="contained" onClick={handleSave} loading={loading}>
+      <CustomButton variant="contained" onClick={submitForm} loading={loading}>
         Save Changes
       </CustomButton>
     </Stack>
   );
 
   return (
-    <ResponsiveModal
-      open={open}
-      onClose={handleClose}
-      title="Edit Profile"
-      actions={actions}
-      maxWidth="sm"
-      disableBackdropClick={loading}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+      enableReinitialize
     >
-      <Box sx={{ width: '100%' }}>
-        <CustomInputLabelField
-          label="Full Name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          placeholder="Enter your full name"
-          error={!!errors.name}
-          helperText={errors.name}
-          required
-        />
+      {({ submitForm, resetForm }) => {
+        // Handle closing via standard modal close
+        const handleClose = () => {
+          resetForm();
+          onClose();
+        };
 
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          sx={{ mt: 2 }}
-          spacing={1}
-        >
-          <CustomInputLabelField
-            label="Extension (Optional)"
-            name="phone_ext"
-            value={formData.phone_ext || ''}
-            onChange={handleInputChange}
-            placeholder="e.g. +44"
-            fullWidth
-          />
-          <CustomInputLabelField
-            label="Phone Number"
-            name="phone_no"
-            value={formData.phone_no}
-            onChange={handleInputChange}
-            placeholder="Enter your phone number"
-            type="tel"
-            error={!!errors.phone_no}
-            helperText={errors.phone_no}
-            required
-            sx={{ flex: 1 }}
-          />
-        </Stack>
-      </Box>
-    </ResponsiveModal>
+        return (
+          <ResponsiveModal
+            open={open}
+            onClose={handleClose}
+            title="Edit Profile"
+            actions={actions(handleClose, submitForm)}
+            maxWidth="sm"
+            disableBackdropClick={loading}
+          >
+            <Form>
+              <Box sx={{ width: '100%' }}>
+                <FormikInput
+                  label="Full Name"
+                  name="name"
+                  placeholder="Enter your full name"
+                  required
+                />
+
+                <Box sx={{ mt: 2 }}>
+                  <FormikPhoneNumber
+                    label="Phone Number"
+                    name="phone_no"
+                    countryCodeName="country_iso"
+                    required
+                  />
+                </Box>
+              </Box>
+            </Form>
+          </ResponsiveModal>
+        );
+      }}
+    </Formik>
   );
 };
 

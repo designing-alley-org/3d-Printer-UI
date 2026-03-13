@@ -1,4 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+
+interface UserState {
+  _id: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  googleId?: string;
+}
+
 export const UserDetailsSlice = createSlice({
   name: 'snackbar',
   initialState: {
@@ -8,7 +18,7 @@ export const UserDetailsSlice = createSlice({
       role: '',
       createdAt: '',
       updatedAt: '',
-    },
+    } as UserState,
   },
   reducers: {
     addUserDetails: (state, action) => {

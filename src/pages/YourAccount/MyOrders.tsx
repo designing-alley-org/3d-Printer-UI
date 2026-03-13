@@ -234,10 +234,11 @@ export const MyOrders = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            gap: 1,
           }}
         >
           <CustomTextField
-            label="Search Orders by Number"
+            label="Search Orders"
             size="small"
             variant="outlined"
             isSearch={true}
@@ -248,9 +249,7 @@ export const MyOrders = () => {
           <SingleSelectDropdown
             options={filterStatusGroups}
             defaultValue={selectedStatusOption}
-            sx={{
-              width: '200px',
-            }}
+            sx={{ width: '200px' }}
             onChange={handleStatusFilterChange}
           />
         </CardContent>

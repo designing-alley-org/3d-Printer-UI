@@ -1,23 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { IPrinter } from '../types/printer';
 import { FileDataDB } from '../types/uploadFiles';
-import { UpdateValueById } from '../store/customizeFilesDetails/CustomizationSlice';
-import { RootState } from '../store/types';
 
 export function usePrinterSelector(
   printersData: IPrinter[],
-  file?: FileDataDB
+  file?: FileDataDB,
+  onPrinterSelect?: (printer: IPrinter) => void
 ) {
   const [open, setOpen] = useState(false);
   const [selectedPrinter, setSelectedPrinter] = useState<IPrinter | null>(null);
   const [searchValue, setSearchValue] = useState('');
-
-  // Redux Hooks
-  const { activeFileId } = useSelector(
-    (state: RootState) => state.customization
-  );
-  const dispatch = useDispatch();
 
   // Handle CMD/CTRL + K shortcut
   useEffect(() => {
@@ -34,12 +26,9 @@ export function usePrinterSelector(
   // Handle printer selection
   const handleSelect = (printer: IPrinter) => {
     setSelectedPrinter(printer);
-    dispatch(
-      UpdateValueById({
-        id: activeFileId as string,
-        data: { printerId: printer._id },
-      })
-    );
+    if (onPrinterSelect) {
+      onPrinterSelect(printer);
+    }
     setOpen(false);
   };
 
